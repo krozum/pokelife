@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript v3
-// @version      3.1.3
+// @version      3.1.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -78,8 +78,6 @@ $(document).on("click", "nav a", function(event) {
         new_buffer = new_buffer.substr(4);
         remember_back(new_buffer);
 
-        $("html, body").animate({ scrollTop: 0 }, "fast");
-
         $.get($(this).attr('href'), function(data) {
             var THAT = $(data);
             window.onReloadMainFunctions.forEach(function(item) {
@@ -122,7 +120,6 @@ $(document).on("click", ".btn-akcja", function(event) {
         $('body').css({"padding-right":"0px"});
         $('.modal-backdrop').remove();
     }
-    $("html, body").animate({ scrollTop: 0 }, "fast");
 
     $(this).attr("disabled", "disabled");
 
@@ -147,14 +144,11 @@ $(document).on('submit', 'form', function(e) {
 
         e.preventDefault();
 
-        $("html, body").animate({ scrollTop: 0 }, "fast");
 
         if($('body').hasClass('modal-open') && $(this).attr("dont-close-modal") != 1) {
             $('body').removeClass('modal-open');
             $('body').css({"padding-right":"0px"});
             $('.modal-backdrop').remove();
-        } else {
-            $("html, body").animate({ scrollTop: 0 }, "fast");
         }
 
         var postData = $(this).serializeArray();
@@ -171,7 +165,6 @@ $(document).on('submit', 'form', function(e) {
                 }
             });
         } else {
-            $("html, body").animate({ scrollTop: 0 }, "fast");
             $.ajax({
                 type : 'GET',
                 url : 'gra/'+$(this).attr('action'),
@@ -830,6 +823,8 @@ function initAutoGo(){
     afterReloadMain(function(){
         if (autoGo) {
             click();
+        } else {
+            $("html, body").animate({ scrollTop: 0 }, "fast");
         }
     })
 
@@ -953,3 +948,72 @@ function initLogger(){
     })
 }
 initLogger();
+
+
+
+// **********************
+//
+// initSzybkieKlikanieWLinkiPromocyjne
+// Funkcja dodająca szybkie klikanie w linki promocyjne
+//
+// **********************
+function initSzybkieKlikanieWLinkiPromocyjne(){
+
+    function clickInLink(number, id) {
+        if (number < 11) {
+            var w = window.open("", "myWindow", "width=200,height=100");
+            w.location.href = 'http://pokelife.pl/index.php?k=' + number + '&g=' + id;
+            $(w).load(setTimeout(function () {
+                w.close();
+                $('#klikniecie-' + number).html('TAK');
+                console.log('PokeLifeScript Beta: klikam link ' + number);
+                setTimeout(function () { clickInLink(number + 1, id); }, 300);
+            }, 300));
+        } else {
+            setTimeout(function () {
+                $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+            }, 100);
+        }
+    }
+
+    onReloadMain(function(){
+        var DATA = this;
+        if (DATA.find('.panel-heading').html() === "Promuj stronę") {
+            var html = '<div class="col-xs-12" style=" text-align: center; "><button id="clickAllLinks" style=" background-color: #f1b03b; border: 1px solid #ce9532; border-radius: 5px; padding: 5px 25px; text-transform: uppercase; line-height: 20px; height: 40px; ">Wyklikaj wszystkie</button></div>';
+            DATA.find('.panel-body>div:first-of-type').append(html);
+        }
+    })
+
+    $(document).on("click", "#clickAllLinks", function (event) {
+        var id = $('#klikniecie-1').parent().find("a").attr("onclick").split(",")[1].split(")")[0];
+        setTimeout(function () { clickInLink(1, id); }, 200);
+    });
+}
+initSzybkieKlikanieWLinkiPromocyjne();
+
+
+
+// **********************
+//
+// initRozbudowanyOpisDziczy
+// Funkcja dodająca logowanie tego co wyświetla sie na ekranie
+//
+// **********************
+function initRozbudowanyOpisDziczy(){
+
+    $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce=ranczo"]', function(){
+        var html = '<div id="opisRancho" style="z-index: 999; width: 80%; min-height: 300px; bottom: 60px; position: fixed; left: 0; right: 0; margin: 0 auto; background: white; border-radius: 15px; padding: 15px">'
+        html = html + '<li style="display: inline"><img src="http://poke-life.net/pokemony/495.png"><p>Snivy</p></li>';
+        html = html + '<li style="display: inline"><img src="http://poke-life.net/pokemony/496.png"><p>Snivy</p></li>';
+        html = html + '<li style="display: inline"><img src="http://poke-life.net/pokemony/497.png"><p>Snivy</p></li>';
+        html = html + '</div>';
+
+        $('body').append(html);
+    })
+
+
+    $(document).on('mouseleave', 'a[href="gra/dzicz.php?poluj&miejsce=ranczo"]', function(){
+        $('#opisRancho').remove();
+    })
+}
+// initRozbudowanyOpisDziczy();
