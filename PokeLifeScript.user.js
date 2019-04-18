@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript v3
-// @version      3.1.2
+// @version      3.1.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -85,10 +85,13 @@ $(document).on("click", "nav a", function(event) {
             window.onReloadMainFunctions.forEach(function(item) {
                 item.call(THAT);
             })
-            $("#glowne_okno").html(THAT);
-            window.afterReloadMainFunctions.forEach(function(item) {
-                item.call();
-            })
+            $("#glowne_okno").html('<div class="panel panel-primary">'+THAT.html()+'<script src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/okno_glowne_reload.js"></script></div>');
+            $.get('inc/stan.php', function(data) {
+                $("#sidebar").html(data);
+                window.afterReloadMainFunctions.forEach(function(item) {
+                    item.call();
+                })
+            });
         });
 
         $('.collapse-hidefix').collapse('hide');
@@ -128,10 +131,13 @@ $(document).on("click", ".btn-akcja", function(event) {
         window.onReloadMainFunctions.forEach(function(item) {
             item.call(THAT);
         })
-        $("#glowne_okno").html(THAT);
-        window.afterReloadMainFunctions.forEach(function(item) {
-            item.call();
-        })
+        $("#glowne_okno").html('<div class="panel panel-primary">'+THAT.html()+'<script src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/okno_glowne_reload.js"></script></div>');
+        $.get('inc/stan.php', function(data) {
+            $("#sidebar").html(data);
+            window.afterReloadMainFunctions.forEach(function(item) {
+                item.call();
+            })
+        });
     });
 });
 
@@ -177,10 +183,13 @@ $(document).on('submit', 'form', function(e) {
                     window.onReloadMainFunctions.forEach(function(item) {
                         item.call(THAT);
                     })
-                    $("#glowne_okno").html(THAT);
-                    window.afterReloadMainFunctions.forEach(function(item) {
-                        item.call();
-                    })
+                    $("#glowne_okno").html('<div class="panel panel-primary">'+THAT.html()+'<script src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/okno_glowne_reload.js"></script></div>');
+                    $.get('inc/stan.php', function(data) {
+                        $("#sidebar").html(data);
+                        window.afterReloadMainFunctions.forEach(function(item) {
+                            item.call();
+                        })
+                    });
                 }
             });
         }
