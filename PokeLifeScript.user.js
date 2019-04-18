@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript v3
-// @version      3.1.1
+// @version      3.1.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -819,7 +819,6 @@ function initAutoGo(){
     });
 
     afterReloadMain(function(){
-        console.log(autoGo);
         if (autoGo) {
             click();
         }
