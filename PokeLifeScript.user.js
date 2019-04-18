@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         PokeLifeScript v3
-// @version      3.1
+// @version      3.1.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
 // @updateURL    https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
-// @require      http://bug7a.github.io/iconselect.js/sample/lib/control/iconselect.js
+// @require      https://bug7a.github.io/iconselect.js/sample/lib/control/iconselect.js
 // @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?v=3
 // @resource     customCSS_style_1  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_1.css?v=3
 // @resource     customCSS_style_2  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_2.css?v=3
@@ -53,7 +53,7 @@ jQuery.fn.html = function() {
         }
         pa_before = pa_after;
 
-        if(window.onReloadSidebarFunctions != undefined){
+        if(typeof window.onReloadSidebarFunctions != undefined){
             window.onReloadSidebarFunctions.forEach(function(item) {
                 item.call(THAT);
             });
@@ -418,9 +418,11 @@ function initPokemonDniaWidget(){
     });
 
     onReloadSidebar(function(){
-        this.find('button[href="raport.php"]').parent().prepend('<img src="https://gra.pokelife.pl/'+hodowlaPokemonDniaImage+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokemon Dnia" style=" width: 50px;margin-left: 10px; float: left; ">');
-        this.find('button[href="raport.php"]').parent().css('margin-top', '10px').css('padding-right','10px');
-        $('[data-toggle="tooltip"]').tooltip();
+        if(hodowlaPokemonDniaImage != undefined){
+            this.find('button[href="raport.php"]').parent().prepend('<img src="https://gra.pokelife.pl/'+hodowlaPokemonDniaImage+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokemon Dnia" style=" width: 50px;margin-left: 10px; float: left; ">');
+            this.find('button[href="raport.php"]').parent().css('margin-top', '10px').css('padding-right','10px');
+            $('[data-toggle="tooltip"]').tooltip();
+        }
     })
 }
 initPokemonDniaWidget();
@@ -511,6 +513,8 @@ function initAutoGo(){
     function initPokemonIcon() {
         $('body').append('<div id="setPokemon" style="position: fixed; cursor: pointer; top: 0; left: 10px; z-index: 9999"></div>');
 
+        IconSelect.COMPONENT_ICON_FILE_PATH = "";
+
         iconPokemon = new IconSelect("setPokemon", {
             'selectedIconWidth': 48,
             'selectedIconHeight': 48,
@@ -521,6 +525,8 @@ function initAutoGo(){
             'vectoralIconNumber': 1,
             'horizontalIconNumber': 6
         });
+
+        console.log(iconPokemon);
 
         var selectPokemon = [];
         let i = 0;
@@ -939,5 +945,3 @@ function initLogger(){
     })
 }
 initLogger();
-
-
