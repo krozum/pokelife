@@ -1,0 +1,11 @@
+body {	
+    background-color: #3c3c3c;	
+}
+
+.panel-primary, .panel-primary>.panel-heading, .awatar, h2, .modal-header {	
+    border-color: #f2cfc9 !important;
+}	
+	
+.plugin-button, .panel-primary>.panel-heading, h2, .modal-header, #goButton, #goAutoButton {	
+    background-color: #f2cfc9 !important;
+}
