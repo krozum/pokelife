@@ -1,0 +1,2194 @@
+{
+   "tm":[
+      {
+         "id":1,
+         "name":"Mega Punch",
+         "level":36,
+         "type_id":1,
+         "category_id":1,
+         "power":80,
+         "accury":85,
+         "desc":""
+      },
+      {
+         "id":2,
+         "name":"Razor Wind",
+         "level":34,
+         "type_id":1,
+         "category_id":2,
+         "power":80,
+         "accury":100,
+         "desc":"Ładuje się, po czym uderza w następnej rundzie. Ma zwiększoną szansę na cios krytyczny o 1 poziom."
+      },
+      {
+         "id":3,
+         "name":"Swords Dance",
+         "level":1,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Zwiększa Atak używającego o 2 poziomy (10)."
+      },
+      {
+         "id":4,
+         "name":"Substitute",
+         "level":30,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":5,
+         "name":"Mega Kick",
+         "level":46,
+         "type_id":1,
+         "category_id":1,
+         "power":120,
+         "accury":75,
+         "desc":""
+      },
+      {
+         "id":6,
+         "name":"Toxic",
+         "level":15,
+         "type_id":8,
+         "category_id":3,
+         "power":"-",
+         "accury":90,
+         "desc":"Atak sam w sobie nie zadaje obrażeń, lecz ma dwa stopnie - zatrucia oraz zatrucia śmiertelnego, które zadaje podwójne obrażenia w stosunku do tego pierwszego. Zawsze trafia, gdy zostanie użyty przez trującego Pokemona."
+      },
+      {
+         "id":7,
+         "name":"Horn Drill",
+         "level":60,
+         "type_id":1,
+         "category_id":1,
+         "power":1000,
+         "accury":25,
+         "desc":"Gdy Pokemon atakuje przeciwnika na tym samym lub niższym poziomie moc wynosi 1000, gdy przeciwnik ma wyższy poziom - atakuje z mocą 100."
+      },
+      {
+         "id":8,
+         "name":"Body Slam",
+         "level":37,
+         "type_id":1,
+         "category_id":1,
+         "power":85,
+         "accury":100,
+         "desc":"Jeśli wcześniej (nieważne jak dawno temu) przeciwnik użył Minimize, to Body Slam zawsze trafi i podwaja moc. Posiada 30 szans na paraliż przeciwnika."
+      },
+      {
+         "id":9,
+         "name":"Take Down",
+         "level":36,
+         "type_id":1,
+         "category_id":1,
+         "power":90,
+         "accury":85,
+         "desc":"Po trafieniu używający otrzymuje 25 obrażeń zwrotnych."
+      },
+      {
+         "id":10,
+         "name":"Double-Edge",
+         "level":46,
+         "type_id":1,
+         "category_id":1,
+         "power":120,
+         "accury":100,
+         "desc":"Po trafieniu używający otrzymuje 33 obrażeń zwrotnych."
+      },
+      {
+         "id":11,
+         "name":"Bubble Beam",
+         "level":24,
+         "type_id":3,
+         "category_id":2,
+         "power":65,
+         "accury":100,
+         "desc":"Po trafieniu 10 szansy na zmniejszenie szybkości przeciwnika o 1 poziom (5)."
+      },
+      {
+         "id":12,
+         "name":"Water Gun",
+         "level":10,
+         "type_id":3,
+         "category_id":2,
+         "power":40,
+         "accury":100,
+         "desc":""
+      },
+      {
+         "id":13,
+         "name":"Ice Beam",
+         "level":42,
+         "type_id":14,
+         "category_id":2,
+         "power":90,
+         "accury":100,
+         "desc":"Po trafieniu 10 szansy na zamrożenie przeciwnika."
+      },
+      {
+         "id":14,
+         "name":"Blizzard",
+         "level":52,
+         "type_id":14,
+         "category_id":2,
+         "power":110,
+         "accury":70,
+         "desc":"Po trafieniu 10 szansy na zamrożenie przeciwnika. Podczas użycia Hail ignoruje celność i uniki przeciwnika, więc zawsze trafia."
+      },
+      {
+         "id":15,
+         "name":"Hyper Beam",
+         "level":60,
+         "type_id":1,
+         "category_id":2,
+         "power":150,
+         "accury":90,
+         "desc":"W drugiej rundzie odpoczywa regenerując siły."
+      },
+      {
+         "id":16,
+         "name":"PayDay",
+         "level":1,
+         "type_id":1,
+         "category_id":1,
+         "power":40,
+         "accury":100,
+         "desc":"Każde użycie daje 1-5 * (poziom + 10) Yenów. Maksymalnie 40k Yenów na walkę 6v6 na 100lvl po 50 rund w każdej walce."
+      },
+      {
+         "id":17,
+         "name":"Submission",
+         "level":33,
+         "type_id":10,
+         "category_id":1,
+         "power":80,
+         "accury":80,
+         "desc":"Po trafieniu używający otrzymuje 25 obrażeń zwrotnych."
+      },
+      {
+         "id":18,
+         "name":"Counter",
+         "level":30,
+         "type_id":10,
+         "category_id":1,
+         "power":"-",
+         "accury":100,
+         "desc":"Po użyciu kontruje ostatni atak przeciwnika, ale tylko wtedy gdy zadał nam obrażenia i jeśli był to atak fizyczny. Zadaje 1.5 raza więcej obrażeń, które przeciwnik zadał ostatnim atakiem fizycznym (ignoruje obronę, STAB). Atak o priorytecie -5."
+      },
+      {
+         "id":19,
+         "name":"Seismic Toss",
+         "level":15,
+         "type_id":10,
+         "category_id":1,
+         "power":"-",
+         "accury":100,
+         "desc":"Moc zależna od poziomu używającego. Np. 20 poziom = 20 mocy."
+      },
+      {
+         "id":20,
+         "name":"Rage",
+         "level":10,
+         "type_id":1,
+         "category_id":1,
+         "power":20,
+         "accury":100,
+         "desc":"Jeśli po tym ataku, w tej samej rundzie Pokemon otrzyma obrażenia - zwiększy Atak o jeden poziom."
+      },
+      {
+         "id":21,
+         "name":"Mega Drain",
+         "level":15,
+         "type_id":4,
+         "category_id":2,
+         "power":40,
+         "accury":100,
+         "desc":"Po trafieniu leczy 40 z zadanych obrażeń. Nie może wyleczyć poza ilość z jaką Pokemon wszedł do walki."
+      },
+      {
+         "id":22,
+         "name":"Solar Beam",
+         "level":52,
+         "type_id":4,
+         "category_id":2,
+         "power":120,
+         "accury":100,
+         "desc":"W pierwszej rundzie ładuje energię a w drugiej posyła właściwe obrażenia. W trakcie Ostrego Słońca atak nie wymaga ładowania w drugiej rundzie. W trakcie Deszczu, Burzy Piaskowej, Gradu i Mgły moc spada do 60."
+      },
+      {
+         "id":23,
+         "name":"Dragon Rage",
+         "level":15,
+         "type_id":17,
+         "category_id":2,
+         "power":40,
+         "accury":100,
+         "desc":"Ignoruje modyfikatory odporności oraz obron/ataków"
+      },
+      {
+         "id":24,
+         "name":"Thunderbolt",
+         "level":40,
+         "type_id":5,
+         "category_id":2,
+         "power":90,
+         "accury":100,
+         "desc":"Po trafieniu 10 szansy na sparaliżowanie przeciwnika."
+      },
+      {
+         "id":25,
+         "name":"Thunder",
+         "level":50,
+         "type_id":5,
+         "category_id":2,
+         "power":110,
+         "accury":70,
+         "desc":"Po trafieniu 30 szansy na sparaliżowanie przeciwnika. Trafia w trakcie Fly, Bounce i Sky Drop. W trakcje Ostrego Słońca celność spada o 50, a w trakcie Deszczu ma pewne trafienie."
+      },
+      {
+         "id":26,
+         "name":"Earthquake",
+         "level":44,
+         "type_id":12,
+         "category_id":1,
+         "power":100,
+         "accury":100,
+         "desc":"Zakopanego przeciwnika zawsze trafia oraz zadaje podwójne obrażenia."
+      },
+      {
+         "id":27,
+         "name":"Fissure",
+         "level":60,
+         "type_id":12,
+         "category_id":1,
+         "power":1000,
+         "accury":25,
+         "desc":"Gdy Pokemon atakuje przeciwnika na tym samym lub niższym poziomie moc wynosi 1000, gdy przeciwnik ma wyższy poziom - atakuje z mocą 100."
+      },
+      {
+         "id":28,
+         "name":"Dig",
+         "level":32,
+         "type_id":12,
+         "category_id":1,
+         "power":80,
+         "accury":100,
+         "desc":"Atak dwurundowy. W pierwszej użytkownik zakopuje się pod ziemię i jest praktycznie nietykalny - w drugiej zadaje obrażenia. Magnitude, Fissure i Earthquake zadają podwójne obrażenia gdy jesteśmy zakopani. Dodatkowo jeśli rundę wcześniej użyto Lock-On albo Mind Reader to będziemy trafieni w fazie podziemnej."
+      },
+      {
+         "id":29,
+         "name":"Psychic",
+         "level":40,
+         "type_id":7,
+         "category_id":2,
+         "power":90,
+         "accury":100,
+         "desc":"Po trafieniu 10 szansy na zmniejszenie Specjalnej Obrony przeciwnika o jeden poziom (5)."
+      },
+      {
+         "id":30,
+         "name":"Teleport",
+         "level":1,
+         "type_id":7,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":31,
+         "name":"Mimic",
+         "level":15,
+         "type_id":1,
+         "category_id":3,
+         "power":1,
+         "accury":100,
+         "desc":"Uczy się ostatniego posunięcia przeciwnika i używa go do końca walki (zamiast Mimic)."
+      },
+      {
+         "id":32,
+         "name":"Double Team",
+         "level":1,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Zwiększa Unik używającego o 1 poziom (5)."
+      },
+      {
+         "id":33,
+         "name":"Reflect",
+         "level":1,
+         "type_id":7,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Obniża obrażenia od ataków fizycznych o 40 przez 3 tury (z wyjątkiem obrażeń niezależnych od mocy)."
+      },
+      {
+         "id":34,
+         "name":"Bide",
+         "level":15,
+         "type_id":1,
+         "category_id":1,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":35,
+         "name":"Metronome",
+         "level":1,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Losuje i używa jednego ataku ze wszystkich dostępnych."
+      },
+      {
+         "id":36,
+         "name":"Self-Destruct",
+         "level":40,
+         "type_id":1,
+         "category_id":1,
+         "power":200,
+         "accury":100,
+         "desc":"Po trafieniu używający otrzymuje 30 obrażeń zwrotnych."
+      },
+      {
+         "id":37,
+         "name":"Egg Bomb",
+         "level":35,
+         "type_id":1,
+         "category_id":1,
+         "power":100,
+         "accury":75,
+         "desc":""
+      },
+      {
+         "id":38,
+         "name":"Fire Blast",
+         "level":51,
+         "type_id":2,
+         "category_id":2,
+         "power":110,
+         "accury":85,
+         "desc":"Po trafieniu 10 szans na podpalenie przeciwnika."
+      },
+      {
+         "id":39,
+         "name":"Swift",
+         "level":25,
+         "type_id":1,
+         "category_id":2,
+         "power":60,
+         "accury":1000,
+         "desc":"Zawsze trafia."
+      },
+      {
+         "id":40,
+         "name":"Skull Bash",
+         "level":44,
+         "type_id":1,
+         "category_id":1,
+         "power":130,
+         "accury":100,
+         "desc":"Ładuje się w pierwszej rundzie i zwiększa obronę używającego o jeden poziom. Atakuje w drugiej rundzie."
+      },
+      {
+         "id":41,
+         "name":"Softboiled",
+         "level":10,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Leczy 25 aktualnego zdrowia Pokemona. Nie może wyleczyć poza ilość z jaką Pokemon wszedł do walki."
+      },
+      {
+         "id":42,
+         "name":"Dream Eater",
+         "level":46,
+         "type_id":7,
+         "category_id":2,
+         "power":100,
+         "accury":100,
+         "desc":"Działa tylko wtedy, gdy przeciwnik śpi. Do tego regeneruje 40 zdrowia używającemu z zadanych obrażeń przeciwnikowi."
+      },
+      {
+         "id":43,
+         "name":"Sky Attack",
+         "level":55,
+         "type_id":6,
+         "category_id":1,
+         "power":140,
+         "accury":90,
+         "desc":"Ładuje się rundę, a w następnej uderza. Po trafieniu 30 szans na oszołomienie przeciwnika. Ma zwiększoną szansę na cios krytyczny o 1 poziom."
+      },
+      {
+         "id":44,
+         "name":"Rest",
+         "level":45,
+         "type_id":7,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Leczy 40 aktualnego zdrowia pokemona oraz ma 100 szans na usunięcie statusów (poparzenie, trucizna, paraliż). Po użyciu Rest, Pokemon śpi rundę, po czym w drugiej budzi się i używa następnego ataku."
+      },
+      {
+         "id":45,
+         "name":"Thunder Wave",
+         "level":1,
+         "type_id":5,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Po trafieniu paraliżuje przeciwnika."
+      },
+      {
+         "id":46,
+         "name":"Psywave",
+         "level":18,
+         "type_id":7,
+         "category_id":2,
+         "power":"-",
+         "accury":100,
+         "desc":"Moc Między 0.5 poziomu oraz 1.5 poziomu Pokemona"
+      },
+      {
+         "id":47,
+         "name":"Explosion",
+         "level":50,
+         "type_id":1,
+         "category_id":1,
+         "power":250,
+         "accury":100,
+         "desc":"Po trafieniu używający otrzymuje 50 obrażeń zwrotnych."
+      },
+      {
+         "id":48,
+         "name":"Rock Slide",
+         "level":31,
+         "type_id":13,
+         "category_id":1,
+         "power":75,
+         "accury":90,
+         "desc":"Po trafieniu 30 szansy na oszołomienie przeciwnika."
+      },
+      {
+         "id":49,
+         "name":"Tri Attack",
+         "level":33,
+         "type_id":1,
+         "category_id":2,
+         "power":80,
+         "accury":100,
+         "desc":"20 na wystąpienie jakiegokolwiek efektu - potem każdy z nich ma 33 szansy na wystąpienie (podpalenie, zamrożenie lub sparaliżowanie przeciwnika)."
+      },
+      {
+         "id":50,
+         "name":"Dynamic Punch",
+         "level":45,
+         "type_id":10,
+         "category_id":1,
+         "power":100,
+         "accury":50,
+         "desc":"Jeśli trafi otępia przeciwnika."
+      },
+      {
+         "id":51,
+         "name":"Headbutt",
+         "level":25,
+         "type_id":1,
+         "category_id":1,
+         "power":70,
+         "accury":100,
+         "desc":"30 szans na oszołomienie przeciwnika."
+      },
+      {
+         "id":52,
+         "name":"Curse",
+         "level":15,
+         "type_id":9,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Po użyciu działanie tego ataku jest zależne od tego, jakiego typu Pokemon go używa. Jeśli a) duch - Pokemon odbiera sobie 25 obecnego HP. Przeciwnik zostaje przeklęty i co turę, przez 3 tury, traci ilość życia równą 40 tego ile odjął sobie atakujący Pok. Czyli w sumie 120. b) inny typ niż duch - obniżamy swoją szybkość, ale podwyższamy Atak i Obronę o 1 poziom (5)."
+      },
+      {
+         "id":53,
+         "name":"Rollout",
+         "level":34,
+         "type_id":13,
+         "category_id":1,
+         "power":"-",
+         "accury":90,
+         "desc":"Pokemon atakuje 1-5 razy z rzędu - raz na rundę, zaczynając od mocy 30. Za każdym razem gdy trafi, moc ataku zwiększa się o około 1,5-2 razy. Każdy atak ma osobną szansę na trafienie. Moc się podwaja po użyciu Defense Curl."
+      },
+      {
+         "id":54,
+         "name":"Zap Cannon",
+         "level":51,
+         "type_id":5,
+         "category_id":2,
+         "power":120,
+         "accury":50,
+         "desc":"Jeśli trafi, paraliżuje przeciwnika."
+      },
+      {
+         "id":55,
+         "name":"Psych Up",
+         "level":15,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":1000,
+         "desc":"Kopiuje zmiany poziomów statystyk, i modyfikuje swoje staty na podstawie tego. Np. jeśli przeciwnik zwiększył sobie atak o 6 poziomów, a gracz o 4 poziomy, psych up to skopiuje i doda sobie te 2 poziomy ataku. Będzie również kopiował negatywne zmiany poziomów statystyk."
+      },
+      {
+         "id":56,
+         "name":"Hidden Power",
+         "level":15,
+         "type_id":"-",
+         "category_id":2,
+         "power":60,
+         "accury":100,
+         "desc":"Typ ruchu losowany z ID Pokemona jako stały seed - oznacza to, że dany Pokemon będzie miał zawsze ten sam typ tego ataku."
+      },
+      {
+         "id":57,
+         "name":"Sunny Day",
+         "level":15,
+         "type_id":2,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Przywołuje pogodę - Ostre Słońce."
+      },
+      {
+         "id":58,
+         "name":"Sweet Scent",
+         "level":1,
+         "type_id":4,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Obniża uniki przeciwnikowi o jeden poziom."
+      },
+      {
+         "id":59,
+         "name":"Snore",
+         "level":15,
+         "type_id":1,
+         "category_id":2,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":60,
+         "name":"Icy Wind",
+         "level":18,
+         "type_id":14,
+         "category_id":2,
+         "power":55,
+         "accury":95,
+         "desc":"Zmniejsza szybkość przeciwnika o 1 poziom (5)."
+      },
+      {
+         "id":61,
+         "name":"Protect",
+         "level":10,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Po użyciu używający nie otrzyma obrażeń w następnej rundzie. Atak o priorytecie 4."
+      },
+      {
+         "id":62,
+         "name":"Rain Dance",
+         "level":15,
+         "type_id":3,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Przywołuje pogodę - Deszcz."
+      },
+      {
+         "id":63,
+         "name":"Giga Drain",
+         "level":30,
+         "type_id":4,
+         "category_id":2,
+         "power":75,
+         "accury":100,
+         "desc":"Regeneruje 40 zdrowia od zadanych obrażeń przeciwnikowi."
+      },
+      {
+         "id":64,
+         "name":"Endure",
+         "level":15,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Przez 2 rundy nie można powalić Pokemona bezpośrednim atakiem (efekt znika po zablokowaniu pierwszego ruchu)."
+      },
+      {
+         "id":65,
+         "name":"Frustration",
+         "level":15,
+         "type_id":1,
+         "category_id":1,
+         "power":"-",
+         "accury":100,
+         "desc":"Moc zależna od przywiązania używającego. Moc 1 na 100 przywiązania oraz 102 na 0 (minusowe również 102)."
+      },
+      {
+         "id":66,
+         "name":"Iron Tail",
+         "level":42,
+         "type_id":11,
+         "category_id":1,
+         "power":100,
+         "accury":75,
+         "desc":"30 szans na zmniejszenie szybkości przeciwnika."
+      },
+      {
+         "id":67,
+         "name":"Dragon Breath",
+         "level":30,
+         "type_id":17,
+         "category_id":2,
+         "power":60,
+         "accury":100,
+         "desc":"30 szans na paraliż przeciwnika."
+      },
+      {
+         "id":68,
+         "name":"Return",
+         "level":15,
+         "type_id":1,
+         "category_id":1,
+         "power":"-",
+         "accury":100,
+         "desc":"Moc wynosi 2 plus procent przywiązania Pokemona (maksymalnie 102)."
+      },
+      {
+         "id":69,
+         "name":"Shadow Ball",
+         "level":34,
+         "type_id":9,
+         "category_id":2,
+         "power":80,
+         "accury":100,
+         "desc":"20 szans na obniżenie specjalnej obrony przeciwnika."
+      },
+      {
+         "id":70,
+         "name":"Mud-Slap",
+         "level":8,
+         "type_id":12,
+         "category_id":2,
+         "power":20,
+         "accury":100,
+         "desc":"Obniża celność przeciwnika o 1 poziom (5)."
+      },
+      {
+         "id":71,
+         "name":"Ice Punch",
+         "level":32,
+         "type_id":14,
+         "category_id":1,
+         "power":75,
+         "accury":100,
+         "desc":"10 szans na zamrożenie przeciwnika."
+      },
+      {
+         "id":72,
+         "name":"Sludge Bomb",
+         "level":36,
+         "type_id":8,
+         "category_id":2,
+         "power":90,
+         "accury":100,
+         "desc":"30 szans na zatrucie przeciwnika."
+      },
+      {
+         "id":73,
+         "name":"Sandstorm",
+         "level":15,
+         "type_id":13,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Przywołuje pogodę - Burzę Piaskową."
+      },
+      {
+         "id":74,
+         "name":"Thunder Punch",
+         "level":32,
+         "type_id":5,
+         "category_id":1,
+         "power":75,
+         "accury":100,
+         "desc":"10 szans na sparaliżowanie przeciwnika."
+      },
+      {
+         "id":75,
+         "name":"Detect",
+         "level":10,
+         "type_id":10,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Po użyciu używający nie otrzyma obrażeń w następnej rundzie. Atak o priorytecie 4. Nie może ochronić przed atakami Doom Desire, Future Sight, Imprison, Perish Song, Role Play, Shadow Force, Transform."
+      },
+      {
+         "id":76,
+         "name":"Attract",
+         "level":5,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Wprowadza przeciwnika w Zakochanie, jeśli przeciwnik nie jest bezpłciowy. Zakochanie działa teraz na 2 tury, podczas których Pokemon ma 50 na zaatakowanie. Oczywiście sam atak będzie jeszcze zmieniany kiedy wejdą płcie."
+      },
+      {
+         "id":77,
+         "name":"Thief",
+         "level":45,
+         "type_id":15,
+         "category_id":1,
+         "power":60,
+         "accury":100,
+         "desc":"Kradniemy przedmiot przeciwnika. I jeśli nie mieliśmy żadnego to go używamy. Skradzione przedmioty wracają do właściciela na koniec walki 1v1."
+      },
+      {
+         "id":78,
+         "name":"Steel Wing",
+         "level":29,
+         "type_id":11,
+         "category_id":1,
+         "power":70,
+         "accury":90,
+         "desc":"10 szans na podwyższenie obrony."
+      },
+      {
+         "id":79,
+         "name":"Fire Punch",
+         "level":32,
+         "type_id":2,
+         "category_id":1,
+         "power":75,
+         "accury":100,
+         "desc":"10 szans na podpalenie przeciwnika."
+      },
+      {
+         "id":80,
+         "name":"Fury Cutter",
+         "level":22,
+         "type_id":16,
+         "category_id":1,
+         "power":40,
+         "accury":95,
+         "desc":"Uderza za 40, moc podwaja się przy każdym użyciu. Aż do 160, jeśli spudłuje spada do 40."
+      },
+      {
+         "id":81,
+         "name":"Nightmare",
+         "level":25,
+         "type_id":9,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":82,
+         "name":"Swagger",
+         "level":10,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":90,
+         "desc":"Po udanym użyciu zwiększa Atak przeciwnika o 2 poziomy (10) ale także go otępia."
+      },
+      {
+         "id":83,
+         "name":"Sleep Talk",
+         "level":8,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"Pozwala atakować losowym ruchem w trakcie snu."
+      },
+      {
+         "id":84,
+         "name":"Flamethrower",
+         "level":42,
+         "type_id":2,
+         "category_id":2,
+         "power":90,
+         "accury":100,
+         "desc":"Szansa 10 na podpalenie."
+      },
+      {
+         "id":85,
+         "name":"Synthesis",
+         "level":15,
+         "type_id":4,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Leczy 25 aktualnego zdrowia (zależne od pogody)."
+      },
+      {
+         "id":86,
+         "name":"Ancient Power",
+         "level":28,
+         "type_id":13,
+         "category_id":2,
+         "power":60,
+         "accury":100,
+         "desc":"10 szans na zwiększenie wszystkich statystyk oprócz celności i uników."
+      },
+      {
+         "id":87,
+         "name":"Outrage",
+         "level":48,
+         "type_id":17,
+         "category_id":1,
+         "power":120,
+         "accury":100,
+         "desc":"Pokemon atakuje 2-3 razy po czym używający popada w otępienie (lub gdy spudłuje). Każdy atak ma osobną szansę na trafienie. Działanie ataku jest od razu przerywane jeśli Pokemon zostanie oszołomiony, zamrożony, otępiony, uśpiony, sparaliżowany lub zaatakuje Pokemona używającego Fly, Dig bądź odpornego na typ."
+      },
+      {
+         "id":88,
+         "name":"Twister",
+         "level":16,
+         "type_id":17,
+         "category_id":2,
+         "power":40,
+         "accury":100,
+         "desc":"20 szans na oszołomienie przeciwnika. Trafia z podwójną mocą Pokemony w trakcie Fly, Bounce i Sky Drop."
+      },
+      {
+         "id":89,
+         "name":"Heal Bell",
+         "level":5,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Leczy wszystkie zmiany stanów (tj paraliż, zamrożenie, podpalenie)."
+      },
+      {
+         "id":90,
+         "name":"Low Kick",
+         "level":12,
+         "type_id":10,
+         "category_id":1,
+         "power":30,
+         "accury":100,
+         "desc":"Im przeciwnik cięższy tym otrzyma większe obrażenia. waga przeciwnika"
+      },
+      {
+         "id":91,
+         "name":"String Shot",
+         "level":6,
+         "type_id":16,
+         "category_id":3,
+         "power":"-",
+         "accury":95,
+         "desc":"Zmniejsza szybkość przeciwnika."
+      },
+      {
+         "id":92,
+         "name":"Defense Curl",
+         "level":1,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Zwiększa obronę. Podwaja moc ataków Rollout i Ice Ball, działa na całą walkę."
+      },
+      {
+         "id":93,
+         "name":"Focus Punch",
+         "level":40,
+         "type_id":10,
+         "category_id":1,
+         "power":150,
+         "accury":90,
+         "desc":"Pokemon przygotowuje się do ataku na początku tury i jeśli nie zostanie uderzony bezpośrednim atakiem przeciwnika, to atak wykonuje się na koniec tej samej tury."
+      },
+      {
+         "id":94,
+         "name":"Dragon Claw",
+         "level":45,
+         "type_id":17,
+         "category_id":1,
+         "power":80,
+         "accury":100,
+         "desc":"-"
+      },
+      {
+         "id":95,
+         "name":"Water Pulse",
+         "level":25,
+         "type_id":3,
+         "category_id":2,
+         "power":60,
+         "accury":100,
+         "desc":"20 szans na otępienie przeciwnika."
+      },
+      {
+         "id":96,
+         "name":"Calm Mind",
+         "level":20,
+         "type_id":7,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Podnosi specjalny atak i specjalną obronę używającemu o 1 poziom."
+      },
+      {
+         "id":97,
+         "name":"Bulk Up",
+         "level":20,
+         "type_id":10,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Podnosi atak i obronę używającego o jeden poziom."
+      },
+      {
+         "id":98,
+         "name":"Bullet Seed",
+         "level":35,
+         "type_id":4,
+         "category_id":1,
+         "power":25,
+         "accury":100,
+         "desc":"Atakuje 2-5 razy na rundę."
+      },
+      {
+         "id":99,
+         "name":"Taunt",
+         "level":20,
+         "type_id":15,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"Blokuje przeciwnikowi możliwość używania ataków statusowych. <b>NIEOSKRYPTOWANY</b>"
+      },
+      {
+         "id":100,
+         "name":"Hail",
+         "level":15,
+         "type_id":14,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Przywołuje pogodę - Grad."
+      },
+      {
+         "id":101,
+         "name":"Light Screen",
+         "level":1,
+         "type_id":7,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Obniża o 40 obrażenia od specjalnych ataków na 3 tury."
+      },
+      {
+         "id":102,
+         "name":"Safeguard",
+         "level":20,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Chroni używającego przed atakami zmieniającymi stan paraliż otępienie, chroni przed byciem ospałym z Yawn, nie chroni przed flinch, ilość tur zmieniona na 3 itd."
+      },
+      {
+         "id":103,
+         "name":"Brick Break",
+         "level":30,
+         "type_id":10,
+         "category_id":1,
+         "power":75,
+         "accury":100,
+         "desc":"Znosi efekt Reflect i Light Screen nawet jak nie trafi."
+      },
+      {
+         "id":104,
+         "name":"Shock Wave",
+         "level":25,
+         "type_id":5,
+         "category_id":2,
+         "power":60,
+         "accury":100,
+         "desc":"Zawsze trafia."
+      },
+      {
+         "id":105,
+         "name":"Rock Tomb",
+         "level":25,
+         "type_id":13,
+         "category_id":1,
+         "power":60,
+         "accury":95,
+         "desc":"Zmniejsza szybkość przeciwnika o jeden poziom (5)."
+      },
+      {
+         "id":106,
+         "name":"Aerial Ace",
+         "level":30,
+         "type_id":6,
+         "category_id":1,
+         "power":60,
+         "accury":100,
+         "desc":"Zawsze trafia."
+      },
+      {
+         "id":107,
+         "name":"Torment",
+         "level":1,
+         "type_id":15,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":108,
+         "name":"Facade",
+         "level":30,
+         "type_id":1,
+         "category_id":1,
+         "power":70,
+         "accury":100,
+         "desc":"Podstawowa moc 70. Moc 140 kiedy użytkownik jest sparaliżowany, zatruty lub płonie."
+      },
+      {
+         "id":109,
+         "name":"Secret Power",
+         "level":30,
+         "type_id":1,
+         "category_id":1,
+         "power":70,
+         "accury":100,
+         "desc":"Po trafieniu 30 szansy na losowy efekt: podpalenie, zmniejszenie szybkości, obniżenie Specjalnego Ataku, paraliż, sen, zamrożenie, obniżenie Szybkości, obniżenie Celności o 1 poziom (5) u przeciwnika."
+      },
+      {
+         "id":110,
+         "name":"Skill Swap",
+         "level":20,
+         "type_id":7,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":111,
+         "name":"Snatch",
+         "level":20,
+         "type_id":15,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":112,
+         "name":"Overheat",
+         "level":45,
+         "type_id":2,
+         "category_id":2,
+         "power":130,
+         "accury":90,
+         "desc":"Zmniejsza specjalny atak używającego o dwa poziomy (10)."
+      },
+      {
+         "id":113,
+         "name":"Ominous Wind",
+         "level":30,
+         "type_id":9,
+         "category_id":2,
+         "power":60,
+         "accury":100,
+         "desc":"10 szans na zwiększenie wszystkich statystyk oprócz celności i uników o jeden poziom (5)."
+      },
+      {
+         "id":114,
+         "name":"Sucker Punch",
+         "level":40,
+         "type_id":15,
+         "category_id":1,
+         "power":80,
+         "accury":100,
+         "desc":"Zadziała tylko wtedy, kiedy w danej rundzie Pokemon zaatakuje pierwszy oraz przeciwnik ma zaatakować ruchem fizycznym lub specjalnym (nie statusowym)."
+      },
+      {
+         "id":115,
+         "name":"Vacuum Wave",
+         "level":20,
+         "type_id":10,
+         "category_id":2,
+         "power":40,
+         "accury":100,
+         "desc":"Atak o priorytecie 1."
+      },
+      {
+         "id":116,
+         "name":"Zen Headbutt",
+         "level":35,
+         "type_id":7,
+         "category_id":1,
+         "power":80,
+         "accury":90,
+         "desc":"20 szans na oszołomienie przeciwnika."
+      },
+      {
+         "id":117,
+         "name":"Blast Burn",
+         "level":60,
+         "type_id":2,
+         "category_id":2,
+         "power":150,
+         "accury":90,
+         "desc":"Odpoczywa w drugiej rundzie od użycia regenerując siły."
+      },
+      {
+         "id":118,
+         "name":"Draco Meteor",
+         "level":60,
+         "type_id":17,
+         "category_id":2,
+         "power":130,
+         "accury":90,
+         "desc":"Obniża specjalny atak używającego o dwa poziomy."
+      },
+      {
+         "id":119,
+         "name":"Frenzy Plant",
+         "level":60,
+         "type_id":4,
+         "category_id":2,
+         "power":150,
+         "accury":90,
+         "desc":"Odpoczywa w drugiej rundzie od użycia regenerując siły."
+      },
+      {
+         "id":120,
+         "name":"Hydro Cannon",
+         "level":60,
+         "type_id":3,
+         "category_id":2,
+         "power":150,
+         "accury":90,
+         "desc":"Odpoczywa w drugiej rundzie od użycia regenerując siły."
+      },
+      {
+         "id":121,
+         "name":"Air Cutter",
+         "level":30,
+         "type_id":6,
+         "category_id":2,
+         "power":60,
+         "accury":95,
+         "desc":"-"
+      },
+      {
+         "id":122,
+         "name":"Knock Off",
+         "level":1,
+         "type_id":15,
+         "category_id":1,
+         "power":65,
+         "accury":100,
+         "desc":"Wytrąca trzymany przedmiot z użycia. Aczkolwiek szczęśliwe jajko nadal doda ekspa. Jeśli to zrobi zadaje 50 więcej obrażeń czyli 97,5."
+      },
+      {
+         "id":123,
+         "name":"Last Resort",
+         "level":50,
+         "type_id":1,
+         "category_id":1,
+         "power":140,
+         "accury":20,
+         "desc":"Co każde użycie celność zwiększa sie o +10, bez maxa - wraca do 20 na koniec walki 1v1."
+      },
+      {
+         "id":124,
+         "name":"Magnet Rise",
+         "level":20,
+         "type_id":5,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"Uodparnia używającego na ataki typu ziemnego."
+      },
+      {
+         "id":125,
+         "name":"Uproar",
+         "level":40,
+         "type_id":1,
+         "category_id":2,
+         "power":90,
+         "accury":100,
+         "desc":"Chroni przed zaśnięciem jakiegokolwiek Pokemona w trakcie działania (blokuje przez to działanie Rest). Pokemon atakuje do 3 razy, przerywa działanie jeśli spudłuje lub przez inne efekty takie same jak przy Thrash (ale nie otępia po zakończeniu). Blokada zaśnięć przestaje działać wraz z zakończeniem ruchu."
+      },
+      {
+         "id":126,
+         "name":"Aqua Tail",
+         "level":35,
+         "type_id":3,
+         "category_id":1,
+         "power":90,
+         "accury":90,
+         "desc":"-"
+      },
+      {
+         "id":127,
+         "name":"Bounce",
+         "level":30,
+         "type_id":6,
+         "category_id":1,
+         "power":85,
+         "accury":85,
+         "desc":"W pierwszej turze następuje ładowanie ataku, użytkownik wznosi się do góry i uzyskuje odporność na wszelkie ataki przeciwnika. W drugiej turze posyła właściwe obrażenia."
+      },
+      {
+         "id":128,
+         "name":"Earth Power",
+         "level":40,
+         "type_id":12,
+         "category_id":2,
+         "power":90,
+         "accury":100,
+         "desc":"10 na obniżenie specjalnej obrony przeciwnika o jeden poziom."
+      },
+      {
+         "id":129,
+         "name":"Endeavor",
+         "level":30,
+         "type_id":1,
+         "category_id":1,
+         "power":"-",
+         "accury":35,
+         "desc":"Obniża życie przeciwnika do tej samej wartości procentowej, jaką posiada używający Pokemon. Jeśli posiadamy więcej życia, ruch kończy się niepowodzeniem. Ruch nie może trafić Pokemona z poziomem wyższym niż używający. Zadziała na przeciwników z poziomem niższym lub tym samym."
+      },
+      {
+         "id":130,
+         "name":"Gunk Shot",
+         "level":45,
+         "type_id":8,
+         "category_id":1,
+         "power":120,
+         "accury":80,
+         "desc":"30 szans na zatrucie przeciwnika."
+      },
+      {
+         "id":131,
+         "name":"Magic Coat",
+         "level":30,
+         "type_id":7,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Odbija ataki statusowe używane przez przeciwnika i kierowane w używającego tego ataku."
+      },
+      {
+         "id":132,
+         "name":"Roost",
+         "level":45,
+         "type_id":6,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Używający traci typ latający i odzyskuje go przed swoim następnym ruchem. Leczy 30 aktualnego zdrowia Pokemona. Nie może wyleczyć poza ilość z jaką Pokemon wszedł do walki."
+      },
+      {
+         "id":133,
+         "name":"Focus Blast",
+         "level":50,
+         "type_id":10,
+         "category_id":2,
+         "power":120,
+         "accury":70,
+         "desc":"10 szans na obniżenie specjalnej obrony przeciwnika o jeden poziom."
+      },
+      {
+         "id":134,
+         "name":"Energy Ball",
+         "level":45,
+         "type_id":4,
+         "category_id":2,
+         "power":90,
+         "accury":100,
+         "desc":"10 szans na obniżenie specjalnej obrony przeciwnika."
+      },
+      {
+         "id":135,
+         "name":"False Swipe",
+         "level":20,
+         "type_id":1,
+         "category_id":1,
+         "power":40,
+         "accury":100,
+         "desc":"Ten atak nie może zadać ciosu kończącego walkę, ponieważ zawsze zostawia przeciwnika z 1 HP."
+      },
+      {
+         "id":136,
+         "name":"Brine",
+         "level":45,
+         "type_id":3,
+         "category_id":2,
+         "power":65,
+         "accury":100,
+         "desc":"Jeśli przeciwnik ma mniej niż 50 życia zadajemy mu podwójne obrażenia."
+      },
+      {
+         "id":137,
+         "name":"Fling",
+         "level":35,
+         "type_id":15,
+         "category_id":1,
+         "power":"-",
+         "accury":100,
+         "desc":"Pokemon rzuca trzymany przedmiot. Moc ataku uzależniona od przedmiotu. Niektóre przedmioty dodają efekty specjalne (moc oraz efekty opisane na stronie przedmiotu). Trafia pomimo Protect czy Detect."
+      },
+      {
+         "id":138,
+         "name":"Charge Beam",
+         "level":45,
+         "type_id":5,
+         "category_id":2,
+         "power":50,
+         "accury":90,
+         "desc":"70 szans na podniesienie ataku specjalnego używającego o 1 poziom."
+      },
+      {
+         "id":139,
+         "name":"Dragon Pulse",
+         "level":40,
+         "type_id":17,
+         "category_id":2,
+         "power":85,
+         "accury":100,
+         "desc":"-"
+      },
+      {
+         "id":140,
+         "name":"Drain Punch",
+         "level":35,
+         "type_id":10,
+         "category_id":1,
+         "power":75,
+         "accury":100,
+         "desc":"Regeneruje 40 zdrowia z zadanych obrażeń przeciwnikowi."
+      },
+      {
+         "id":141,
+         "name":"Will-O-Wisp",
+         "level":45,
+         "type_id":2,
+         "category_id":3,
+         "power":"-",
+         "accury":85,
+         "desc":"Jeśli trafi, podpala przeciwnika."
+      },
+      {
+         "id":142,
+         "name":"Silver Wind",
+         "level":30,
+         "type_id":16,
+         "category_id":2,
+         "power":60,
+         "accury":100,
+         "desc":"10 szans na zwiększenie wszystkich statystyk używającego o jeden poziom (5) oprócz celności i uników."
+      },
+      {
+         "id":143,
+         "name":"Shadow Claw",
+         "level":35,
+         "type_id":9,
+         "category_id":1,
+         "power":70,
+         "accury":100,
+         "desc":"-"
+      },
+      {
+         "id":144,
+         "name":"Payback",
+         "level":50,
+         "type_id":15,
+         "category_id":1,
+         "power":50,
+         "accury":100,
+         "desc":"Podwójna moc, jeśli atakujemy jako drudzy."
+      },
+      {
+         "id":145,
+         "name":"Giga Impact",
+         "level":60,
+         "type_id":1,
+         "category_id":1,
+         "power":150,
+         "accury":90,
+         "desc":"Po użyciu ataku wymagana jest runda odpoczynku."
+      },
+      {
+         "id":146,
+         "name":"Rock Polish",
+         "level":15,
+         "type_id":13,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Zwiększa szybkość używającego o dwa poziomy (10)."
+      },
+      {
+         "id":147,
+         "name":"Stone Edge",
+         "level":45,
+         "type_id":13,
+         "category_id":1,
+         "power":100,
+         "accury":80,
+         "desc":"-"
+      },
+      {
+         "id":148,
+         "name":"Avalanche",
+         "level":40,
+         "type_id":14,
+         "category_id":1,
+         "power":60,
+         "accury":100,
+         "desc":"Zadaje obrażenia. Priorytet -4. Jeśli otrzymaliśmy obrażenia w tej turze (tylko bezpośrednie, klątwa i obrażenia od stanów nie są uwzględniane) podwajamy moc ataku."
+      },
+      {
+         "id":149,
+         "name":"Gyro Ball",
+         "level":50,
+         "type_id":11,
+         "category_id":1,
+         "power":"-",
+         "accury":100,
+         "desc":"Moc = 25 × (szybkość przeciwnika / szybkość użytkownika). Moc maksymalna to 150."
+      },
+      {
+         "id":150,
+         "name":"Stealth Rock",
+         "level":35,
+         "type_id":13,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":151,
+         "name":"Captivate",
+         "level":5,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Obniża atak specjalny przeciwka o dwa poziomy."
+      },
+      {
+         "id":152,
+         "name":"Dark Pulse",
+         "level":40,
+         "type_id":15,
+         "category_id":2,
+         "power":80,
+         "accury":100,
+         "desc":"20 szans na oszołomienie przeciwnika."
+      },
+      {
+         "id":153,
+         "name":"X-Scissor",
+         "level":40,
+         "type_id":16,
+         "category_id":1,
+         "power":80,
+         "accury":100,
+         "desc":"-"
+      },
+      {
+         "id":154,
+         "name":"Natural Gift",
+         "level":40,
+         "type_id":1,
+         "category_id":1,
+         "power":80,
+         "accury":100,
+         "desc":"-"
+      },
+      {
+         "id":155,
+         "name":"Poison Jab",
+         "level":45,
+         "type_id":8,
+         "category_id":1,
+         "power":80,
+         "accury":100,
+         "desc":"30 szans na zatrucie przeciwnika."
+      },
+      {
+         "id":156,
+         "name":"Grass Knot",
+         "level":40,
+         "type_id":4,
+         "category_id":2,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":157,
+         "name":"Pluck",
+         "level":25,
+         "type_id":6,
+         "category_id":1,
+         "power":60,
+         "accury":100,
+         "desc":"Zwiększa szybkość używającego o jeden poziom."
+      },
+      {
+         "id":158,
+         "name":"U-turn",
+         "level":30,
+         "type_id":16,
+         "category_id":1,
+         "power":70,
+         "accury":100,
+         "desc":"-"
+      },
+      {
+         "id":159,
+         "name":"Flash Cannon",
+         "level":40,
+         "type_id":11,
+         "category_id":2,
+         "power":80,
+         "accury":100,
+         "desc":"10 szans na obniżenie specjalnej obrony o 1 poziom."
+      },
+      {
+         "id":160,
+         "name":"Trick Room",
+         "level":45,
+         "type_id":9,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":161,
+         "name":"Iron Defense",
+         "level":25,
+         "type_id":11,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Zwiększa obronę używającego o dwa poziomy."
+      },
+      {
+         "id":162,
+         "name":"Iron Head",
+         "level":45,
+         "type_id":11,
+         "category_id":1,
+         "power":80,
+         "accury":100,
+         "desc":"30 szans na oszołomienie przeciwnika."
+      },
+      {
+         "id":163,
+         "name":"Seed Bomb",
+         "level":45,
+         "type_id":4,
+         "category_id":1,
+         "power":80,
+         "accury":100,
+         "desc":"-"
+      },
+      {
+         "id":164,
+         "name":"Signal Beam",
+         "level":40,
+         "type_id":16,
+         "category_id":2,
+         "power":75,
+         "accury":100,
+         "desc":"10 szans na otępienie przeciwnika."
+      },
+      {
+         "id":165,
+         "name":"Superpower",
+         "level":45,
+         "type_id":10,
+         "category_id":1,
+         "power":120,
+         "accury":100,
+         "desc":"Zmniejsza atak i obronę używającego o jeden poziom."
+      },
+      {
+         "id":166,
+         "name":"Bug Bite",
+         "level":35,
+         "type_id":16,
+         "category_id":1,
+         "power":60,
+         "accury":100,
+         "desc":"-"
+      },
+      {
+         "id":167,
+         "name":"Gastro Acid",
+         "level":15,
+         "type_id":8,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":168,
+         "name":"Gravity",
+         "level":15,
+         "type_id":7,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"Usuwa przeciwnikowi zdolność latania oraz lewitowania, a także blokuje działanie ataków z powietrza."
+      },
+      {
+         "id":169,
+         "name":"Helping Hand",
+         "level":15,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":170,
+         "name":"Pain Split",
+         "level":35,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":171,
+         "name":"Hone Claws",
+         "level":15,
+         "type_id":15,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Zwiększa atak oraz celność używającego o jeden poziom (5)."
+      },
+      {
+         "id":172,
+         "name":"Psyshock",
+         "level":40,
+         "type_id":7,
+         "category_id":2,
+         "power":80,
+         "accury":100,
+         "desc":"Używa obrony zamiast specjalnej obrony przeciwnika przy obliczaniu obrażeń, jest podatny na Light Screen i Mirror Coat."
+      },
+      {
+         "id":173,
+         "name":"Venoshock",
+         "level":45,
+         "type_id":8,
+         "category_id":2,
+         "power":65,
+         "accury":100,
+         "desc":"Podwaja moc gdy jest użyty na zatrutym przeciwniku."
+      },
+      {
+         "id":174,
+         "name":"Telekinesis",
+         "level":30,
+         "type_id":7,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"-"
+      },
+      {
+         "id":175,
+         "name":"Smack Down",
+         "level":25,
+         "type_id":13,
+         "category_id":1,
+         "power":50,
+         "accury":100,
+         "desc":"Sprawia, że ziemne ataki mogą uderzać latające Pokemony. Anuluje ataki Fly, Bounce i Sky Drop, gdy są w fazie ładowania."
+      },
+      {
+         "id":176,
+         "name":"Sludge Wave",
+         "level":50,
+         "type_id":8,
+         "category_id":2,
+         "power":95,
+         "accury":100,
+         "desc":"10 szans na zatrucie przeciwnika."
+      },
+      {
+         "id":177,
+         "name":"Flame Charge",
+         "level":35,
+         "type_id":2,
+         "category_id":1,
+         "power":50,
+         "accury":100,
+         "desc":"Zwiększa szybkość używającego o jeden poziom (5)."
+      },
+      {
+         "id":178,
+         "name":"Low Sweep",
+         "level":30,
+         "type_id":10,
+         "category_id":1,
+         "power":65,
+         "accury":100,
+         "desc":"Zmniejsza szybkość przeciwnika o jeden poziom (5)."
+      },
+      {
+         "id":179,
+         "name":"Round",
+         "level":35,
+         "type_id":1,
+         "category_id":2,
+         "power":60,
+         "accury":100,
+         "desc":"Zadaje obrażenia."
+      },
+      {
+         "id":180,
+         "name":"Echoed Voice",
+         "level":25,
+         "type_id":1,
+         "category_id":2,
+         "power":40,
+         "accury":100,
+         "desc":"Zaczyna z mocą 40, po każdym użyciu moc wzrasta o 40 do max 200. Po osiągnięciu 200, spada ponownie do 40. Również na koniec walki 1v1 spada do 40."
+      },
+      {
+         "id":181,
+         "name":"Scald",
+         "level":40,
+         "type_id":3,
+         "category_id":2,
+         "power":80,
+         "accury":100,
+         "desc":"-"
+      },
+      {
+         "id":182,
+         "name":"Sky Drop",
+         "level":35,
+         "type_id":6,
+         "category_id":1,
+         "power":60,
+         "accury":100,
+         "desc":"Przeciwnik jest brany w powietrze i nie może atakować turę. W następnej turze zadane są mu obrażenia i wszystko wraca do normy. Nie działa na latający typ oraz Pokemony powyżej 200kg."
+      },
+      {
+         "id":183,
+         "name":"Incinerate",
+         "level":35,
+         "type_id":2,
+         "category_id":2,
+         "power":60,
+         "accury":100,
+         "desc":"Niszczy trzymany klejnot przeciwnika na czas walki."
+      },
+      {
+         "id":184,
+         "name":"Quash",
+         "level":15,
+         "type_id":15,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Zmniejsza priorytet losowego ataku przeciwnika o -2. Maksymalnie -6, może wylosować pusty ruch, wtedy nie zadziała."
+      },
+      {
+         "id":185,
+         "name":"Acrobatics",
+         "level":50,
+         "type_id":6,
+         "category_id":1,
+         "power":55,
+         "accury":100,
+         "desc":"Gdy Pokemon nie trzyma przedmiotu (np. go zużył) moc to 110. Wyjątek to Klejnot Powietrza - klejnot zostanie zużyty przed obliczeniem mocy ruchu, więc ruch zaatakuje z mocą 110 + wzmocnienie z klejnotu)."
+      },
+      {
+         "id":186,
+         "name":"Embargo",
+         "level":45,
+         "type_id":15,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"-"
+      },
+      {
+         "id":187,
+         "name":"Retaliate",
+         "level":40,
+         "type_id":1,
+         "category_id":1,
+         "power":70,
+         "accury":100,
+         "desc":"Jeśli zostanie użyty w pierwszej turze po padnięciu poprzedniego Pokemona, moc podwaja się (nawet jeśli nie trafi). Przed każdym następnym użyciem moc spada o 20, aż do bazowego 70."
+      },
+      {
+         "id":188,
+         "name":"Volt Switch",
+         "level":25,
+         "type_id":5,
+         "category_id":2,
+         "power":70,
+         "accury":100,
+         "desc":"-"
+      },
+      {
+         "id":189,
+         "name":"Struggle Bug",
+         "level":25,
+         "type_id":16,
+         "category_id":2,
+         "power":50,
+         "accury":100,
+         "desc":"Zmniejsza specjalny atak przeciwnika o jeden poziom."
+      },
+      {
+         "id":190,
+         "name":"Bulldoze",
+         "level":40,
+         "type_id":12,
+         "category_id":1,
+         "power":60,
+         "accury":100,
+         "desc":"Obniża szybkość przeciwnika o jeden poziom (5)."
+      },
+      {
+         "id":191,
+         "name":"Frost Breath",
+         "level":40,
+         "type_id":14,
+         "category_id":2,
+         "power":60,
+         "accury":90,
+         "desc":"-"
+      },
+      {
+         "id":192,
+         "name":"Dragon Tail",
+         "level":35,
+         "type_id":17,
+         "category_id":1,
+         "power":60,
+         "accury":90,
+         "desc":"Zadaje obrażenia. Atak z priorytetem -6."
+      },
+      {
+         "id":193,
+         "name":"Work Up",
+         "level":15,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Zwiększa atak oraz specjalny atak używającego o jeden poziom."
+      },
+      {
+         "id":194,
+         "name":"Wild Charge",
+         "level":50,
+         "type_id":5,
+         "category_id":1,
+         "power":90,
+         "accury":100,
+         "desc":"W wyniku zadanych obrażeń użytkownik otrzymuje obrażenia zwrotne o wartości 25 z zadanych obrażeń."
+      },
+      {
+         "id":195,
+         "name":"Snarl",
+         "level":30,
+         "type_id":15,
+         "category_id":2,
+         "power":55,
+         "accury":95,
+         "desc":"Po trafieniu zmniejsza specjalny atak przeciwnika o 1 poziom (5)."
+      },
+      {
+         "id":196,
+         "name":"Super Fang",
+         "level":35,
+         "type_id":1,
+         "category_id":1,
+         "power":"-",
+         "accury":90,
+         "desc":"Zabiera 15 obecnego życia wrogowi."
+      },
+      {
+         "id":197,
+         "name":"Role Play",
+         "level":15,
+         "type_id":7,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":198,
+         "name":"Tailwind",
+         "level":30,
+         "type_id":6,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Podwaja Szybkość używającego w następnej rundzie."
+      },
+      {
+         "id":199,
+         "name":"Worry Seed",
+         "level":10,
+         "type_id":4,
+         "category_id":3,
+         "power":"-",
+         "accury":"-",
+         "desc":"-"
+      },
+      {
+         "id":200,
+         "name":"Grass Pledge",
+         "level":35,
+         "type_id":4,
+         "category_id":2,
+         "power":80,
+         "accury":100,
+         "desc":"Zadaje obrażenia."
+      },
+      {
+         "id":201,
+         "name":"Fire Pledge",
+         "level":35,
+         "type_id":2,
+         "category_id":2,
+         "power":80,
+         "accury":100,
+         "desc":"Zadaje obrażenia."
+      },
+      {
+         "id":202,
+         "name":"Water Pledge",
+         "level":35,
+         "type_id":3,
+         "category_id":2,
+         "power":80,
+         "accury":100,
+         "desc":"Zadaje obrażenia."
+      },
+      {
+         "id":203,
+         "name":"Covet",
+         "level":20,
+         "type_id":1,
+         "category_id":1,
+         "power":60,
+         "accury":100,
+         "desc":"Pokemon kradnie przedmiot przeciwnika. I jeśli nie trzymał żadnego to go używa. Skradzione przedmioty wracają do właściciela na koniec walki 1v1."
+      },
+      {
+         "id":204,
+         "name":"Drill Run",
+         "level":40,
+         "type_id":12,
+         "category_id":1,
+         "power":80,
+         "accury":95,
+         "desc":"Zadaje obrażenia."
+      },
+      {
+         "id":205,
+         "name":"Dual Chop",
+         "level":30,
+         "type_id":17,
+         "category_id":1,
+         "power":40,
+         "accury":90,
+         "desc":"Pokemon atakuje 2 razy. Każdy atak ma osobną szansę na trafienie."
+      },
+      {
+         "id":206,
+         "name":"Hyper Voice",
+         "level":40,
+         "type_id":1,
+         "category_id":2,
+         "power":90,
+         "accury":100,
+         "desc":"Zadaje obrażenia."
+      },
+      {
+         "id":207,
+         "name":"Electroweb",
+         "level":30,
+         "type_id":5,
+         "category_id":2,
+         "power":55,
+         "accury":95,
+         "desc":"Po trafieniu obniża Szybkośc przeciwnika o jeden poziom (5)."
+      },
+      {
+         "id":208,
+         "name":"Foul Play",
+         "level":50,
+         "type_id":15,
+         "category_id":1,
+         "power":95,
+         "accury":100,
+         "desc":"Obrażenia zadawane przez Pokemona zadawane są na podstawie ataku przeciwnika, a nie Pokemona atakującego."
+      },
+      {
+         "id":209,
+         "name":"Bind",
+         "level":15,
+         "type_id":1,
+         "category_id":1,
+         "power":15,
+         "accury":85,
+         "desc":"Więzi przeciwnika na 4-5 rund zadając przy tym obrażenia."
+      },
+      {
+         "id":210,
+         "name":"Heat Wave",
+         "level":45,
+         "type_id":2,
+         "category_id":2,
+         "power":95,
+         "accury":90,
+         "desc":"Zadaje obrażenia. Po trafieniu 10 szansy na podpalenie przeciwnika."
+      },
+      {
+         "id":211,
+         "name":"Infestation",
+         "level":0,
+         "type_id":16,
+         "category_id":2,
+         "power":20,
+         "accury":100,
+         "desc":"Więzi przeciwnika na 4-5 rund zadając przy tym obrażenia."
+      },
+      {
+         "id":212,
+         "name":"Nature Power",
+         "level":0,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Zmienia się w inne posunięcie w zależności od miejsca, w którym się przebywa."
+      },
+      {
+         "id":213,
+         "name":"Power-Up Punch",
+         "level":0,
+         "type_id":10,
+         "category_id":1,
+         "power":40,
+         "accury":100,
+         "desc":"Po trafieniu podnosi atak używającego o jeden poziom (5)."
+      },
+      {
+         "id":214,
+         "name":"Dazzling Gleam",
+         "level":0,
+         "type_id":18,
+         "category_id":2,
+         "power":80,
+         "accury":100,
+         "desc":""
+      },
+      {
+         "id":215,
+         "name":"Confide",
+         "level":0,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":1000,
+         "desc":"Obniża Specjalny atak przeciwnika o jeden poziom (5). Działa pomimo użycia przez przeciwnika Protect czy Detect."
+      },
+      {
+         "id":216,
+         "name":"Trick",
+         "level":0,
+         "type_id":7,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Zamienia przedmioty między Pokemonami. Nie działa na Mega Kamienie."
+      },
+      {
+         "id":217,
+         "name":"Recycle",
+         "level":0,
+         "type_id":1,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Odnawia zużyty przedmiot (np. przez Fling lub Klejnot). Nie może odnowić przedmiotu skradzionego lub zamienionego."
+      },
+      {
+         "id":218,
+         "name":"Magic Room",
+         "level":0,
+         "type_id":7,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Blokuje działanie przedmiotów trzymanych. Ruch nie działa na Mega Kamienie."
+      },
+      {
+         "id":219,
+         "name":"Wonder Room",
+         "level":0,
+         "type_id":7,
+         "category_id":3,
+         "power":"-",
+         "accury":100,
+         "desc":"Zamienia obronę z sp. obroną u obu Pokemonów. Efekt trwa 5 rund."
+      }
+   ]
+}
