@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript v3
-// @version      3.0
+// @version      3.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -8,11 +8,11 @@
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @require      http://bug7a.github.io/iconselect.js/sample/lib/control/iconselect.js
-// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife-beta/master/assets/global.css?v=3
-// @resource     customCSS_style_1  https://raw.githubusercontent.com/krozum/pokelife-beta/master/assets/style_1.css?v=3
-// @resource     customCSS_style_2  https://raw.githubusercontent.com/krozum/pokelife-beta/master/assets/style_2.css?v=3
-// @resource     customCSS_style_3  https://raw.githubusercontent.com/krozum/pokelife-beta/master/assets/style_3.css?v=3
-// @resource     customCSS_style_4  https://raw.githubusercontent.com/krozum/pokelife-beta/master/assets/style_4.css?v=3
+// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?v=3
+// @resource     customCSS_style_1  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_1.css?v=3
+// @resource     customCSS_style_2  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_2.css?v=3
+// @resource     customCSS_style_3  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_3.css?v=3
+// @resource     customCSS_style_4  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_4.css?v=3
 // ==/UserScript==
 
 window.onReloadSidebarFunctions = [];
@@ -437,7 +437,7 @@ initPokemonDniaWidget();
 function initPlecakTMView(){
     var tmData;
 
-    var api = "https://raw.githubusercontent.com/krozum/pokelife-beta/master/tm.json";
+    var api = "https://raw.githubusercontent.com/krozum/pokelife/master/tm.json";
     $.getJSON(api, {
         format: "json"
     }).done(function (data) {
@@ -488,7 +488,7 @@ initStatystykiLink();
 //
 // **********************
 function initVersionInfo(){
-    $('body').append('<div id="newVersionInfo" style="border-radius: 4px; position: fixed; cursor: pointer; bottom: 10px; right: 20px; font-size: 19px; text-align: center; width: auto; height: 30px; line-height: 35px; z-index: 9998; text-align: right;"><a style="color: yellow !important;text-decoration:none;" target="_blank" href="https://github.com/krozum/pokelife-beta#user-content-changelog">' + (GM_info.script.version == window.localStorage.lastVersion ? "" : "New Version! ") + 'v' + GM_info.script.version + '</a></div>');
+    $('body').append('<div id="newVersionInfo" style="border-radius: 4px; position: fixed; cursor: pointer; bottom: 10px; right: 20px; font-size: 19px; text-align: center; width: auto; height: 30px; line-height: 35px; z-index: 9998; text-align: right;"><a style="color: yellow !important;text-decoration:none;" target="_blank" href="https://github.com/krozum/pokelife#user-content-changelog">' + (GM_info.script.version == window.localStorage.lastVersion ? "" : "New Version! ") + 'v' + GM_info.script.version + '</a></div>');
     window.localStorage.lastVersion = GM_info.script.version;
 };
 initVersionInfo();
@@ -605,7 +605,7 @@ function initAutoGo(){
                 }
             },
             {
-                'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife-beta/master/assets/nb1.jpg",
+                'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb1.jpg",
                 'iconValue': function(){
                     let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
                     if (pokeLvlNumber < 15) {
@@ -616,7 +616,7 @@ function initAutoGo(){
                 }
             },
             {
-                'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife-beta/master/assets/nb2.png",
+                'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb2.png",
                 'iconValue': function(){
                     var d = new Date();
                     var h = d.getHours();
