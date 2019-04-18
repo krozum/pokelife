@@ -1,0 +1,17 @@
+body {	
+    background-color: #604D53;	
+}
+
+.panel-primary, .panel-primary>.panel-heading, .awatar, h2, .modal-header {	
+    border-color: #eb9d8c !important;
+}	
+	
+.plugin-button, .panel-primary>.panel-heading, h2, .modal-header, #goButton, #goAutoButton {	
+    background-color: #eb9d8c !important;
+    background: url(https://azmind.com/wp-content/uploads/2014/12/christmas-pattern-2.png);
+    background-size: 40%;
+}
+
+.plugin-button {
+    background: #eb9d8c !important;	
+}
