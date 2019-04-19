@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript v3
-// @version      3.1.4
+// @version      3.1.5
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -305,6 +305,174 @@ function initWielkanocWidget(){
         onReloadMain(function(){
             if(this.find("p.alert-success:contains('Poszukiwania Jajek')").length > 0){
                 refreshWielkanocWidget();
+            }
+            if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=ranczo"]').length > 0){
+                var html;
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Ognista świeczka przygląda się twojemu jajku.')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Cudowny Most</strong></p>';
+                    console.log('1');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('By odnaleźć następne jajko przygotuj się na większą ilość Punktów Akcji na wyprawę')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Strzelisty Most</strong></p>';
+                    console.log('2');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Wodna wydra znajduje sie w tej samej lokacji co następne jajo')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Strzelisty Most</strong></p>';
+                    console.log('3');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Przynęta zapachowa nie zadziała niestety na jajko')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Rancho</strong></p>';
+                    console.log('4');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Karrablast znajduje się w tej samej dziczy co twoje jajko')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Most Zwodzony Driftveil</strong></p>';
+                    console.log('5');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Pawniard ćwiczy nieopodal twojego jajka.')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Most Sieci Metra</strong></p>';
+                    console.log('6');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Które szczęśliwe wydarzenie będzie pierwsze? Regeneracja Punktów Akcji czy znalezienie jajka?')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Cudowny most</strong></p>';
+                    console.log('7');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Szukaj jajka przy automacie z napojami')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Most Sieci Metra</strong></p>';
+                    console.log('8');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Może lokalizator sferycznych przedmiotów zareaguje na jajko')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Most Sieci Metra</strong></p>';
+                    console.log('9');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Kto wie, może znajdziesz Kryształ szukając kolejnego jajka')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Jaskinia Elektrokamieni</strong></p>';
+                    console.log('10');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Jelenie z kwiatami w porożu stąpają ostrożnie blisko twojego jajka.')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Rancho</strong></p>';
+                    console.log('11');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Miejsce przebywania kolejnego jajka jest także rewirem Klinka')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Jaskinia Elektrokamieni</strong></p>';
+                    console.log('12');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Strzępiasty czerwony Basculin pływa blisko twojego jajka')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Strzelisty Most</strong></p>';
+                    console.log('13');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Stalowa mrówka posiada stałą trasę przy twoim jajku')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Most Sieci Metra</strong></p>';
+                    console.log('14');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Gothita wskaże ci drogę do jajka')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Cudowny Most</strong></p>';
+                    console.log('15');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Sewaddle i jajko łączy wspólna dzicz')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Rancho</strong></p>';
+                    console.log('16');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Timburr podnosi ciężary nieopodal jajka')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Most Sieci Metra</strong></p>';
+                    console.log('17');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Łabędź już wysiaduje twoje jajko')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Most Zwodzony Driftveil</strong></p>';
+                    console.log('18');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Shelmet przygląda się twojemu jajku')").length > 0){
+                    console.log('19');
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Rancho</strong></p>';
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Ognista małpka fika blisko twojego jajka.')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Cudowny Most</strong></p>';
+                    console.log('20');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Petilil szykuje się do ewolucji nieopodal twojego jajka.')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Rancho</strong></p>';
+                    console.log('21');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Misiu z glutem u nosa bawi się koło twojego jajka.')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Most Zwodzony Driftveil</strong></p>';
+                    console.log('22');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Następne jajko znajduje się w siedlisku trawiastych węży.')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Rancho</strong></p>';
+                    console.log('23');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Poszukaj jajka w Snopku Siana')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Rancho</strong></p>';
+                    console.log('24');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Uważaj, by w miejscu przebywania kolejnego jajka nie okradły cię koty')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Wiejski Most</strong></p>';
+                    console.log('25');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Tynamo drzemie nieopodal twojego jajka')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Jaskinia Elektrokamieni</strong></p>';
+                    console.log('26');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Cottonee unosi się w okolicach twojego jajka')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Rancho</strong></p>';
+                    console.log('27');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Czerwony nos klauna może ci się pomylić z jajkiem')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Most Zwodzony Driftveil</strong></p>';
+                    console.log('28');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Uważaj, by ognisty mrówkojad nie ugotował twojego jajka')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Most Sieci Metra</strong></p>';
+                    console.log('29');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Minccino uważnie zamiata w pobliżu jajka')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Wiejski Most</strong></p>';
+                    console.log('30');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Roślinna małpka fika blisko twojego jajka')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Rancho</strong></p>';
+                    console.log('31');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Ciężki do spotkania Tirtouga kręci się w poblizu twojego jajka')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Strzelisty Most</strong></p>';
+                    console.log('32');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Ferroseed patrzy się na twoje jajko')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Jaskinia Elektrokamieni</strong></p>';
+                    console.log('33');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
             }
         })
 
