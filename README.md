@@ -27,5 +27,8 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.2 (2019-04-18)
+* Poprawki do bota, przeniesienie pozostałych funkcji
+* Dodatkowe statystyki do dziczy po najechaniu na pasek skrótów, na razie tylko Unova
 3.0 (2019-04-18)
 * Nowa wersja bota dzięki której rozbudowana nowych rzeczy będzie łatwiejsza
