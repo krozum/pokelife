@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript v3
-// @version      3.1.5
+// @version      3.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -8,11 +8,11 @@
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @require      https://bug7a.github.io/iconselect.js/sample/lib/control/iconselect.js
-// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?v=3
+// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?v=4
 // @resource     customCSS_style_1  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_1.css?v=3
 // @resource     customCSS_style_2  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_2.css?v=3
 // @resource     customCSS_style_3  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_3.css?v=3
-// @resource     customCSS_style_4  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_4.css?v=3
+// @resource     customCSS_style_4  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_4.css?v=4
 // ==/UserScript==
 
 window.onReloadSidebarFunctions = [];
@@ -79,11 +79,11 @@ $(document).on("click", "nav a", function(event) {
         remember_back(new_buffer);
 
         $.get($(this).attr('href'), function(data) {
-            var THAT = $(data);
+            var THAT = $('<div>').append($(data).clone());
             window.onReloadMainFunctions.forEach(function(item) {
                 item.call(THAT);
             })
-            $("#glowne_okno").html('<div class="panel panel-primary">'+THAT.html()+'<script src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/okno_glowne_reload.js"></script></div>');
+            $("#glowne_okno").html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"")+'<script src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/okno_glowne_reload.js"></script>');
             $.get('inc/stan.php', function(data) {
                 $("#sidebar").html(data);
                 window.afterReloadMainFunctions.forEach(function(item) {
@@ -96,8 +96,13 @@ $(document).on("click", "nav a", function(event) {
     }
 });
 
+var zarobek;
 $(document).off("click", ".btn-akcja");
 $(document).on("click", ".btn-akcja", function(event) {
+    var url = $(this).attr('href');
+    if($('#hodowla-glowne b').length > 0){
+        zarobek = $('#hodowla-glowne b').html().split("¥")[0];
+    }
 
     event.preventDefault();
     if(this.id != 'back_button') {
@@ -123,12 +128,16 @@ $(document).on("click", ".btn-akcja", function(event) {
 
     $(this).attr("disabled", "disabled");
 
+    if(url.startsWith("hodowla.php?sprzedaj_wszystkie=")){
+        updateStats("zarobki_z_hodowli", zarobek);
+    }
+
     $.get('gra/'+$(this).attr('href'), function(data) {
-        var THAT = $(data);
+        var THAT = $('<div>').append($(data).clone());
         window.onReloadMainFunctions.forEach(function(item) {
             item.call(THAT);
         })
-        $("#glowne_okno").html('<div class="panel panel-primary">'+THAT.html()+'<script src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/okno_glowne_reload.js"></script></div>');
+        $("#glowne_okno").html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"")+'<script src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/okno_glowne_reload.js"></script>');
         $.get('inc/stan.php', function(data) {
             $("#sidebar").html(data);
             window.afterReloadMainFunctions.forEach(function(item) {
@@ -172,11 +181,11 @@ $(document).on('submit', 'form', function(e) {
                     postData : postData
                 },
                 success:function (data) {
-                    var THAT = $(data);
+                    var THAT = $('<div>').append($(data).clone());
                     window.onReloadMainFunctions.forEach(function(item) {
                         item.call(THAT);
                     })
-                    $("#glowne_okno").html('<div class="panel panel-primary">'+THAT.html()+'<script src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/okno_glowne_reload.js"></script></div>');
+                    $("#glowne_okno").html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"")+'<script src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/okno_glowne_reload.js"></script>');
                     $.get('inc/stan.php', function(data) {
                         $("#sidebar").html(data);
                         window.afterReloadMainFunctions.forEach(function(item) {
@@ -191,20 +200,20 @@ $(document).on('submit', 'form', function(e) {
 
 
 function initTest(){
-//     onReloadSidebar(function(){
-//         console.log("onReloadSidebar");
-//         console.log(this);
-//     })
+    //     onReloadSidebar(function(){
+    //         console.log("onReloadSidebar");
+    //         console.log(this);
+    //     })
 
-//     onReloadMain(function(){
-//         console.log("onReloadMain");
-//         console.log(this);
-//     })
+    //     onReloadMain(function(){
+    //         console.log("onReloadMain");
+    //         console.log(this);
+    //     })
 
-//     afterReloadMain(function(){
-//         console.log("onReloadMain");
-//         console.log(this);
-//     })
+    //     afterReloadMain(function(){
+    //         console.log("onReloadMain");
+    //         console.log(this);
+    //     })
 }
 initTest();
 
@@ -473,6 +482,81 @@ function initWielkanocWidget(){
                     console.log('33');
                     this.find(".panel-body p:nth(0)").after(html);
                 }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Ciężki do spotkania Archen kręci się w pobliżu twojego jajka')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Wiejski Most</strong></p>';
+                    console.log('34');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Vanillite obserwuje twoje jajko')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Most Zwodzony Driftveil</strong></p>';
+                    console.log('35');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Jeleń z czerwonym liściastym porożem stąpa ostrożnie blisko twojego jajka')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Wiejski Most</strong></p>';
+                    console.log('36');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Uważnie przyglądaj się różnego radzaju kamieniom. Pewnie wśród nich ukryło się kolejne jajko')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Jaskinia Elektrokamieni</strong></p>';
+                    console.log('37');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Ognista świnka ogrzewa twoje jajko')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Most Sieci Metra</strong></p>';
+                    console.log('38');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Czy cudowny amulet doda ci szczęścia przy szukaniu jajka?')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Cudowny Most</strong></p>';
+                    console.log('39');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Elektryczna latająca wiewiórka fruwa w okolicach następnego jaja')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Wiejski Most</strong></p>';
+                    console.log('40');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Alomomola chętnie ci wskaże miejsce występowania następnego jajka')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Strzelisty Most</strong></p>';
+                    console.log('41');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Elektryczny pajączek tka swoje sieci nad twoim jajem')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Jaskinia Elektrokamieni</strong></p>';
+                    console.log('42');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Elektromagnes niestety nie zareaguje na jajko chociaż jest bardzo przydatny w tej dziczy')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Jaskinia Elektrokamieni</strong></p>';
+                    console.log('42');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Uważaj na wściekłe Haxorusy w tej dziczy co następne jajo')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Cudowny Most</strong></p>';
+                    console.log('43');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Throh i Sawk trenują w okolicy twojego jajka')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Most Sieci Metra</strong></p>';
+                    console.log('44');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Kto wie, może znajdziesz Kryształ szukając kolejnego jajka?')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Jaskinia Elektrokamieni</strong></p>';
+                    console.log('45');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Wychodząc z dziczy schowaj jajko w szczelniejszych kieszeniach')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Strzelisty Most</strong></p>';
+                    console.log('46');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
+                if(this.find(".alert-warning:not(:contains('\"R\"')):contains('Scraggy uparcie podciąga spodenki biegając blisko twojego jajka.h')").length > 0){
+                    html = '<p class="alert alert-warning text-center">Jajko jest w <strong>Most Sieci Metra</strong></p>';
+                    console.log('47');
+                    this.find(".panel-body p:nth(0)").after(html);
+                }
             }
         })
 
@@ -483,6 +567,41 @@ function initWielkanocWidget(){
     }
 }
 initWielkanocWidget();
+
+
+
+// **********************
+//
+// initAutouzupelnianiePol
+// Funkcja dodająca logowanie tego co wyświetla sie na ekranie
+//
+// **********************
+function initAutouzupelnianiePol(){
+
+    $(document).on("click", "#plecak-jagody .thumbnail-plecak, .thumbnail-plecak[data-target='#plecak-11'], .thumbnail-plecak[data-target='#plecak-15']", function (event) {
+        var id = $(this).data("target");
+        var ilosc = $(this).find("h5").html().split(" ")[0];
+        $(id+' input[name="ilosc"]').val(ilosc);
+    });
+
+    onReloadMain(function(){
+        if (this.find('.panel-heading').html() === "Centrum wymiany Punktów Zasług") {
+            var dostepne = Number(this.find('.panel-body big').html().split(" ")[0]);
+            var cena_zakupu = Number(this.find('#target0').parent().find("b").html().split("¥")[0].replace(/\./g, ''));
+            var ilosc_yenow = Number($('a[href="http://pokelife.pl/pokedex/index.php?title=Pieniądze"]').parent().html().split("</a>")[1].split("<a")[0].replace(/\./g, ''));
+
+            var ile_moge_kupic = Number((ilosc_yenow / cena_zakupu).toFixed());
+
+            if (ile_moge_kupic > dostepne) {
+                ile_moge_kupic = dostepne;
+            }
+
+            console.log('PokeLifeScript: dostępnych PZ do kupienia: ' + ile_moge_kupic);
+            this.find('#target0').attr("value", ile_moge_kupic);
+        }
+    })
+}
+initAutouzupelnianiePol();
 
 
 
@@ -1164,24 +1283,494 @@ initSzybkieKlikanieWLinkiPromocyjne();
 // **********************
 //
 // initRozbudowanyOpisDziczy
-// Funkcja dodająca logowanie tego co wyświetla sie na ekranie
+// Funkcja dodająca podgląd statystyk dotyczących dziczy
 //
 // **********************
 function initRozbudowanyOpisDziczy(){
+    var jsonData = [];
 
-    $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce=ranczo"]', function(){
-        var html = '<div id="opisRancho" style="z-index: 999; width: 80%; min-height: 300px; bottom: 60px; position: fixed; left: 0; right: 0; margin: 0 auto; background: white; border-radius: 15px; padding: 15px">'
-        html = html + '<li style="display: inline"><img src="http://poke-life.net/pokemony/495.png"><p>Snivy</p></li>';
-        html = html + '<li style="display: inline"><img src="http://poke-life.net/pokemony/496.png"><p>Snivy</p></li>';
-        html = html + '<li style="display: inline"><img src="http://poke-life.net/pokemony/497.png"><p>Snivy</p></li>';
-        html = html + '</div>';
+    function initUnova(){
+        $.get('gra/kolekcja.php', function( data ) {
+            $(data).find('#kolekcja-5 div').each(function(index, value){
+                jsonData[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+            })
+            initRanczo();
+            initMostZwodzonyDriftveil();
+            initCudownyMost();
+            initStrzelistyMost();
+            initMostSieciMetra();
+            initWiejskiMost();
+            initJaskiniaElektrokamieni();
+            iniReliktowyZamek();
+        });
 
-        $('body').append(html);
-    })
+        function initRanczo(){
+            $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce=ranczo"]', function(){
+                var html = '<div id="opisRancho" style="z-index: 999; max-width: 300px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">'
+                if(!jsonData["495"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/495.png"><p style="margin: 0;">Snivy</p></li>';
+                }
+                if(!jsonData["496"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/496.png"><p style="margin: 0;">Servine</p></li>';
+                }
+                if(!jsonData["497"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/497.png"><p style="margin: 0;">Serperior</p></li>';
+                }
+                if(!jsonData["504"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/504.png"><p style="margin: 0;">Patrat</p></li>';
+                }
+                if(!jsonData["505"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/505.png"><p style="margin: 0;">Watchog</p></li>';
+                }
+                if(!jsonData["506"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/506.png"><p style="margin: 0;">Lillipup</p></li>';
+                }
+                if(!jsonData["507"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/507.png"><p style="margin: 0;">Herdier</p></li>';
+                }
+                if(!jsonData["508"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/508.png"><p style="margin: 0;">Stoutland</p></li>';
+                }
+                if(!jsonData["511"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/511.png"><p style="margin: 0;">Pansage</p></li>';
+                }
+                if(!jsonData["519"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/519.png"><p style="margin: 0;">Pidove</p></li>';
+                }
+                if(!jsonData["520"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/520.png"><p style="margin: 0;">Tranquill</p></li>';
+                }
+                if(!jsonData["521"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/521.png"><p style="margin: 0;">Unfezant</p></li>';
+                }
+                if(!jsonData["531"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/531.png"><p style="margin: 0;">Audino</p></li>';
+                }
+                if(!jsonData["540"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/540.png"><p style="margin: 0;">Sewaddle</p></li>';
+                }
+                if(!jsonData["541"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/541.png"><p style="margin: 0;">Swadloon</p></li>';
+                }
+                if(!jsonData["546"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/546.png"><p style="margin: 0;">Cottonee</p></li>';
+                }
+                if(!jsonData["548"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/548.png"><p style="margin: 0;">Petilil</p></li>';
+                }
+                if(!jsonData["585"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/585.png"><p style="margin: 0;">Deerling</p></li>';
+                }
+                if(!jsonData["586"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/586.png"><p style="margin: 0;">Sawsbuck</p></li>';
+                }
+                if(!jsonData["616"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/616.png"><p style="margin: 0;">Shelmet</p></li>';
+                }
+                html = html + '</div>';
+                $('body').append(html);
+            })
 
 
-    $(document).on('mouseleave', 'a[href="gra/dzicz.php?poluj&miejsce=ranczo"]', function(){
-        $('#opisRancho').remove();
-    })
+            $(document).on('mouseleave', 'a[href="gra/dzicz.php?poluj&miejsce=ranczo"]', function(){
+                $('#opisRancho').remove();
+            })
+        }
+
+        function initMostZwodzonyDriftveil(){
+            $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce=most_zwodzony_driftveil"]', function(){
+                var html = '<div id="opisMostZwodzonyDriftveil" style="z-index: 999; max-width: 300px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">'
+                if(!jsonData["515"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/515.png"><p style="margin: 0;">Panpour</p></li>';
+                }
+                if(!jsonData["557"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/557.png"><p style="margin: 0;">Dwebble</p></li>';
+                }
+                if(!jsonData["558"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/558.png"><p style="margin: 0;">Crustle</p></li>';
+                }
+                if(!jsonData["577"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/577.png"><p style="margin: 0;">Solosis</p></li>';
+                }
+                if(!jsonData["578"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/578.png"><p style="margin: 0;">Duosion</p></li>';
+                }
+                if(!jsonData["579"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/579.png"><p style="margin: 0;">Reuniclus</p></li>';
+                }
+                if(!jsonData["580"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/580.png"><p style="margin: 0;">Ducklett</p></li>';
+                }
+                if(!jsonData["581"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/581.png"><p style="margin: 0;">Swanna</p></li>';
+                }
+                if(!jsonData["582"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/582.png"><p style="margin: 0;">Vanillite</p></li>';
+                }
+                if(!jsonData["583"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/583.png"><p style="margin: 0;">Vanillish</p></li>';
+                }
+                if(!jsonData["584"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/584.png"><p style="margin: 0;">Vanilluxe</p></li>';
+                }
+                if(!jsonData["585"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/585.png"><p style="margin: 0;">Deerling</p></li>';
+                }
+                if(!jsonData["586"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/586.png"><p style="margin: 0;">Sawsbuck</p></li>';
+                }
+                if(!jsonData["588"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/588.png"><p style="margin: 0;">Karrablast</p></li>';
+                }
+                if(!jsonData["613"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/613.png"><p style="margin: 0;">Cubchoo</p></li>';
+                }
+                if(!jsonData["614"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/614.png"><p style="margin: 0;">Beartic</p></li>';
+                }
+                if(!jsonData["615"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/615.png"><p style="margin: 0;">Cryogonal</p></li>';
+                }
+                if(!jsonData["621"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/621.png"><p style="margin: 0;">Druddigon</p></li>';
+                }
+                if(!jsonData["622"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/622.png"><p style="margin: 0;">Golett</p></li>';
+                }
+                if(!jsonData["623"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/623.png"><p style="margin: 0;">Golurk</p></li>';
+                }
+                html = html + '</div>';
+                $('body').append(html);
+            })
+
+
+            $(document).on('mouseleave', 'a[href="gra/dzicz.php?poluj&miejsce=most_zwodzony_driftveil"]', function(){
+                $('#opisMostZwodzonyDriftveil').remove();
+            })
+        }
+
+        function initCudownyMost(){
+            $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce=cudowny_most"]', function(){
+                var html = '<div id="opisCudownyMost" style="z-index: 999; max-width: 320px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">'
+                if(!jsonData["513"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/513.png"><p style="margin: 0;">Pansear</p></li>';
+                }
+                if(!jsonData["517"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/517.png"><p style="margin: 0;">Munna</p></li>';
+                }
+                if(!jsonData["574"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/574.png"><p style="margin: 0;">Gothita</p></li>';
+                }
+                if(!jsonData["575"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/575.png"><p style="margin: 0;">Gothorita</p></li>';
+                }
+                if(!jsonData["576"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/576.png"><p style="margin: 0;">Gothitelle</p></li>';
+                }
+                if(!jsonData["585"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/585.png"><p style="margin: 0;">Deerling</p></li>';
+                }
+                if(!jsonData["586"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/586.png"><p style="margin: 0;">Sawsbuck</p></li>';
+                }
+                if(!jsonData["605"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/605.png"><p style="margin: 0;">Elgyem</p></li>';
+                }
+                if(!jsonData["606"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/606.png"><p style="margin: 0;">Beheeyem</p></li>';
+                }
+                if(!jsonData["607"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/607.png"><p style="margin: 0;">Litwick</p></li>';
+                }
+                if(!jsonData["608"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/608.png"><p style="margin: 0;">Lampent</p></li>';
+                }
+                if(!jsonData["610"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/610.png"><p style="margin: 0;">Axew</p></li>';
+                }
+                if(!jsonData["611"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/611.png"><p style="margin: 0;">Fraxure</p></li>';
+                }
+                if(!jsonData["612"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/612.png"><p style="margin: 0;">Haxorus</p></li>';
+                }
+                html = html + '</div>';
+                $('body').append(html);
+            })
+
+
+            $(document).on('mouseleave', 'a[href="gra/dzicz.php?poluj&miejsce=cudowny_most"]', function(){
+                $('#opisCudownyMost').remove();
+            })
+        }
+
+        function initStrzelistyMost(){
+            $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce=strzelisty_most"]', function(){
+                var html = '<div id="opisStrzelistyMost" style="z-index: 999; max-width: 320px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">'
+                if(!jsonData["501"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/501.png"><p style="margin: 0;">Oshawott</p></li>';
+                }
+                if(!jsonData["502"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/502.png"><p style="margin: 0;">Dewott</p></li>';
+                }
+                if(!jsonData["503"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/503.png"><p style="margin: 0;">Samurott</p></li>';
+                }
+                if(!jsonData["535"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/535.png"><p style="margin: 0;">Tympole</p></li>';
+                }
+                if(!jsonData["536"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/536.png"><p style="margin: 0;">Palpitoad</p></li>';
+                }
+                if(!jsonData["537"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/537.png"><p style="margin: 0;">Seismitoad</p></li>';
+                }
+                if(!jsonData["550"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/550.png"><p style="margin: 0;">Basculin</p></li>';
+                }
+                if(!jsonData["592"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/592.png"><p style="margin: 0;">Frillish</p></li>';
+                }
+                if(!jsonData["593"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/593.png"><p style="margin: 0;">Jellicent</p></li>';
+                }
+                if(!jsonData["594"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/594.png"><p style="margin: 0;">Alomomola</p></li>';
+                }
+                html = html + '</div>';
+                $('body').append(html);
+            })
+
+
+            $(document).on('mouseleave', 'a[href="gra/dzicz.php?poluj&miejsce=strzelisty_most"]', function(){
+                $('#opisStrzelistyMost').remove();
+            })
+        }
+
+        function initMostSieciMetra(){
+            $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce=most_sieci_metra"]', function(){
+                var html = '<div id="opisMostSieciMetra" style="z-index: 999; max-width: 320px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">'
+                if(!jsonData["498"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/498.png"><p style="margin: 0;">Tepig</p></li>';
+                }
+                if(!jsonData["499"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/499.png"><p style="margin: 0;">Pignite</p></li>';
+                }
+                if(!jsonData["500"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/500.png"><p style="margin: 0;">Emboar</p></li>';
+                }
+                if(!jsonData["532"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/532.png"><p style="margin: 0;">Timburr</p></li>';
+                }
+                if(!jsonData["533"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/533.png"><p style="margin: 0;">Gurdurr</p></li>';
+                }
+                if(!jsonData["538"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/538.png"><p style="margin: 0;">Throh</p></li>';
+                }
+                if(!jsonData["539"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/539.png"><p style="margin: 0;">Sawk</p></li>';
+                }
+                if(!jsonData["543"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/543.png"><p style="margin: 0;">Venipede</p></li>';
+                }
+                if(!jsonData["544"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/544.png"><p style="margin: 0;">Whirlipede</p></li>';
+                }
+                if(!jsonData["545"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/545.png"><p style="margin: 0;">Scolipede</p></li>';
+                }
+                if(!jsonData["559"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/559.png"><p style="margin: 0;">Scraggy</p></li>';
+                }
+                if(!jsonData["560"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/560.png"><p style="margin: 0;">Scrafty</p></li>';
+                }
+                if(!jsonData["568"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/568.png"><p style="margin: 0;">Trubbish</p></li>';
+                }
+                if(!jsonData["569"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/569.png"><p style="margin: 0;">Garbodor</p></li>';
+                }
+                if(!jsonData["618"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/618.png"><p style="margin: 0;">Stunfisk</p></li>';
+                }
+                if(!jsonData["619"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/619.png"><p style="margin: 0;">Mienfoo</p></li>';
+                }
+                if(!jsonData["620"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/620.png"><p style="margin: 0;">Mienshao</p></li>';
+                }
+                if(!jsonData["624"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/624.png"><p style="margin: 0;">Pawniard</p></li>';
+                }
+                if(!jsonData["631"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/631.png"><p style="margin: 0;">Heatmor</p></li>';
+                }
+                if(!jsonData["632"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/632.png"><p style="margin: 0;">Durant</p></li>';
+                }
+                html = html + '</div>';
+                $('body').append(html);
+            })
+
+
+            $(document).on('mouseleave', 'a[href="gra/dzicz.php?poluj&miejsce=most_sieci_metra"]', function(){
+                $('#opisMostSieciMetra').remove();
+            })
+        }
+
+        function initWiejskiMost(){
+            $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce=wiejski_most"]', function(){
+                var html = '<div id="opisWiejskiMost" style="z-index: 999; max-width: 320px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">'
+                if(!jsonData["509"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/509.png"><p style="margin: 0;">Purrloin</p></li>';
+                }
+                if(!jsonData["510"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/510.png"><p style="margin: 0;">Liepard</p></li>';
+                }
+                if(!jsonData["550"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/550.png"><p style="margin: 0;">Basculin</p></li>';
+                }
+                if(!jsonData["572"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/572.png"><p style="margin: 0;">Minccino</p></li>';
+                }
+                if(!jsonData["585"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/585.png"><p style="margin: 0;">Deerling</p></li>';
+                }
+                if(!jsonData["586"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/586.png"><p style="margin: 0;">Sawsbuck</p></li>';
+                }
+                if(!jsonData["587"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/587.png"><p style="margin: 0;">Emolga</p></li>';
+                }
+                if(!jsonData["590"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/590.png"><p style="margin: 0;">Foongus</p></li>';
+                }
+                if(!jsonData["591"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/591.png"><p style="margin: 0;">Amoonguss</p></li>';
+                }
+                if(!jsonData["626"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/626.png"><p style="margin: 0;">Bouffalant</p></li>';
+                }
+                if(!jsonData["627"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/627.png"><p style="margin: 0;">Rufflet</p></li>';
+                }
+                if(!jsonData["629"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/629.png"><p style="margin: 0;">Vullaby</p></li>';
+                }
+                html = html + '</div>';
+                $('body').append(html);
+            })
+
+
+            $(document).on('mouseleave', 'a[href="gra/dzicz.php?poluj&miejsce=wiejski_most"]', function(){
+                $('#opisWiejskiMost').remove();
+            })
+        }
+
+        function initJaskiniaElektrokamieni(){
+            $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce=jaskinia_elektrokamieni"]', function(){
+                var html = '<div id="opisJaskiniaElektrokamieni" style="z-index: 999; max-width: 320px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">'
+                if(!jsonData["522"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/522.png"><p style="margin: 0;">Blitzle</p></li>';
+                }
+                if(!jsonData["523"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/523.png"><p style="margin: 0;">Zebstrika</p></li>';
+                }
+                if(!jsonData["524"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/524.png"><p style="margin: 0;">Roggenrola</p></li>';
+                }
+                if(!jsonData["525"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/525.png"><p style="margin: 0;">Boldore</p></li>';
+                }
+                if(!jsonData["527"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/527.png"><p style="margin: 0;">Woobat</p></li>';
+                }
+                if(!jsonData["529"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/529.png"><p style="margin: 0;">Drilbur</p></li>';
+                }
+                if(!jsonData["530"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/530.png"><p style="margin: 0;">Excadrill</p></li>';
+                }
+                if(!jsonData["595"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/595.png"><p style="margin: 0;">Joltik</p></li>';
+                }
+                if(!jsonData["596"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/596.png"><p style="margin: 0;">Galvantula</p></li>';
+                }
+                if(!jsonData["597"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/597.png"><p style="margin: 0;">Ferroseed</p></li>';
+                }
+                if(!jsonData["598"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/598.png"><p style="margin: 0;">Ferrothorn</p></li>';
+                }
+                if(!jsonData["599"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/599.png"><p style="margin: 0;">Klink</p></li>';
+                }
+                if(!jsonData["600"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/600.png"><p style="margin: 0;">Klang</p></li>';
+                }
+                if(!jsonData["601"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/601.png"><p style="margin: 0;">Klinklang</p></li>';
+                }
+                if(!jsonData["602"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/602.png"><p style="margin: 0;">Tynamo</p></li>';
+                }
+                if(!jsonData["603"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/603.png"><p style="margin: 0;">Eelektrik</p></li>';
+                }
+                html = html + '</div>';
+                $('body').append(html);
+            })
+
+
+            $(document).on('mouseleave', 'a[href="gra/dzicz.php?poluj&miejsce=jaskinia_elektrokamieni"]', function(){
+                $('#opisJaskiniaElektrokamieni').remove();
+            })
+        }
+
+        function iniReliktowyZamek(){
+            $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce=reliktowy_zamek"]', function(){
+                var html = '<div id="opisReliktowyZamek" style="z-index: 999; max-width: 320px; bottom: 60px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">'
+                if(!jsonData["551"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/551.png"><p style="margin: 0;">Sandile</p></li>';
+                }
+                if(!jsonData["552"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/552.png"><p style="margin: 0;">Krokorok</p></li>';
+                }
+                if(!jsonData["553"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/553.png"><p style="margin: 0;">Krookodile</p></li>';
+                }
+                if(!jsonData["556"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/556.png"><p style="margin: 0;">Maractus</p></li>';
+                }
+                if(!jsonData["561"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/561.png"><p style="margin: 0;">Sigilyph</p></li>';
+                }
+                if(!jsonData["562"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/562.png"><p style="margin: 0;">Yamask</p></li>';
+                }
+                if(!jsonData["563"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/563.png"><p style="margin: 0;">Cofagrigus</p></li>';
+                }
+                if(!jsonData["636"]){
+                    html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/636.png"><p style="margin: 0;">Larvesta</p></li>';
+                }
+                html = html + '</div>';
+                $('body').append(html);
+            })
+
+
+            $(document).on('mouseleave', 'a[href="gra/dzicz.php?poluj&miejsce=reliktowy_zamek"]', function(){
+                $('#opisReliktowyZamek').remove();
+            })
+        }
+    }
+
+    if($('#pasek_skrotow').find('a[href="gra/dzicz.php?poluj&miejsce=ranczo"]').length > 0){
+        initUnova();
+    }
 }
-// initRozbudowanyOpisDziczy();
+initRozbudowanyOpisDziczy();
