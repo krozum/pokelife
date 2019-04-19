@@ -8,6 +8,10 @@
     box-shadow: 2px 3px 1px 0px #b8b8b8;
 }
 
+.glyphicon {
+    curson: pointer;	
+}
+
 .triangle-isosceles:after {
     content: "";
     position: absolute;
