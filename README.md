@@ -25,6 +25,11 @@ Instrukcja instalacji
 
 Changelog
 ---------
+
+3.4 (2019-04-20)
+* Kolejna porcja poprawek
+* Dodanie podpowiedzi w której dziczy jest jajko
+
 3.2 (2019-04-18)
 * Poprawki do bota, przeniesienie pozostałych funkcji
 * Dodatkowe statystyki do dziczy po najechaniu na pasek skrótów, na razie tylko Unova
