@@ -1,0 +1,940 @@
+{  
+   "unova":{  
+      "494":{  
+         "id":"494",
+         "name":"Victini",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "495":{  
+         "id":"495",
+         "name":"Snivy",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "496":{  
+         "id":"496",
+         "name":"Servine",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "497":{  
+         "id":"497",
+         "name":"Serperior",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "498":{  
+         "id":"498",
+         "name":"Tepig",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "499":{  
+         "id":"499",
+         "name":"Pignite",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "500":{  
+         "id":"500",
+         "name":"Emboar",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "501":{  
+         "id":"501",
+         "name":"Oshawott",
+         "do_zlapania":1,
+         "wystepowanie":"Strzelisty Most"
+      },
+      "502":{  
+         "id":"502",
+         "name":"Dewott",
+         "do_zlapania":1,
+         "wystepowanie":"Strzelisty Most"
+      },
+      "503":{  
+         "id":"503",
+         "name":"Samurott",
+         "do_zlapania":1,
+         "wystepowanie":"Strzelisty Most"
+      },
+      "504":{  
+         "id":"504",
+         "name":"Patrat",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "505":{  
+         "id":"505",
+         "name":"Watchog",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "506":{  
+         "id":"506",
+         "name":"Lillipup",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "507":{  
+         "id":"507",
+         "name":"Herdier",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "508":{  
+         "id":"508",
+         "name":"Stoutland",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "509":{  
+         "id":"509",
+         "name":"Purrloin",
+         "do_zlapania":1,
+         "wystepowanie":"Wiejski Most"
+      },
+      "510":{  
+         "id":"510",
+         "name":"Liepard",
+         "do_zlapania":1,
+         "wystepowanie":"Wiejski Most"
+      },
+      "511":{  
+         "id":"511",
+         "name":"Pansage",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "512":{  
+         "id":"512",
+         "name":"Simisage",
+         "do_zlapania":0,
+         "wystepowanie":"Ranczo"
+      },
+      "513":{  
+         "id":"513",
+         "name":"Pansear",
+         "do_zlapania":1,
+         "wystepowanie":"Cudowny Most"
+      },
+      "514":{  
+         "id":"514",
+         "name":"Simisear",
+         "do_zlapania":0,
+         "wystepowanie":"Cudowny Most"
+      },
+      "515":{  
+         "id":"515",
+         "name":"Panpour",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "516":{  
+         "id":"516",
+         "name":"Simipour",
+         "do_zlapania":0,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "517":{  
+         "id":"517",
+         "name":"Munna",
+         "do_zlapania":1,
+         "wystepowanie":"Cudowny Most"
+      },
+      "518":{  
+         "id":"518",
+         "name":"Musharna",
+         "do_zlapania":0,
+         "wystepowanie":"Cudowny Most"
+      },
+      "519":{  
+         "id":"519",
+         "name":"Pidove",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "520":{  
+         "id":"520",
+         "name":"Tranquill",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "521":{  
+         "id":"521",
+         "name":"Unfezant",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "522":{  
+         "id":"522",
+         "name":"Blitzle",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "523":{  
+         "id":"523",
+         "name":"Zebstrika",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "524":{  
+         "id":"524",
+         "name":"Roggenrola",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "525":{  
+         "id":"525",
+         "name":"Boldore",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "526":{  
+         "id":"526",
+         "name":"Gigalith",
+         "do_zlapania":0,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "527":{  
+         "id":"527",
+         "name":"Woobat",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "528":{  
+         "id":"528",
+         "name":"Swoobat",
+         "do_zlapania":0,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "529":{  
+         "id":"529",
+         "name":"Drilbur",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "530":{  
+         "id":"530",
+         "name":"Excadrill",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "531":{  
+         "id":"531",
+         "name":"Mega Audino",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "532":{  
+         "id":"532",
+         "name":"Timburr",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "533":{  
+         "id":"533",
+         "name":"Gurdurr",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "534":{  
+         "id":"534",
+         "name":"Conkeldurr",
+         "do_zlapania":0,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "535":{  
+         "id":"535",
+         "name":"Tympole",
+         "do_zlapania":1,
+         "wystepowanie":"Strzelisty Most"
+      },
+      "536":{  
+         "id":"536",
+         "name":"Palpitoad",
+         "do_zlapania":1,
+         "wystepowanie":"Strzelisty Most"
+      },
+      "537":{  
+         "id":"537",
+         "name":"Seismitoad",
+         "do_zlapania":1,
+         "wystepowanie":"Strzelisty Most"
+      },
+      "538":{  
+         "id":"538",
+         "name":"Throh",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "539":{  
+         "id":"539",
+         "name":"Sawk",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "540":{  
+         "id":"540",
+         "name":"Sewaddle",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "541":{  
+         "id":"541",
+         "name":"Swadloon",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "542":{  
+         "id":"542",
+         "name":"Leavanny",
+         "do_zlapania":0,
+         "wystepowanie":"Ranczo"
+      },
+      "543":{  
+         "id":"543",
+         "name":"Venipede",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "544":{  
+         "id":"544",
+         "name":"Whirlipede",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "545":{  
+         "id":"545",
+         "name":"Scolipede",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "546":{  
+         "id":"546",
+         "name":"Cottonee",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "547":{  
+         "id":"547",
+         "name":"Whimsicott",
+         "do_zlapania":0,
+         "wystepowanie":"Ranczo"
+      },
+      "548":{  
+         "id":"548",
+         "name":"Petilil",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "549":{  
+         "id":"549",
+         "name":"Lilligant",
+         "do_zlapania":0,
+         "wystepowanie":"Ranczo"
+      },
+      "550":{  
+         "id":"550",
+         "name":"Basculin",
+         "do_zlapania":1,
+         "wystepowanie":"Wiejski Most"
+      },
+      "551":{  
+         "id":"551",
+         "name":"Sandile",
+         "do_zlapania":1,
+         "wystepowanie":"Reliktowy Zamek"
+      },
+      "552":{  
+         "id":"552",
+         "name":"Krokorok",
+         "do_zlapania":1,
+         "wystepowanie":"Reliktowy Zamek"
+      },
+      "553":{  
+         "id":"553",
+         "name":"Krookodile",
+         "do_zlapania":1,
+         "wystepowanie":"Reliktowy Zamek"
+      },
+      "554":{  
+         "id":"554",
+         "name":"Darumaka",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "555":{  
+         "id":"555",
+         "name":"Darmanitan",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "556":{  
+         "id":"556",
+         "name":"Maractus",
+         "do_zlapania":1,
+         "wystepowanie":"Reliktowy Zamek"
+      },
+      "557":{  
+         "id":"557",
+         "name":"Dwebble",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "558":{  
+         "id":"558",
+         "name":"Crustle",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "559":{  
+         "id":"559",
+         "name":"Scraggy",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "560":{  
+         "id":"560",
+         "name":"Scrafty",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "561":{  
+         "id":"561",
+         "name":"Sigilyph",
+         "do_zlapania":1,
+         "wystepowanie":"Reliktowy Zamek"
+      },
+      "562":{  
+         "id":"562",
+         "name":"Yamask",
+         "do_zlapania":1,
+         "wystepowanie":"Reliktowy Zamek"
+      },
+      "563":{  
+         "id":"563",
+         "name":"Cofagrigus",
+         "do_zlapania":1,
+         "wystepowanie":"Reliktowy Zamek"
+      },
+      "564":{  
+         "id":"564",
+         "name":"Tirtouga",
+         "do_zlapania":0,
+         "wystepowanie":"Strzelisty Most"
+      },
+      "565":{  
+         "id":"565",
+         "name":"Carracosta",
+         "do_zlapania":0,
+         "wystepowanie":"Strzelisty Most"
+      },
+      "566":{  
+         "id":"566",
+         "name":"Archen",
+         "do_zlapania":0,
+         "wystepowanie":"Wiejski Most"
+      },
+      "567":{  
+         "id":"567",
+         "name":"Archeops",
+         "do_zlapania":0,
+         "wystepowanie":"Wiejski Most"
+      },
+      "568":{  
+         "id":"568",
+         "name":"Trubbish",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "569":{  
+         "id":"569",
+         "name":"Garbodor",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "570":{  
+         "id":"570",
+         "name":"Zorua",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "571":{  
+         "id":"571",
+         "name":"Zoroark",
+         "do_zlapania":0,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "572":{  
+         "id":"572",
+         "name":"Minccino",
+         "do_zlapania":1,
+         "wystepowanie":"Wiejski Most"
+      },
+      "573":{  
+         "id":"573",
+         "name":"Cinccino",
+         "do_zlapania":0,
+         "wystepowanie":"Wiejski Most"
+      },
+      "574":{  
+         "id":"574",
+         "name":"Gothita",
+         "do_zlapania":1,
+         "wystepowanie":"Cudowny Most"
+      },
+      "575":{  
+         "id":"575",
+         "name":"Gothorita",
+         "do_zlapania":1,
+         "wystepowanie":"Cudowny Most"
+      },
+      "576":{  
+         "id":"576",
+         "name":"Gothitelle",
+         "do_zlapania":1,
+         "wystepowanie":"Cudowny Most"
+      },
+      "577":{  
+         "id":"577",
+         "name":"Solosis",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "578":{  
+         "id":"578",
+         "name":"Duosion",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "579":{  
+         "id":"579",
+         "name":"Reuniclus",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "580":{  
+         "id":"580",
+         "name":"Ducklett",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "581":{  
+         "id":"581",
+         "name":"Swanna",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "582":{  
+         "id":"582",
+         "name":"Vanillite",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "583":{  
+         "id":"583",
+         "name":"Vanillish",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "584":{  
+         "id":"584",
+         "name":"Vanilluxe",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "585":{  
+         "id":"585",
+         "name":"Deerling",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "586":{  
+         "id":"586",
+         "name":"Sawsbuck",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "587":{  
+         "id":"587",
+         "name":"Emolga",
+         "do_zlapania":1,
+         "wystepowanie":"Wiejski Most"
+      },
+      "588":{  
+         "id":"588",
+         "name":"Karrablast",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "589":{  
+         "id":"589",
+         "name":"Escavalier",
+         "do_zlapania":0,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "590":{  
+         "id":"590",
+         "name":"Foongus",
+         "do_zlapania":1,
+         "wystepowanie":"Wiejski Most"
+      },
+      "591":{  
+         "id":"591",
+         "name":"Amoonguss",
+         "do_zlapania":1,
+         "wystepowanie":"Wiejski Most"
+      },
+      "592":{  
+         "id":"592",
+         "name":"Frillish",
+         "do_zlapania":1,
+         "wystepowanie":"Strzelisty Most"
+      },
+      "593":{  
+         "id":"593",
+         "name":"Jellicent",
+         "do_zlapania":1,
+         "wystepowanie":"Strzelisty Most"
+      },
+      "594":{  
+         "id":"594",
+         "name":"Alomomola",
+         "do_zlapania":1,
+         "wystepowanie":"Strzelisty Most"
+      },
+      "595":{  
+         "id":"595",
+         "name":"Joltik",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "596":{  
+         "id":"596",
+         "name":"Galvantula",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "597":{  
+         "id":"597",
+         "name":"Ferroseed",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "598":{  
+         "id":"598",
+         "name":"Ferrothorn",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "599":{  
+         "id":"599",
+         "name":"Klink",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "600":{  
+         "id":"600",
+         "name":"Klang",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "601":{  
+         "id":"601",
+         "name":"Klinklang",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "602":{  
+         "id":"602",
+         "name":"Tynamo",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "603":{  
+         "id":"603",
+         "name":"Eelektrik",
+         "do_zlapania":1,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "604":{  
+         "id":"604",
+         "name":"Eelektross",
+         "do_zlapania":0,
+         "wystepowanie":"Jaskinia Elektrokamieni"
+      },
+      "605":{  
+         "id":"605",
+         "name":"Elgyem",
+         "do_zlapania":1,
+         "wystepowanie":"Cudowny Most"
+      },
+      "606":{  
+         "id":"606",
+         "name":"Beheeyem",
+         "do_zlapania":1,
+         "wystepowanie":"Cudowny Most"
+      },
+      "607":{  
+         "id":"607",
+         "name":"Litwick",
+         "do_zlapania":1,
+         "wystepowanie":"Cudowny Most"
+      },
+      "608":{  
+         "id":"608",
+         "name":"Lampent",
+         "do_zlapania":1,
+         "wystepowanie":"Cudowny Most"
+      },
+      "609":{  
+         "id":"609",
+         "name":"Chandelure",
+         "do_zlapania":0,
+         "wystepowanie":"Cudowny Most"
+      },
+      "610":{  
+         "id":"610",
+         "name":"Axew",
+         "do_zlapania":1,
+         "wystepowanie":"Cudowny Most"
+      },
+      "611":{  
+         "id":"611",
+         "name":"Fraxure",
+         "do_zlapania":1,
+         "wystepowanie":"Cudowny Most"
+      },
+      "612":{  
+         "id":"612",
+         "name":"Haxorus",
+         "do_zlapania":1,
+         "wystepowanie":"Cudowny Most"
+      },
+      "613":{  
+         "id":"613",
+         "name":"Cubchoo",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "614":{  
+         "id":"614",
+         "name":"Beartic",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "615":{  
+         "id":"615",
+         "name":"Cryogonal",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "616":{  
+         "id":"616",
+         "name":"Shelmet",
+         "do_zlapania":1,
+         "wystepowanie":"Ranczo"
+      },
+      "617":{  
+         "id":"617",
+         "name":"Accelgor",
+         "do_zlapania":0,
+         "wystepowanie":"Ranczo"
+      },
+      "618":{  
+         "id":"618",
+         "name":"Stunfisk",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "619":{  
+         "id":"619",
+         "name":"Mienfoo",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "620":{  
+         "id":"620",
+         "name":"Mienshao",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "621":{  
+         "id":"621",
+         "name":"Druddigon",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "622":{  
+         "id":"622",
+         "name":"Golett",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "623":{  
+         "id":"623",
+         "name":"Golurk",
+         "do_zlapania":1,
+         "wystepowanie":"Most Zwodzony Driftveil"
+      },
+      "624":{  
+         "id":"624",
+         "name":"Pawniard",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "625":{  
+         "id":"625",
+         "name":"Bisharp",
+         "do_zlapania":0,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "626":{  
+         "id":"626",
+         "name":"Bouffalant",
+         "do_zlapania":1,
+         "wystepowanie":"Wiejski Most"
+      },
+      "627":{  
+         "id":"627",
+         "name":"Rufflet",
+         "do_zlapania":1,
+         "wystepowanie":"Wiejski Most"
+      },
+      "628":{  
+         "id":"628",
+         "name":"Braviary",
+         "do_zlapania":0,
+         "wystepowanie":"Wiejski Most"
+      },
+      "629":{  
+         "id":"629",
+         "name":"Vullaby",
+         "do_zlapania":1,
+         "wystepowanie":"Wiejski Most"
+      },
+      "630":{  
+         "id":"630",
+         "name":"Mandibuzz",
+         "do_zlapania":0,
+         "wystepowanie":"Wiejski Most"
+      },
+      "631":{  
+         "id":"631",
+         "name":"Heatmor",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "632":{  
+         "id":"632",
+         "name":"Durant",
+         "do_zlapania":1,
+         "wystepowanie":"Most Sieci Metra"
+      },
+      "633":{  
+         "id":"633",
+         "name":"Deino",
+         "do_zlapania":0,
+         "wystepowanie":"Reliktowy Zamek"
+      },
+      "634":{  
+         "id":"634",
+         "name":"Zweilous",
+         "do_zlapania":0,
+         "wystepowanie":"Reliktowy Zamek"
+      },
+      "635":{  
+         "id":"635",
+         "name":"Hydreigon",
+         "do_zlapania":0,
+         "wystepowanie":"Reliktowy Zamek"
+      },
+      "636":{  
+         "id":"636",
+         "name":"Larvesta",
+         "do_zlapania":1,
+         "wystepowanie":"Reliktowy Zamek"
+      },
+      "637":{  
+         "id":"637",
+         "name":"Volcarona",
+         "do_zlapania":0,
+         "wystepowanie":"Reliktowy Zamek"
+      },
+      "638":{  
+         "id":"638",
+         "name":"Cobalion",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "639":{  
+         "id":"639",
+         "name":"Terrakion",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "640":{  
+         "id":"640",
+         "name":"Virizion",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "641":{  
+         "id":"641",
+         "name":"Tornadus",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "642":{  
+         "id":"642",
+         "name":"Thundurus",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "643":{  
+         "id":"643",
+         "name":"Reshiram",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "644":{  
+         "id":"644",
+         "name":"Zekrom",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "645":{  
+         "id":"645",
+         "name":"Landorus",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "646":{  
+         "id":"646",
+         "name":"Kyurem",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "647":{  
+         "id":"647",
+         "name":"Keldeo",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "648":{  
+         "id":"648",
+         "name":"Meloetta",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "649":{  
+         "id":"649",
+         "name":"Genesect",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      }
+   }
+}
