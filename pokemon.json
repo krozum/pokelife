@@ -2022,7 +2022,7 @@
       },
       "181":{  
          "id":"181",
-         "name":"Ampharos",
+         "name":"Mega Ampharos",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2184,7 +2184,7 @@
       },
       "208":{  
          "id":"208",
-         "name":"Steelix",
+         "name":"Mega Steelix",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2208,7 +2208,7 @@
       },
       "212":{  
          "id":"212",
-         "name":"Scizor",
+         "name":"Mega Scizor",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2220,7 +2220,7 @@
       },
       "214":{  
          "id":"214",
-         "name":"Heracross",
+         "name":"Mega Heracross",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2310,7 +2310,7 @@
       },
       "229":{  
          "id":"229",
-         "name":"Houndoom",
+         "name":"Mega Houndoom",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2424,7 +2424,7 @@
       },
       "248":{  
          "id":"248",
-         "name":"Tyranitar",
+         "name":"Mega Tyranitar",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2443,6 +2443,818 @@
       "251":{  
          "id":"251",
          "name":"Celebi",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      }
+   },
+   "hoenn":{  
+      "252":{  
+         "id":"252",
+         "name":"Treecko",
+         "do_zlapania":1,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "253":{  
+         "id":"253",
+         "name":"Grovyle",
+         "do_zlapania":1,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "254":{  
+         "id":"254",
+         "name":"Mega Sceptile",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "255":{  
+         "id":"255",
+         "name":"Torchic",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia"
+      },
+      "256":{  
+         "id":"256",
+         "name":"Combusken",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia"
+      },
+      "257":{  
+         "id":"257",
+         "name":"Mega Blaziken",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "258":{  
+         "id":"258",
+         "name":"Mudkip",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "259":{  
+         "id":"259",
+         "name":"Marshtomp",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "260":{  
+         "id":"260",
+         "name":"Mega Swampert",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "261":{  
+         "id":"261",
+         "name":"Poochyena",
+         "do_zlapania":1,
+         "wystepowanie":"Nawiedzona Wieża"
+      },
+      "262":{  
+         "id":"262",
+         "name":"Mightyena",
+         "do_zlapania":1,
+         "wystepowanie":"Nawiedzona Wieża"
+      },
+      "263":{  
+         "id":"263",
+         "name":"Zigzagoon",
+         "do_zlapania":1,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "264":{  
+         "id":"264",
+         "name":"Linoone",
+         "do_zlapania":1,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "265":{  
+         "id":"265",
+         "name":"Wurmple",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "266":{  
+         "id":"266",
+         "name":"Silcoon",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "267":{  
+         "id":"267",
+         "name":"Beautifly",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "268":{  
+         "id":"268",
+         "name":"Cascoon",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "269":{  
+         "id":"269",
+         "name":"Dustox",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "270":{  
+         "id":"270",
+         "name":"Lotad",
+         "do_zlapania":1,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "271":{  
+         "id":"271",
+         "name":"Lombre",
+         "do_zlapania":1,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "272":{  
+         "id":"272",
+         "name":"Ludicolo",
+         "do_zlapania":0,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "273":{  
+         "id":"273",
+         "name":"Seedot",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "274":{  
+         "id":"274",
+         "name":"Nuzleaf",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "275":{  
+         "id":"275",
+         "name":"Shiftry",
+         "do_zlapania":0,
+         "wystepowanie":"Ogród"
+      },
+      "276":{  
+         "id":"276",
+         "name":"Taillow",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "277":{  
+         "id":"277",
+         "name":"Swellow",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "278":{  
+         "id":"278",
+         "name":"Wingull",
+         "do_zlapania":1,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "279":{  
+         "id":"279",
+         "name":"Pelipper",
+         "do_zlapania":1,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "280":{  
+         "id":"280",
+         "name":"Ralts",
+         "do_zlapania":1,
+         "wystepowanie":"Nawiedzona Wieża"
+      },
+      "281":{  
+         "id":"281",
+         "name":"Kirlia",
+         "do_zlapania":1,
+         "wystepowanie":"Nawiedzona Wieża"
+      },
+      "282":{  
+         "id":"282",
+         "name":"Mega Gardevoir",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "283":{  
+         "id":"283",
+         "name":"Surskit",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "284":{  
+         "id":"284",
+         "name":"Masquerain",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "285":{  
+         "id":"285",
+         "name":"Shroomish",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "286":{  
+         "id":"286",
+         "name":"Breloom",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "287":{  
+         "id":"287",
+         "name":"Slakoth",
+         "do_zlapania":0,
+         "wystepowanie":"Opuszczona Elektrownia"
+      },
+      "288":{  
+         "id":"288",
+         "name":"Vigoroth",
+         "do_zlapania":0,
+         "wystepowanie":"Opuszczona Elektrownia"
+      },
+      "289":{  
+         "id":"289",
+         "name":"Slaking",
+         "do_zlapania":0,
+         "wystepowanie":"Opuszczona Elektrownia"
+      },
+      "290":{  
+         "id":"290",
+         "name":"Nincada",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "291":{  
+         "id":"291",
+         "name":"Ninjask",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "292":{  
+         "id":"292",
+         "name":"Shedinja",
+         "do_zlapania":0,
+         "wystepowanie":"Nawiedzona Wieża"
+      },
+      "293":{  
+         "id":"293",
+         "name":"Whismur",
+         "do_zlapania":1,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "294":{  
+         "id":"294",
+         "name":"Loudred",
+         "do_zlapania":1,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "295":{  
+         "id":"295",
+         "name":"Exploud",
+         "do_zlapania":1,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "296":{  
+         "id":"296",
+         "name":"Makuhita",
+         "do_zlapania":1,
+         "wystepowanie":"Opuszczona Elektrownia"
+      },
+      "297":{  
+         "id":"297",
+         "name":"Hariyama",
+         "do_zlapania":1,
+         "wystepowanie":"Opuszczona Elektrownia"
+      },
+      "298":{  
+         "id":"298",
+         "name":"Azurill",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "299":{  
+         "id":"299",
+         "name":"Nosepass",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia"
+      },
+      "300":{  
+         "id":"300",
+         "name":"Skitty",
+         "do_zlapania":1,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "301":{  
+         "id":"301",
+         "name":"Delcatty",
+         "do_zlapania":0,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "302":{  
+         "id":"302",
+         "name":"Sableye",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "303":{  
+         "id":"303",
+         "name":"Mega Mawile",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "304":{  
+         "id":"304",
+         "name":"Aron",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia"
+      },
+      "305":{  
+         "id":"305",
+         "name":"Lairon",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia"
+      },
+      "306":{  
+         "id":"306",
+         "name":"Mega Aggron",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "307":{  
+         "id":"307",
+         "name":"Meditite",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia"
+      },
+      "308":{  
+         "id":"308",
+         "name":"Mega Medicham",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "309":{  
+         "id":"309",
+         "name":"Electrike",
+         "do_zlapania":1,
+         "wystepowanie":"Opuszczona Elektrownia"
+      },
+      "310":{  
+         "id":"310",
+         "name":"Mega Manectric",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "311":{  
+         "id":"311",
+         "name":"Plusle",
+         "do_zlapania":1,
+         "wystepowanie":"Opuszczona Elektrownia"
+      },
+      "312":{  
+         "id":"312",
+         "name":"Minun",
+         "do_zlapania":1,
+         "wystepowanie":"Opuszczona Elektrownia"
+      },
+      "313":{  
+         "id":"313",
+         "name":"Volbeat",
+         "do_zlapania":1,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "314":{  
+         "id":"314",
+         "name":"Illumise",
+         "do_zlapania":1,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "315":{  
+         "id":"315",
+         "name":"Roselia",
+         "do_zlapania":1,
+         "wystepowanie":"Alejka Spacerowa"
+      },
+      "316":{  
+         "id":"316",
+         "name":"Gulpin",
+         "do_zlapania":1,
+         "wystepowanie":"Opuszczona Elektrownia"
+      },
+      "317":{  
+         "id":"317",
+         "name":"Swalot",
+         "do_zlapania":1,
+         "wystepowanie":"Opuszczona Elektrownia"
+      },
+      "318":{  
+         "id":"318",
+         "name":"Carvanha",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "319":{  
+         "id":"319",
+         "name":"Mega Sharpedo",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "320":{  
+         "id":"320",
+         "name":"Wailmer",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "321":{  
+         "id":"321",
+         "name":"Wailord",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "322":{  
+         "id":"322",
+         "name":"Numel",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia"
+      },
+      "323":{  
+         "id":"323",
+         "name":"Mega Camerupt",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "324":{  
+         "id":"324",
+         "name":"Torkoal",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia"
+      },
+      "325":{  
+         "id":"325",
+         "name":"Spoink",
+         "do_zlapania":1,
+         "wystepowanie":"Nawiedzona Wieża"
+      },
+      "326":{  
+         "id":"326",
+         "name":"Grumpig",
+         "do_zlapania":1,
+         "wystepowanie":"Nawiedzona Wieża"
+      },
+      "327":{  
+         "id":"327",
+         "name":"Spinda",
+         "do_zlapania":1,
+         "wystepowanie":"Opuszczona Elektrownia"
+      },
+      "328":{  
+         "id":"328",
+         "name":"Trapinch",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia"
+      },
+      "329":{  
+         "id":"329",
+         "name":"Vibrava",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia"
+      },
+      "330":{  
+         "id":"330",
+         "name":"Flygon",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia"
+      },
+      "331":{  
+         "id":"331",
+         "name":"Cacnea",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia"
+      },
+      "332":{  
+         "id":"332",
+         "name":"Cacturne",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia"
+      },
+      "333":{  
+         "id":"333",
+         "name":"Swablu",
+         "do_zlapania":1,
+         "wystepowanie":"Meteorytowa Góra"
+      },
+      "334":{  
+         "id":"334",
+         "name":"Mega Altaria",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "335":{  
+         "id":"335",
+         "name":"Zangoose",
+         "do_zlapania":1,
+         "wystepowanie":"Opuszczona Elektrownia"
+      },
+      "336":{  
+         "id":"336",
+         "name":"Seviper",
+         "do_zlapania":1,
+         "wystepowanie":"Opuszczona Elektrownia"
+      },
+      "337":{  
+         "id":"337",
+         "name":"Lunatone",
+         "do_zlapania":1,
+         "wystepowanie":"Meteorytowa Góra"
+      },
+      "338":{  
+         "id":"338",
+         "name":"Solrock",
+         "do_zlapania":1,
+         "wystepowanie":"Meteorytowa Góra"
+      },
+      "339":{  
+         "id":"339",
+         "name":"Barboach",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "340":{  
+         "id":"340",
+         "name":"Whiscash",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "341":{  
+         "id":"341",
+         "name":"Corphish",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "342":{  
+         "id":"342",
+         "name":"Crawdaunt",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "343":{  
+         "id":"343",
+         "name":"Baltoy",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia"
+      },
+      "344":{  
+         "id":"344",
+         "name":"Claydol",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia"
+      },
+      "345":{  
+         "id":"345",
+         "name":"Lileep",
+         "do_zlapania":0,
+         "wystepowanie":"Głębina"
+      },
+      "346":{  
+         "id":"346",
+         "name":"Cradily",
+         "do_zlapania":0,
+         "wystepowanie":"Głębina"
+      },
+      "347":{  
+         "id":"347",
+         "name":"Anorith",
+         "do_zlapania":0,
+         "wystepowanie":"Pustynia"
+      },
+      "348":{  
+         "id":"348",
+         "name":"Armaldo",
+         "do_zlapania":0,
+         "wystepowanie":"Pustynia"
+      },
+      "349":{  
+         "id":"349",
+         "name":"Feebas",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "350":{  
+         "id":"350",
+         "name":"Milotic",
+         "do_zlapania":0,
+         "wystepowanie":"Głębina"
+      },
+      "351":{  
+         "id":"351",
+         "name":"Castform",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "352":{  
+         "id":"352",
+         "name":"Kecleon",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "353":{  
+         "id":"353",
+         "name":"Shuppet",
+         "do_zlapania":1,
+         "wystepowanie":"Nawiedzona Wieża"
+      },
+      "354":{  
+         "id":"354",
+         "name":"Mega Banette",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "355":{  
+         "id":"355",
+         "name":"Duskull",
+         "do_zlapania":1,
+         "wystepowanie":"Nawiedzona Wieża"
+      },
+      "356":{  
+         "id":"356",
+         "name":"Dusclops",
+         "do_zlapania":1,
+         "wystepowanie":"Nawiedzona Wieża"
+      },
+      "357":{  
+         "id":"357",
+         "name":"Tropius",
+         "do_zlapania":1,
+         "wystepowanie":"Ogród"
+      },
+      "358":{  
+         "id":"358",
+         "name":"Chimecho",
+         "do_zlapania":1,
+         "wystepowanie":"Nawiedzona Wieża"
+      },
+      "359":{  
+         "id":"359",
+         "name":"Mega Absol",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "360":{  
+         "id":"360",
+         "name":"Wynaut",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "361":{  
+         "id":"361",
+         "name":"Snorunt",
+         "do_zlapania":1,
+         "wystepowanie":"Meteorytowa Góra"
+      },
+      "362":{  
+         "id":"362",
+         "name":"Mega Glalie",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "363":{  
+         "id":"363",
+         "name":"Spheal",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "364":{  
+         "id":"364",
+         "name":"Sealeo",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "365":{  
+         "id":"365",
+         "name":"Walrein",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "366":{  
+         "id":"366",
+         "name":"Clamperl",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "367":{  
+         "id":"367",
+         "name":"Huntail",
+         "do_zlapania":0,
+         "wystepowanie":"Głębina"
+      },
+      "368":{  
+         "id":"368",
+         "name":"Gorebyss",
+         "do_zlapania":0,
+         "wystepowanie":"Głębina"
+      },
+      "369":{  
+         "id":"369",
+         "name":"Relicanth",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "370":{  
+         "id":"370",
+         "name":"Luvdisc",
+         "do_zlapania":1,
+         "wystepowanie":"Głębina"
+      },
+      "371":{  
+         "id":"371",
+         "name":"Bagon",
+         "do_zlapania":0,
+         "wystepowanie":"Meteorytowa Góra"
+      },
+      "372":{  
+         "id":"372",
+         "name":"Shelgon",
+         "do_zlapania":0,
+         "wystepowanie":"Meteorytowa Góra"
+      },
+      "373":{  
+         "id":"373",
+         "name":"Mega Salamence",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "374":{  
+         "id":"374",
+         "name":"Beldum",
+         "do_zlapania":0,
+         "wystepowanie":"Meteorytowa Góra"
+      },
+      "375":{  
+         "id":"375",
+         "name":"Metang",
+         "do_zlapania":0,
+         "wystepowanie":"Meteorytowa Góra"
+      },
+      "376":{  
+         "id":"376",
+         "name":"Mega Metagross",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "377":{  
+         "id":"377",
+         "name":"Regirock",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "378":{  
+         "id":"378",
+         "name":"Regice",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "379":{  
+         "id":"379",
+         "name":"Registeel",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "380":{  
+         "id":"380",
+         "name":"Mega Latias",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "381":{  
+         "id":"381",
+         "name":"Mega Latios",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "382":{  
+         "id":"382",
+         "name":"Kyogre",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "383":{  
+         "id":"383",
+         "name":"Groudon",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "384":{  
+         "id":"384",
+         "name":"Mega Rayquaza",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "385":{  
+         "id":"385",
+         "name":"Jirachi",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "386":{  
+         "id":"386",
+         "name":"Deoxys",
          "do_zlapania":0,
          "wystepowanie":"brak"
       }
