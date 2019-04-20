@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript v3
-// @version      3.3
+// @version      3.3.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1380,11 +1380,16 @@ function initRozbudowanyOpisDziczy(){
 
                     $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce='+url+'"]', function(){
                         var html = '<div id="opis'+name.replace(/[ ]/g, '')+'" style="z-index: 999; max-width: 300px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">';
+                        var wszystkie = true;
                         $.each(pokemonData[region], function(index, value) {
                             if(value.wystepowanie == name && value.do_zlapania == 1 && kolekcjaData[region][value.id] == false){
+                                wszystkie = false;
                                 html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/'+value.id+'.png"><p style="margin: 0;">'+value.name+'</p></li>';
                             }
                         })
+                        if(wszystkie){
+                            html = html + "Udało ci się złapać wszystkie poki w tej dziczy";
+                        }
                         html = html + '</div>';
                         $('body').append(html);
                     })
