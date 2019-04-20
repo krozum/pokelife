@@ -9,12 +9,10 @@
 * Rozbudowany widok plecaka:
   - Nowy widok zakładki TM<br />
   [![N|Solid](https://i.imgur.com/rOUR8ZD.png)](https://github.com/krozum/pokelife)
-* Szybki sklep gdzie mozna w dowolnej chwili dokupić pokeballi, niebieskich jagód oraz niebieskich napoi
-[![N|Solid](https://i.imgur.com/QCE2rM7.png)](https://github.com/krozum/pokelife)
 * Aktualnie dostepne zadania widoczne na sidebarze<br />
 [![N|Solid](https://i.imgur.com/bnEjHrY.png)](https://github.com/krozum/pokelife)
-* Alerty shiny - pokazuje ostatnie 3 spotkane shiny<br />
-[![N|Solid](https://i.imgur.com/5lcWUmn.png)](https://github.com/krozum/pokelife)
+* Ostatnie 3 spotkane shiny w sidebarze<br />
+[![N|Solid](https://i.imgur.com/0ftDpk0.png)](https://github.com/krozum/pokelife)
 * Dzienne statystyki<br />
 [![N|Solid](https://i.imgur.com/eTFDIUF.png)](https://github.com/krozum/pokelife)
 
