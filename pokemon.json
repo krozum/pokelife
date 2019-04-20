@@ -2022,7 +2022,7 @@
       },
       "181":{  
          "id":"181",
-         "name":"Mega Ampharos",
+         "name":"Ampharos",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2184,7 +2184,7 @@
       },
       "208":{  
          "id":"208",
-         "name":"Mega Steelix",
+         "name":"Steelix",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2208,7 +2208,7 @@
       },
       "212":{  
          "id":"212",
-         "name":"Mega Scizor",
+         "name":"Scizor",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2220,7 +2220,7 @@
       },
       "214":{  
          "id":"214",
-         "name":"Mega Heracross",
+         "name":"Heracross",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2310,7 +2310,7 @@
       },
       "229":{  
          "id":"229",
-         "name":"Mega Houndoom",
+         "name":"Houndoom",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2424,7 +2424,7 @@
       },
       "248":{  
          "id":"248",
-         "name":"Mega Tyranitar",
+         "name":"Tyranitar",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2462,7 +2462,7 @@
       },
       "254":{  
          "id":"254",
-         "name":"Mega Sceptile",
+         "name":"Sceptile",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2480,7 +2480,7 @@
       },
       "257":{  
          "id":"257",
-         "name":"Mega Blaziken",
+         "name":"Blaziken",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2498,7 +2498,7 @@
       },
       "260":{  
          "id":"260",
-         "name":"Mega Swampert",
+         "name":"Swampert",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2630,7 +2630,7 @@
       },
       "282":{  
          "id":"282",
-         "name":"Mega Gardevoir",
+         "name":"Gardevoir",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2756,7 +2756,7 @@
       },
       "303":{  
          "id":"303",
-         "name":"Mega Mawile",
+         "name":"Mawile",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2774,7 +2774,7 @@
       },
       "306":{  
          "id":"306",
-         "name":"Mega Aggron",
+         "name":"Aggron",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2786,7 +2786,7 @@
       },
       "308":{  
          "id":"308",
-         "name":"Mega Medicham",
+         "name":"Medicham",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2798,7 +2798,7 @@
       },
       "310":{  
          "id":"310",
-         "name":"Mega Manectric",
+         "name":"Manectric",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2852,7 +2852,7 @@
       },
       "319":{  
          "id":"319",
-         "name":"Mega Sharpedo",
+         "name":"Sharpedo",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2876,7 +2876,7 @@
       },
       "323":{  
          "id":"323",
-         "name":"Mega Camerupt",
+         "name":"Camerupt",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -2942,7 +2942,7 @@
       },
       "334":{  
          "id":"334",
-         "name":"Mega Altaria",
+         "name":"Altaria",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -3062,7 +3062,7 @@
       },
       "354":{  
          "id":"354",
-         "name":"Mega Banette",
+         "name":"Banette",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -3092,7 +3092,7 @@
       },
       "359":{  
          "id":"359",
-         "name":"Mega Absol",
+         "name":"Absol",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -3110,7 +3110,7 @@
       },
       "362":{  
          "id":"362",
-         "name":"Mega Glalie",
+         "name":"Glalie",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -3176,7 +3176,7 @@
       },
       "373":{  
          "id":"373",
-         "name":"Mega Salamence",
+         "name":"Salamence",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -3194,7 +3194,7 @@
       },
       "376":{  
          "id":"376",
-         "name":"Mega Metagross",
+         "name":"Metagross",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -3218,13 +3218,13 @@
       },
       "380":{  
          "id":"380",
-         "name":"Mega Latias",
+         "name":"Latias",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
       "381":{  
          "id":"381",
-         "name":"Mega Latios",
+         "name":"Latios",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -3242,7 +3242,7 @@
       },
       "384":{  
          "id":"384",
-         "name":"Mega Rayquaza",
+         "name":"Rayquaza",
          "do_zlapania":0,
          "wystepowanie":"brak"
       },
@@ -3255,6 +3255,650 @@
       "386":{  
          "id":"386",
          "name":"Deoxys",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      }
+   },
+   "sinnoh":{  
+      "387":{  
+         "id":"387",
+         "name":"Turtwig",
+         "do_zlapania":1,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "388":{  
+         "id":"388",
+         "name":"Grotle",
+         "do_zlapania":1,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "389":{  
+         "id":"389",
+         "name":"Torterra",
+         "do_zlapania":1,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "390":{  
+         "id":"390",
+         "name":"Chimchar",
+         "do_zlapania":1,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "391":{  
+         "id":"391",
+         "name":"Monferno",
+         "do_zlapania":1,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "392":{  
+         "id":"392",
+         "name":"Infernape",
+         "do_zlapania":1,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "393":{  
+         "id":"393",
+         "name":"Piplup",
+         "do_zlapania":1,
+         "wystepowanie":"Potrójny Staw"
+      },
+      "394":{  
+         "id":"394",
+         "name":"Prinplup",
+         "do_zlapania":1,
+         "wystepowanie":"Potrójny Staw"
+      },
+      "395":{  
+         "id":"395",
+         "name":"Empoleon",
+         "do_zlapania":1,
+         "wystepowanie":"Potrójny Staw"
+      },
+      "396":{  
+         "id":"396",
+         "name":"Starly",
+         "do_zlapania":1,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "397":{  
+         "id":"397",
+         "name":"Staravia",
+         "do_zlapania":1,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "398":{  
+         "id":"398",
+         "name":"Staraptor",
+         "do_zlapania":1,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "399":{  
+         "id":"399",
+         "name":"Bidoof",
+         "do_zlapania":1,
+         "wystepowanie":"Potrójny Staw"
+      },
+      "400":{  
+         "id":"400",
+         "name":"Bibarel",
+         "do_zlapania":1,
+         "wystepowanie":"Potrójny Staw"
+      },
+      "401":{  
+         "id":"401",
+         "name":"Kricketot",
+         "do_zlapania":1,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "402":{  
+         "id":"402",
+         "name":"Kricketune",
+         "do_zlapania":1,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "403":{  
+         "id":"403",
+         "name":"Shinx",
+         "do_zlapania":1,
+         "wystepowanie":"Dolina Wiatraków"
+      },
+      "404":{  
+         "id":"404",
+         "name":"Luxio",
+         "do_zlapania":1,
+         "wystepowanie":"Dolina Wiatraków"
+      },
+      "405":{  
+         "id":"405",
+         "name":"Luxray",
+         "do_zlapania":1,
+         "wystepowanie":"Dolina Wiatraków"
+      },
+      "406":{  
+         "id":"406",
+         "name":"Budew",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "407":{  
+         "id":"407",
+         "name":"Roserade",
+         "do_zlapania":0,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "408":{  
+         "id":"408",
+         "name":"Cranidos",
+         "do_zlapania":0,
+         "wystepowanie":"Wielkie Bagna"
+      },
+      "409":{  
+         "id":"409",
+         "name":"Rampardos",
+         "do_zlapania":0,
+         "wystepowanie":"Wielkie Bagna"
+      },
+      "410":{  
+         "id":"410",
+         "name":"Shieldon",
+         "do_zlapania":0,
+         "wystepowanie":"Wielkie Bagna"
+      },
+      "411":{  
+         "id":"411",
+         "name":"Bastiodon",
+         "do_zlapania":0,
+         "wystepowanie":"Wielkie Bagna"
+      },
+      "412":{  
+         "id":"412",
+         "name":"Burmy",
+         "do_zlapania":1,
+         "wystepowanie":"Dolina Wiatraków"
+      },
+      "413":{  
+         "id":"413",
+         "name":"Wormadam",
+         "do_zlapania":1,
+         "wystepowanie":"Dolina Wiatraków"
+      },
+      "414":{  
+         "id":"414",
+         "name":"Mothim",
+         "do_zlapania":1,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "415":{  
+         "id":"415",
+         "name":"Combee",
+         "do_zlapania":1,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "416":{  
+         "id":"416",
+         "name":"Vespiquen",
+         "do_zlapania":1,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "417":{  
+         "id":"417",
+         "name":"Pachirisu",
+         "do_zlapania":1,
+         "wystepowanie":"Dolina Wiatraków"
+      },
+      "418":{  
+         "id":"418",
+         "name":"Buizel",
+         "do_zlapania":1,
+         "wystepowanie":"Potrójny Staw"
+      },
+      "419":{  
+         "id":"419",
+         "name":"Floatzel",
+         "do_zlapania":1,
+         "wystepowanie":"Potrójny Staw"
+      },
+      "420":{  
+         "id":"420",
+         "name":"Cherubi",
+         "do_zlapania":1,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "421":{  
+         "id":"421",
+         "name":"Cherrim",
+         "do_zlapania":1,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "422":{  
+         "id":"422",
+         "name":"Shellos",
+         "do_zlapania":1,
+         "wystepowanie":"Potrójny Staw"
+      },
+      "423":{  
+         "id":"423",
+         "name":"Gastrodon",
+         "do_zlapania":1,
+         "wystepowanie":"Potrójny Staw"
+      },
+      "424":{  
+         "id":"424",
+         "name":"Ambipom",
+         "do_zlapania":1,
+         "wystepowanie":"Puszcza"
+      },
+      "425":{  
+         "id":"425",
+         "name":"Drifloon",
+         "do_zlapania":1,
+         "wystepowanie":"Dolina Wiatraków"
+      },
+      "426":{  
+         "id":"426",
+         "name":"Drifblim",
+         "do_zlapania":1,
+         "wystepowanie":"Dolina Wiatraków"
+      },
+      "427":{  
+         "id":"427",
+         "name":"Buneary",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia Lodowa"
+      },
+      "428":{  
+         "id":"428",
+         "name":"Lopunny",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "429":{  
+         "id":"429",
+         "name":"Mismagius",
+         "do_zlapania":0,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "430":{  
+         "id":"430",
+         "name":"Honchkrow",
+         "do_zlapania":0,
+         "wystepowanie":"Dolina Wiatraków"
+      },
+      "431":{  
+         "id":"431",
+         "name":"Glameow",
+         "do_zlapania":1,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "432":{  
+         "id":"432",
+         "name":"Purugly",
+         "do_zlapania":1,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "433":{  
+         "id":"433",
+         "name":"Chingling",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "434":{  
+         "id":"434",
+         "name":"Stunky",
+         "do_zlapania":1,
+         "wystepowanie":"Wielkie Bagna"
+      },
+      "435":{  
+         "id":"435",
+         "name":"Skuntank",
+         "do_zlapania":1,
+         "wystepowanie":"Wielkie Bagna"
+      },
+      "436":{  
+         "id":"436",
+         "name":"Bronzor",
+         "do_zlapania":1,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "437":{  
+         "id":"437",
+         "name":"Bronzong",
+         "do_zlapania":1,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "438":{  
+         "id":"438",
+         "name":"Bonsly",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "439":{  
+         "id":"439",
+         "name":"Mime Jr.",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "440":{  
+         "id":"440",
+         "name":"Happiny",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "441":{  
+         "id":"441",
+         "name":"Chatot",
+         "do_zlapania":1,
+         "wystepowanie":"Dolina Wiatraków"
+      },
+      "442":{  
+         "id":"442",
+         "name":"Spiritomb",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia Lodowa"
+      },
+      "443":{  
+         "id":"443",
+         "name":"Gible",
+         "do_zlapania":0,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "444":{  
+         "id":"444",
+         "name":"Gabite",
+         "do_zlapania":0,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "445":{  
+         "id":"445",
+         "name":"Garchomp",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "446":{  
+         "id":"446",
+         "name":"Munchlax",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "447":{  
+         "id":"447",
+         "name":"Riolu",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "448":{  
+         "id":"448",
+         "name":"Lucario",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "449":{  
+         "id":"449",
+         "name":"Hippopotas",
+         "do_zlapania":1,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "450":{  
+         "id":"450",
+         "name":"Hippowdon",
+         "do_zlapania":1,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "451":{  
+         "id":"451",
+         "name":"Skorupi",
+         "do_zlapania":1,
+         "wystepowanie":"Wielkie Bagna"
+      },
+      "452":{  
+         "id":"452",
+         "name":"Drapion",
+         "do_zlapania":1,
+         "wystepowanie":"Wielkie Bagna"
+      },
+      "453":{  
+         "id":"453",
+         "name":"Croagunk",
+         "do_zlapania":1,
+         "wystepowanie":"Wielkie Bagna"
+      },
+      "454":{  
+         "id":"454",
+         "name":"Toxicroak",
+         "do_zlapania":1,
+         "wystepowanie":"Wielkie Bagna"
+      },
+      "455":{  
+         "id":"455",
+         "name":"Carnivine",
+         "do_zlapania":1,
+         "wystepowanie":"Wielkie Bagna"
+      },
+      "456":{  
+         "id":"456",
+         "name":"Finneon",
+         "do_zlapania":1,
+         "wystepowanie":"Potrójny Staw"
+      },
+      "457":{  
+         "id":"457",
+         "name":"Lumineon",
+         "do_zlapania":1,
+         "wystepowanie":"Potrójny Staw"
+      },
+      "458":{  
+         "id":"458",
+         "name":"Mantyke",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "459":{  
+         "id":"459",
+         "name":"Snover",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia Lodowa"
+      },
+      "460":{  
+         "id":"460",
+         "name":"Abomasnow",
+         "do_zlapania":1,
+         "wystepowanie":"brak"
+      },
+      "461":{  
+         "id":"461",
+         "name":"Weavile",
+         "do_zlapania":0,
+         "wystepowanie":"Pustynia Lodowa"
+      },
+      "462":{  
+         "id":"462",
+         "name":"Magnezone",
+         "do_zlapania":0,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "463":{  
+         "id":"463",
+         "name":"Lickilicky",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia Lodowa"
+      },
+      "464":{  
+         "id":"464",
+         "name":"Rhyperior",
+         "do_zlapania":0,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "465":{  
+         "id":"465",
+         "name":"Tangrowth",
+         "do_zlapania":1,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "466":{  
+         "id":"466",
+         "name":"Electivire",
+         "do_zlapania":0,
+         "wystepowanie":"Dolina Wiatraków"
+      },
+      "467":{  
+         "id":"467",
+         "name":"Magmortar",
+         "do_zlapania":0,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "468":{  
+         "id":"468",
+         "name":"Togekiss",
+         "do_zlapania":0,
+         "wystepowanie":"Dolina Wiatraków"
+      },
+      "469":{  
+         "id":"469",
+         "name":"Yanmega",
+         "do_zlapania":1,
+         "wystepowanie":"Potrójny Staw"
+      },
+      "470":{  
+         "id":"470",
+         "name":"Leafeon",
+         "do_zlapania":0,
+         "wystepowanie":"Gęsty Zagajnik"
+      },
+      "471":{  
+         "id":"471",
+         "name":"Glaceon",
+         "do_zlapania":0,
+         "wystepowanie":"Pustynia Lodowa"
+      },
+      "472":{  
+         "id":"472",
+         "name":"Gliscor",
+         "do_zlapania":0,
+         "wystepowanie":"Wielkie Bagna"
+      },
+      "473":{  
+         "id":"473",
+         "name":"Mamoswine",
+         "do_zlapania":1,
+         "wystepowanie":"Pustynia Lodowa"
+      },
+      "474":{  
+         "id":"474",
+         "name":"Porygon-Z",
+         "do_zlapania":0,
+         "wystepowanie":"Pustynia Lodowa"
+      },
+      "475":{  
+         "id":"475",
+         "name":"Gallade",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "476":{  
+         "id":"476",
+         "name":"Probopass",
+         "do_zlapania":0,
+         "wystepowanie":"Koronny Szczyt"
+      },
+      "477":{  
+         "id":"477",
+         "name":"Dusknoir",
+         "do_zlapania":0,
+         "wystepowanie":"Wielkie Bagna"
+      },
+      "478":{  
+         "id":"478",
+         "name":"Froslass",
+         "do_zlapania":0,
+         "wystepowanie":"Pustynia Lodowa"
+      },
+      "479":{  
+         "id":"479",
+         "name":"Rotom",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "480":{  
+         "id":"480",
+         "name":"Uxie",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "481":{  
+         "id":"481",
+         "name":"Mesprit",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "482":{  
+         "id":"482",
+         "name":"Azelf",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "483":{  
+         "id":"483",
+         "name":"Dialga",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "484":{  
+         "id":"484",
+         "name":"Palkia",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "485":{  
+         "id":"485",
+         "name":"Heatran",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "486":{  
+         "id":"486",
+         "name":"Regigigas",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "487":{  
+         "id":"487",
+         "name":"Giratina",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "488":{  
+         "id":"488",
+         "name":"Cresselia",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "489":{  
+         "id":"489",
+         "name":"Phione",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "490":{  
+         "id":"490",
+         "name":"Manaphy",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "491":{  
+         "id":"491",
+         "name":"Darkrai",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "492":{  
+         "id":"492",
+         "name":"Shaymin",
+         "do_zlapania":0,
+         "wystepowanie":"brak"
+      },
+      "493":{  
+         "id":"493",
+         "name":"Arceus",
          "do_zlapania":0,
          "wystepowanie":"brak"
       }
