@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.5.2
+// @version      3.5.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -367,7 +367,7 @@ function initAutoGo(){
                 }
             },
             {
-                'iconFilePath': "images/pokesklep/swarmballe.jpg",
+                'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb3.jpg",
                 'iconValue': function() {
                     var d = new Date();
                     var h = d.getHours();
