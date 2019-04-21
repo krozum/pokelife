@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript v3
-// @version      3.4
+// @version      3.4.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -17,6 +17,7 @@
 // ==/UserScript==
 
 window.onReloadSidebarFunctions = [];
+var AutoGoSettings = new Object();
 
 function onReloadSidebar(fn) {
     window.onReloadSidebarFunctions.push(fn);
@@ -215,8 +216,369 @@ function initTest(){
     //         console.log("onReloadMain");
     //         console.log(this);
     //     })
+
+    //     console.log(AutoGoSettings);
 }
 initTest();
+
+
+
+// **********************
+//
+// initAutoGo
+// Funkcja dodająca automatyczne klikanie w wyprawy
+//
+// **********************
+function initAutoGo(){
+    var iconPokemon;
+    var iconPokeball;
+    var iconLocation;
+    var lastClick;
+    var autoGo;
+
+    function initPokemonIcon() {
+        $('body').append('<div id="setPokemon" style="position: fixed; cursor: pointer; top: 0; left: 10px; z-index: 9999"></div>');
+
+        IconSelect.COMPONENT_ICON_FILE_PATH = "";
+
+        AutoGoSettings.iconPokemon = new IconSelect("setPokemon", {
+            'selectedIconWidth': 48,
+            'selectedIconHeight': 48,
+            'selectedBoxPadding': 1,
+            'iconsWidth': 48,
+            'iconsHeight': 48,
+            'boxIconSpace': 1,
+            'vectoralIconNumber': 1,
+            'horizontalIconNumber': 6
+        });
+
+        var selectPokemon = [];
+        let i = 0;
+        $.each($('.stan-pokemon'), function (index, item) {
+            let src = $(item).find('img').attr('src');
+            if (src != "undefined" && src != undefined) {
+                selectPokemon.push({ 'iconFilePath': $(item).find('img').attr('src'), 'iconValue': "&wybierz_pokemona=" + i });
+                i = i + 1;
+            }
+        });
+
+        AutoGoSettings.iconPokemon.refresh(selectPokemon);
+
+        if (window.localStorage.pokemonIconsIndex) {
+            AutoGoSettings.iconPokemon.setSelectedIndex(window.localStorage.pokemonIconsIndex);
+        } else {
+            AutoGoSettings.iconPokemon.setSelectedIndex(0);
+            window.localStorage.pokemonIconsIndex = 0;
+        }
+
+        document.getElementById('setPokemon').addEventListener('changed', function (e) {
+            window.localStorage.pokemonIconsIndex = AutoGoSettings.iconPokemon.getSelectedIndex();
+        });
+    }
+    initPokemonIcon();
+
+    function initPokeballIcon() {
+        $('body').append('<div id="setPokeball" style="position: fixed; cursor: pointer; top: 0; left: 60px; z-index: 9999"></div>');
+
+        AutoGoSettings.iconPokeball = new IconSelect("setPokeball", {
+            'selectedIconWidth': 48,
+            'selectedIconHeight': 48,
+            'selectedBoxPadding': 1,
+            'iconsWidth': 48,
+            'iconsHeight': 48,
+            'boxIconSpace': 1,
+            'vectoralIconNumber': 1,
+            'horizontalIconNumber': 6
+        });
+
+        var selectPokeball = [
+            {
+                'iconFilePath': "images/pokesklep/pokeballe.jpg",
+                'iconValue': function(){
+                    return '&zlap_pokemona=pokeballe';
+                }
+            },
+            {
+                'iconFilePath': "images/pokesklep/greatballe.jpg",
+                'iconValue': function(){
+                    return '&zlap_pokemona=greatballe';
+                }
+            },
+            {
+                'iconFilePath': "images/pokesklep/nestballe.jpg",
+                'iconValue': function(){
+                    return '&zlap_pokemona=nestballe';
+                }
+            },
+            {
+                'iconFilePath': "images/pokesklep/friendballe.jpg",
+                'iconValue': function(){
+                    return '&zlap_pokemona=friendballe';
+                }
+            },
+            {
+                'iconFilePath': "images/pokesklep/nightballe.jpg",
+                'iconValue': function(){
+                    return '&zlap_pokemona=nightballe';
+                }
+            },
+            {
+                'iconFilePath': "images/pokesklep/cherishballe.jpg",
+                'iconValue': function(){
+                    return '&zlap_pokemona=cherishballe';
+                }
+            },
+            {
+                'iconFilePath': "images/pokesklep/lureballe.jpg",
+                'iconValue': function(){
+                    return '&zlap_pokemona=lureballe';
+                }
+            },
+            {
+                'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb1.jpg",
+                'iconValue': function(){
+                    let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                    if (pokeLvlNumber < 15) {
+                        return '&zlap_pokemona=nestballe';
+                    } else {
+                        return '&zlap_pokemona=greatballe';
+                    }
+                }
+            },
+            {
+                'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb2.png",
+                'iconValue': function(){
+                    var d = new Date();
+                    var h = d.getHours();
+                    if (h >= 22 || h < 6) {
+                        return '&zlap_pokemona=nightballe';
+                    }
+                    let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                    if (pokeLvlNumber < 15) {
+                        return '&zlap_pokemona=nestballe';
+                    } else {
+                        return '&zlap_pokemona=greatballe';
+                    }
+                }
+            },
+            {
+                'iconFilePath': "images/pokesklep/swarmballe.jpg",
+                'iconValue': function() {
+                    var d = new Date();
+                    var h = d.getHours();
+                    if (h >= 22 || h < 6) {
+                        return '&zlap_pokemona=nightballe';
+                    }
+                    let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                    if (pokeLvlNumber < 3) {
+                        return '&zlap_pokemona=uzyj_swarmballe';
+                    } else if (pokeLvlNumber >= 3 && pokeLvlNumber < 15) {
+                        return '&zlap_pokemona=nestballe';
+                    } else {
+                        return '&zlap_pokemona=greatballe';
+                    }
+                }
+            },
+            {
+                'iconFilePath': "https://gra.pokelife.pl/images/event/sniezka.jpg",
+                'iconValue': function(){
+                    var pokemonId = $('#glowne_okno img:nth(1)').attr("src").split("/")[2].split('.')[0];
+                    var fruits = ["361", "362", "378", "471", "582", "583", "584", "613", "614", "615", "712", "713", "124", "144", "220", "221", "225", "238", "363", "364", "365", "473", "478", "87", "91", "131", "215", "459", "460", "461", "479"];
+                    if(fruits.indexOf(pokemonId) != -1){
+                        return '&zlap_pokemona=pokeballe';
+                    }
+                    var d = new Date();
+                    var h = d.getHours();
+                    if (h >= 22 || h < 6) {
+                        return '&zlap_pokemona=nightballe';
+                    }
+                    let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                    if (pokeLvlNumber < 15) {
+                        return '&zlap_pokemona=nestballe';
+                    } else {
+                        return '&zlap_pokemona=greatballe';
+                    }
+                }
+            }
+        ];
+
+        AutoGoSettings.iconPokeball.refresh(selectPokeball);
+
+        if (window.localStorage.pokeballIconIndex) {
+            AutoGoSettings.iconPokeball.setSelectedIndex(window.localStorage.pokeballIconIndex);
+        } else {
+            AutoGoSettings.iconPokeball.setSelectedIndex(1);
+            window.localStorage.pokeballIconIndex = 1;
+        }
+
+        document.getElementById('setPokeball').addEventListener('changed', function (e) {
+            window.localStorage.pokeballIconIndex = AutoGoSettings.iconPokeball.getSelectedIndex();
+        });
+    }
+    initPokeballIcon();
+
+    function initLocationIcon() {
+        $('body').append('<div id="setLocation" style="position: fixed; cursor: pointer; top: 0; left: 117px; z-index: 9999"></div>');
+
+        AutoGoSettings.iconLocation = new IconSelect("setLocation", {
+            'selectedIconWidth': 48,
+            'selectedIconHeight': 48,
+            'selectedBoxPadding': 1,
+            'iconsWidth': 48,
+            'iconsHeight': 48,
+            'boxIconSpace': 1,
+            'vectoralIconNumber': 1,
+            'horizontalIconNumber': 6
+        });
+
+        var icons = [];
+        $.each($('#pasek_skrotow li'), function (index, item) {
+            if ($(item).find('a').attr('href').substring(0, 9) == "gra/dzicz") {
+                icons.push({ 'iconFilePath': $(item).find('img').attr('src'), 'iconValue': $(item).find('a').attr('href').substring(28) });
+            }
+        });
+
+        AutoGoSettings.iconLocation.refresh(icons);
+
+        if (window.localStorage.locationIconsIndex) {
+            AutoGoSettings.iconLocation.setSelectedIndex(window.localStorage.locationIconsIndex);
+        } else {
+            AutoGoSettings.iconLocation.setSelectedIndex(0);
+            window.localStorage.locationIconsIndex = 0;
+        }
+
+        document.getElementById('setLocation').addEventListener('changed', function (e) {
+            window.localStorage.locationIconsIndex = AutoGoSettings.iconLocation.getSelectedIndex();
+        });
+    }
+    initLocationIcon();
+
+    function initGoButton(){
+        window.localStorage.spaceGo == undefined ? window.localStorage.spaceGo = true : null;
+        $('body').append('<div id="goButton" style="' + (window.localStorage.spaceGo ? (window.localStorage.spaceGo == "true" ? "opacity: 0.3;" : "opacity: 1;") : "opacity: 1;") + 'border-radius: 4px;position: fixed; cursor: pointer; top: 5px; right: 10px; font-size: 36px; text-align: center; width: 100px; height: 48px; line-height: 48px; background: ' + $('.panel-heading').css('background-color') + '; z-index: 9999">GO</div>');
+        $('body').append('<div id="goAutoButton" style="border-radius: 4px;position: fixed; cursor: pointer; top: 5px; right: 122px; font-size: 36px; text-align: center; width: 140px; height: 48px; line-height: 48px; background: ' + $('.panel-heading').css('background-color') + '; z-index: 9999">AutoGO</div>');
+    }
+    initGoButton();
+
+    function click() {
+        var canRun = true;
+
+        $('.stan-pokemon div.progress:first-of-type .progress-bar').each(function (index) {
+            var now = $(this).attr("aria-valuenow");
+            var max = $(this).attr("aria-valuemax");
+            if (Number(now) < Number(max)) {
+                if (lastClick === 'leczenie') {
+                    canRun = false;
+                } else {
+                    canRun = false;
+                    lastClick = 'leczenie';
+                    console.log('PokeLifeScript: lecze ze jagody');
+                    $.get( 'gra/plecak.php?uzyj&rodzaj_przedmiotu=czerwone_jagody&tylko_komunikat&ulecz_wszystkie&zjedz_max', function( data ) {
+                        console.log('PokeLifeScript: lecze ze yeny');
+                        $.get( 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat', function( data ) {
+                            var koszt = $(data).find(".alert-success strong").html().split(" ¥")[0];
+                            updateStats("koszty_leczenia", koszt.replace(/\./g, ''));
+
+                            $.get( 'inc/stan.php', function( data ) {
+                                $( "#sidebar" ).html( data );
+                                $('.btn-wybor_pokemona').attr("disabled", false);
+                                $('.btn-wybor_pokemona .progress-bar').css("width", "100%");
+                                $('.btn-wybor_pokemona .progress-bar span').html("100% PŻ");
+                                click();
+                            });
+                        });
+                    });
+                }
+            }
+        });
+
+        if (canRun) {
+            lastClick = 'nieleczenie';
+            window.localStorage.catchMode = true;
+            if($('#glowne_okno .panel-heading').length > 0){
+                if ($('.dzikipokemon-background-shiny').length > 0) {
+                    console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
+                    autoGo = false;
+                    $('#goAutoButton').html('AutoGO');
+                    fetch("https://bra1ns.com/pokelife/insert.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim());
+                } else if (window.localStorage.catchMode == "true" && $('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
+                    console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
+                    autoGo = false;
+                    $('#goAutoButton').html('AutoGO');
+                } else if ($('.dzikipokemon-background-normalny').length == 1) {
+                    console.log('PokeLifeScript: atakuje pokemona');
+                    var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue() + AutoGoSettings.iconPokemon.getSelectedValue();
+                    $('button[href="' + url + '"]').trigger('click');
+                } else if ($("form[action='dzicz.php?zlap']").length == 1) {
+                    console.log('PokeLifeScript: rzucam pokeballa');
+                    $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue() + AutoGoSettings.iconPokeball.getSelectedValue().call() + '"]').trigger('click');
+                } else if ($("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue()+ "']").length == 1) {
+                    console.log('PokeLifeScript: rzucam 1 swarmballa');
+                    $("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue()+ "']").submit();
+                } else if ($('.progress-stan2 div').attr('aria-valuenow') < 5) {
+                    console.log('PokeLifeScript: brak PA, przerywam AutoGo');
+                    autoGo = false;
+                    $('#goAutoButton').html('AutoGO');
+                } else {
+                    console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue() + ".");
+                    $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue() + '"] img').trigger('click');
+                }
+            }
+        }
+    }
+
+    $(document).on("click", "#goButton", function(){
+        click();
+    });
+
+    $(document).on("click", '#goAutoButton', function () {
+        if (autoGo) {
+            autoGo = false;
+            $('#goAutoButton').html('AutoGO');
+        } else {
+            autoGo = true;
+            $('#goAutoButton').html('STOP');
+            click();
+        }
+    });
+
+    afterReloadMain(function(){
+        if (autoGo) {
+            click();
+        } else {
+            $("html, body").animate({ scrollTop: 0 }, "fast");
+        }
+    })
+
+    onReloadMain(function(){
+        if (autoGo) {
+            if(this.find(".panel-body > p.alert-danger").length > 0){
+                if(this.find(".panel-body > p.alert-danger:contains('Posiadasz za mało punktów akcji')").length > 0){
+                    console.log('PokeLifeScript: brak PA, przerywam AutoGo');
+                    autoGo = false;
+                    $('#goAutoButton').html('AutoGO');
+                } else if(this.find(".panel-body > p.alert-danger:contains('Nie masz wystarczającej ilośći Punktów Akcji')").length > 0){
+                    console.log('PokeLifeScript: brak PA, przerywam AutoGo');
+                    autoGo = false;
+                    $('#goAutoButton').html('AutoGO');
+                }
+            }
+        }
+    })
+
+    $(window).keypress(function (e) {
+        if (e.key === ' ' || e.key === 'Spacebar') {
+            if ($('input:focus').length == 0 && $('textarea:focus').length == 0 && $('#glowne_okno .panel-heading').length == 0){
+                e.preventDefault();
+                click();
+            } else if ($('input:focus').length == 0 && $('textarea:focus').length == 0 && $('#glowne_okno .panel-heading').html() !== "Poczta" && !$('#glowne_okno .panel-heading').html().startsWith("Stowarzyszenie")) {
+                e.preventDefault();
+                click();
+            }
+        }
+    });
+};
+initAutoGo();
 
 
 
@@ -275,86 +637,6 @@ function initSkins(){
     });
 }
 initSkins();
-
-
-
-// **********************
-//
-// initWielkanocWidget
-// Funkcja pokazująca ilość jajek złapanych danego dnia
-//
-// **********************
-
-function initWielkanocWidget(){
-    var d = new Date();
-    if(d.getDate() <= 28 && d.getDate() >= 15 && d.getMonth() == 3){
-        var wielkanocWidget;
-
-        function refreshWielkanocWidget(){
-            $.ajax({
-                type: 'POST',
-                url: "gra/statystyki.php"
-            }).done(function (response) {
-                var html = '<div class="panel panel-primary"><div class="panel-heading">Wielkanoc 2019<div class="navbar-right"><span id="refreshWielkanocWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
-                var text = $(response).find('#statystyki .statystyki-wyglad:nth(1)').html();
-                if(text == "15 / 15"){
-                    html = html +'<p style=" margin: 5px 0; text-align: center; font-size: 19px; ">Zebrano wszystkie jajka</p>';
-                } else {
-                    html = html + '<p style=" margin: 5px 0; text-align: center; font-size: 19px; ">Zebrane jajka ' + text + '</p>';
-                }
-                html = html + '</tbody></table></div>';
-                wielkanocWidget = html;
-            });
-        }
-        refreshWielkanocWidget();
-
-        onReloadSidebar(function(){
-            this.find(".panel-heading:contains('Drużyna')").parent().before(wielkanocWidget);
-        })
-
-        var api = "https://raw.githubusercontent.com/krozum/pokelife/master/pokemon.json";
-        $.getJSON(api, {
-            format: "json"
-        }).done(function (data) {
-            var wielkanocData = data;
-            var html;
-            var url;
-
-            onReloadMain(function(){
-                if(this.find("p.alert-success:contains('Poszukiwania Jajek')").length > 0){
-                    refreshWielkanocWidget();
-                }
-
-                if(this.find(".alert-warning:not(:contains('\"R\"')) b").length > 0){
-                    var text = this.find(".alert-warning:not(:contains('\"R\"')) b:nth(0)").html();
-                    if(typeof wielkanocData[text] != undefined){
-                        html = '<p class="alert alert-warning text-center">Jajko jest w <strong>'+wielkanocData[text]+'</strong></p>';
-                        this.find(".panel-body p:nth(0)").after(html);
-                    }
-
-                    if(this.find(".alert-warning:not(:contains('\"R\"')) b").length > 1){
-                        text = this.find(".alert-warning:not(:contains('\"R\"')) b:nth(1)").html();
-                        if(typeof wielkanocData[text] != undefined){
-                            html = '<p class="alert alert-warning text-center">Jajko jest w <strong>'+wielkanocData[text]+'</strong></p>';
-                            this.find(".panel-body p:nth(0)").after(html);
-                        }
-                    }
-
-                    $(document).on("click", ".setDzicz", function (event) {
-                        var url = $(this).data('url');
-                        alert(url);
-                    });
-                }
-            })
-        })
-
-        $(document).on("click", "#refreshWielkanocWidget", function (event) {
-            refreshWielkanocWidget();
-            $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
-        });
-    }
-}
-initWielkanocWidget();
 
 
 
@@ -576,367 +858,6 @@ initVersionInfo();
 
 // **********************
 //
-// initAutoGo
-// Funkcja dodająca automatyczne klikanie w wyprawy
-//
-// **********************
-function initAutoGo(){
-    var iconPokemon;
-    var iconPokeball;
-    var iconLocation;
-    var lastClick;
-    var autoGo;
-
-    function initPokemonIcon() {
-        $('body').append('<div id="setPokemon" style="position: fixed; cursor: pointer; top: 0; left: 10px; z-index: 9999"></div>');
-
-        IconSelect.COMPONENT_ICON_FILE_PATH = "";
-
-        iconPokemon = new IconSelect("setPokemon", {
-            'selectedIconWidth': 48,
-            'selectedIconHeight': 48,
-            'selectedBoxPadding': 1,
-            'iconsWidth': 48,
-            'iconsHeight': 48,
-            'boxIconSpace': 1,
-            'vectoralIconNumber': 1,
-            'horizontalIconNumber': 6
-        });
-
-        console.log(iconPokemon);
-
-        var selectPokemon = [];
-        let i = 0;
-        $.each($('.stan-pokemon'), function (index, item) {
-            let src = $(item).find('img').attr('src');
-            if (src != "undefined" && src != undefined) {
-                selectPokemon.push({ 'iconFilePath': $(item).find('img').attr('src'), 'iconValue': "&wybierz_pokemona=" + i });
-                i = i + 1;
-            }
-        });
-
-        iconPokemon.refresh(selectPokemon);
-
-        if (window.localStorage.pokemonIconsIndex) {
-            iconPokemon.setSelectedIndex(window.localStorage.pokemonIconsIndex);
-        } else {
-            iconPokemon.setSelectedIndex(0);
-            window.localStorage.pokemonIconsIndex = 0;
-        }
-
-        document.getElementById('setPokemon').addEventListener('changed', function (e) {
-            window.localStorage.pokemonIconsIndex = iconPokemon.getSelectedIndex();
-        });
-    }
-    initPokemonIcon();
-
-    function initPokeballIcon() {
-        $('body').append('<div id="setPokeball" style="position: fixed; cursor: pointer; top: 0; left: 60px; z-index: 9999"></div>');
-
-        iconPokeball = new IconSelect("setPokeball", {
-            'selectedIconWidth': 48,
-            'selectedIconHeight': 48,
-            'selectedBoxPadding': 1,
-            'iconsWidth': 48,
-            'iconsHeight': 48,
-            'boxIconSpace': 1,
-            'vectoralIconNumber': 1,
-            'horizontalIconNumber': 6
-        });
-
-        var selectPokeball = [
-            {
-                'iconFilePath': "images/pokesklep/pokeballe.jpg",
-                'iconValue': function(){
-                    return '&zlap_pokemona=pokeballe';
-                }
-            },
-            {
-                'iconFilePath': "images/pokesklep/greatballe.jpg",
-                'iconValue': function(){
-                    return '&zlap_pokemona=greatballe';
-                }
-            },
-            {
-                'iconFilePath': "images/pokesklep/nestballe.jpg",
-                'iconValue': function(){
-                    return '&zlap_pokemona=nestballe';
-                }
-            },
-            {
-                'iconFilePath': "images/pokesklep/friendballe.jpg",
-                'iconValue': function(){
-                    return '&zlap_pokemona=friendballe';
-                }
-            },
-            {
-                'iconFilePath': "images/pokesklep/nightballe.jpg",
-                'iconValue': function(){
-                    return '&zlap_pokemona=nightballe';
-                }
-            },
-            {
-                'iconFilePath': "images/pokesklep/cherishballe.jpg",
-                'iconValue': function(){
-                    return '&zlap_pokemona=cherishballe';
-                }
-            },
-            {
-                'iconFilePath': "images/pokesklep/lureballe.jpg",
-                'iconValue': function(){
-                    return '&zlap_pokemona=lureballe';
-                }
-            },
-            {
-                'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb1.jpg",
-                'iconValue': function(){
-                    let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                    if (pokeLvlNumber < 15) {
-                        return '&zlap_pokemona=nestballe';
-                    } else {
-                        return '&zlap_pokemona=greatballe';
-                    }
-                }
-            },
-            {
-                'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb2.png",
-                'iconValue': function(){
-                    var d = new Date();
-                    var h = d.getHours();
-                    if (h >= 22 || h < 6) {
-                        return '&zlap_pokemona=nightballe';
-                    }
-                    let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                    if (pokeLvlNumber < 15) {
-                        return '&zlap_pokemona=nestballe';
-                    } else {
-                        return '&zlap_pokemona=greatballe';
-                    }
-                }
-            },
-            {
-                'iconFilePath': "images/pokesklep/swarmballe.jpg",
-                'iconValue': function() {
-                    var d = new Date();
-                    var h = d.getHours();
-                    if (h >= 22 || h < 6) {
-                        return '&zlap_pokemona=nightballe';
-                    }
-                    let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                    if (pokeLvlNumber < 3) {
-                        return '&zlap_pokemona=uzyj_swarmballe';
-                    } else if (pokeLvlNumber >= 3 && pokeLvlNumber < 15) {
-                        return '&zlap_pokemona=nestballe';
-                    } else {
-                        return '&zlap_pokemona=greatballe';
-                    }
-                }
-            },
-            {
-                'iconFilePath': "https://gra.pokelife.pl/images/event/sniezka.jpg",
-                'iconValue': function(){
-                    var pokemonId = $('#glowne_okno img:nth(1)').attr("src").split("/")[2].split('.')[0];
-                    var fruits = ["361", "362", "378", "471", "582", "583", "584", "613", "614", "615", "712", "713", "124", "144", "220", "221", "225", "238", "363", "364", "365", "473", "478", "87", "91", "131", "215", "459", "460", "461", "479"];
-                    if(fruits.indexOf(pokemonId) != -1){
-                        return '&zlap_pokemona=pokeballe';
-                    }
-                    var d = new Date();
-                    var h = d.getHours();
-                    if (h >= 22 || h < 6) {
-                        return '&zlap_pokemona=nightballe';
-                    }
-                    let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                    if (pokeLvlNumber < 15) {
-                        return '&zlap_pokemona=nestballe';
-                    } else {
-                        return '&zlap_pokemona=greatballe';
-                    }
-                }
-            }
-        ];
-
-        iconPokeball.refresh(selectPokeball);
-
-        if (window.localStorage.pokeballIconIndex) {
-            iconPokeball.setSelectedIndex(window.localStorage.pokeballIconIndex);
-        } else {
-            iconPokeball.setSelectedIndex(1);
-            window.localStorage.pokeballIconIndex = 1;
-        }
-
-        document.getElementById('setPokeball').addEventListener('changed', function (e) {
-            window.localStorage.pokeballIconIndex = iconPokeball.getSelectedIndex();
-        });
-    }
-    initPokeballIcon();
-
-    function initLocationIcon() {
-        $('body').append('<div id="setLocation" style="position: fixed; cursor: pointer; top: 0; left: 117px; z-index: 9999"></div>');
-
-        iconLocation = new IconSelect("setLocation", {
-            'selectedIconWidth': 48,
-            'selectedIconHeight': 48,
-            'selectedBoxPadding': 1,
-            'iconsWidth': 48,
-            'iconsHeight': 48,
-            'boxIconSpace': 1,
-            'vectoralIconNumber': 1,
-            'horizontalIconNumber': 6
-        });
-
-        var icons = [];
-        $.each($('#pasek_skrotow li'), function (index, item) {
-            if ($(item).find('a').attr('href').substring(0, 9) == "gra/dzicz") {
-                icons.push({ 'iconFilePath': $(item).find('img').attr('src'), 'iconValue': $(item).find('a').attr('href').substring(28) });
-            }
-        });
-
-        iconLocation.refresh(icons);
-
-        if (window.localStorage.locationIconsIndex) {
-            iconLocation.setSelectedIndex(window.localStorage.locationIconsIndex);
-        } else {
-            iconLocation.setSelectedIndex(0);
-            window.localStorage.locationIconsIndex = 0;
-        }
-
-        document.getElementById('setLocation').addEventListener('changed', function (e) {
-            window.localStorage.locationIconsIndex = iconLocation.getSelectedIndex();
-        });
-    }
-    initLocationIcon();
-
-    function initGoButton(){
-        window.localStorage.spaceGo == undefined ? window.localStorage.spaceGo = true : null;
-        $('body').append('<div id="goButton" style="' + (window.localStorage.spaceGo ? (window.localStorage.spaceGo == "true" ? "opacity: 0.3;" : "opacity: 1;") : "opacity: 1;") + 'border-radius: 4px;position: fixed; cursor: pointer; top: 5px; right: 10px; font-size: 36px; text-align: center; width: 100px; height: 48px; line-height: 48px; background: ' + $('.panel-heading').css('background-color') + '; z-index: 9999">GO</div>');
-        $('body').append('<div id="goAutoButton" style="border-radius: 4px;position: fixed; cursor: pointer; top: 5px; right: 122px; font-size: 36px; text-align: center; width: 140px; height: 48px; line-height: 48px; background: ' + $('.panel-heading').css('background-color') + '; z-index: 9999">AutoGO</div>');
-    }
-    initGoButton();
-
-    function click() {
-        var canRun = true;
-
-        $('.stan-pokemon div.progress:first-of-type .progress-bar').each(function (index) {
-            var now = $(this).attr("aria-valuenow");
-            var max = $(this).attr("aria-valuemax");
-            if (Number(now) < Number(max)) {
-                if (lastClick === 'leczenie') {
-                    canRun = false;
-                } else {
-                    canRun = false;
-                    lastClick = 'leczenie';
-                    console.log('PokeLifeScript Beta: lecze ze jagody');
-                    $.get( 'gra/plecak.php?uzyj&rodzaj_przedmiotu=czerwone_jagody&tylko_komunikat&ulecz_wszystkie&zjedz_max', function( data ) {
-                        console.log('PokeLifeScript Beta: lecze ze yeny');
-                        $.get( 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat', function( data ) {
-                            var koszt = $(data).find(".alert-success strong").html().split(" ¥")[0];
-                            updateStats("koszty_leczenia", koszt.replace(/\./g, ''));
-
-                            $.get( 'inc/stan.php', function( data ) {
-                                $( "#sidebar" ).html( data );
-                                $('.btn-wybor_pokemona').attr("disabled", false);
-                                $('.btn-wybor_pokemona .progress-bar').css("width", "100%");
-                                $('.btn-wybor_pokemona .progress-bar span').html("100% PŻ");
-                                click();
-                            });
-                        });
-                    });
-                }
-            }
-        });
-
-        if (canRun) {
-            lastClick = 'nieleczenie';
-            window.localStorage.catchMode = true;
-            if($('#glowne_okno .panel-heading').length > 0){
-                if ($('.dzikipokemon-background-shiny').length > 0) {
-                    console.log('PokeLifeScript Beta: spotkany Shiny, przerwanie AutoGo');
-                    autoGo = false;
-                    $('#goAutoButton').html('AutoGO');
-                    fetch("https://bra1ns.com/pokelife/insert.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim());
-                } else if (window.localStorage.catchMode == "true" && $('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
-                    console.log('PokeLifeScript Beta: spotkany niezłapany pokemona, przerwanie AutoGo');
-                    autoGo = false;
-                    $('#goAutoButton').html('AutoGO');
-                } else if ($('.dzikipokemon-background-normalny').length == 1) {
-                    console.log('PokeLifeScript Beta: atakuje pokemona');
-                    var url = "dzicz.php?miejsce=" + iconLocation.getSelectedValue() + iconPokemon.getSelectedValue();
-                    $('button[href="' + url + '"]').trigger('click');
-                } else if ($("form[action='dzicz.php?zlap']").length == 1) {
-                    console.log('PokeLifeScript Beta: rzucam pokeballa');
-                    $('label[href="dzicz.php?miejsce=' + iconLocation.getSelectedValue() + iconPokeball.getSelectedValue().call() + '"]').trigger('click');
-                } else if ($("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + iconLocation.getSelectedValue()+ "']").length == 1) {
-                    console.log('PokeLifeScript Beta: rzucam 1 swarmballa');
-                    $("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + iconLocation.getSelectedValue()+ "']").submit();
-                } else if ($('.progress-stan2 div').attr('aria-valuenow') < 5) {
-                    console.log('PokeLifeScript Beta: brak PA, przerywam AutoGo');
-                    autoGo = false;
-                    $('#goAutoButton').html('AutoGO');
-                } else {
-                    console.log('PokeLifeScript Beta: idę do dziczy ' + iconLocation.getSelectedValue() + ".");
-                    $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + iconLocation.getSelectedValue() + '"] img').trigger('click');
-                }
-            }
-        }
-    }
-
-    $(document).on("click", "#goButton", function(){
-        click();
-    });
-
-    $(document).on("click", '#goAutoButton', function () {
-        if (autoGo) {
-            autoGo = false;
-            $('#goAutoButton').html('AutoGO');
-        } else {
-            autoGo = true;
-            $('#goAutoButton').html('STOP');
-            click();
-        }
-    });
-
-    afterReloadMain(function(){
-        if (autoGo) {
-            click();
-        } else {
-            $("html, body").animate({ scrollTop: 0 }, "fast");
-        }
-    })
-
-    onReloadMain(function(){
-        if (autoGo) {
-            if(this.find(".panel-body > p.alert-danger").length > 0){
-                if(this.find(".panel-body > p.alert-danger:contains('Posiadasz za mało punktów akcji')").length > 0){
-                    console.log('PokeLifeScript Beta: brak PA, przerywam AutoGo');
-                    autoGo = false;
-                    $('#goAutoButton').html('AutoGO');
-                } else if(this.find(".panel-body > p.alert-danger:contains('Nie masz wystarczającej ilośći Punktów Akcji')").length > 0){
-                    console.log('PokeLifeScript Beta: brak PA, przerywam AutoGo');
-                    autoGo = false;
-                    $('#goAutoButton').html('AutoGO');
-                }
-            }
-        }
-    })
-
-    $(window).keypress(function (e) {
-        if (e.key === ' ' || e.key === 'Spacebar') {
-            if ($('input:focus').length == 0 && $('textarea:focus').length == 0 && $('#glowne_okno .panel-heading').length == 0){
-                e.preventDefault();
-                click();
-            } else if ($('input:focus').length == 0 && $('textarea:focus').length == 0 && $('#glowne_okno .panel-heading').html() !== "Poczta" && !$('#glowne_okno .panel-heading').html().startsWith("Stowarzyszenie")) {
-                e.preventDefault();
-                click();
-            }
-        }
-    });
-};
-initAutoGo();
-
-
-
-// **********************
-//
 // initLogger
 // Funkcja dodająca logowanie tego co wyświetla sie na ekranie
 //
@@ -946,10 +867,10 @@ function initLogger(){
         var DATA = this;
 
         if(DATA.find("p.alert-info:contains('Niestety, tym razem nie spotkało cię nic interesującego.')").length > 0){
-            console.log('PokeLifeScript Beta: pusta wyprawa');
+            console.log('PokeLifeScript: pusta wyprawa');
         } else if(DATA.find("p.alert-success:contains('pojedynek')").length > 0){
             console.log(DATA.find("p.alert-success:contains('pojedynek')").html());
-            console.log('PokeLifeScript Beta: walka z trenerem');
+            console.log('PokeLifeScript: walka z trenerem');
             updateStats("walki_z_trenerami", 1);
             var pd = 0;
             if(DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia'))").length > 2){
@@ -969,27 +890,27 @@ function initLogger(){
                 updateStats("zdobyte_doswiadczenie", pd);
             }
         } else if(DATA.find(".dzikipokemon-background-normalny").length > 0){
-            console.log('PokeLifeScript Beta: spotkany pokemon');
+            console.log('PokeLifeScript: spotkany pokemon');
         } else if(DATA.find("h2:contains('Złap Pokemona')").length > 0){
-            console.log('PokeLifeScript Beta: pokemon pokonany');
+            console.log('PokeLifeScript: pokemon pokonany');
             updateStats("wygranych_walk_w_dziczy", 1);
             updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]);
         } else if(DATA.find("h2:contains('Pokemon Ucieka')").length > 0){
-            console.log('PokeLifeScript Beta: pokemon pokonany ale ucieka');
+            console.log('PokeLifeScript: pokemon pokonany ale ucieka');
             updateStats("wygranych_walk_w_dziczy", 1);
             updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]);
         } else if(DATA.find(".panel-body > p.alert-success:contains('Udało Ci się złapać')").length > 0){
-            console.log('PokeLifeScript Beta: pokemon złapany');
+            console.log('PokeLifeScript: pokemon złapany');
             updateStats("zlapanych_pokemonow", 1);
             if(DATA.find('p.alert-success:nth(1):contains("nie masz już miejsca")').length > 0){
                 var zarobek  = DATA.find('p.alert-success:nth(1):contains("nie masz już miejsca") strong').html().split(" ")[0].replace(/\./g, '');
                 updateStats("zarobki_z_hodowli", zarobek);
             }
         } else if(DATA.find(".panel-body > p.alert-danger:contains('uwolnił')").length > 0){
-            console.log('PokeLifeScript Beta: pokemon sie uwolnił');
+            console.log('PokeLifeScript: pokemon sie uwolnił');
             updateStats("niezlapanych_pokemonow", 1);
         } else if(DATA.find(".panel-body > p.alert-success").length > 0){
-            console.log('PokeLifeScript Beta: event w dziczy');
+            console.log('PokeLifeScript: event w dziczy');
             if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html() != undefined && DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html().indexOf("Jagód") != -1) {
                 if(DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b').html() == "Czerwonych Jagód"){
                     updateStats("zebrane_czerwone_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
@@ -1018,7 +939,7 @@ function initLogger(){
                 }
             }
         } else if(DATA.find(".panel-body > p.alert-info").length > 0){
-            console.log('PokeLifeScript Beta: event w dziczy');
+            console.log('PokeLifeScript: event w dziczy');
         }
     })
 }
@@ -1041,7 +962,7 @@ function initSzybkieKlikanieWLinkiPromocyjne(){
             $(w).load(setTimeout(function () {
                 w.close();
                 $('#klikniecie-' + number).html('TAK');
-                console.log('PokeLifeScript Beta: klikam link ' + number);
+                console.log('PokeLifeScript: klikam link ' + number);
                 setTimeout(function () { clickInLink(number + 1, id); }, 300);
             }, 300));
         } else {
@@ -1136,12 +1057,13 @@ function initRozbudowanyOpisDziczy(){
                     var name = $(item).find('a').data('original-title').split('Wyprawa: ')[1];
 
                     $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce='+url+'"]', function(){
-                        var html = '<div id="opis'+name.replace(/[ ]/g, '')+'" style="z-index: 999; max-width: 300px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">';
+                        var html = '<div class="row" id="opis'+name.replace(/[ ]/g, '')+'" style="z-index: 999; width: 600px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">';
                         var wszystkie = true;
+
                         $.each(pokemonData[region], function(index, value) {
                             if(value.wystepowanie == name && value.do_zlapania == 1 && kolekcjaData[region][value.id] == false){
                                 wszystkie = false;
-                                html = html + '<li style="display: inline; float: left; margin: 5px; text-align: center;"><img style="max-width: 40px; max-height: 40px;" src="https://gra.pokelife.pl/pokemony/niezdobyte/'+value.id+'.png"><p style="margin: 0;">'+value.name+'</p></li>';
+                                html = html + '<div class="col-xs-2" style="display: inline; float: left; padding: 0; margin-top: 5px; text-align: center;"><img style="margin-bottom: 5px; text-align: center; max-width: 80%;" src="https://gra.pokelife.pl/pokemony/niezdobyte/'+value.id+'.png"><p style="margin: 0; margin-top: 5px; margin-bottom: 5px">'+value.name+'</p></div>';
                             }
                         })
                         if(wszystkie){
@@ -1162,3 +1084,84 @@ function initRozbudowanyOpisDziczy(){
     });
 }
 initRozbudowanyOpisDziczy();
+
+
+
+// **********************
+//
+// initWielkanocWidget
+// Funkcja pokazująca ilość jajek złapanych danego dnia
+//
+// **********************
+
+function initWielkanocWidget(){
+    var d = new Date();
+    if(d.getDate() <= 28 && d.getDate() >= 15 && d.getMonth() == 3){
+        var wielkanocWidget;
+
+        function refreshWielkanocWidget(){
+            $.ajax({
+                type: 'POST',
+                url: "gra/statystyki.php"
+            }).done(function (response) {
+                var html = '<div class="panel panel-primary"><div class="panel-heading">Wielkanoc 2019<div class="navbar-right"><span id="refreshWielkanocWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
+                var text = $(response).find('#statystyki .statystyki-wyglad:nth(1)').html();
+                if(text == "15 / 15"){
+                    html = html +'<p style=" margin: 5px 0; text-align: center; font-size: 19px; ">Zebrano wszystkie jajka</p>';
+                } else {
+                    html = html + '<p style=" margin: 5px 0; text-align: center; font-size: 19px; ">Zebrane jajka ' + text + '</p>';
+                }
+                html = html + '</tbody></table></div>';
+                wielkanocWidget = html;
+            });
+        }
+        refreshWielkanocWidget();
+
+        onReloadSidebar(function(){
+            this.find(".panel-heading:contains('Drużyna')").parent().before(wielkanocWidget);
+        })
+
+        var api = "https://raw.githubusercontent.com/krozum/pokelife/master/wielkanoc.json";
+        $.getJSON(api, {
+            format: "json"
+        }).done(function (data) {
+            var wielkanocData = data;
+            var html;
+            var url;
+
+            onReloadMain(function(){
+                if(this.find("p.alert-success:contains('Poszukiwania Jajek')").length > 0){
+                    refreshWielkanocWidget();
+                }
+
+                if(this.find(".alert-warning:not(:contains('\"R\"')) b").length > 0){
+                    var text = this.find(".alert-warning:not(:contains('\"R\"')) b:nth(0)").html();
+                    if(typeof wielkanocData[text] != "undefined"){
+                        html = '<p class="alert alert-warning text-center">Jajko jest w <strong>'+wielkanocData[text]+'</strong></p>';
+                        this.find(".panel-body p:nth(0)").after(html);
+                    }
+
+                    if(this.find(".alert-warning:not(:contains('\"R\"')) b").length > 1){
+                        text = this.find(".alert-warning:not(:contains('\"R\"')) b:nth(1)").html();
+                        console.log(text);
+                        if(typeof wielkanocData[text] != "undefined"){
+                            html = '<p class="alert alert-warning text-center">Jajko jest w <strong>'+wielkanocData[text]+'</strong></p>';
+                            this.find(".panel-body p:nth(0)").after(html);
+                        }
+                    }
+
+                    $(document).on("click", ".setDzicz", function (event) {
+                        var url = $(this).data('url');
+                        alert(url);
+                    });
+                }
+            })
+        })
+
+        $(document).on("click", "#refreshWielkanocWidget", function (event) {
+            refreshWielkanocWidget();
+            $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+        });
+    }
+}
+initWielkanocWidget();
