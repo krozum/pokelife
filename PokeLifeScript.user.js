@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         PokeLifeScript v3
-// @version      3.4.1
+// @name         PokeLifeScript
+// @version      3.5
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -257,7 +257,12 @@ function initAutoGo(){
         $.each($('.stan-pokemon'), function (index, item) {
             let src = $(item).find('img').attr('src');
             if (src != "undefined" && src != undefined) {
-                selectPokemon.push({ 'iconFilePath': $(item).find('img').attr('src'), 'iconValue': "&wybierz_pokemona=" + i });
+                selectPokemon.push({
+                    'iconFilePath': $(item).find('img').attr('src'),
+                    'iconValue': function(){
+                        return "&wybierz_pokemona=" + AutoGoSettings.iconPokemon.getSelectedIndex();
+                    }
+                });
                 i = i + 1;
             }
         });
@@ -404,15 +409,15 @@ function initAutoGo(){
 
         AutoGoSettings.iconPokeball.refresh(selectPokeball);
 
-        if (window.localStorage.pokeballIconIndex) {
-            AutoGoSettings.iconPokeball.setSelectedIndex(window.localStorage.pokeballIconIndex);
+        if (window.localStorage.pokeballIconsIndex) {
+            AutoGoSettings.iconPokeball.setSelectedIndex(window.localStorage.pokeballIconsIndex);
         } else {
             AutoGoSettings.iconPokeball.setSelectedIndex(1);
-            window.localStorage.pokeballIconIndex = 1;
+            window.localStorage.pokeballIconsIndex = 1;
         }
 
         document.getElementById('setPokeball').addEventListener('changed', function (e) {
-            window.localStorage.pokeballIconIndex = AutoGoSettings.iconPokeball.getSelectedIndex();
+            window.localStorage.pokeballIconsIndex = AutoGoSettings.iconPokeball.getSelectedIndex();
         });
     }
     initPokeballIcon();
@@ -434,7 +439,12 @@ function initAutoGo(){
         var icons = [];
         $.each($('#pasek_skrotow li'), function (index, item) {
             if ($(item).find('a').attr('href').substring(0, 9) == "gra/dzicz") {
-                icons.push({ 'iconFilePath': $(item).find('img').attr('src'), 'iconValue': $(item).find('a').attr('href').substring(28) });
+                icons.push({
+                    'iconFilePath': $(item).find('img').attr('src'),
+                    'iconValue': function(){
+                        return $(item).find('a').attr('href').substring(28)
+                    }
+                });
             }
         });
 
@@ -507,21 +517,21 @@ function initAutoGo(){
                     $('#goAutoButton').html('AutoGO');
                 } else if ($('.dzikipokemon-background-normalny').length == 1) {
                     console.log('PokeLifeScript: atakuje pokemona');
-                    var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue() + AutoGoSettings.iconPokemon.getSelectedValue();
+                    var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
                     $('button[href="' + url + '"]').trigger('click');
                 } else if ($("form[action='dzicz.php?zlap']").length == 1) {
                     console.log('PokeLifeScript: rzucam pokeballa');
-                    $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue() + AutoGoSettings.iconPokeball.getSelectedValue().call() + '"]').trigger('click');
-                } else if ($("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue()+ "']").length == 1) {
+                    $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokeball.getSelectedValue().call() + '"]').trigger('click');
+                } else if ($("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call()+ "']").length == 1) {
                     console.log('PokeLifeScript: rzucam 1 swarmballa');
-                    $("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue()+ "']").submit();
+                    $("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call()+ "']").submit();
                 } else if ($('.progress-stan2 div').attr('aria-valuenow') < 5) {
                     console.log('PokeLifeScript: brak PA, przerywam AutoGo');
                     autoGo = false;
                     $('#goAutoButton').html('AutoGO');
                 } else {
-                    console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue() + ".");
-                    $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue() + '"] img').trigger('click');
+                    console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".");
+                    $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
                 }
             }
         }
@@ -1098,6 +1108,7 @@ function initWielkanocWidget(){
     var d = new Date();
     if(d.getDate() <= 28 && d.getDate() >= 15 && d.getMonth() == 3){
         var wielkanocWidget;
+        var aktualnaDziczZJajem = $('#pasek_skrotow a:nth(0)').attr('href').split('miejsce=')[1];
 
         function refreshWielkanocWidget(){
             $.ajax({
@@ -1132,6 +1143,7 @@ function initWielkanocWidget(){
             onReloadMain(function(){
                 if(this.find("p.alert-success:contains('Poszukiwania Jajek')").length > 0){
                     refreshWielkanocWidget();
+                    aktualnaDziczZJajem = $('#pasek_skrotow a:nth(0)').attr('href').split('miejsce=')[1];
                 }
 
                 if(this.find(".alert-warning:not(:contains('\"R\"')) b").length > 0){
@@ -1139,6 +1151,7 @@ function initWielkanocWidget(){
                     if(typeof wielkanocData[text] != "undefined"){
                         html = '<p class="alert alert-warning text-center">Jajko jest w <strong>'+wielkanocData[text]+'</strong></p>';
                         this.find(".panel-body p:nth(0)").after(html);
+                        aktualnaDziczZJajem = $('#pasek_skrotow a[data-original-title="Szybka Wyprawa: '+wielkanocData[text]+'"]').attr('href').split('miejsce=')[1];
                     }
 
                     if(this.find(".alert-warning:not(:contains('\"R\"')) b").length > 1){
@@ -1147,13 +1160,9 @@ function initWielkanocWidget(){
                         if(typeof wielkanocData[text] != "undefined"){
                             html = '<p class="alert alert-warning text-center">Jajko jest w <strong>'+wielkanocData[text]+'</strong></p>';
                             this.find(".panel-body p:nth(0)").after(html);
+                            aktualnaDziczZJajem = $('#pasek_skrotow a[data-original-title="Szybka Wyprawa: '+wielkanocData[text]+'"]').attr('href').split('miejsce=')[1];
                         }
                     }
-
-                    $(document).on("click", ".setDzicz", function (event) {
-                        var url = $(this).data('url');
-                        alert(url);
-                    });
                 }
             })
         })
@@ -1162,6 +1171,16 @@ function initWielkanocWidget(){
             refreshWielkanocWidget();
             $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
         });
+
+        var icons = [];
+        icons.push({
+            'iconFilePath': 'https://s3.party.pl/styl-zycia/dom/kuchnia-przepisy/koszyk-z-surowymi-jajkami-na-gorze-jajko-ugotowane-na-rwardo-przekrojone-na-pol-380054-MT.jpg',
+            'iconValue': function(){
+                return aktualnaDziczZJajem;
+            }
+        });
+
+        AutoGoSettings.iconLocation.refresh(icons);
     }
 }
 initWielkanocWidget();
