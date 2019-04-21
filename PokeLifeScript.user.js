@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.5
+// @version      3.5.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -457,7 +457,7 @@ function initAutoGo(){
             window.localStorage.locationIconsIndex = 0;
         }
 
-        document.getElementById('setLocation').addEventListener('changed', function (e) {
+        $(document).on('change', '#setLocation', function (e) {
             window.localStorage.locationIconsIndex = AutoGoSettings.iconLocation.getSelectedIndex();
         });
     }
@@ -1172,7 +1172,7 @@ function initWielkanocWidget(){
             $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
         });
 
-        var icons = [];
+        var icons = AutoGoSettings.iconLocation.getIcons();
         icons.push({
             'iconFilePath': 'https://s3.party.pl/styl-zycia/dom/kuchnia-przepisy/koszyk-z-surowymi-jajkami-na-gorze-jajko-ugotowane-na-rwardo-przekrojone-na-pol-380054-MT.jpg',
             'iconValue': function(){
@@ -1180,7 +1180,19 @@ function initWielkanocWidget(){
             }
         });
 
+        $('#setLocation-box-scroll > div').html('');
         AutoGoSettings.iconLocation.refresh(icons);
+
+        if (window.localStorage.locationIconsIndex) {
+            AutoGoSettings.iconLocation.setSelectedIndex(window.localStorage.locationIconsIndex);
+        } else {
+            AutoGoSettings.iconLocation.setSelectedIndex(0);
+            window.localStorage.locationIconsIndex = 0;
+        }
+
+        document.getElementById('setLocation').addEventListener('changed', function (e) {
+            window.localStorage.locationIconsIndex = AutoGoSettings.iconLocation.getSelectedIndex();
+        });
     }
 }
 initWielkanocWidget();
