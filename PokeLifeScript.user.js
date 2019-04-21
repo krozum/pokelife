@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.5.1
+// @version      3.5.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -375,7 +375,7 @@ function initAutoGo(){
                         return '&zlap_pokemona=nightballe';
                     }
                     let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                    if (pokeLvlNumber < 3) {
+                    if (pokeLvlNumber <= 4) {
                         return '&zlap_pokemona=uzyj_swarmballe';
                     } else if (pokeLvlNumber >= 3 && pokeLvlNumber < 15) {
                         return '&zlap_pokemona=nestballe';
@@ -385,23 +385,15 @@ function initAutoGo(){
                 }
             },
             {
-                'iconFilePath': "https://gra.pokelife.pl/images/event/sniezka.jpg",
+                'iconFilePath': "images/pokesklep/safariballe.jpg",
                 'iconValue': function(){
-                    var pokemonId = $('#glowne_okno img:nth(1)').attr("src").split("/")[2].split('.')[0];
-                    var fruits = ["361", "362", "378", "471", "582", "583", "584", "613", "614", "615", "712", "713", "124", "144", "220", "221", "225", "238", "363", "364", "365", "473", "478", "87", "91", "131", "215", "459", "460", "461", "479"];
-                    if(fruits.indexOf(pokemonId) != -1){
-                        return '&zlap_pokemona=pokeballe';
-                    }
-                    var d = new Date();
-                    var h = d.getHours();
-                    if (h >= 22 || h < 6) {
-                        return '&zlap_pokemona=nightballe';
-                    }
-                    let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                    if (pokeLvlNumber < 15) {
-                        return '&zlap_pokemona=nestballe';
+                    if($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50){
+                        return '&zlap_pokemona=safariballe';
+                    } else if ($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0)  {
+                        $('button:contains("Pomiń i szukaj dalej")').click();
+                        return "";
                     } else {
-                        return '&zlap_pokemona=greatballe';
+                        return "xxx";
                     }
                 }
             }
