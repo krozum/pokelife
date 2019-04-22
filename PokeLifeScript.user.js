@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.5.3
+// @version      3.5.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -375,7 +375,7 @@ function initAutoGo(){
                         return '&zlap_pokemona=nightballe';
                     }
                     let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                    if (pokeLvlNumber <= 4) {
+                    if (pokeLvlNumber <= 10) {
                         return '&zlap_pokemona=uzyj_swarmballe';
                     } else if (pokeLvlNumber >= 3 && pokeLvlNumber < 15) {
                         return '&zlap_pokemona=nestballe';
@@ -1095,7 +1095,6 @@ initRozbudowanyOpisDziczy();
 // Funkcja pokazująca ilość jajek złapanych danego dnia
 //
 // **********************
-
 function initWielkanocWidget(){
     var d = new Date();
     if(d.getDate() <= 28 && d.getDate() >= 15 && d.getMonth() == 3){
@@ -1188,3 +1187,23 @@ function initWielkanocWidget(){
     }
 }
 initWielkanocWidget();
+
+
+
+// **********************
+//
+// initPoprawaWygladuPokow
+// Funkcja podmieniająca obrazki na lepsze
+//
+// **********************
+function initPoprawaWygladuPokow(){
+    onReloadSidebar(function(){
+        this.find('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/a32j44.jpg');
+    });
+
+    onReloadMain(function(){
+        this.find('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/a32j44.jpg');
+        this.find('img[src="pokemony/srednie/s282.png"]').css('padding', '8px');
+    });
+}
+initPoprawaWygladuPokow();
