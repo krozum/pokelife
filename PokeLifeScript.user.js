@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.5.4
+// @version      3.5.5
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1143,6 +1143,8 @@ function initWielkanocWidget(){
                         html = '<p class="alert alert-warning text-center">Jajko jest w <strong>'+wielkanocData[text]+'</strong></p>';
                         this.find(".panel-body p:nth(0)").after(html);
                         aktualnaDziczZJajem = $('#pasek_skrotow a[data-original-title="Szybka Wyprawa: '+wielkanocData[text]+'"]').attr('href').split('miejsce=')[1];
+                    } else {
+                        console.log("WielkanocWidget: " + text);
                     }
 
                     if(this.find(".alert-warning:not(:contains('\"R\"')) b").length > 1){
@@ -1152,6 +1154,8 @@ function initWielkanocWidget(){
                             html = '<p class="alert alert-warning text-center">Jajko jest w <strong>'+wielkanocData[text]+'</strong></p>';
                             this.find(".panel-body p:nth(0)").after(html);
                             aktualnaDziczZJajem = $('#pasek_skrotow a[data-original-title="Szybka Wyprawa: '+wielkanocData[text]+'"]').attr('href').split('miejsce=')[1];
+                        } else {
+                            console.log("WielkanocWidget: " + text);
                         }
                     }
                 }
