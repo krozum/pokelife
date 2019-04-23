@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.6
+// @version      3.6.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -34,6 +34,14 @@ window.afterReloadMainFunctions = [];
 function afterReloadMain(fn) {
     window.afterReloadMainFunctions.push(fn);
 }
+
+function updateEvent(text, eventTypeId){
+    fetch("https://bra1ns.com/pokelife/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId)
+        .then(resp => {
+        console.log("updateEvent: "+eventTypeId+" => "+ text);
+    })
+}
+
 
 function updateStats(name, value){
     fetch("https://bra1ns.com/pokelife/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name="+name + "&value=" + value)
@@ -870,7 +878,11 @@ initVersionInfo();
 //
 // initLogger
 // Funkcja dodająca logowanie tego co wyświetla sie na ekranie
-//
+// eventTypeId:
+// 1 - pusta wyprawa
+// 2 - walka z trenerem wygrana
+// 3 - walka z trenerem przegrana
+// 4 - spotkany pokemon
 // **********************
 function initLogger(){
     onReloadMain(function(){
@@ -878,9 +890,11 @@ function initLogger(){
 
         if(DATA.find("p.alert-info:contains('Niestety, tym razem nie spotkało cię nic interesującego.')").length > 0){
             console.log('PokeLifeScript: pusta wyprawa');
+            updateEvent("Niestety, tym razem nie spotkało cię nic interesującego", 1);
         } else if(DATA.find("p.alert-success:contains('pojedynek')").length > 0){
             console.log(DATA.find("p.alert-success:contains('pojedynek')").html());
             console.log('PokeLifeScript: walka z trenerem');
+            updateEvent("Niestety, tym razem nie spotkało cię nic interesującego", 1);
             updateStats("walki_z_trenerami", 1);
             var pd = 0;
             var json = "";
@@ -893,6 +907,7 @@ function initLogger(){
                 });
                 updateStats("zarobki_z_trenerow", DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split(" ¥")[0]);
                 updateStats("zdobyte_doswiadczenie", pd);
+                updateEvent("Na twojej drodze staje inny trener pokemon, który wyzywa Cię na pojedynek. Wygrywasz " + DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split(" ¥")[0] + " ¥. Zdobyte doświadczenie: " + pd, 2);
                 updateStatsDoswiadczenie("{"+json.substring(0, json.length - 1)+"}");
             } else {
                 $.each(DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split("PD<br>"), function(key, value){
@@ -902,10 +917,12 @@ function initLogger(){
                     }
                 });
                 updateStats("zdobyte_doswiadczenie", pd);
+                updateEvent("Na twojej drodze staje inny trener pokemon, który wyzywa Cię na pojedynek ale niestety go przegrywasz. Zdobyte doświadczenie: " + pd, 3);
                 updateStatsDoswiadczenie("{"+json.substring(0, json.length - 1)+"}");
             }
         } else if(DATA.find(".dzikipokemon-background-normalny").length > 0){
             console.log('PokeLifeScript: spotkany pokemon');
+            updateEvent("Spotkany pokemon " + DATA.find('.panel-primary i').html(), 4);
         } else if(DATA.find("h2:contains('Złap Pokemona')").length > 0){
             console.log('PokeLifeScript: pokemon pokonany');
             updateStats("wygranych_walk_w_dziczy", 1);
