@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.5.5
+// @version      3.6
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -41,6 +41,14 @@ function updateStats(name, value){
         console.log("UpdateStats: "+name+" => "+ value);
     })
 }
+
+function updateStatsDoswiadczenie(json){
+    fetch("https://bra1ns.com/pokelife/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json="+json)
+        .then(resp => {
+        console.log("updateStatsDoswiadczenie: " + json);
+    })
+}
+
 
 var pa_before = $('#sidebar .progress-bar:contains("PA")').attr("aria-valuenow");
 const oldShow = jQuery.fn.html
@@ -875,21 +883,26 @@ function initLogger(){
             console.log('PokeLifeScript: walka z trenerem');
             updateStats("walki_z_trenerami", 1);
             var pd = 0;
+            var json = "";
             if(DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia'))").length > 2){
                 $.each(DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(2) b").html().split("PD<br>"), function(key, value){
                     if(value != ""){
                         pd = pd + Number(value.split("+")[1]);
+                        json = json + '"'+ value.split("+")[0].trim() + '":"' + Number(value.split("+")[1]) + '",';
                     }
                 });
                 updateStats("zarobki_z_trenerow", DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split(" ¥")[0]);
                 updateStats("zdobyte_doswiadczenie", pd);
+                updateStatsDoswiadczenie("{"+json.substring(0, json.length - 1)+"}");
             } else {
                 $.each(DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split("PD<br>"), function(key, value){
                     if(value != ""){
                         pd = pd + Number(value.split("+")[1]);
+                        json = json + '"'+ value.split("+")[0].trim() + '":"' + Number(value.split("+")[1]) + '",';
                     }
                 });
                 updateStats("zdobyte_doswiadczenie", pd);
+                updateStatsDoswiadczenie("{"+json.substring(0, json.length - 1)+"}");
             }
         } else if(DATA.find(".dzikipokemon-background-normalny").length > 0){
             console.log('PokeLifeScript: spotkany pokemon');
@@ -897,10 +910,12 @@ function initLogger(){
             console.log('PokeLifeScript: pokemon pokonany');
             updateStats("wygranych_walk_w_dziczy", 1);
             updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]);
+            updateStatsDoswiadczenie('{"'+ DATA.find('.panel-body b b').html() + '":"' +DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]+'"}');
         } else if(DATA.find("h2:contains('Pokemon Ucieka')").length > 0){
             console.log('PokeLifeScript: pokemon pokonany ale ucieka');
             updateStats("wygranych_walk_w_dziczy", 1);
             updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]);
+            updateStatsDoswiadczenie('{"'+ DATA.find('.panel-body b b').html() + '":"' +DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]+'"}');
         } else if(DATA.find(".panel-body > p.alert-success:contains('Udało Ci się złapać')").length > 0){
             console.log('PokeLifeScript: pokemon złapany');
             updateStats("zlapanych_pokemonow", 1);
