@@ -25,7 +25,7 @@ Instrukcja instalacji
 
 Changelog
 ---------
-3.7
+3.7 (2019-04-24)
 * Dodanie logowanie informacji na temat doświadczenia i aktywności do statystyk.
 
 3.5 (2019-04-21)
