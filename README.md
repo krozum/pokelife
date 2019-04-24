@@ -25,6 +25,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.7
+* Dodanie logowanie informacji na temat doświadczenia i aktywności do statystyk.
+
 3.5 (2019-04-21)
 * Dodanie wyboru specialnej dziczy. Po wybraniu bot będzie chodził do pierwszej dziczy aż napotka podpowiedź gdzie jest jajko. Wtedy przełączy sie na tą dzicz aż do momentu zdobycia jajka. Po zdobyciu wraca do pierwszej dziczy. Aby działał wymaga uzupełnienia pliku
 https://github.com/krozum/pokelife/blob/master/wielkanoc.json o wszystke podpowiedzi. Unova i Kanto są w większości uzupełnione.
