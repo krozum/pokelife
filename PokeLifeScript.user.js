@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.7
+// @version      3.7.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -983,7 +983,7 @@ function initLogger(){
                     updateStats("zebrane_inne_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
                 }
                 updateEvent(DATA.find('.panel-body > p.alert-success').html(), 9);
-            } else {
+            } else if(DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
                 updateEvent(DATA.find('.panel-body > p.alert-success').html(), 10);
             }
         } else if(DATA.find(".panel-body > p.alert-info").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa'){
