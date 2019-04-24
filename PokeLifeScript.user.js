@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.6.1
+// @version      3.7
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -883,8 +883,15 @@ initVersionInfo();
 // 2 - walka z trenerem wygrana
 // 3 - walka z trenerem przegrana
 // 4 - spotkany pokemon
+// 5 - walka wygrana
+// 6 - walka przegrana
+// 7 - pokemon złapany
+// 8 - pokemon niezłapany
+// 9 - zebrane jagody
+// 10 - event w dziczy
 // **********************
 function initLogger(){
+    var aktualnyPokemonDzicz;
     onReloadMain(function(){
         var DATA = this;
 
@@ -892,7 +899,6 @@ function initLogger(){
             console.log('PokeLifeScript: pusta wyprawa');
             updateEvent("Niestety, tym razem nie spotkało cię nic interesującego", 1);
         } else if(DATA.find("p.alert-success:contains('pojedynek')").length > 0){
-            console.log(DATA.find("p.alert-success:contains('pojedynek')").html());
             console.log('PokeLifeScript: walka z trenerem');
             updateEvent("Niestety, tym razem nie spotkało cię nic interesującego", 1);
             updateStats("walki_z_trenerami", 1);
@@ -907,7 +913,7 @@ function initLogger(){
                 });
                 updateStats("zarobki_z_trenerow", DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split(" ¥")[0]);
                 updateStats("zdobyte_doswiadczenie", pd);
-                updateEvent("Na twojej drodze staje inny trener pokemon, który wyzywa Cię na pojedynek. Wygrywasz " + DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split(" ¥")[0] + " ¥. Zdobyte doświadczenie: " + pd, 2);
+                updateEvent("Na twojej drodze staje inny trener pokemon, który wyzywa Cię na pojedynek. Wygrywasz <b>" + DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split(" ¥")[0] + "</b> ¥. Zdobyte doświadczenie: <b>" + pd + "</b>", 2);
                 updateStatsDoswiadczenie("{"+json.substring(0, json.length - 1)+"}");
             } else {
                 $.each(DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split("PD<br>"), function(key, value){
@@ -917,24 +923,28 @@ function initLogger(){
                     }
                 });
                 updateStats("zdobyte_doswiadczenie", pd);
-                updateEvent("Na twojej drodze staje inny trener pokemon, który wyzywa Cię na pojedynek ale niestety go przegrywasz. Zdobyte doświadczenie: " + pd, 3);
+                updateEvent("Na twojej drodze staje inny trener pokemon, który wyzywa Cię na pojedynek ale niestety go przegrywasz. Zdobyte doświadczenie: <b>" + pd + "</b>", 3);
                 updateStatsDoswiadczenie("{"+json.substring(0, json.length - 1)+"}");
             }
         } else if(DATA.find(".dzikipokemon-background-normalny").length > 0){
             console.log('PokeLifeScript: spotkany pokemon');
-            updateEvent("Spotkany pokemon " + DATA.find('.panel-primary i').html(), 4);
+            updateEvent("Spotkany pokemon <b>" + DATA.find('.panel-primary i').html() + "</b>", 4);
+            aktualnyPokemonDzicz = DATA.find('.panel-primary i').html();
         } else if(DATA.find("h2:contains('Złap Pokemona')").length > 0){
             console.log('PokeLifeScript: pokemon pokonany');
             updateStats("wygranych_walk_w_dziczy", 1);
             updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]);
             updateStatsDoswiadczenie('{"'+ DATA.find('.panel-body b b').html() + '":"' +DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]+'"}');
+            updateEvent("Wygrałeś walke z <b>"+aktualnyPokemonDzicz+"</b>. Zdobyłeś <b>" + DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0] + "</b> punktów doświadczenia", 5);
         } else if(DATA.find("h2:contains('Pokemon Ucieka')").length > 0){
             console.log('PokeLifeScript: pokemon pokonany ale ucieka');
             updateStats("wygranych_walk_w_dziczy", 1);
             updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]);
             updateStatsDoswiadczenie('{"'+ DATA.find('.panel-body b b').html() + '":"' +DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]+'"}');
+             updateEvent("Wygrałeś walke z <b>"+aktualnyPokemonDzicz+"</b>. Zdobyłeś <b>" + DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0] + "</b> punktów doświadczenia", 5);
         } else if(DATA.find(".panel-body > p.alert-success:contains('Udało Ci się złapać')").length > 0){
             console.log('PokeLifeScript: pokemon złapany');
+            updateEvent("Udało ci sie złapać <b>"+ aktualnyPokemonDzicz + "</b>.", 7);
             updateStats("zlapanych_pokemonow", 1);
             if(DATA.find('p.alert-success:nth(1):contains("nie masz już miejsca")').length > 0){
                 var zarobek  = DATA.find('p.alert-success:nth(1):contains("nie masz już miejsca") strong').html().split(" ")[0].replace(/\./g, '');
@@ -943,6 +953,7 @@ function initLogger(){
         } else if(DATA.find(".panel-body > p.alert-danger:contains('uwolnił')").length > 0){
             console.log('PokeLifeScript: pokemon sie uwolnił');
             updateStats("niezlapanych_pokemonow", 1);
+            updateEvent("<b>"+ aktualnyPokemonDzicz + "</b> się uwolnił.", 8);
         } else if(DATA.find(".panel-body > p.alert-success").length > 0){
             console.log('PokeLifeScript: event w dziczy');
             if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html() != undefined && DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html().indexOf("Jagód") != -1) {
@@ -971,9 +982,16 @@ function initLogger(){
                 } else {
                     updateStats("zebrane_inne_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
                 }
+                updateEvent(DATA.find('.panel-body > p.alert-success').html(), 9);
+            } else {
+                updateEvent(DATA.find('.panel-body > p.alert-success').html(), 10);
             }
-        } else if(DATA.find(".panel-body > p.alert-info").length > 0){
+        } else if(DATA.find(".panel-body > p.alert-info").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa'){
             console.log('PokeLifeScript: event w dziczy');
+            updateEvent(DATA.find('.panel-body > p.alert-info').html(), 10);
+        } else if(DATA.find(".panel-body > p.alert-warning").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa'){
+            console.log('PokeLifeScript: event w dziczy');
+            updateEvent(DATA.find('.panel-body > p.alert-warning').html(), 10);
         }
     })
 }
