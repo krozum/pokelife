@@ -25,6 +25,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.7.2 (2019-04-25)
+* Poprawka do podpowiedzi z dziczami z jajkiem
+
 3.7 (2019-04-24)
 * Dodanie logowanie informacji na temat doświadczenia i aktywności do statystyk.
 
