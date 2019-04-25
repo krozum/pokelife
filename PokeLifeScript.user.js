@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.7.1
+// @version      3.7.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1150,6 +1150,21 @@ function initWielkanocWidget(){
     if(d.getDate() <= 28 && d.getDate() >= 15 && d.getMonth() == 3){
         var wielkanocWidget;
         var aktualnaDziczZJajem = $('#pasek_skrotow a:nth(0)').attr('href').split('miejsce=')[1];
+        var region;
+
+        if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=las"]').length > 0){
+            region = 'kanto';
+        } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=puszcza"]').length > 0){
+            region = 'johto';
+        } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=opuszczona_elektrownia"]').length > 0){
+            region = 'hoenn';
+        } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=koronny_szczyt"]').length > 0){
+            region = 'sinnoh';
+        } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=ranczo"]').length > 0){
+            region = 'unova';
+        } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=francuski_labirynt"]').length > 0){
+            region = 'kalos';
+        }
 
         function refreshWielkanocWidget(){
             $.ajax({
@@ -1177,7 +1192,8 @@ function initWielkanocWidget(){
         $.getJSON(api, {
             format: "json"
         }).done(function (data) {
-            var wielkanocData = data;
+            var wielkanocData = data[region];
+            console.log(wielkanocData);
             var html;
             var url;
 
