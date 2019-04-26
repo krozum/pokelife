@@ -94,6 +94,7 @@
       "Szukaj jajka pośród ambry.":"Morze",
       "Uważaj na sztorm w trakcie poszukiwania jajka.":"Morze",
       "Uważaj na macki Tentacruel przy poszukiwaniu następnego jajka.":"Morze",
+      "Nie pomyl białych jagód z jajkiem.":"Morze",
       "Nie pomyl Ditto z jajem!":"Góry",
       "By odnaleźć następne jajko przygotuj się na większą ilość Punktów Akcji na wyprawę.":"Góry",
       "Wściekłe Rhyhorn szarżują wokół jajka.":"Góry",
@@ -103,6 +104,7 @@
       "Pokemon z czaszką na głowie pilnuje twojego jajka.":"Góry",
       "Wściekłe Primeape mogą ci dać wycisk podczas szukania jajka.":"Góry",
       "Uważaj na dzikie Charmeleon w okolicach jajka.":"Góry",
+      "Cieplutki Flareon grzeje twoje jajeczko.":"Góry",
       "Zabierz Latarkę, w ciemności ciężko bedzie znaleźć jajko.":"Jaskinie",
       "Diglett uważają na twoje jajko w trakcie kopania tuneli.":"Jaskinie",
       "Uważaj, by nie uszkodzić jajka przy pracy kilofem.":"Jaskinie",
@@ -120,7 +122,8 @@
       "Mime udaje, że smaży twoje jajko. To wcale nie jest śmieszne.":"Opuszczone Miasto",
       "Rzadki Jolteon troszczy się o twoje jajo.":"Opuszczone Miasto",
       "Koffing pilnuje twojego jajka.":"Opuszczone Miasto",
-      "Może następne jajko znajdziesz pośród pokeballi?":"Opuszczone Miasto"
+      "Może następne jajko znajdziesz pośród pokeballi?":"Opuszczone Miasto",
+      "Szukaj jajka przy automacie z napojami.":"Opuszczone Miasto"
    },
    "hoenn":{  
       "Poszukaj jajka pośród Starych Ruin.":"Pustynia",
