@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.7.2
+// @version      3.8
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -9,7 +9,7 @@
 // @grant        GM_getResourceText
 // @require      https://bug7a.github.io/iconselect.js/sample/lib/control/iconselect.js
 // @require      https://bug7a.github.io/iconselect.js/sample/lib/control/iconselect.js
-// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?v=4
+// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?xa=7
 // @resource     customCSS_style_1  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_1.css?v=3
 // @resource     customCSS_style_2  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_2.css?v=3
 // @resource     customCSS_style_3  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_3.css?v=3
@@ -251,6 +251,7 @@ function initAutoGo(){
     var iconLocation;
     var lastClick;
     var autoGo;
+    var blockGoButton = false;
 
     function initPokemonIcon() {
         $('body').append('<div id="setPokemon" style="position: fixed; cursor: pointer; top: 0; left: 10px; z-index: 9999"></div>');
@@ -479,67 +480,72 @@ function initAutoGo(){
     initGoButton();
 
     function click() {
-        var canRun = true;
+        if(!blockGoButton){
+            blockGoButton = true;
+            var canRun = true;
 
-        $('.stan-pokemon div.progress:first-of-type .progress-bar').each(function (index) {
-            var now = $(this).attr("aria-valuenow");
-            var max = $(this).attr("aria-valuemax");
-            if (Number(now) < Number(max)) {
-                if (lastClick === 'leczenie') {
-                    canRun = false;
-                } else {
-                    canRun = false;
-                    lastClick = 'leczenie';
-                    console.log('PokeLifeScript: lecze ze jagody');
-                    $.get( 'gra/plecak.php?uzyj&rodzaj_przedmiotu=czerwone_jagody&tylko_komunikat&ulecz_wszystkie&zjedz_max', function( data ) {
-                        console.log('PokeLifeScript: lecze ze yeny');
-                        $.get( 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat', function( data ) {
-                            var koszt = $(data).find(".alert-success strong").html().split(" ¥")[0];
-                            updateStats("koszty_leczenia", koszt.replace(/\./g, ''));
+            $('.stan-pokemon div.progress:first-of-type .progress-bar').each(function (index) {
+                var now = $(this).attr("aria-valuenow");
+                var max = $(this).attr("aria-valuemax");
+                if (Number(now) < Number(max)) {
+                    if (lastClick === 'leczenie') {
+                        canRun = false;
+                    } else {
+                        canRun = false;
+                        lastClick = 'leczenie';
+                        console.log('PokeLifeScript: lecze ze jagody');
+                        $.get( 'gra/plecak.php?uzyj&rodzaj_przedmiotu=czerwone_jagody&tylko_komunikat&ulecz_wszystkie&zjedz_max', function( data ) {
+                            console.log('PokeLifeScript: lecze ze yeny');
+                            $.get( 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat', function( data ) {
+                                var koszt = $(data).find(".alert-success strong").html().split(" ¥")[0];
+                                updateStats("koszty_leczenia", koszt.replace(/\./g, ''));
 
-                            $.get( 'inc/stan.php', function( data ) {
-                                $( "#sidebar" ).html( data );
-                                $('.btn-wybor_pokemona').attr("disabled", false);
-                                $('.btn-wybor_pokemona .progress-bar').css("width", "100%");
-                                $('.btn-wybor_pokemona .progress-bar span').html("100% PŻ");
-                                click();
+                                $.get( 'inc/stan.php', function( data ) {
+                                    $( "#sidebar" ).html( data );
+                                    blockGoButton = false;
+                                    $('.btn-wybor_pokemona').attr("disabled", false);
+                                    $('.btn-wybor_pokemona .progress-bar').css("width", "100%");
+                                    $('.btn-wybor_pokemona .progress-bar span').html("100% PŻ");
+                                    click();
+                                });
                             });
                         });
-                    });
+                    }
                 }
-            }
-        });
+            });
 
-        if (canRun) {
-            lastClick = 'nieleczenie';
-            window.localStorage.catchMode = true;
-            if($('#glowne_okno .panel-heading').length > 0){
-                if ($('.dzikipokemon-background-shiny').length > 0) {
-                    console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
-                    autoGo = false;
-                    $('#goAutoButton').html('AutoGO');
-                    fetch("https://bra1ns.com/pokelife/insert.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim());
-                } else if (window.localStorage.catchMode == "true" && $('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
-                    console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
-                    autoGo = false;
-                    $('#goAutoButton').html('AutoGO');
-                } else if ($('.dzikipokemon-background-normalny').length == 1) {
-                    console.log('PokeLifeScript: atakuje pokemona');
-                    var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
-                    $('button[href="' + url + '"]').trigger('click');
-                } else if ($("form[action='dzicz.php?zlap']").length == 1) {
-                    console.log('PokeLifeScript: rzucam pokeballa');
-                    $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokeball.getSelectedValue().call() + '"]').trigger('click');
-                } else if ($("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call()+ "']").length == 1) {
-                    console.log('PokeLifeScript: rzucam 1 swarmballa');
-                    $("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call()+ "']").submit();
-                } else if ($('.progress-stan2 div').attr('aria-valuenow') < 5) {
-                    console.log('PokeLifeScript: brak PA, przerywam AutoGo');
-                    autoGo = false;
-                    $('#goAutoButton').html('AutoGO');
-                } else {
-                    console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".");
-                    $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
+            if (canRun) {
+                lastClick = 'nieleczenie';
+                window.localStorage.catchMode = true;
+                if($('#glowne_okno .panel-heading').length > 0){
+                    if ($('.dzikipokemon-background-shiny').length > 0) {
+                        console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
+                        autoGo = false;
+                        $('#goAutoButton').html('AutoGO');
+                        fetch("https://bra1ns.com/pokelife/insert.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim());
+                    } else if (window.localStorage.catchMode == "true" && $('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
+                        console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
+                        autoGo = false;
+                        $('#goAutoButton').html('AutoGO');
+                    } else if ($('.dzikipokemon-background-normalny').length == 1) {
+                        console.log('PokeLifeScript: atakuje pokemona');
+                        var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
+                        $('button[href="' + url + '"]').trigger('click');
+                    } else if ($("form[action='dzicz.php?zlap']").length == 1) {
+                        console.log('PokeLifeScript: rzucam pokeballa');
+                        $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokeball.getSelectedValue().call() + '"]').trigger('click');
+                    } else if ($("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call()+ "']").length == 1) {
+                        console.log('PokeLifeScript: rzucam 1 swarmballa');
+                        $("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call()+ "']").submit();
+                    } else if ($('.progress-stan2 div').attr('aria-valuenow') < 5) {
+                        console.log('PokeLifeScript: brak PA, przerywam AutoGo');
+                        blockGoButton = false;
+                        autoGo = false;
+                        $('#goAutoButton').html('AutoGO');
+                    } else {
+                        console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".");
+                        $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
+                    }
                 }
             }
         }
@@ -561,6 +567,7 @@ function initAutoGo(){
     });
 
     afterReloadMain(function(){
+        blockGoButton = false;
         if (autoGo) {
             click();
         } else {
@@ -573,10 +580,12 @@ function initAutoGo(){
             if(this.find(".panel-body > p.alert-danger").length > 0){
                 if(this.find(".panel-body > p.alert-danger:contains('Posiadasz za mało punktów akcji')").length > 0){
                     console.log('PokeLifeScript: brak PA, przerywam AutoGo');
+                    blockGoButton = false;
                     autoGo = false;
                     $('#goAutoButton').html('AutoGO');
                 } else if(this.find(".panel-body > p.alert-danger:contains('Nie masz wystarczającej ilośći Punktów Akcji')").length > 0){
                     console.log('PokeLifeScript: brak PA, przerywam AutoGo');
+                    blockGoButton = false;
                     autoGo = false;
                     $('#goAutoButton').html('AutoGO');
                 }
@@ -1277,3 +1286,234 @@ function initPoprawaWygladuPokow(){
     });
 }
 initPoprawaWygladuPokow();
+
+
+
+// **********************
+//
+// initSzybkiSklep
+// Funkcja dodająca szybki sklep
+//
+// **********************
+function initSzybkiSklep(){
+    $('body').append('<div class="plugin-button" id="goFastShop" style="border-radius: 4px; position: fixed; cursor: pointer; bottom: 10px; left: 80px; font-size: 19px; text-align: center; width: auto; height: 30px; line-height: 35px; z-index: 99998; text-align: left; line-height: 30px;"><a style="color: #272727 !important;text-decoration:none; padding: 5px">Szybki sklep</a></div>');
+    $('body').append('<div id="fastShop"></div>');
+    $('#fastShop').append('<table> <tr> <th></th> <th></th> <th></th><th></th> </tr></table>');
+    $('#fastShop table').append('<col width="100"> <col width="180"><col width="60"><col width="130">');
+    $('#fastShop table').append('<tr id="shop1" url=""> <td><img style="width: 70px;" src="images/pokesklep/greatballe.jpg"        ></td> <td class="cena"></td> <td class="ilosc"></td> <td><button disabled>Kup teraz</button></td> </tr>');
+    $('#fastShop table').append('<tr id="shop2" url=""> <td><img style="width: 70px;" src="images/pokesklep/stunballe.jpg"         ></td> <td class="cena"></td> <td class="ilosc"></td> <td><button disabled>Kup teraz</button></td> </tr>');
+    $('#fastShop table').append('<tr id="shop3" url=""> <td><img style="width: 70px;" src="images/pokesklep/nightballe.jpg"        ></td> <td class="cena"></td> <td class="ilosc"></td> <td><button disabled>Kup teraz</button></td> </tr>');
+    $('#fastShop table').append('<tr id="shop4" url=""> <td><img style="width: 70px;" src="images/pokesklep/nestballe.jpg"         ></td> <td class="cena"></td> <td class="ilosc"></td> <td><button disabled>Kup teraz</button></td> </tr>');
+    $('#fastShop table').append('<tr id="shop5" url=""> <td><img style="width: 70px;" src="images/pokesklep/napoj_energetyczny.jpg"></td> <td class="cena"></td> <td class="ilosc"></td> <td><button disabled>Kup teraz</button></td> </tr>');
+    $('#fastShop table').append('<tr id="shop6" url=""> <td><img style="width: 70px;" src="images/pokesklep/niebieskie_jagody.jpg" ></td> <td class="cena"></td> <td class="ilosc"></td> <td><button disabled>Kup teraz</button></td> </tr>');
+    $('#fastShop table').append('<tr id="shop7" url=""> <td><img style="width: 70px;" src="images/pokesklep/fioletowe_jagody.jpg"  ></td> <td class="cena"></td> <td class="ilosc"></td> <td><button disabled>Kup teraz</button></td> </tr>');
+    $('#fastShop table').append('<tr id="shop8" url=""> <td><img style="width: 70px;" src="images/pokesklep/czekoladowe_serce.jpg" ></td> <td class="cena"></td> <td class="ilosc"></td> <td><button disabled>Kup teraz</button></td> </tr>');
+
+
+    $(document).on("click", '#goFastShop', function () {
+        if ($('#fastShop').css('display') == "none") {
+            refreshShop();
+            $('#fastShop').css('display', "block");
+        } else {
+            $('#fastShop').css('display', "none");
+        }
+    });
+
+    $(document).click(function(e){
+        if( $(e.target).closest("#goFastShop").length > 0 ) {
+            return false;
+        }
+        if( $(e.target).closest("#fastShop").length > 0 ) {
+            return false;
+        }
+
+        $('#fastShop').css('display', "none");
+        $('#fastShop button').removeClass('confirm');
+    });
+
+     $(document).on("click", "#fastShop button:not('.confirm')", function (event) {
+        event.preventDefault();
+        $(this).addClass("confirm");
+    });
+
+    $(document).on("click", "#fastShop button.confirm", function (event) {
+        var url = $(this).parent().parent().attr('url');
+        if(url.indexOf('niebieskie_jagody') != -1){
+            updateStats("wydatki_na_pa",  $(this).parent().parent().find('.cena').html().replace(" ¥", "").replace(/ /g, ''));
+        }
+        if(url.indexOf('napoj_energetyczny') != -1){
+            updateStats("wydatki_na_pa",  $(this).parent().parent().find('.cena').html().replace(" ¥", "").replace(/ /g, ''));
+        }
+
+        $.ajax({
+            type : 'POST',
+            url : url,
+            success:function (data) {
+                $.get('inc/stan.php', function(data) {
+                    $("#sidebar").html(data);
+                    refreshShop();
+                });
+            }
+        });
+    });
+
+    function refreshShop() {
+        var ilosc_yenow = Number($('a[href="http://pokelife.pl/pokedex/index.php?title=Pieniądze"]').parent().html().split("</a>")[1].split("<a")[0].replace(/\./g, ''));
+        var ilosc_pz = Number($('a[href="http://pokelife.pl/pokedex/index.php?title=Punkty_Zasług"]').parent().html().split("</a>")[1].split("<a")[0].replace(/\./g, ''));
+
+
+        // greatballe
+        $('#shop1').attr('url', "gra/pokesklep.php?zakupy&z=1&postData%5B0%5D%5Bname%5D=kup_greatballe&postData%5B0%5D%5Bvalue%5D=1000");
+        $('#shop1 .cena').html("1 000 000 ¥");
+        $('#shop1 .ilosc').html("1000");
+
+        if (Number(ilosc_yenow) < Number("1000000")) {
+            $('#shop1 button').attr("disabled", true);
+        } else {
+            $('#shop1 button').attr("disabled", false);
+        }
+
+        // stunballe
+        $.ajax({
+            type: 'POST',
+            url: "gra/targ_prz.php?oferty_strona&&przedmiot=stunballe&zakladka=1&strona=1",
+        }).done(function (response) {
+            var id = $($(response).find("form")[0]).find("input[name='id_oferty']").val();
+            var max = $($(response).find("form span")[1]).html();
+            if (max > 10) {
+                max = 10;
+            }
+            var price = Number($($(response).find("form span")[2]).html().split("&nbsp;")[0].replace(/\./g, '')) * max;
+            var price_with_dot = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            var url = 'gra/targ_prz.php?szukaj&przedmiot=stunballe&postData%5B0%5D%5Bname%5D=przedmiot&postData%5B0%5D%5Bvalue%5D=stunballe&postData%5B1%5D%5Bname%5D=id_oferty&postData%5B1%5D%5Bvalue%5D='+id+'&postData%5B2%5D%5Bname%5D=ilosc_yeny&postData%5B2%5D%5Bvalue%5D=1&postData%5B3%5D%5Bname%5D=napewno&postData%5B3%5D%5Bvalue%5D=&postData%5B4%5D%5Bname%5D=kup&postData%5B4%5D%5Bvalue%5D=';
+
+            $('#shop2').attr('url', url);
+            $('#shop2 .cena').html(price_with_dot + " ¥");
+            $('#shop2 .ilosc').html(max);
+
+            if (Number(ilosc_yenow) < Number(price)) {
+                $('#shop2 button').attr("disabled", true);
+            } else {
+                $('#shop2 button').attr("disabled", false);
+            }
+        });
+
+        // nightballe
+        $('#shop3').attr('url', "gra/pokesklep.php?zakupy&z=1&postData%5B0%5D%5Bname%5D=kup_nightballe&postData%5B0%5D%5Bvalue%5D=1000");
+        $('#shop3 .cena').html("1 250 000 ¥");
+        $('#shop3 .ilosc').html(1000);
+
+        if (Number(ilosc_yenow) < Number("1250000")) {
+            $('#shop3 button').attr("disabled", true);
+        }
+
+        // nestballe
+        $('#shop4').attr('url', "gra/pokesklep.php?zakupy&z=1&postData%5B0%5D%5Bname%5D=kup_nestballe&postData%5B0%5D%5Bvalue%5D=1000");
+        $('#shop4 .cena').html("400 000 ¥");
+        $('#shop4 .ilosc').html(1000);
+
+        if (Number(ilosc_yenow) < Number("400000")) {
+            $('#shop3 button').attr("disabled", true);
+        } else {
+            $('#shop3 button').attr("disabled", false);
+        }
+
+        // niebieskie napoje
+        $.ajax({
+            type: 'POST',
+            url: "gra/targ_prz.php?oferty_strona&&przedmiot=napoj_energetyczny&zakladka=3&strona=1",
+        }).done(function (response) {
+            var id = $($(response).find("form")[0]).find("input[name='id_oferty']").val();
+            var max = 1;
+            var price = Number($($(response).find("form span")[2]).html().split("&nbsp;")[0].replace(/\./g, '')) * max;
+            var price_with_dot = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            var url = 'gra/targ_prz.php?szukaj&przedmiot=napoj_energetyczny&postData%5B0%5D%5Bname%5D=przedmiot&postData%5B0%5D%5Bvalue%5D=napoj_energetyczny&postData%5B1%5D%5Bname%5D=id_oferty&postData%5B1%5D%5Bvalue%5D='+id+'&postData%5B2%5D%5Bname%5D=ilosc_yeny&postData%5B2%5D%5Bvalue%5D=1&postData%5B3%5D%5Bname%5D=napewno&postData%5B3%5D%5Bvalue%5D=&postData%5B4%5D%5Bname%5D=kup&postData%5B4%5D%5Bvalue%5D=';
+
+            $('#shop5').attr('url', url);
+            $('#shop5 .cena').html(price_with_dot + " ¥");
+            $('#shop5 .ilosc').html(max);
+
+            if (Number(ilosc_yenow) < Number(price)) {
+                $('#shop5 button').attr("disabled", true);
+            } else {
+                $('#shop5 button').attr("disabled", false);
+            }
+        });
+
+        // niebieskie jagody
+        $.ajax({
+            type: 'POST',
+            url: "gra/targ_prz.php?oferty_strona&&przedmiot=niebieskie_jagody&strona=1",
+        }).done(function (response) {
+            var id = $($(response).find("form")[0]).find("input[name='id_oferty']").val();
+            var max = $($(response).find("form span")[1]).html();
+            if (max > 10) {
+                max = 10;
+            }
+            var price = Number($($(response).find("form span")[2]).html().split("&nbsp;")[0].replace(/\./g, '')) * max;
+            var price_with_dot = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            var url = 'gra/targ_prz.php?szukaj&przedmiot=niebieskie_jagody&postData%5B0%5D%5Bname%5D=przedmiot&postData%5B0%5D%5Bvalue%5D=niebieskie_jagody&postData%5B1%5D%5Bname%5D=id_oferty&postData%5B1%5D%5Bvalue%5D='+id+'&postData%5B2%5D%5Bname%5D=ilosc_yeny&postData%5B2%5D%5Bvalue%5D='+max+'&postData%5B3%5D%5Bname%5D=napewno&postData%5B3%5D%5Bvalue%5D=&postData%5B4%5D%5Bname%5D=kup&postData%5B4%5D%5Bvalue%5D=';
+
+            $('#shop6').attr('url', url);
+            $('#shop6 .cena').html(price_with_dot + " ¥");
+            $('#shop6 .ilosc').html(max);
+
+            if (Number(ilosc_yenow) < Number(price)) {
+                $('#shop6 button').attr("disabled", true);
+            } else {
+                $('#shop6 button').attr("disabled", false);
+            }
+        });
+
+        // fioletowe jagody
+        $.ajax({
+            type: 'POST',
+            url: "gra/targ_prz.php?oferty_strona&&przedmiot=fioletowe_jagody&strona=1",
+        }).done(function (response) {
+            var id = $($(response).find("form")[0]).find("input[name='id_oferty']").val();
+            var max = $($(response).find("form span")[1]).html();
+            if (max > 100) {
+                max = 100;
+            }
+            var price = Number($($(response).find("form span")[2]).html().split("&nbsp;")[0].replace(/\./g, '')) * max;
+            var price_with_dot = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            var url = 'gra/targ_prz.php?szukaj&przedmiot=niebieskie_jagody&postData%5B0%5D%5Bname%5D=przedmiot&postData%5B0%5D%5Bvalue%5D=niebieskie_jagody&postData%5B1%5D%5Bname%5D=id_oferty&postData%5B1%5D%5Bvalue%5D='+id+'&postData%5B2%5D%5Bname%5D=ilosc_yeny&postData%5B2%5D%5Bvalue%5D='+max+'&postData%5B3%5D%5Bname%5D=napewno&postData%5B3%5D%5Bvalue%5D=&postData%5B4%5D%5Bname%5D=kup&postData%5B4%5D%5Bvalue%5D=';
+
+            $('#shop7').attr('url', url);
+            $('#shop7 .cena').html(price_with_dot + " ¥");
+            $('#shop7 .ilosc').html(max);
+
+            if (Number(ilosc_yenow) < Number(price)) {
+                $('#shop7 button').attr("disabled", true);
+            } else {
+                $('#shop7 button').attr("disabled", false);
+            }
+        });
+
+        // czekoladowe serce
+        $.ajax({
+            type: 'POST',
+            url: "gra/targ_prz.php?oferty_strona&&przedmiot=czekoladowe_serce&strona=1",
+        }).done(function (response) {
+            var id = $($(response).find("form")[0]).find("input[name='id_oferty']").val();
+            var max = $($(response).find("form span")[1]).html();
+            if (max > 100) {
+                max = 100;
+            }
+            var price = Number($($(response).find("form span")[2]).html().split("&nbsp;")[0].replace(/\./g, '')) * max;
+            var price_with_dot = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            var url = 'gra/targ_prz.php?szukaj&przedmiot=czekoladowe_serce&postData%5B0%5D%5Bname%5D=przedmiot&postData%5B0%5D%5Bvalue%5D=czekoladowe_serce&postData%5B1%5D%5Bname%5D=id_oferty&postData%5B1%5D%5Bvalue%5D='+id+'&postData%5B2%5D%5Bname%5D=ilosc_yeny&postData%5B2%5D%5Bvalue%5D='+max+'&postData%5B3%5D%5Bname%5D=napewno&postData%5B3%5D%5Bvalue%5D=&postData%5B4%5D%5Bname%5D=kup&postData%5B4%5D%5Bvalue%5D=';
+
+            $('#shop8').attr('url', url);
+            $('#shop8 .cena').html(price_with_dot + " ¥");
+            $('#shop8 .ilosc').html(max);
+
+            if (Number(ilosc_yenow) < Number(price)) {
+                $('#shop8 button').attr("disabled", true);
+            } else {
+                $('#shop8 button').attr("disabled", false);
+            }
+        });
+    }
+};
+initSzybkiSklep();
