@@ -8,6 +8,37 @@
     box-shadow: 2px 3px 1px 0px #b8b8b8;
 }
 
+.cena {
+    font-size: 22px;	
+}
+
+#fastShop button {
+    border: none; 
+    border-radius: 5px; 
+    padding: 1px 10px; 
+    background: #e44242d1; 
+    color: white !important; 
+    font-size: 20px;	
+}
+
+#fastShop button:disabled {
+    background: #adadadd1;
+}
+
+#fastShop {
+    display: none; 
+    height: auto;
+    left: 10px;
+    min-height: 370px;
+    z-index: 99999;
+    background: white;
+    position: fixed;
+    padding: 10px;
+    bottom: 60px;
+    opacity: 0.9;	
+}
+
+
 .glyphicon {
     cursor: pointer;	
 }
@@ -203,13 +234,4 @@ a {
 #sidebar table.table-striped.table-condensed td:last-child div {
     padding: 5px;
     padding-bottom: 6px;
-}
-
-#fastShop button.confirm {
-    background-color: #d9534f !important;
-    border-color: #d9534f !important;
-}
-
-#fastShop button {
-    color: #333 !important;	
 }
