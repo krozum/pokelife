@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.9 (2019-04-29)
+* Dodanie wyszukiwarki osiągnięć
+
 3.8 (2019-04-29)
 * Dodanie szybkiego sklepu, poprawa autoGo na spacji aby przy szybkim klikaniu nie powodowała błędów
 
