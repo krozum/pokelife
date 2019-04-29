@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.8
+// @version      3.9
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -15,6 +15,28 @@
 // @resource     customCSS_style_3  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_3.css?v=3
 // @resource     customCSS_style_4  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_4.css?v=4
 // ==/UserScript==
+
+
+// Wszystkie funkcje od góry:
+//
+// 1.  initTest
+// 2.  initAutoGo
+// 3.  initSkins
+// 4.  initAutouzupelnianiePol
+// 5.  initShinyWidget
+// 6.  initZadaniaWidget
+// 7.  initPlecakTMView
+// 8.  initStatystykiLink
+// 9.  initVersionInfo
+// 10. initLogger
+// 11. initSzybkieKlikanieWLinkiPromocyjne
+// 12. initRozbudowanyOpisDziczy
+// 13. initWielkanocWidget
+// 14. initPoprawaWygladuPokow
+// 15. initSzybkiSklep
+// 16. initWyszukiwarkaOsiagniec
+
+
 
 window.onReloadSidebarFunctions = [];
 var AutoGoSettings = new Object();
@@ -1517,3 +1539,42 @@ function initSzybkiSklep(){
     }
 };
 initSzybkiSklep();
+
+
+
+// **********************
+//
+// initWyszukiwarkaOsiagniec
+// Funkcja dodająca wyszukiwarke osiągnięć
+//
+// **********************
+function initWyszukiwarkaOsiagniec(){
+    onReloadMain(function(){
+        if (this.find('.panel-heading').html() === "Osiągnięcia") {
+            this.find('#osiagniecia-glowne').parent().prepend('<input id="wyszukajOsiagniecie" style="margin-bottom: 20px;display: inline; width: 100%;" type="text" class="form-control" placeholder="Wyszukaj osiągnięcie...">');
+        }
+    });
+
+    $(document).on("keyup", "#wyszukajOsiagniecie", function (event) {
+        if($(this).val() == ""){
+            var tab_id = $('#glowne_okno li[role="presentation"].active a').attr('aria-controls');
+            $('#'+tab_id).parent().find("div.tab-pane[role='tabpanel']").removeClass('active').removeClass('in').addClass('fade');
+            $('#'+tab_id).addClass('in').addClass('active');
+            $('#osiagniecia-glowne').parent().find("div.osiagniecie").parent().css("display", "block");
+        } else {
+            $('#osiagniecia-glowne').parent().find("div.tab-pane[role='tabpanel']").removeClass('fade').addClass('in').addClass('active');
+            $('#osiagniecia-glowne').parent().find("div.osiagniecie").parent().css("display", "none");
+            $('#osiagniecia-glowne').parent().find("div.osiagniecie:contains('"+$(this).val()+"')").parent().css("display", "block");
+        }
+    });
+
+    $(document).on("click", 'li[role="presentation"]', function (event) {
+        $('#wyszukajOsiagniecie').val("");
+        var tab_id = $('#glowne_okno li[role="presentation"].active a').attr('aria-controls');
+        $('#'+tab_id).parent().find("div.tab-pane[role='tabpanel']").removeClass('active').removeClass('in').addClass('fade');
+        $('#'+tab_id).addClass('in').addClass('active');
+        $('#osiagniecia-glowne').parent().find("div.osiagniecie").parent().css("display", "block");
+    });
+
+}
+initWyszukiwarkaOsiagniec();
