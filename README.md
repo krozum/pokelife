@@ -14,7 +14,9 @@
 * Ostatnie 3 spotkane shiny w sidebarze<br />
 [![N|Solid](https://i.imgur.com/0ftDpk0.png)](https://github.com/krozum/pokelife)
 * Dzienne statystyki<br />
-[![N|Solid](https://i.imgur.com/eTFDIUF.png)](https://github.com/krozum/pokelife)
+[![N|Solid](https://i.imgur.com/yMtuZ8E.png)](https://github.com/krozum/pokelife)
+* Szybki sklep<br />
+[![N|Solid](https://i.imgur.com/NHHmCQM.png)](https://github.com/krozum/pokelife)
 
 Instrukcja instalacji
 ---------
