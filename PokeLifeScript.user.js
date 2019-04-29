@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.9
+// @version      3.9.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1380,6 +1380,8 @@ function initSzybkiSklep(){
     });
 
     function refreshShop() {
+        $('#fastShop button').removeClass('confirm');
+
         var ilosc_yenow = Number($('a[href="http://pokelife.pl/pokedex/index.php?title=Pieniądze"]').parent().html().split("</a>")[1].split("<a")[0].replace(/\./g, ''));
         var ilosc_pz = Number($('a[href="http://pokelife.pl/pokedex/index.php?title=Punkty_Zasług"]').parent().html().split("</a>")[1].split("<a")[0].replace(/\./g, ''));
 
