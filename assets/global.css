@@ -21,6 +21,10 @@
     font-size: 20px;	
 }
 
+#fastShop button.confirm {
+    background: #ffc107d1; 
+}
+
 #fastShop button:disabled {
     background: #adadadd1;
 }
