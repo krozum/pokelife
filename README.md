@@ -25,6 +25,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.8 (2019-04-29)
+* Dodanie szybkiego sklepu, poprawa autoGo na spacji aby przy szybkim klikaniu nie powodowała błędów
+
 3.7.2 (2019-04-25)
 * Poprawka do podpowiedzi z dziczami z jajkiem
 
