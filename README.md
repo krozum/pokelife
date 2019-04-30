@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.9.2 (2019-04-30)
+* Dodanie możliwości wyświetlania komunikatu
+
 3.9 (2019-04-29)
 * Dodanie wyszukiwarki osiągnięć
 
