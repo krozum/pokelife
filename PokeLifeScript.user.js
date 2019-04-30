@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.9.2
+// @version      3.9.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1591,24 +1591,46 @@ initWyszukiwarkaOsiagniec();
 //
 // **********************
 function initKomunikat(){
+    var array = [];
+    if(window.localStorage.komunikat == undefined){
+        window.localStorage.komunikat = JSON.stringify(array);
+    } else {
+        array = JSON.parse(window.localStorage.komunikat);
+    }
+
     var isHidden = false;
     var komunikatAPI = "https://bra1ns.com/pokelife/get_komunikat.php";
     $.getJSON(komunikatAPI, {
         format: "json"
     }).done(function (data) {
         if(data != ""){
-            var komunikat = data[0]['message'];
-            onReloadSidebar(function(){
-                if(!isHidden){
-                    this.find("#wyloguj").parent().parent().parent().before('<div id="komunikat" style="background: #272727;width: 100%;padding: 12px;border-radius: 5px;font-size: 16px;margin: 0;margin-bottom: 20px;color: #e6e6e6;position: relative;"><div id="hideKomunikat" style="position: absolute;right: 10px;top: 4px;cursor: pointer;color: #777777;">x</div><p style=" margin: 0; margin-right: 20px; overflow-wrap: break-word; ">'+komunikat+'</p></div>');
+            $.each(data, function (index, item) {
+                if(array[item['message_id']] == undefined){
+                    array[item['message_id']] = item;
                 }
             })
+            window.localStorage.komunikat = JSON.stringify(array);
         }
     });
 
-    $(document).on("click", '#hideKomunikat', function (event) {
-        $('#komunikat').remove();
+    onReloadSidebar(function(){
+        var DATA = this;
+        $.each(array, function (index, item) {
+            if(item != null && item['is_active'] == 1){
+                console.log(array);
+                console.log(item['is_active']);
+                DATA.find("#wyloguj").parent().parent().parent().before('<div class="komunikat" style="background: #272727;width: 100%;padding: 12px;border-radius: 5px;font-size: 16px;margin: 0;margin-bottom: 20px;color: #e6e6e6;position: relative;"><div class="hideKomunikat" data-id="'+item['message_id']+'" style="position: absolute;right: 10px;top: 4px;cursor: pointer;color: #777777;">x</div><p style=" margin: 0; margin-right: 20px; overflow-wrap: break-word; ">'+item['message']+'</p></div>');
+            }
+        })
+    })
+
+    $(document).on("click", '.hideKomunikat', function (event) {
+        $(this).parent().remove();
         isHidden = true;
+        var id = $(this).data('id');
+        array[id]['is_active'] = "0";
+        console.log(array);
+        window.localStorage.komunikat = JSON.stringify(array);
     });
 
 };
