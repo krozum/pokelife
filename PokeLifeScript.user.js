@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.9.1
+// @version      3.9.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -35,6 +35,7 @@
 // 14. initPoprawaWygladuPokow
 // 15. initSzybkiSklep
 // 16. initWyszukiwarkaOsiagniec
+// 17. initKomunikat
 
 
 
@@ -1580,3 +1581,35 @@ function initWyszukiwarkaOsiagniec(){
 
 }
 initWyszukiwarkaOsiagniec();
+
+
+
+// **********************
+//
+// initKomunikat
+// Funkcja dodająca wyświetlanie komunikatu
+//
+// **********************
+function initKomunikat(){
+    var isHidden = false;
+    var komunikatAPI = "https://bra1ns.com/pokelife/get_komunikat.php";
+    $.getJSON(komunikatAPI, {
+        format: "json"
+    }).done(function (data) {
+        if(data != ""){
+            var komunikat = data[0]['message'];
+            onReloadSidebar(function(){
+                if(!isHidden){
+                    this.find("#wyloguj").parent().parent().parent().before('<div id="komunikat" style="background: #272727;width: 100%;padding: 12px;border-radius: 5px;font-size: 16px;margin: 0;margin-bottom: 20px;color: #e6e6e6;position: relative;"><div id="hideKomunikat" style="position: absolute;right: 10px;top: 4px;cursor: pointer;color: #777777;">x</div><p style=" margin: 0; margin-right: 20px; overflow-wrap: break-word; ">'+komunikat+'</p></div>');
+                }
+            })
+        }
+    });
+
+    $(document).on("click", '#hideKomunikat', function (event) {
+        $('#komunikat').remove();
+        isHidden = true;
+    });
+
+};
+initKomunikat();
