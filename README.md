@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.9.4
+* Tymaczasowa poprawa zapisywania zmiany dziczy
+
 3.9.2 (2019-04-30)
 * Dodanie możliwości wyświetlania komunikatu
 
