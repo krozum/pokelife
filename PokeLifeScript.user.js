@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.9.3
+// @version      3.9.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -489,7 +489,7 @@ function initAutoGo(){
             window.localStorage.locationIconsIndex = 0;
         }
 
-        $(document).on('change', '#setLocation', function (e) {
+        document.getElementById('setLocation').addEventListener('changed', function (e) {
             window.localStorage.locationIconsIndex = AutoGoSettings.iconLocation.getSelectedIndex();
         });
     }
@@ -1288,7 +1288,10 @@ function initWielkanocWidget(){
         });
     }
 }
-initWielkanocWidget();
+// TODO gdy włączone to nie działa zapamietanie lokalizacji
+// initWielkanocWidget();
+
+
 
 
 
