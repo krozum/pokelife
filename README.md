@@ -27,7 +27,7 @@ Instrukcja instalacji
 
 Changelog
 ---------
-3.9.4
+3.9.4 (2019-05-01)
 * Tymaczasowa poprawa zapisywania zmiany dziczy
 
 3.9.2 (2019-04-30)
