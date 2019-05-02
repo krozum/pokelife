@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.9.4
+// @version      3.9.5
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -698,7 +698,7 @@ initSkins();
 // **********************
 function initAutouzupelnianiePol(){
 
-    $(document).on("click", "#plecak-jagody .thumbnail-plecak, .thumbnail-plecak[data-target='#plecak-11'], .thumbnail-plecak[data-target='#plecak-15']", function (event) {
+    $(document).on("click", "#plecak-jagody .thumbnail-plecak, .thumbnail-plecak[data-target='#plecak-11'], .thumbnail-plecak[data-target='#plecak-15'], .thumbnail-plecak[data-target='#plecak-8']", function (event) {
         var id = $(this).data("target");
         var ilosc = $(this).find("h5").html().split(" ")[0];
         $(id+' input[name="ilosc"]').val(ilosc);
@@ -1575,11 +1575,13 @@ function initWyszukiwarkaOsiagniec(){
     });
 
     $(document).on("click", 'li[role="presentation"]', function (event) {
-        $('#wyszukajOsiagniecie').val("");
-        var tab_id = $('#glowne_okno li[role="presentation"].active a').attr('aria-controls');
-        $('#'+tab_id).parent().find("div.tab-pane[role='tabpanel']").removeClass('active').removeClass('in').addClass('fade');
-        $('#'+tab_id).addClass('in').addClass('active');
-        $('#osiagniecia-glowne').parent().find("div.osiagniecie").parent().css("display", "block");
+        if($(this).parent().parent().parent().find('.panel-heading:contains("Osiągnięcia")').length > 0){
+            $('#wyszukajOsiagniecie').val("");
+            var tab_id = $('#glowne_okno li[role="presentation"].active a').attr('aria-controls');
+            $('#'+tab_id).parent().find("div.tab-pane[role='tabpanel']").removeClass('active').removeClass('in').addClass('fade');
+            $('#'+tab_id).addClass('in').addClass('active');
+            $('#osiagniecia-glowne').parent().find("div.osiagniecie").parent().css("display", "block");
+        }
     });
 
 }
