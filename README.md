@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.10.1 (2019-05-02)
+* Poprawka do leczenia
+
 3.10 (2019-05-02)
 * Dodanie opcje automatycznego przywracania PA w trakcie AutoGO
 
