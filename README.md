@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.9.5 (2019-05-02)
+* Poprawa błędu z zakładkami
+
 3.9.4 (2019-05-01)
 * Tymaczasowa poprawa zapisywania zmiany dziczy
 
