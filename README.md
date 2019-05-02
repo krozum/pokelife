@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.10 (2019-05-02)
+* Dodanie opcje automatycznego przywracania PA w trakcie AutoGO
+
 3.9.5 (2019-05-02)
 * Poprawa błędu z zakładkami
 
