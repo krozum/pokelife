@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.10
+// @version      3.10.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -581,17 +581,19 @@ function initAutoGo(){
                         $.get( 'gra/plecak.php?uzyj&rodzaj_przedmiotu=czerwone_jagody&tylko_komunikat&ulecz_wszystkie&zjedz_max', function( data ) {
                             console.log('PokeLifeScript: lecze ze yeny');
                             $.get( 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat', function( data ) {
-                                var koszt = $(data).find(".alert-success strong").html().split(" ¥")[0];
-                                updateStats("koszty_leczenia", koszt.replace(/\./g, ''));
+                                if($(data).find(".alert-success strong").length > 0){
+                                    var koszt = $(data).find(".alert-success strong").html().split(" ¥")[0];
+                                    updateStats("koszty_leczenia", koszt.replace(/\./g, ''));
 
-                                $.get( 'inc/stan.php', function( data ) {
-                                    $( "#sidebar" ).html( data );
-                                    blockGoButton = false;
-                                    $('.btn-wybor_pokemona').attr("disabled", false);
-                                    $('.btn-wybor_pokemona .progress-bar').css("width", "100%");
-                                    $('.btn-wybor_pokemona .progress-bar span').html("100% PŻ");
-                                    click();
-                                });
+                                    $.get( 'inc/stan.php', function( data ) {
+                                        $( "#sidebar" ).html( data );
+                                        blockGoButton = false;
+                                        $('.btn-wybor_pokemona').attr("disabled", false);
+                                        $('.btn-wybor_pokemona .progress-bar').css("width", "100%");
+                                        $('.btn-wybor_pokemona .progress-bar span').html("100% PŻ");
+                                        click();
+                                    });
+                                }
                             });
                         });
                     }
