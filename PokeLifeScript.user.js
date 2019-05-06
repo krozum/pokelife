@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.11
+// @version      3.12
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -59,7 +59,7 @@ function afterReloadMain(fn) {
 }
 
 function updateEvent(text, eventTypeId){
-    fetch("https://bra1ns.com/pokelife/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId + "&time="+Date.now())
+    fetch("https://brains.e-kei.pl/pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId + "&time="+Date.now())
         .then(resp => {
         console.log("updateEvent: "+eventTypeId+" => "+ text);
     })
@@ -67,14 +67,14 @@ function updateEvent(text, eventTypeId){
 
 
 function updateStats(name, value){
-    fetch("https://bra1ns.com/pokelife/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name="+name + "&value=" + value + "&time="+Date.now())
+    fetch("https://brains.e-kei.pl/pokelife/api/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name="+name + "&value=" + value + "&time="+Date.now())
         .then(resp => {
         console.log("UpdateStats: "+name+" => "+ value);
     })
 }
 
 function updateStatsDoswiadczenie(json){
-    fetch("https://bra1ns.com/pokelife/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json="+json + "&time="+Date.now())
+    fetch("https://brains.e-kei.pl/pokelife/api/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json="+json + "&time="+Date.now())
         .then(resp => {
         console.log("updateStatsDoswiadczenie: " + json);
     })
@@ -105,7 +105,7 @@ jQuery.fn.html = function() {
     delay.setMinutes(delay.getMinutes() - 1);
     if (window.lastActiveTime < delay || window.lastActiveTime == undefined) {
         window.lastActiveTime = new Date();
-        fetch("https://bra1ns.com/pokelife/insert_user.php?bot_version=" + GM_info.script.version + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now())
+        fetch("https://brains.e-kei.pl/pokelife/api/update_user.php?bot_version=" + GM_info.script.version + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now())
     }
     return ret
 }
@@ -610,7 +610,7 @@ function initAutoGo(){
                         console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
                         autoGo = false;
                         $('#goAutoButton').html('AutoGO');
-                        fetch("https://bra1ns.com/pokelife/insert.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now());
+                        fetch("https://brains.e-kei.pl/pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now());
                     } else if (window.localStorage.catchMode == "true" && $('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
                         console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
                         autoGo = false;
@@ -823,7 +823,7 @@ function initShinyWidget(){
     var shinyWidget;
 
     function refreshShinyWidget(){
-        var api = "https://bra1ns.com/pokelife/get.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now();
+        var api = "https://brains.e-kei.pl/pokelife/api/get_shiny.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now();
         $.getJSON(api, {
             format: "json"
         }).done(function (data) {
@@ -972,8 +972,8 @@ initPlecakTMView();
 //
 // **********************
 function initStatystykiLink(){
-    $('body').append('<a id="PokeLifeScriptStats" style="color: #333333 !important;text-decoration:none;" target="_blank" href="https://bra1ns.com/pokelife/stats"><div class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;top: 15px;left: 220px;font-size: 19px;text-align: center;width: 100px;height: 30px;line-height: 35px;z-index: 9998;text-align: center;line-height: 30px;color: #333333;">Statystyki</div></a>');
-    $("#PokeLifeScriptStats").attr("href", "https://bra1ns.com/pokelife/stats?login="+$('#wyloguj').parent().parent().html().split("<div")[0].trim());
+    $('body').append('<a id="PokeLifeScriptStats" style="color: #333333 !important;text-decoration:none;" target="_blank" href="https://brains.e-kei.pl/pokelife/stats/"><div class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;top: 15px;left: 220px;font-size: 19px;text-align: center;width: 100px;height: 30px;line-height: 35px;z-index: 9998;text-align: center;line-height: 30px;color: #333333;">Statystyki</div></a>');
+    $("#PokeLifeScriptStats").attr("href", "https://brains.e-kei.pl/pokelife/stats/?login="+$('#wyloguj').parent().parent().html().split("<div")[0].trim());
 }
 initStatystykiLink();
 
@@ -1030,6 +1030,7 @@ function initLogger(){
                         json = json + '"'+ value.split("+")[0].trim() + '":"' + Number(value.split("+")[1]) + '",';
                     }
                 });
+                pd = pd.toFixed(2);
                 updateStats("zarobki_z_trenerow", DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split(" ¥")[0]);
                 updateStats("zdobyte_doswiadczenie", pd);
                 updateEvent("Na twojej drodze staje inny trener pokemon, który wyzywa Cię na pojedynek. Wygrywasz <b>" + DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split(" ¥")[0] + "</b> ¥. Zdobyte doświadczenie: <b>" + pd + "</b>", 2);
@@ -1041,6 +1042,7 @@ function initLogger(){
                         json = json + '"'+ value.split("+")[0].trim() + '":"' + Number(value.split("+")[1]) + '",';
                     }
                 });
+                pd.toFixed(2);
                 updateStats("zdobyte_doswiadczenie", pd);
                 updateEvent("Na twojej drodze staje inny trener pokemon, który wyzywa Cię na pojedynek ale niestety go przegrywasz. Zdobyte doświadczenie: <b>" + pd + "</b>", 3);
                 updateStatsDoswiadczenie("{"+json.substring(0, json.length - 1)+"}");
@@ -1691,7 +1693,7 @@ function initKomunikat(){
     }
 
     var isHidden = false;
-    var komunikatAPI = "https://bra1ns.com/pokelife/get_komunikat.php" + "?time="+Date.now();
+    var komunikatAPI = "https://brains.e-kei.pl/pokelife/api/get_alert.php" + "?time="+Date.now();
     $.getJSON(komunikatAPI, {
         format: "json"
     }).done(function (data) {
