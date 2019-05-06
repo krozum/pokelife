@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.11 (2019-05-06)
+* Poprawka do zapisywania statystyk
+
 3.10.1 (2019-05-02)
 * Poprawka do leczenia
 
