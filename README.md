@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.12 (2019-05-06)
+* Przejście na nowy hosting
+
 3.11 (2019-05-06)
 * Poprawka do zapisywania statystyk
 
