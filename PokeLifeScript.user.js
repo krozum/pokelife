@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.10.2
+// @version      3.11
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -59,7 +59,7 @@ function afterReloadMain(fn) {
 }
 
 function updateEvent(text, eventTypeId){
-    fetch("https://bra1ns.com/pokelife/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId)
+    fetch("https://bra1ns.com/pokelife/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId + "&time="+Date.now())
         .then(resp => {
         console.log("updateEvent: "+eventTypeId+" => "+ text);
     })
@@ -67,14 +67,14 @@ function updateEvent(text, eventTypeId){
 
 
 function updateStats(name, value){
-    fetch("https://bra1ns.com/pokelife/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name="+name + "&value=" + value)
+    fetch("https://bra1ns.com/pokelife/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name="+name + "&value=" + value + "&time="+Date.now())
         .then(resp => {
         console.log("UpdateStats: "+name+" => "+ value);
     })
 }
 
 function updateStatsDoswiadczenie(json){
-    fetch("https://bra1ns.com/pokelife/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json="+json)
+    fetch("https://bra1ns.com/pokelife/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json="+json + "&time="+Date.now())
         .then(resp => {
         console.log("updateStatsDoswiadczenie: " + json);
     })
@@ -105,7 +105,7 @@ jQuery.fn.html = function() {
     delay.setMinutes(delay.getMinutes() - 1);
     if (window.lastActiveTime < delay || window.lastActiveTime == undefined) {
         window.lastActiveTime = new Date();
-        fetch("https://bra1ns.com/pokelife/insert_user.php?bot_version=" + GM_info.script.version + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim())
+        fetch("https://bra1ns.com/pokelife/insert_user.php?bot_version=" + GM_info.script.version + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now())
     }
     return ret
 }
@@ -610,7 +610,7 @@ function initAutoGo(){
                         console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
                         autoGo = false;
                         $('#goAutoButton').html('AutoGO');
-                        fetch("https://bra1ns.com/pokelife/insert.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim());
+                        fetch("https://bra1ns.com/pokelife/insert.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now());
                     } else if (window.localStorage.catchMode == "true" && $('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
                         console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
                         autoGo = false;
@@ -823,7 +823,7 @@ function initShinyWidget(){
     var shinyWidget;
 
     function refreshShinyWidget(){
-        var api = "https://bra1ns.com/pokelife/get.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim();
+        var api = "https://bra1ns.com/pokelife/get.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now();
         $.getJSON(api, {
             format: "json"
         }).done(function (data) {
@@ -1691,7 +1691,7 @@ function initKomunikat(){
     }
 
     var isHidden = false;
-    var komunikatAPI = "https://bra1ns.com/pokelife/get_komunikat.php";
+    var komunikatAPI = "https://bra1ns.com/pokelife/get_komunikat.php" + "?time="+Date.now();
     $.getJSON(komunikatAPI, {
         format: "json"
     }).done(function (data) {
