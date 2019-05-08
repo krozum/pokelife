@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.12.1 (2019-05-08)
+* Poprawka do zawieszania sie bota
+
 3.12 (2019-05-06)
 * Przejście na nowy hosting
 
