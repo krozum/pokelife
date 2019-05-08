@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.12
+// @version      3.12.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -38,6 +38,14 @@
 // 17. initKomunikat
 
 
+function requestBra1nsPL(url, callback){
+    $.ajax(url)
+        .done(data => callback == null ? console.log(data) : callback(data))
+        .fail((xhr, status) => console.log('error:', status));
+}
+
+
+requestBra1nsPL("https://brains.e-kei.pl/pokelife/api/update_user.php?bot_version=" + GM_info.script.version + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim(), null);
 
 window.onReloadSidebarFunctions = [];
 var AutoGoSettings = new Object();
@@ -59,23 +67,20 @@ function afterReloadMain(fn) {
 }
 
 function updateEvent(text, eventTypeId){
-    fetch("https://brains.e-kei.pl/pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId + "&time="+Date.now())
-        .then(resp => {
+    requestBra1nsPL("https://brains.e-kei.pl/pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId + "&time="+Date.now(), function(response){
         console.log("updateEvent: "+eventTypeId+" => "+ text);
     })
 }
 
 
 function updateStats(name, value){
-    fetch("https://brains.e-kei.pl/pokelife/api/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name="+name + "&value=" + value + "&time="+Date.now())
-        .then(resp => {
+    requestBra1nsPL("https://brains.e-kei.pl/pokelife/api/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name="+name + "&value=" + value + "&time="+Date.now(), function(response){
         console.log("UpdateStats: "+name+" => "+ value);
     })
 }
 
 function updateStatsDoswiadczenie(json){
-    fetch("https://brains.e-kei.pl/pokelife/api/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json="+json + "&time="+Date.now())
-        .then(resp => {
+    requestBra1nsPL("https://brains.e-kei.pl/pokelife/api/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json="+json + "&time="+Date.now(), function(response){
         console.log("updateStatsDoswiadczenie: " + json);
     })
 }
@@ -99,13 +104,6 @@ jQuery.fn.html = function() {
                 item.call(THAT);
             });
         }
-    }
-
-    var delay = new Date();
-    delay.setMinutes(delay.getMinutes() - 1);
-    if (window.lastActiveTime < delay || window.lastActiveTime == undefined) {
-        window.lastActiveTime = new Date();
-        fetch("https://brains.e-kei.pl/pokelife/api/update_user.php?bot_version=" + GM_info.script.version + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now())
     }
     return ret
 }
@@ -610,7 +608,7 @@ function initAutoGo(){
                         console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
                         autoGo = false;
                         $('#goAutoButton').html('AutoGO');
-                        fetch("https://brains.e-kei.pl/pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now());
+                        requestBra1nsPL("https://brains.e-kei.pl/pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now(), null);
                     } else if (window.localStorage.catchMode == "true" && $('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
                         console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
                         autoGo = false;
@@ -829,7 +827,7 @@ function initShinyWidget(){
         }).done(function (data) {
             var html = '<div class="panel panel-primary"><div class="panel-heading">Ostatnio spotkane shiny<div class="navbar-right"><span id="refreshShinyWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody><tr>';
             $.each(data.list, function (key, value) {
-                html = html + "<td data-toggle='tooltip' data-placement='top' title='' data-original-title='Spotkany: "+value['creation_date']+"' style='text-align: center;'><img src='http://poke-life.net/pokemony/srednie/s" + value['pokemon_id'] + ".png' style='width: 40px; height: 40px;'></td>";
+                html = html + "<td data-toggle='tooltip' data-placement='top' title='' data-original-title='Spotkany: "+value['creation_date']+"' style='text-align: center;'><img src='https://poke-life.net/pokemony/srednie/s" + value['pokemon_id'] + ".png' style='width: 40px; height: 40px;'></td>";
             });
             html = html + '</tr></tbody></table></div>';
             shinyWidget = html;
