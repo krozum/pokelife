@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.13.1
+// @version      3.14
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -86,6 +86,32 @@ function updateStatsDoswiadczenie(json){
     })
 }
 
+$(document).ready(function() {
+    $("a").each(function(){
+        if($(this).attr('href').charAt(0)!='#' && !$(this).hasClass( "link" )) {
+            $(this).attr("href", "index.php?url="+$(this).attr("href"));
+        };
+    });
+
+    if(window.location.search.indexOf('url=') != -1){
+        $.get(window.location.search.split('url=')[1], function(data) {
+            var THAT = $('<div>').append($(data).clone());
+            window.onReloadMainFunctions.forEach(function(item) {
+                item.call(THAT);
+            })
+            $("#glowne_okno").html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"")+'<script>$(".btn-edycja-nazwy-grupy").click(function(a){$("#panel_grupa_id_"+$(this).attr("data-grupa-id")).html(\'<form action="druzyna.php?p=2&zmien_nazwe_grupy='+$(this).attr("data-grupa-id")+'" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="'+$(this).attr("data-obecna-nazwa")+'"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>\')}),$(".nauka-ataku").click(function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow");var t=$("input[name=nauczZamiast-"+$(this).attr("data-pokemon-id")+"]:checked").val();$(this).attr("data-tm-zapomniany")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm_zapomniany="+$(this).attr("data-tm-zapomniany")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$(this).attr("data-tm")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm="+$(this).attr("data-tm")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&nauka_ataku="+$(this).attr("data-nazwa-ataku")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)})}),$(".select-submit").one("blur change",function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$("html, body").animate({scrollTop:0},"fast"),$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}})}),$("#zatwierdz_reprezentacje").click(function(a){$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$("html, body").animate({scrollTop:0},"fast"),$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}}),a.preventDefault()}),$(".collapse_toggle_icon").click(function(a){$(".collapse_toggle_icon").hasClass("glyphicon-chevron-down")?$(".collapse_toggle_icon").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up"):$(".collapse_toggle_icon").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down")});</script>');
+            $.get('inc/stan.php', function(data) {
+                $("#sidebar").html(data);
+                window.afterReloadMainFunctions.forEach(function(item) {
+                    item.call();
+                })
+            });
+            history.replaceState('data to be passed', 'Title of the page', 'index.php');
+        });
+    }
+});
+
+
 
 var pa_before = $('#sidebar .progress-bar:contains("PA")').attr("aria-valuenow");
 const oldShow = jQuery.fn.html
@@ -118,7 +144,14 @@ $(document).on("click", "nav a", function(event) {
         new_buffer = new_buffer.substr(4);
         remember_back(new_buffer);
 
-        $.get($(this).attr('href'), function(data) {
+        var url = $(this).attr('href');
+        if(url.indexOf('index.php?url=') != -1){
+            url = url.replace('index.php?url=', '');
+        }
+        if(url.indexOf('gra/') == -1){
+            url = 'gra/'+url;
+        }
+        $.get(url, function(data) {
             var THAT = $('<div>').append($(data).clone());
             window.onReloadMainFunctions.forEach(function(item) {
                 item.call(THAT);
@@ -529,11 +562,11 @@ function initAutoGo(){
 
         var icons = [];
         $.each($('#pasek_skrotow li'), function (index, item) {
-            if ($(item).find('a').attr('href').substring(0, 9) == "gra/dzicz") {
+            if ($(item).find('a').attr('href') != "#" && $(item).find('a').attr('href').split('url=')[1].substring(0, 9) == "gra/dzicz") {
                 icons.push({
                     'iconFilePath': $(item).find('img').attr('src'),
                     'iconValue': function(){
-                        return $(item).find('a').attr('href').substring(28)
+                        return $(item).find('a').attr('href').split('url=')[1].substring(28)
                     }
                 });
             }
@@ -626,7 +659,7 @@ function initAutoGo(){
                         $("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call()+ "']").submit();
                     } else {
                         console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".");
-                        $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
+                        $('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
                     }
                 }
             }
