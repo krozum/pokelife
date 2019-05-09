@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.12.1
+// @version      3.13
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -36,6 +36,7 @@
 // 15. initSzybkiSklep
 // 16. initWyszukiwarkaOsiagniec
 // 17. initKomunikat
+// 18. initPlecakTrzymaneView
 
 
 function requestBra1nsPL(url, callback){
@@ -1727,3 +1728,78 @@ function initKomunikat(){
 
 };
 initKomunikat();
+
+
+
+
+
+// **********************
+//
+// initPlecakTrzymaneView
+// Funkcja zmieniająca wygląd plecaka
+//
+// **********************
+function initPlecakTrzymaneView(){
+    onReloadMain(function(){
+        if(this.find('.panel-heading').html() === "Plecak"){
+            var DATA = this;
+            var arrayUzywane = [];
+            var arrayJajka = [];
+            var arrayMega = [];
+            var arrayInne = [];
+            var arrayModal = [];
+            $.each(this.find('#plecak-trzymane > .row > div'), function (index, item) {
+                if($(item).find(".modal-dialog").length > 0){
+                    arrayModal.push(item)
+                } else if($(item).find(".caption .text-center:contains('Używa: ')").length > 0){
+                    arrayUzywane.push($(item));
+                } else if($(item).find("img[src='images/przedmioty/100x100/lucky_egg.png']").length > 0){
+                    arrayJajka.push($(item));
+                } else if($(item).find(".caption:contains('ite V')").length > 0){
+                    arrayMega.push($(item));
+                } else if($(item).find(".caption:contains('ite X V')").length > 0){
+                    arrayMega.push($(item));
+                } else if($(item).find(".caption:contains('ite Y V')").length > 0){
+                    arrayMega.push($(item));
+                } else {
+                    arrayInne.push($(item));
+                }
+                item.remove();
+            })
+
+            var html = "<div class='row'><div class='col-xs-12'><h3 style='text-align: center;'>Używane</h3>";
+            $.each(arrayUzywane, function (index, item) {
+                html = html + '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" style="margin: 0; padding: 0;">' + item.html() + '</div>';
+            })
+            html = html + "</div></div>"
+            this.find('#plecak-trzymane > .row').append(html);
+
+            html = "<div class='row'><div class='col-xs-12'><h3 style='text-align: center;'>Szczęśliwe jajko</h3>";
+            $.each(arrayJajka, function (index, item) {
+                html = html + '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" style="margin: 0; padding: 0;">' + item.html() + '</div>';
+            })
+            html = html + "</div></div>"
+            this.find('#plecak-trzymane > .row').append(html);
+
+            html = "<div class='row'><div class='col-xs-12'><h3 style='text-align: center;'>Mega kamienie</h3>";
+            $.each(arrayMega, function (index, item) {
+                html = html + '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" style="margin: 0; padding: 0;">' + item.html() + '</div>';
+            })
+            html = html + "</div></div>"
+            this.find('#plecak-trzymane >.row').append(html);
+
+            html = "<div class='row'><div class='col-xs-12'><h3 style='text-align: center;'>Inne</h3>";
+            $.each(arrayInne, function (index, item) {
+                html = html + '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" style="margin: 0; padding: 0;">' + item.html() + '</div>';
+            })
+            html = html + "</div></div>"
+            this.find('#plecak-trzymane > .row').append(html);
+
+            var THAT = this;
+            $.each(arrayModal, function (index, item) {
+                $(item).appendTo(THAT.find('#plecak-trzymane > .row'));
+            })
+        }
+    })
+}
+initPlecakTrzymaneView();
