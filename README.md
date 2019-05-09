@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.14 (2019-05-09)
+* Od teraz otwórz w nowym oknie działa
+
 3.13 (2019-05-09)
 * Dodanie nowego widoku Trzymanych przedmiotów
 
