@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.13 (2019-05-09)
+* Dodanie nowego widoku Trzymanych przedmiotów
+
 3.12.1 (2019-05-08)
 * Poprawka do zawieszania sie bota
 
