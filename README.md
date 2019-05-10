@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.15 (2019-05-10)
+* Dodano przycisk do wbijania szkoleniowca. Jest on dostępny w Pokemony -> Przechowalnia. Po kliknięciu bot przechodzi po wszystkich pokemonach w przechowalni i zwiększa im statystyki z treningiem mniejszym niż 7 do wartości 7.
+
 3.14 (2019-05-09)
 * Od teraz otwórz w nowym oknie działa
 
