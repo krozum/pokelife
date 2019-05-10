@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.15.1
+// @version      3.15.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1832,6 +1832,8 @@ function initWbijanieSzkoleniowca(){
     var affected = 0;
     var price = 0;
 
+    $('#pasek_skrotow > .navbar-nav').append('<li><a id="skrot_szkoleniowiec" href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Wbijaj osiągnięcie szkoleniowca"><div class="pseudo-btn"><img src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/3b79fd270c90c0dfd90763fcf1b54346-trofeo-de-campe--n-estrella-by-vexels.png"></div></a></li>');
+
     onReloadMain(function(){
         array = [];
         if(this.find('.panel-heading').html() === "Pokemony"){
@@ -1844,6 +1846,12 @@ function initWbijanieSzkoleniowca(){
         }
     })
 
+
+    $(document).on('click', '#skrot_szkoleniowiec', function(){
+        reloadMain('gra/druzyna.php?p=3', function(){
+            $('#wbijajSzkoleniowca').trigger('click');
+        });
+    });
 
     $(document).on('click', '#wbijajSzkoleniowca', function(){
         wbijajSzkoleniowca(array);
@@ -1868,7 +1876,13 @@ function initWbijanieSzkoleniowca(){
                 var i;
                 for(var j = 1; j <=6; j++){
                     var count = Number($('.sala_atrybuty_tabelka .row:nth('+j+') > div:nth(2)').html());
-                    var ile = 7 - count;
+                    var ile = 0;
+                    if(j != 6){
+                        ile = 7 - count;
+                    } else {
+                        ile = 35 - count;
+                        ile = ile / 5;
+                    }
                     if(ile > 0){
                         affected = affected + ile;
                         treningi.push($('.sala_atrybuty_tabelka .row:nth('+j+') > div:nth(3) > form').attr('action')+"&postData%5B0%5D%5Bname%5D=ilosc&postData%5B0%5D%5Bvalue%5D=" + ile);
