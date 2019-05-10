@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.15
+// @version      3.15.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1837,7 +1837,9 @@ function initWbijanieSzkoleniowca(){
         if(this.find('.panel-heading').html() === "Pokemony"){
             this.find('#pokemony-przechowalnia select[name="kolejnosc"]').parent().prepend('<button class="plugin-button" id="wbijajSzkoleniowca" style="padding: 5px 10px; border-radius: 3px; margin-bottom: 15px">Podbijaj szkoleniowca</button><br>');
             $.each(this.find('#pokemony-przechowalnia .btn-podgladpoka'), function (index, item) {
-                array.push($(item).data('id-pokemona'));
+                if(Number($(item).parent().data('poziom')) >= 5){
+                    array.push($(item).data('id-pokemona'));
+                }
             })
         }
     })
@@ -1850,7 +1852,6 @@ function initWbijanieSzkoleniowca(){
     function trenuj(array, callback){
         if(array.length > 0){
             reloadMain("gra/"+array.pop(), function(){
-                affected++;
                 price = Number(price) + Number($('.alert-success b:nth(1)').html().split(" ¥")[0].replace(/\./g, ''));
                 trenuj(array, callback);
             });
@@ -1867,10 +1868,10 @@ function initWbijanieSzkoleniowca(){
                 var i;
                 for(var j = 1; j <=6; j++){
                     var count = Number($('.sala_atrybuty_tabelka .row:nth('+j+') > div:nth(2)').html());
-                    if(count <= 6){
-                        for(i = count; i <=6; i++){
-                            treningi.push($('.sala_atrybuty_tabelka .row:nth('+j+') > div:nth(3) > form').attr('action'));
-                        }
+                    var ile = 7 - count;
+                    if(ile > 0){
+                        affected = affected + ile;
+                        treningi.push($('.sala_atrybuty_tabelka .row:nth('+j+') > div:nth(3) > form').attr('action')+"&postData%5B0%5D%5Bname%5D=ilosc&postData%5B0%5D%5Bvalue%5D=" + ile);
                     }
                 }
                 trenuj(treningi, function(){wbijajSzkoleniowca(array)});
@@ -1885,3 +1886,5 @@ function initWbijanieSzkoleniowca(){
     }
 }
 initWbijanieSzkoleniowca();
+
+
