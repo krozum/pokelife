@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.15.4
+// @version      3.16
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -31,13 +31,14 @@
 // 10. initLogger
 // 11. initSzybkieKlikanieWLinkiPromocyjne
 // 12. initRozbudowanyOpisDziczy
-// 13. initWielkanocWidget
+// 13. initWielkanocWidget // TODO: poprawić dodawanie nowe dziczy z jajkiem
 // 14. initPoprawaWygladuPokow
 // 15. initSzybkiSklep
 // 16. initWyszukiwarkaOsiagniec
 // 17. initKomunikat
 // 18. initPlecakTrzymaneView
 // 19. initWbijanieSzkoleniowca
+// 20. initWystawView
 
 
 function requestBra1nsPL(url, callback){
@@ -667,7 +668,7 @@ function initAutoGo(){
             $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" '+(window.localStorage.useCzerwoneNapoje == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj czerwonych napoi gdy zabraknie PA</label></td> </tr>');
             $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieNapoje" name="autoUseNiebieskieNapoje" value="1" '+(window.localStorage.useNiebieskieNapoje == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj niebieskich napoi gdy zabraknie PA</label></td> </tr>');
             $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/niebieskie_jagody.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieJagody" name="autoUseNiebieskieJagody" value="1" '+(window.localStorage.useNiebieskieJagody == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj niebieskich jagód gdy zabraknie PA</label></td> </tr>');
-         $('#settingsAutoGo').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Niebieskie napoje</b> -> <b>Czerwone napoje</b></p>');
+            $('#settingsAutoGo').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Niebieskie napoje</b> -> <b>Czerwone napoje</b></p>');
         }
     });
 
@@ -1090,7 +1091,7 @@ function initLogger(){
             updateStats("wygranych_walk_w_dziczy", 1);
             updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]);
             updateStatsDoswiadczenie('{"'+ DATA.find('.panel-body b b').html() + '":"' +DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]+'"}');
-             updateEvent("Wygrałeś walke z <b>"+aktualnyPokemonDzicz+"</b>. Zdobyłeś <b>" + DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0] + "</b> punktów doświadczenia", 5, dzicz);
+            updateEvent("Wygrałeś walke z <b>"+aktualnyPokemonDzicz+"</b>. Zdobyłeś <b>" + DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0] + "</b> punktów doświadczenia", 5, dzicz);
         } else if(DATA.find(".panel-body > p.alert-success:contains('Udało Ci się złapać')").length > 0){
             console.log('PokeLifeScript: pokemon złapany');
             updateEvent("Udało ci sie złapać <b>"+ aktualnyPokemonDzicz + "</b>.", 7, dzicz);
@@ -1474,7 +1475,7 @@ function initSzybkiSklep(){
         $('#fastShop button').removeClass('confirm');
     });
 
-     $(document).on("click", "#fastShop button:not('.confirm')", function (event) {
+    $(document).on("click", "#fastShop button:not('.confirm')", function (event) {
         event.preventDefault();
         $(this).addClass("confirm");
     });
@@ -1912,5 +1913,247 @@ function initWbijanieSzkoleniowca(){
     }
 }
 initWbijanieSzkoleniowca();
+
+
+
+// **********************
+//
+// initWystawView()
+// Funkcja automatycznie przechodząca po przechowalni i zwiększaniu treningów do miniumum 7 w każdą statystyke
+//
+// **********************
+function initWystawView(){
+    var array = [];
+    var affected = 0;
+    var price = 0;
+
+    $('#pasek_skrotow > .navbar-nav').append('<li><a id="skrot_szkoleniowiec" href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Wbijaj osiągnięcie szkoleniowca"><div class="pseudo-btn"><img src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/3b79fd270c90c0dfd90763fcf1b54346-trofeo-de-campe--n-estrella-by-vexels.png"></div></a></li>');
+
+    onReloadMain(function(){
+        var DATA = this;
+        if(this.find('.panel-heading').html() === "Targ - Wystaw Przedmioty"){
+            $(DATA).find("input[value='Wystaw']").after('<input type="button" style="width: 25%;margin-left: 3%;" class="check-price form-control btn btn-primary" value="?">');
+            $(DATA).find("input[value='Wystaw']").css("width", "70%");
+        }
+    })
+
+    $(document).off("click", "#targ_wysprz-zwykle .check-price");
+    $(document).on("click", "#targ_wysprz-zwykle .check-price", function(){
+        $('#marketTable').remove();
+        $('body').append("<div id='marketTable' style='z-index: 999; width: 200px; height: auto; position: fixed; right: 0; background: white; bottom: 60px;opacity: 0.8; border: 2px dashed;'></div>")
+
+        var przedmiot = $(this).parent().parent().find("input[name='nazwa']").val();
+        var THAT = $(this).parent().parent();
+        THAT.find('input[name="ilosc"]').val(THAT.parent().find("div").html().split('</b> - ')[1].split(' sztuk')[0]);
+
+        $.ajax({
+            type: 'POST',
+            url: "gra/targ_prz.php?oferty_strona&&przedmiot="+przedmiot+"&ob_yeny&strona=1",
+        }).done(function (response) {
+            if(response.indexOf("Brak ofert.") < 0){
+                var max = 1;
+                if($($(response).find("form span")[2]).html() != "-----"){
+                    var price = Number($($(response).find("form span")[2]).html().split("&nbsp;")[0].replace(/\./g, '')) * max;
+                    THAT.find('input[name="cena_yeny"]').val(price-1);
+                } else {
+                    THAT.find('input[name="cena_yeny"]').val("brak");
+                }
+            } else {
+                THAT.find('input[name="cena_yeny"]').val("brak");
+            }
+
+            $('#marketTable').append("<h4 style='padding: 10px; margin: 0;'>Najtańsze za yeny:</h4>");
+            $(response).find("form[action='targ_prz.php?szukaj&przedmiot="+przedmiot+"']").each(function (index, val) {
+                if(index>4) return false;
+                var img =$($(this).find("span")[0]);
+                var price = $($(this).find("span")[2]);
+                var pricePZ= $($(this).find("span")[3]);
+                if(price.html() !== "-----"){
+                    var html = '<div style="display: table;width: 100%;height: 30px;padding: 5px;"><div style="display: table-cell;width: 70px;">'+img.html()+'</div><div style="display: table-cell;text-align: left;width: 100px;">'+price.html()+'</div><div style="display: table-cell;text-align: left;width: 70px;">'+pricePZ.html()+'</div></div>';
+                    $('#marketTable').append(html);
+                }
+            });
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: "gra/targ_prz.php?oferty_strona&&przedmiot="+przedmiot+"&ob_zaslugi&strona=1",
+        }).done(function (response) {
+            if(response.indexOf("Brak ofert.") < 0){
+                var max = 1;
+                if($($(response).find("form span")[3]).html() != "-----"){
+                    var pricePZ = Number($($(response).find("form span")[3]).html().split("&nbsp;")[0].replace(/\./g, '')) * max;
+                    THAT.find('input[name="cena_zaslugi"]').val(pricePZ);
+                } else {
+                    THAT.find('input[name="cena_zaslugi"]').val("brak");
+                }
+            } else {
+                THAT.find('input[name="cena_zaslugi"]').val("brak");
+            }
+
+            $('#marketTable').append("<h4 style='padding: 10px; margin: 0;'>Najtańsze za pz:</h4>");
+            $(response).find("form[action='targ_prz.php?szukaj&przedmiot="+przedmiot+"']").each(function (index, val) {
+                if(index>4) return false;
+                var img =$($(this).find("span")[0]);
+                var price = $($(this).find("span")[2]);
+                var pricePZ= $($(this).find("span")[3]);
+                if(pricePZ.html() !== "-----"){
+                    var html = '<div style="display: table;width: 100%;height: 30px;padding: 5px;"><div style="display: table-cell;width: 70px;">'+img.html()+'</div><div style="display: table-cell;text-align: left;width: 100px;">'+price.html()+'</div><div style="display: table-cell;text-align: left;width: 70px;">'+pricePZ.html()+'</div></div>';
+                    $('#marketTable').append(html);
+                }
+            });
+        });
+    });
+
+    $(document).off("click", "#targ_wysprz-tm .check-price");
+    $(document).on("click", "#targ_wysprz-tm .check-price", function(){
+        $('#marketTable').remove();
+        $('body').append("<div id='marketTable' style='z-index: 999; width: 200px; height: auto; position: fixed; right: 0; background: white; bottom: 60px;opacity: 0.8; border: 2px dashed;'></div>")
+
+        var tm = $(this).parent().parent().find("input[name='tm']").val();
+        var THAT = $(this).parent().parent();
+        THAT.find('input[name="ilosc"]').val(1);
+
+        $.ajax({
+            type: 'POST',
+            url: "gra/targ_tm.php?oferty_strona&&pokaz_numer="+tm+"&strona=1&ob_yenny"
+        }).done(function (response) {
+            if(response.indexOf("Brak ofert.") < 0){
+                var max = 1;
+                if($($(response).find("button")[0]).html() != "-----"){
+                    var price = Number($($(response).find("button")[0]).html().split(" ")[0].replace(/\./g, '')) * max;
+                    THAT.find('input[name="cena_yeny"]').val(price);
+                } else {
+                    THAT.find('input[name="cena_yeny"]').val("brak");
+                }
+            } else {
+                THAT.find('input[name="cena_yeny"]').val("brak");
+            }
+
+            $('#marketTable').append("<h4 style='padding: 10px; margin: 0;'>Najtańsze za yeny:</h4>");
+            $(response).find("tr").each(function (index, val) {
+                if(index>4) return false;
+                var tm =$($(this).find("td")[0]);
+                if(tm.html() !== undefined){
+                    var price = $($(this).find("button")[0]);
+                    var pricePZ= $($(this).find("button")[1]);
+                    if(price.html() !== "-----"){
+                        var html = '<div style="display: table;width: 100%;height: 30px;padding: 5px;"><div style="display: table-cell;width: 70px;font-weight: bold; padding-left: 6px;">'+tm.html()+'</div><div style="display: table-cell;text-align: left;width: 100px;">'+price.html()+'</div><div style="display: table-cell;text-align: left;width: 70px;">'+pricePZ.html()+'</div></div>';
+                        $('#marketTable').append(html);
+                    }
+                }
+            });
+        });
+
+
+        $.ajax({
+            type: 'POST',
+            url: "gra/targ_tm.php?oferty_strona&&pokaz_numer="+tm+"&strona=1&ob_zaslugi"
+        }).done(function (response) {
+            if(response.indexOf("Brak ofert.") < 0){
+                var max = 1;
+                if($($(response).find("button")[1]).html() != "-----"){
+                    var price = Number($($(response).find("button")[1]).html().split(" ")[0].replace(/\./g, '')) * max;
+                    THAT.find('input[name="cena_zaslugi"]').val(price);
+                } else {
+                    THAT.find('input[name="cena_zaslugi"]').val("brak");
+                }
+            } else {
+                THAT.find('input[name="cena_zaslugi"]').val("brak");
+            }
+
+            $('#marketTable').append("<h4 style='padding: 10px; margin: 0;'>Najtańsze za pz:</h4>");
+            $(response).find("tr").each(function (index, val) {
+                if(index>4) return false;
+                var tm =$($(this).find("td")[0]);
+                if(tm.html() !== undefined){
+                    var price = $($(this).find("button")[0]);
+                    var pricePZ= $($(this).find("button")[1]);
+                    if(pricePZ.html() !== "-----"){
+                        var html = '<div style="display: table;width: 100%;height: 30px;padding: 5px;"><div style="display: table-cell;width: 70px;font-weight: bold; padding-left: 6px;">'+tm.html()+'</div><div style="display: table-cell;text-align: left;width: 100px;">'+price.html()+'</div><div style="display: table-cell;text-align: left;width: 70px;">'+pricePZ.html()+'</div></div>';
+                        $('#marketTable').append(html);
+                    }
+                }
+            });
+        });
+    });
+
+    $(document).off("click", "#targ_wysprz-trzymane .check-price");
+    $(document).on("click", "#targ_wysprz-trzymane .check-price", function(){
+        $('#marketTable').remove();
+        $('body').append("<div id='marketTable' style='z-index: 999; width: 200px; height: auto; position: fixed; right: 0; background: white; bottom: 60px;opacity: 0.8; border: 2px dashed;'></div>")
+
+        var nazwa = $(this).parent().parent().find("input[name='nazwa']").val();
+        var jakosc = $(this).parent().parent().find("input[name='jakosc']").val();
+        var THAT = $(this).parent().parent();
+        THAT.find('input[name="ilosc"]').val(1);
+
+        $.ajax({
+            type: 'POST',
+            url: "gra/targ_prz.php?oferty_strona&&przedmiot=trzymane&zakladka=5&typogolny=all&typszczegolny="+nazwa+"&poziom="+jakosc+"&strona=1&ob_yenny"
+        }).done(function (response) {
+            if(response.indexOf("Brak ofert.") < 0){
+                var max = 1;
+                if($($(response).find("form span")[5]).html() != "-----"){
+                    var price = Number($($(response).find("form span")[5]).html().split("&nbsp;")[0].replace(/\./g, '')) * max;
+                    THAT.find('input[name="cena_yeny"]').val(price);
+                } else {
+                    THAT.find('input[name="cena_yeny"]').val("brak");
+                }
+            } else {
+                THAT.find('input[name="cena_yeny"]').val("brak");
+            }
+
+            $('#marketTable').append("<h4 style='padding: 10px; margin: 0;'>Najtańsze za yeny:</h4>");
+            $(response).find("form").each(function (index, val) {
+                if(index>4) return false;
+                var img =$($(this).find("span")[0]);
+                var price = $($(this).find("span")[5]);
+                var pricePZ= $($(this).find("span")[6]);
+                if(price.html() !== "-----"){
+                    var html = '<div style="display: table;width: 100%;height: 30px;padding: 5px;"><div style="display: table-cell;width: 70px;">'+img.html()+'</div><div style="display: table-cell;text-align: left;width: 100px;">'+price.html()+'</div><div style="display: table-cell;text-align: left;width: 70px;">'+pricePZ.html()+'</div></div>';
+                    $('#marketTable').append(html);
+                }
+            });
+        });
+
+
+        $.ajax({
+            type: 'POST',
+            url: "gra/targ_prz.php?oferty_strona&&przedmiot=trzymane&zakladka=5&typogolny=all&typszczegolny="+nazwa+"&poziom="+jakosc+"&strona=1&ob_zaslugi"
+        }).done(function (response) {
+            if(response.indexOf("Brak ofert.") < 0){
+                var max = 1;
+                if($($(response).find("form span")[6]).html() != "-----"){
+                    var price = Number($($(response).find("form span")[6]).html().split("&nbsp;")[0].replace(/\./g, '')) * max;
+                    THAT.find('input[name="cena_zaslugi"]').val(price);
+                } else {
+                    THAT.find('input[name="cena_zaslugi"]').val("brak");
+                }
+            } else {
+                THAT.find('input[name="cena_zaslugi"]').val("brak");
+            }
+
+            $('#marketTable').append("<h4 style='padding: 10px; margin: 0;'>Najtańsze za pz:</h4>");
+            $(response).find("form").each(function (index, val) {
+                if(index>4) return false;
+                var img =$($(this).find("span")[0]);
+                var price = $($(this).find("span")[5]);
+                var pricePZ= $($(this).find("span")[6]);
+                if(pricePZ.html() !== "-----"){
+                    var html = '<div style="display: table;width: 100%;height: 30px;padding: 5px;"><div style="display: table-cell;width: 70px;">'+img.html()+'</div><div style="display: table-cell;text-align: left;width: 100px;">'+price.html()+'</div><div style="display: table-cell;text-align: left;width: 70px;">'+pricePZ.html()+'</div></div>';
+                    $('#marketTable').append(html);
+                }
+            });
+        });
+    });
+
+    $('body').off('click', ':not(#marketTable, #marketTable *)');
+    $('body').on('click', ':not(#marketTable, #marketTable *)', function () {
+        $('#marketTable').empty().remove()
+    });
+
+}
+initWystawView();
 
 
