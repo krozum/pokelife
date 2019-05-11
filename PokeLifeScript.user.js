@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.15.3
+// @version      3.15.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -247,7 +247,7 @@ $(document).on('submit', 'form', function(e) {
                 success:function (data) {
                     var THAT = $('<div>').append($(data).clone());
                     window.onReloadMainFunctions.forEach(function(item) {
-                        item.call(THAT);
+                        item.call(THAT, null);
                     })
                     $("#glowne_okno").html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"")+'<script>$(".btn-edycja-nazwy-grupy").click(function(a){$("#panel_grupa_id_"+$(this).attr("data-grupa-id")).html(\'<form action="druzyna.php?p=2&zmien_nazwe_grupy='+$(this).attr("data-grupa-id")+'" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="'+$(this).attr("data-obecna-nazwa")+'"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>\')}),$(".nauka-ataku").click(function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow");var t=$("input[name=nauczZamiast-"+$(this).attr("data-pokemon-id")+"]:checked").val();$(this).attr("data-tm-zapomniany")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm_zapomniany="+$(this).attr("data-tm-zapomniany")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$(this).attr("data-tm")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm="+$(this).attr("data-tm")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&nauka_ataku="+$(this).attr("data-nazwa-ataku")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)})}),$(".select-submit").one("blur change",function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$("html, body").animate({scrollTop:0},"fast"),$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}})}),$("#zatwierdz_reprezentacje").click(function(a){$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$("html, body").animate({scrollTop:0},"fast"),$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}}),a.preventDefault()}),$(".collapse_toggle_icon").click(function(a){$(".collapse_toggle_icon").hasClass("glyphicon-chevron-down")?$(".collapse_toggle_icon").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up"):$(".collapse_toggle_icon").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down")});</script>');
                     $.get('inc/stan.php', function(data) {
@@ -1037,7 +1037,7 @@ function initLogger(){
     onReloadMain(function(url){
         console.log(url);
         var dzicz = null;
-        if(url.indexOf('miejsce=') != -1){
+        if(url != null && url.indexOf('miejsce=') != -1){
             dzicz = url.split('miejsce=')[1].split('&')[0];
         }
         var DATA = this;
