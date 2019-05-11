@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.16
+// @version      3.16.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1923,12 +1923,6 @@ initWbijanieSzkoleniowca();
 //
 // **********************
 function initWystawView(){
-    var array = [];
-    var affected = 0;
-    var price = 0;
-
-    $('#pasek_skrotow > .navbar-nav').append('<li><a id="skrot_szkoleniowiec" href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Wbijaj osiągnięcie szkoleniowca"><div class="pseudo-btn"><img src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/3b79fd270c90c0dfd90763fcf1b54346-trofeo-de-campe--n-estrella-by-vexels.png"></div></a></li>');
-
     onReloadMain(function(){
         var DATA = this;
         if(this.find('.panel-heading').html() === "Targ - Wystaw Przedmioty"){
