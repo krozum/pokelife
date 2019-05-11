@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.15.2
+// @version      3.15.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -68,10 +68,16 @@ function afterReloadMain(fn) {
     window.afterReloadMainFunctions.push(fn);
 }
 
-function updateEvent(text, eventTypeId){
-    requestBra1nsPL("https://brains.e-kei.pl/pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId + "&time="+Date.now(), function(response){
-        console.log("updateEvent: "+eventTypeId+" => "+ text);
-    })
+function updateEvent(text, eventTypeId, dzicz){
+    if(dzicz != null){
+        requestBra1nsPL("https://brains.e-kei.pl/pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId + "&dzicz=" + dzicz + "&time="+Date.now(), function(response){
+            console.log("updateEvent: "+eventTypeId+" => "+ text);
+        })
+    } else {
+        requestBra1nsPL("https://brains.e-kei.pl/pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId + "&time="+Date.now(), function(response){
+            console.log("updateEvent: "+eventTypeId+" => "+ text);
+        })
+    }
 }
 
 
@@ -189,7 +195,7 @@ function reloadMain(url, callback){
     $.get(url, function(data) {
         var THAT = $('<div>').append($(data).clone());
         window.onReloadMainFunctions.forEach(function(item) {
-            item.call(THAT);
+            item.call(THAT, url);
         })
         $("#glowne_okno").html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"")+'<script>$(".btn-edycja-nazwy-grupy").click(function(a){$("#panel_grupa_id_"+$(this).attr("data-grupa-id")).html(\'<form action="druzyna.php?p=2&zmien_nazwe_grupy='+$(this).attr("data-grupa-id")+'" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="'+$(this).attr("data-obecna-nazwa")+'"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>\')}),$(".nauka-ataku").click(function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow");var t=$("input[name=nauczZamiast-"+$(this).attr("data-pokemon-id")+"]:checked").val();$(this).attr("data-tm-zapomniany")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm_zapomniany="+$(this).attr("data-tm-zapomniany")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$(this).attr("data-tm")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm="+$(this).attr("data-tm")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&nauka_ataku="+$(this).attr("data-nazwa-ataku")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)})}),$(".select-submit").one("blur change",function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$("html, body").animate({scrollTop:0},"fast"),$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}})}),$("#zatwierdz_reprezentacje").click(function(a){$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$("html, body").animate({scrollTop:0},"fast"),$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}}),a.preventDefault()}),$(".collapse_toggle_icon").click(function(a){$(".collapse_toggle_icon").hasClass("glyphicon-chevron-down")?$(".collapse_toggle_icon").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up"):$(".collapse_toggle_icon").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down")});</script>');
         $.get('inc/stan.php', function(data) {
@@ -207,6 +213,7 @@ function reloadMain(url, callback){
 $(document).off('submit', 'form');
 $(document).on('submit', 'form', function(e) {
     if (!$(this).attr("form-normal-submit")) {
+        console.log('aa');
 
         e.preventDefault();
 
@@ -1027,15 +1034,20 @@ initVersionInfo();
 // **********************
 function initLogger(){
     var aktualnyPokemonDzicz;
-    onReloadMain(function(){
+    onReloadMain(function(url){
+        console.log(url);
+        var dzicz = null;
+        if(url.indexOf('miejsce=') != -1){
+            dzicz = url.split('miejsce=')[1].split('&')[0];
+        }
         var DATA = this;
 
         if(DATA.find("p.alert-info:contains('Niestety, tym razem nie spotkało cię nic interesującego.')").length > 0){
             console.log('PokeLifeScript: pusta wyprawa');
-            updateEvent("Niestety, tym razem nie spotkało cię nic interesującego", 1);
+            updateEvent("Niestety, tym razem nie spotkało cię nic interesującego", 1, dzicz);
         } else if(DATA.find("p.alert-success:contains('pojedynek')").length > 0){
             console.log('PokeLifeScript: walka z trenerem');
-            updateEvent("Niestety, tym razem nie spotkało cię nic interesującego", 1);
+            updateEvent("Niestety, tym razem nie spotkało cię nic interesującego", 1, dzicz);
             updateStats("walki_z_trenerami", 1);
             var pd = 0;
             var json = "";
@@ -1049,7 +1061,7 @@ function initLogger(){
                 pd = pd.toFixed(2);
                 updateStats("zarobki_z_trenerow", DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split(" ¥")[0]);
                 updateStats("zdobyte_doswiadczenie", pd);
-                updateEvent("Na twojej drodze staje inny trener pokemon, który wyzywa Cię na pojedynek. Wygrywasz <b>" + DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split(" ¥")[0] + "</b> ¥. Zdobyte doświadczenie: <b>" + pd + "</b>", 2);
+                updateEvent("Na twojej drodze staje inny trener pokemon, który wyzywa Cię na pojedynek. Wygrywasz <b>" + DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split(" ¥")[0] + "</b> ¥. Zdobyte doświadczenie: <b>" + pd + "</b>", 2, dzicz);
                 updateStatsDoswiadczenie("{"+json.substring(0, json.length - 1)+"}");
             } else {
                 $.each(DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split("PD<br>"), function(key, value){
@@ -1060,28 +1072,28 @@ function initLogger(){
                 });
                 pd.toFixed(2);
                 updateStats("zdobyte_doswiadczenie", pd);
-                updateEvent("Na twojej drodze staje inny trener pokemon, który wyzywa Cię na pojedynek ale niestety go przegrywasz. Zdobyte doświadczenie: <b>" + pd + "</b>", 3);
+                updateEvent("Na twojej drodze staje inny trener pokemon, który wyzywa Cię na pojedynek ale niestety go przegrywasz. Zdobyte doświadczenie: <b>" + pd + "</b>", 3, dzicz);
                 updateStatsDoswiadczenie("{"+json.substring(0, json.length - 1)+"}");
             }
         } else if(DATA.find(".dzikipokemon-background-normalny").length > 0){
             console.log('PokeLifeScript: spotkany pokemon');
-            updateEvent("Spotkany pokemon <b>" + DATA.find('.panel-primary i').html() + "</b>", 4);
+            updateEvent("Spotkany pokemon <b>" + DATA.find('.panel-primary i').html() + "</b>", 4, dzicz);
             aktualnyPokemonDzicz = DATA.find('.panel-primary i').html();
         } else if(DATA.find("h2:contains('Złap Pokemona')").length > 0){
             console.log('PokeLifeScript: pokemon pokonany');
             updateStats("wygranych_walk_w_dziczy", 1);
             updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]);
             updateStatsDoswiadczenie('{"'+ DATA.find('.panel-body b b').html() + '":"' +DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]+'"}');
-            updateEvent("Wygrałeś walke z <b>"+aktualnyPokemonDzicz+"</b>. Zdobyłeś <b>" + DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0] + "</b> punktów doświadczenia", 5);
+            updateEvent("Wygrałeś walke z <b>"+aktualnyPokemonDzicz+"</b>. Zdobyłeś <b>" + DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0] + "</b> punktów doświadczenia", 5, dzicz);
         } else if(DATA.find("h2:contains('Pokemon Ucieka')").length > 0){
             console.log('PokeLifeScript: pokemon pokonany ale ucieka');
             updateStats("wygranych_walk_w_dziczy", 1);
             updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]);
             updateStatsDoswiadczenie('{"'+ DATA.find('.panel-body b b').html() + '":"' +DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0]+'"}');
-             updateEvent("Wygrałeś walke z <b>"+aktualnyPokemonDzicz+"</b>. Zdobyłeś <b>" + DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0] + "</b> punktów doświadczenia", 5);
+             updateEvent("Wygrałeś walke z <b>"+aktualnyPokemonDzicz+"</b>. Zdobyłeś <b>" + DATA.find('p.alert-success:first').html().split("zyskuje ")[1].split(" punktów")[0] + "</b> punktów doświadczenia", 5, dzicz);
         } else if(DATA.find(".panel-body > p.alert-success:contains('Udało Ci się złapać')").length > 0){
             console.log('PokeLifeScript: pokemon złapany');
-            updateEvent("Udało ci sie złapać <b>"+ aktualnyPokemonDzicz + "</b>.", 7);
+            updateEvent("Udało ci sie złapać <b>"+ aktualnyPokemonDzicz + "</b>.", 7, dzicz);
             updateStats("zlapanych_pokemonow", 1);
             if(DATA.find('p.alert-success:nth(1):contains("nie masz już miejsca")').length > 0){
                 var zarobek  = DATA.find('p.alert-success:nth(1):contains("nie masz już miejsca") strong').html().split(" ")[0].replace(/\./g, '');
@@ -1090,7 +1102,7 @@ function initLogger(){
         } else if(DATA.find(".panel-body > p.alert-danger:contains('uwolnił')").length > 0){
             console.log('PokeLifeScript: pokemon sie uwolnił');
             updateStats("niezlapanych_pokemonow", 1);
-            updateEvent("<b>"+ aktualnyPokemonDzicz + "</b> się uwolnił.", 8);
+            updateEvent("<b>"+ aktualnyPokemonDzicz + "</b> się uwolnił.", 8, dzicz);
         } else if(DATA.find(".panel-body > p.alert-success").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa'){
             console.log('PokeLifeScript: event w dziczy');
             if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html() != undefined && DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html().indexOf("Jagód") != -1) {
@@ -1119,16 +1131,16 @@ function initLogger(){
                 } else {
                     updateStats("zebrane_inne_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
                 }
-                updateEvent(DATA.find('.panel-body > p.alert-success').html(), 9);
+                updateEvent(DATA.find('.panel-body > p.alert-success').html(), 9, dzicz);
             } else if(DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
-                updateEvent(DATA.find('.panel-body > p.alert-success').html(), 10);
+                updateEvent(DATA.find('.panel-body > p.alert-success').html(), 10, dzicz);
             }
         } else if(DATA.find(".panel-body > p.alert-info").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa'){
             console.log('PokeLifeScript: event w dziczy');
-            updateEvent(DATA.find('.panel-body > p.alert-info').html(), 10);
+            updateEvent(DATA.find('.panel-body > p.alert-info').html(), 10, dzicz);
         } else if(DATA.find(".panel-body > p.alert-warning").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa'){
             console.log('PokeLifeScript: event w dziczy');
-            updateEvent(DATA.find('.panel-body > p.alert-warning').html(), 10);
+            updateEvent(DATA.find('.panel-body > p.alert-warning').html(), 10, dzicz);
         }
     })
 }
