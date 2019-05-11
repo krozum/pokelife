@@ -27,7 +27,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
-3.15.3 (2019-05-09)
+3.16 (2019-05-11)
+* Dodanie tabelki z cenami po wciśnięciu "?" na widoku Wystaw Przedmioty
+
+3.15.4 (2019-05-11)
 * Poprawki do szkoleniowca
 * Dodanie przycisku do paska skrótów
 * Dodanie zapisywanie dziczy w której jest event
