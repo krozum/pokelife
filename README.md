@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.16.2 (2019-05-13)
+* Dodano porgress bar dla szkoleniowca
+
 3.16 (2019-05-11)
 * Dodanie tabelki z cenami po wciśnięciu "?" na widoku Wystaw Przedmioty
 
