@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.16.2
+// @version      3.16.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1849,6 +1849,7 @@ function initWbijanieSzkoleniowca(){
     var affected = 0;
     var price = 0;
     var max = 0;
+    var now = 0;
 
     $('#pasek_skrotow > .navbar-nav').append('<li><a id="skrot_szkoleniowiec" href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Wbijaj osiągnięcie szkoleniowca"><div class="pseudo-btn"><img src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/3b79fd270c90c0dfd90763fcf1b54346-trofeo-de-campe--n-estrella-by-vexels.png"></div></a></li>');
 
@@ -1873,6 +1874,7 @@ function initWbijanieSzkoleniowca(){
 
     $(document).on('click', '#wbijajSzkoleniowca', function(){
         max = array.length;
+        now = 0;
         wbijajSzkoleniowca(array);
     });
 
@@ -1881,6 +1883,8 @@ function initWbijanieSzkoleniowca(){
             reloadMain("gra/"+array.pop(), function(){
                 price = Number(price) + Number($('.alert-success b:nth(1)').html().split(" ¥")[0].replace(/\./g, ''));
                 trenuj(array, callback);
+            }, function(){
+                $(this).find('.panel-body:nth(0)').prepend('<div class="progress" style="margin:0; margin-bottom: 10px"> <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="'+now+'" aria-valuemin="0" aria-valuemax="'+max+'" style="width: '+Number(((now*100)/max)).toFixed(0)+'%;"> <span>'+Number(((now*100)/max)).toFixed(0)+'%</span> </div> </div>');
             });
         } else {
             callback.call();
@@ -1890,6 +1894,7 @@ function initWbijanieSzkoleniowca(){
     function wbijajSzkoleniowca(array){
         if(array.length > 0){
             var id = array.pop();
+            now++;
             reloadMain("gra/sala.php?p="+id+"&zrodlo=rezerwa", function(){
                 var treningi = [];
                 var i;
@@ -1909,7 +1914,7 @@ function initWbijanieSzkoleniowca(){
                 }
                 trenuj(treningi, function(){wbijajSzkoleniowca(array)});
             }, function(){
-                $(this).find('.panel-body:nth(0)').prepend('<div class="progress" style="margin:0; margin-bottom: 10px"> <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="'+(max-array.length)+'" aria-valuemin="0" aria-valuemax="'+max+'" style="width: '+Number((((max-array.length)*100)/max))+'%;"> <span>'+Number((((max-array.length)*100)/max))+'%</span> </div> </div>');
+                $(this).find('.panel-body:nth(0)').prepend('<div class="progress" style="margin:0; margin-bottom: 10px"> <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="'+now+'" aria-valuemin="0" aria-valuemax="'+max+'" style="width: '+Number(((now*100)/max)).toFixed(0)+'%;"> <span>'+Number(((now*100)/max)).toFixed(0)+'%</span> </div> </div>');
             });
         } else {
             reloadMain('gra/druzyna.php?p=3', function(){
