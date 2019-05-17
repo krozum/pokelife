@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.16.4
+// @version      3.16.5
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -115,7 +115,7 @@ jQuery.fn.html = function() {
     if(this.selector == "#sidebar"){
         var pa_after = this.find('.progress-bar:contains("PA")').attr("aria-valuenow");
 
-        if(pa_after < pa_before){
+        if(Number(pa_after) < Number(pa_before)){
             updateStats("wyklikanych_pa", Number(pa_before)-Number(pa_after));
         }
         pa_before = pa_after;
