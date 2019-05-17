@@ -27,6 +27,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.16.5  (2019-05-17)
+* Drobne poprawki
+* Poprawiono błąd ze zliczaniem wykorzystanych PA
+
 3.16.2 (2019-05-13)
 * Dodano porgress bar dla szkoleniowca
 
