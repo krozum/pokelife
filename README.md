@@ -27,6 +27,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.17  (2019-05-21)
+* Dodanie nowego balla levelball + mixed2
+* Zmieniono poziom swarmballi z 3 do 5 poziomu
+
 3.16.5  (2019-05-17)
 * Drobne poprawki
 * Poprawiono błąd ze zliczaniem wykorzystanych PA
