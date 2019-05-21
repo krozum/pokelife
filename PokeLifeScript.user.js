@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.16.5
+// @version      3.17
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -506,9 +506,27 @@ function initAutoGo(){
                         return '&zlap_pokemona=nightballe';
                     }
                     let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                    if (pokeLvlNumber <= 10) {
+                    if (pokeLvlNumber <= 5) {
                         return '&zlap_pokemona=uzyj_swarmballe';
-                    } else if (pokeLvlNumber >= 3 && pokeLvlNumber < 15) {
+                    } else if (pokeLvlNumber > 5 && pokeLvlNumber < 15) {
+                        return '&zlap_pokemona=nestballe';
+                    } else {
+                        return '&zlap_pokemona=greatballe';
+                    }
+                }
+            },
+            {
+                'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb4.jpg",
+                'iconValue': function() {
+                    var d = new Date();
+                    var h = d.getHours();
+                    if (h >= 22 || h < 6) {
+                        return '&zlap_pokemona=nightballe';
+                    }
+                    let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                    if (pokeLvlNumber <= 5) {
+                        return '&zlap_pokemona=levelballe';
+                    } else if (pokeLvlNumber >= 5 && pokeLvlNumber < 15) {
                         return '&zlap_pokemona=nestballe';
                     } else {
                         return '&zlap_pokemona=greatballe';
