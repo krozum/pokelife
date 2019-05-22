@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.17.3
+// @version      3.17.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1447,12 +1447,12 @@ function initWielkanocWidget(){
 function initPoprawaWygladuPokow(){
     onReloadSidebar(function(){
         this.find('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/ms3.png');
-        this.find('img[src="pokemony/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/ms3.png');
+        this.find('img[src="pokemony/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/srednie_ms3.png');
     });
 
     onReloadMain(function(){
         this.find('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/ms3.png');
-        this.find('img[src="pokemony/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/ms3.png');
+        this.find('img[src="pokemony/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/srednie_ms3.png');
     });
 }
 initPoprawaWygladuPokow();
