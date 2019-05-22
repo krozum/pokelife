@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.17.1
+// @version      3.17.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1451,6 +1451,7 @@ function initPoprawaWygladuPokow(){
 
     onReloadMain(function(){
         this.find('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/a32j44.jpg');
+        this.find('img[src="pokemony/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/a32j44.jpg');
     });
 }
 initPoprawaWygladuPokow();
