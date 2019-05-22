@@ -245,3 +245,7 @@ a {
     margin-left: 1px;
     margin-right: 1px;
 }
+
+#pokemony-druzyna tr td {
+    padding-bottom: 25px !important;
+}
