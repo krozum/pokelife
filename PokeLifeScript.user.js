@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.17.4
+// @version      3.17.5
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -8,7 +8,7 @@
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @require      https://bug7a.github.io/iconselect.js/sample/lib/control/iconselect.js
-// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=1
+// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=2
 // @resource     customCSS_style_1  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_1.css?ver=1
 // @resource     customCSS_style_2  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_2.css?ver=1
 // @resource     customCSS_style_3  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_3.css?ver=1
@@ -1557,7 +1557,7 @@ function initSzybkiSklep(){
             }
             var price = Number($($(response).find("form span")[2]).html().split("&nbsp;")[0].replace(/\./g, '')) * max;
             var price_with_dot = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-            var url = 'gra/targ_prz.php?szukaj&przedmiot=stunballe&postData%5B0%5D%5Bname%5D=przedmiot&postData%5B0%5D%5Bvalue%5D=stunballe&postData%5B1%5D%5Bname%5D=id_oferty&postData%5B1%5D%5Bvalue%5D='+id+'&postData%5B2%5D%5Bname%5D=ilosc_yeny&postData%5B2%5D%5Bvalue%5D=1&postData%5B3%5D%5Bname%5D=napewno&postData%5B3%5D%5Bvalue%5D=&postData%5B4%5D%5Bname%5D=kup&postData%5B4%5D%5Bvalue%5D=';
+            var url = 'gra/targ_prz.php?szukaj&przedmiot=stunballe&postData%5B0%5D%5Bname%5D=przedmiot&postData%5B0%5D%5Bvalue%5D=stunballe&postData%5B1%5D%5Bname%5D=id_oferty&postData%5B1%5D%5Bvalue%5D='+id+'&postData%5B2%5D%5Bname%5D=ilosc_yeny&postData%5B2%5D%5Bvalue%5D='+max+'&postData%5B3%5D%5Bname%5D=napewno&postData%5B3%5D%5Bvalue%5D=&postData%5B4%5D%5Bname%5D=kup&postData%5B4%5D%5Bvalue%5D=';
 
             $('#shop2').attr('url', url);
             $('#shop2 .cena').html(price_with_dot + " ¥");
@@ -1619,8 +1619,8 @@ function initSzybkiSklep(){
         }).done(function (response) {
             var id = $($(response).find("form")[0]).find("input[name='id_oferty']").val();
             var max = $($(response).find("form span")[1]).html();
-            if (max > 10) {
-                max = 10;
+            if (max > 100) {
+                max = 100;
             }
             var price = Number($($(response).find("form span")[2]).html().split("&nbsp;")[0].replace(/\./g, '')) * max;
             var price_with_dot = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -2184,4 +2184,3 @@ function initWystawView(){
 
 }
 initWystawView();
-
