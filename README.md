@@ -27,6 +27,12 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.17.5  (2019-05-23)
+* Drobne poprawki
+* Stunny w szybki sklepie juz kupują sie po 10
+* Zmieniono ilość niebieskich jagód na 100 w szybkim sklepie
+* Poprawki graficzne na widoku Pokemony -> Pokemony
+
 3.17  (2019-05-21)
 * Dodanie nowego balla levelball + mixed2
 * Zmieniono poziom swarmballi z 3 do 5 poziomu
