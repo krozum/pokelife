@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.17.5
+// @version      3.18
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -38,6 +38,7 @@
 // 18. initPlecakTrzymaneView
 // 19. initWbijanieSzkoleniowca
 // 20. initWystawView
+// 21. initWbijanieJeszczeDokladke
 
 
 function requestBra1nsPL(url, callback){
@@ -201,7 +202,7 @@ function reloadMain(url, callback, callback2){
         if(callback2 != undefined && callback2 != null){
             callback2.call(THAT, url);
         }
-        $("#glowne_okno").html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"")+'<script>$(".btn-edycja-nazwy-grupy").click(function(a){$("#panel_grupa_id_"+$(this).attr("data-grupa-id")).html(\'<form action="druzyna.php?p=2&zmien_nazwe_grupy='+$(this).attr("data-grupa-id")+'" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="'+$(this).attr("data-obecna-nazwa")+'"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>\')}),$(".nauka-ataku").click(function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow");var t=$("input[name=nauczZamiast-"+$(this).attr("data-pokemon-id")+"]:checked").val();$(this).attr("data-tm-zapomniany")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm_zapomniany="+$(this).attr("data-tm-zapomniany")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$(this).attr("data-tm")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm="+$(this).attr("data-tm")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&nauka_ataku="+$(this).attr("data-nazwa-ataku")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)})}),$(".select-submit").one("blur change",function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$("html, body").animate({scrollTop:0},"fast"),$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}})}),$("#zatwierdz_reprezentacje").click(function(a){$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$("html, body").animate({scrollTop:0},"fast"),$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}}),a.preventDefault()}),$(".collapse_toggle_icon").click(function(a){$(".collapse_toggle_icon").hasClass("glyphicon-chevron-down")?$(".collapse_toggle_icon").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up"):$(".collapse_toggle_icon").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down")});</script>');
+        $("#glowne_okno").html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"")+'<script>$(".btn-edycja-nazwy-grupy").click(function(a){$("#panel_grupa_id_"+$(this).attr("data-grupa-id")).html(\'<form action="druzyna.php?p=2&zmien_nazwe_grupy='+$(this).attr("data-grupa-id")+'" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="'+$(this).attr("data-obecna-nazwa")+'"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>\')}),$(".nauka-ataku").click(function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow");var t=$("input[name=nauczZamiast-"+$(this).attr("data-pokemon-id")+"]:checked").val();$(this).attr("data-tm-zapomniany")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm_zapomniany="+$(this).attr("data-tm-zapomniany")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$(this).attr("data-tm")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm="+$(this).attr("data-tm")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&nauka_ataku="+$(this).attr("data-nazwa-ataku")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)})}),$(".select-submit").one("blur change",function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}})}),$("#zatwierdz_reprezentacje").click(function(a){$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}}),a.preventDefault()}),$(".collapse_toggle_icon").click(function(a){$(".collapse_toggle_icon").hasClass("glyphicon-chevron-down")?$(".collapse_toggle_icon").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up"):$(".collapse_toggle_icon").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down")});</script>');
         $.get('inc/stan.php', function(data) {
             $("#sidebar").html(data);
             window.afterReloadMainFunctions.forEach(function(item) {
@@ -217,8 +218,6 @@ function reloadMain(url, callback, callback2){
 $(document).off('submit', 'form');
 $(document).on('submit', 'form', function(e) {
     if (!$(this).attr("form-normal-submit")) {
-        console.log('aa');
-
         e.preventDefault();
 
 
@@ -253,7 +252,7 @@ $(document).on('submit', 'form', function(e) {
                     window.onReloadMainFunctions.forEach(function(item) {
                         item.call(THAT, null);
                     })
-                    $("#glowne_okno").html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"")+'<script>$(".btn-edycja-nazwy-grupy").click(function(a){$("#panel_grupa_id_"+$(this).attr("data-grupa-id")).html(\'<form action="druzyna.php?p=2&zmien_nazwe_grupy='+$(this).attr("data-grupa-id")+'" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="'+$(this).attr("data-obecna-nazwa")+'"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>\')}),$(".nauka-ataku").click(function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow");var t=$("input[name=nauczZamiast-"+$(this).attr("data-pokemon-id")+"]:checked").val();$(this).attr("data-tm-zapomniany")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm_zapomniany="+$(this).attr("data-tm-zapomniany")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$(this).attr("data-tm")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm="+$(this).attr("data-tm")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&nauka_ataku="+$(this).attr("data-nazwa-ataku")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)})}),$(".select-submit").one("blur change",function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$("html, body").animate({scrollTop:0},"fast"),$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}})}),$("#zatwierdz_reprezentacje").click(function(a){$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$("html, body").animate({scrollTop:0},"fast"),$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}}),a.preventDefault()}),$(".collapse_toggle_icon").click(function(a){$(".collapse_toggle_icon").hasClass("glyphicon-chevron-down")?$(".collapse_toggle_icon").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up"):$(".collapse_toggle_icon").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down")});</script>');
+                    $("#glowne_okno").html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"")+'<script>$(".btn-edycja-nazwy-grupy").click(function(a){$("#panel_grupa_id_"+$(this).attr("data-grupa-id")).html(\'<form action="druzyna.php?p=2&zmien_nazwe_grupy='+$(this).attr("data-grupa-id")+'" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="'+$(this).attr("data-obecna-nazwa")+'"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>\')}),$(".nauka-ataku").click(function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow");var t=$("input[name=nauczZamiast-"+$(this).attr("data-pokemon-id")+"]:checked").val();$(this).attr("data-tm-zapomniany")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm_zapomniany="+$(this).attr("data-tm-zapomniany")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$(this).attr("data-tm")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm="+$(this).attr("data-tm")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&nauka_ataku="+$(this).attr("data-nazwa-ataku")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)})}),$(".select-submit").one("blur change",function(a){a.preventDefault(),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}})}),$("#zatwierdz_reprezentacje").click(function(a){$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}}),a.preventDefault()}),$(".collapse_toggle_icon").click(function(a){$(".collapse_toggle_icon").hasClass("glyphicon-chevron-down")?$(".collapse_toggle_icon").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up"):$(".collapse_toggle_icon").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down")});</script>');
                     $.get('inc/stan.php', function(data) {
                         $("#sidebar").html(data);
                         window.afterReloadMainFunctions.forEach(function(item) {
@@ -1061,7 +1060,6 @@ initVersionInfo();
 function initLogger(){
     var aktualnyPokemonDzicz;
     onReloadMain(function(url){
-        console.log(url);
         var dzicz = null;
         if(url != null && url.indexOf('miejsce=') != -1){
             dzicz = url.split('miejsce=')[1].split('&')[0];
@@ -1878,7 +1876,7 @@ function initWbijanieSzkoleniowca(){
     onReloadMain(function(){
         array = [];
         if(this.find('.panel-heading').html() === "Pokemony"){
-            this.find('#pokemony-przechowalnia select[name="kolejnosc"]').parent().prepend('<button class="plugin-button" id="wbijajSzkoleniowca" style="padding: 5px 10px; border-radius: 3px; margin-bottom: 15px">Podbijaj szkoleniowca</button><br>');
+            this.find('#pokemony-przechowalnia select[name="kolejnosc"]').parent().prepend('<button class="plugin-button" id="wbijajSzkoleniowca" style="padding: 5px 10px; border-radius: 3px; margin-bottom: 15px">Wbijaj szkoleniowca</button><br>');
             $.each(this.find('#pokemony-przechowalnia .btn-podgladpoka'), function (index, item) {
                 if(Number($(item).parent().data('poziom')) >= 5){
                     array.push($(item).data('id-pokemona'));
@@ -1905,9 +1903,7 @@ function initWbijanieSzkoleniowca(){
             reloadMain("gra/"+array.pop(), function(){
                 price = Number(price) + Number($('.alert-success b:nth(1)').html().split(" ¥")[0].replace(/\./g, ''));
                 trenuj(array, callback);
-            }, function(){
-                $(this).find('.panel-body:nth(0)').prepend('<div class="progress" style="margin:0; margin-bottom: 10px"> <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="'+now+'" aria-valuemin="0" aria-valuemax="'+max+'" style="width: '+Number(((now*100)/max)).toFixed(0)+'%;"> <span>'+Number(((now*100)/max)).toFixed(0)+'%</span> </div> </div>');
-            });
+            })
         } else {
             callback.call();
         }
@@ -1915,6 +1911,12 @@ function initWbijanieSzkoleniowca(){
 
     function wbijajSzkoleniowca(array){
         if(array.length > 0){
+            if($('#szkoleniowiec_progress').length < 1){
+                $('body').append('<div id="szkoleniowiec_progress" class="" style="position: fixed;bottom: 60px;width: 500px;height: auto;z-index: 999;margin: 0 auto;left: 0;right: 0;background-color: inherit;border: none;"><div class="progress" style="margin:0;box-shadow: none;border-radius: 0; border: 1px solid black"><div class="progress-bar progress-bar-danger" role="progressbar" style="border-radius: 0; width: '+Number((((max-array.length)*100)/max)).toFixed(0)+'%;"> <span>'+Number((((max-array.length)*100)/max)).toFixed(0)+'%</span></div></div></div>');
+            } else {
+                $('#szkoleniowiec_progress .progress-bar').css('width', Number((((max-array.length)*100)/max)).toFixed(0)+'%');
+                $('#szkoleniowiec_progress .progress-bar span').html(Number((((max-array.length)*100)/max)).toFixed(0)+'%');
+            }
             var id = array.pop();
             now++;
             reloadMain("gra/sala.php?p="+id+"&zrodlo=rezerwa", function(){
@@ -1935,10 +1937,9 @@ function initWbijanieSzkoleniowca(){
                     }
                 }
                 trenuj(treningi, function(){wbijajSzkoleniowca(array)});
-            }, function(){
-                $(this).find('.panel-body:nth(0)').prepend('<div class="progress" style="margin:0; margin-bottom: 10px"> <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="'+now+'" aria-valuemin="0" aria-valuemax="'+max+'" style="width: '+Number(((now*100)/max)).toFixed(0)+'%;"> <span>'+Number(((now*100)/max)).toFixed(0)+'%</span> </div> </div>');
-            });
+            })
         } else {
+            $('#szkoleniowiec_progress').remove();
             reloadMain('gra/druzyna.php?p=3', function(){
                 $('#pokemony-przechowalnia select[name="kolejnosc"]').parent().prepend('<p class="alert alert-success text-center">Wykonano <b>'+affected+'</b> treningów o łącznej wartości <b>'+price+' ¥</b></p>');
                 price = 0;
@@ -2184,3 +2185,95 @@ function initWystawView(){
 
 }
 initWystawView();
+
+
+
+// **********************
+//
+// initWbijanieJeszczeDokladke()
+// Funkcja automatycznie wbijające osiągnięcie Jeszcze Dokladke
+//
+// **********************
+function initWbijanieJeszczeDokladke(){
+    var pokemonZDruzynyId;
+    var array = [];
+    var max;
+
+    $('#pasek_skrotow > .navbar-nav').append('<li><a id="skrot_jeszcze_dokladke" href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Wbijaj osiągnięcie Jeszcze dokładke?"><div class="pseudo-btn"><img src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/3b79fd270c90c0dfd90763fcf1b54346-trofeo-de-campe--n-estrella-by-vexels.png"></div></a></li>');
+
+
+    onReloadMain(function(){
+        array = [];
+        if(this.find('.panel-heading').html() === "Pokemony"){
+            this.find('#pokemony-przechowalnia select[name="kolejnosc"]').parent().prepend('<button class="plugin-button" id="wbijajJeszczeDokladke" style="padding: 5px 10px; border-radius: 3px; margin-bottom: 15px">Wbijaj jeszcze dokładke?</button><br>');
+            $.each(this.find('#pokemony-przechowalnia .btn-podgladpoka'), function (index, item) {
+                if(Number($(item).parent().data('poziom')) >= 5){
+                    array.push($(item).data('id-pokemona'));
+                }
+            })
+        }
+    })
+
+    $('body').off('click', '#wbijajJeszczeDokladke');
+    $('body').on('click', '#wbijajJeszczeDokladke', function () {
+        $('#skrot_jeszcze_dokladke').trigger('click');
+    });
+
+    $('body').off('click', '#skrot_jeszcze_dokladke');
+    $('body').on('click', '#skrot_jeszcze_dokladke', function () {
+        pokemonZDruzynyId = $($('#sidebar .stan-pokemon')[$('#sidebar .stan-pokemon').length -1]).data('pokemon-id');
+        reloadMain("gra/druzyna.php?przechowuj="+pokemonZDruzynyId, function(){
+            reloadMain('gra/druzyna.php?p=3', function(){
+                max = array.length;
+                wbijaj(array);
+            }, function(){
+                if(this.find('.panel-heading').html() === "Pokemony"){
+                    this.find('#pokemony-przechowalnia select[name="kolejnosc"]').parent().prepend('<button class="plugin-button" id="wbijajSzkoleniowca" style="padding: 5px 10px; border-radius: 3px; margin-bottom: 15px">Podbijaj szkoleniowca</button><br>');
+                    $.each(this.find('#pokemony-przechowalnia .btn-podgladpoka'), function (index, item) {
+                        if(Number($(item).parent().data('poziom')) >= 5){
+                            array.push($(item).data('id-pokemona'));
+                        }
+                    })
+                }
+            });
+        }, function(){
+
+        });
+    })
+
+    function wbijaj(array){
+        if(array.length > 0){
+            if($('#jeszcze_dokladke_progress').length < 1){
+                $('body').append('<div id="jeszcze_dokladke_progress" class="" style="position: fixed;bottom: 60px;width: 500px;height: auto;z-index: 999;margin: 0 auto;left: 0;right: 0;background-color: inherit;border: none;"><div class="progress" style="margin:0;box-shadow: none;border-radius: 0; border: 1px solid black"><div class="progress-bar progress-bar-danger" role="progressbar" style="border-radius: 0; width: '+Number((((max-array.length)*100)/max)).toFixed(0)+'%;"> <span>'+Number((((max-array.length)*100)/max)).toFixed(0)+'%</span></div></div></div>');
+            } else {
+                $('#jeszcze_dokladke_progress .progress-bar').css('width', Number((((max-array.length)*100)/max)).toFixed(0)+'%');
+                $('#jeszcze_dokladke_progress .progress-bar span').html(Number((((max-array.length)*100)/max)).toFixed(0)+'%');
+            }
+
+            var id_pokemona = array.pop();
+            reloadMain("gra/druzyna.php?p=3&postData%5B0%5D%5Bname%5D=kolejnosc&postData%5B0%5D%5Bvalue%5D=2&postData%5B1%5D%5Bname%5D=akcja&postData%5B1%5D%5Bvalue%5D=druzyna&postData%5B2%5D%5Bname%5D=p_"+id_pokemona+"&postData%5B2%5D%5Bvalue%5D="+id_pokemona, function(){
+                reloadMain("gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=przysmaki&postData%5B1%5D%5Bname%5D=druzyna_numer&postData%5B1%5D%5Bvalue%5D="+($('#sidebar .stan-pokemon').length/2-1)+"&postData%5B2%5D%5Bname%5D=ilosc&postData%5B2%5D%5Bvalue%5D=100", function(){
+                    reloadMain("gra/druzyna.php?przechowuj="+id_pokemona, function(){
+                        reloadMain("gra/druzyna.php?p=2&postData%5B0%5D%5Bname%5D=kolejnosc&postData%5B0%5D%5Bvalue%5D=2&postData%5B1%5D%5Bname%5D=akcja&postData%5B1%5D%5Bvalue%5D=przechowalnia&postData%5B2%5D%5Bname%5D=p_"+id_pokemona+"&postData%5B2%5D%5Bvalue%5D="+id_pokemona, function(){
+                            wbijaj(array);
+                        })
+                    })
+                }, function(){
+                    if(this.find('.alert-danger').length > 0 && this.find('.alert-danger').html() != 'Twój pokemon nie jest w stanie dzisiaj zjeść już więcej przysmaków.'){
+                        console.log(this.find('.alert-danger').html());
+                        array = [];
+                    }
+                })
+            })
+        } else {
+            $('#jeszcze_dokladke_progress').remove();
+            reloadMain("gra/druzyna.php?p=3&postData%5B0%5D%5Bname%5D=kolejnosc&postData%5B0%5D%5Bvalue%5D=2&postData%5B1%5D%5Bname%5D=akcja&postData%5B1%5D%5Bvalue%5D=druzyna&postData%5B2%5D%5Bname%5D=p_"+pokemonZDruzynyId+"&postData%5B2%5D%5Bvalue%5D="+pokemonZDruzynyId, function(){
+
+            })
+        }
+    }
+
+
+
+}
+initWbijanieJeszczeDokladke();
