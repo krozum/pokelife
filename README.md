@@ -27,7 +27,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
-3.17.5  (2019-05-23)
+3.18.1 (2019-05-24)
+* Dodanie automatycznego wbijania Jeszcze dokładke?
+
+3.17.5 (2019-05-23)
 * Drobne poprawki
 * Stunny w szybki sklepie juz kupują sie po 10
 * Zmieniono ilość niebieskich jagód na 100 w szybkim sklepie
@@ -37,7 +40,7 @@ Changelog
 * Dodanie nowego balla levelball + mixed2
 * Zmieniono poziom swarmballi z 3 do 5 poziomu
 
-3.16.5  (2019-05-17)
+3.16.5 (2019-05-17)
 * Drobne poprawki
 * Poprawiono błąd ze zliczaniem wykorzystanych PA
 
