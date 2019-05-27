@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.19
+// @version      3.19.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -217,8 +217,8 @@ $(document).on("click", ".nauka-ataku", function(event) {
     }
 });
 
-$(document).off("blur change", ".nauka-ataku");
-$(document).one("blur change", ".nauka-ataku", function(event) {
+$(document).off("blur change", ".select-submit");
+$(document).on("change", ".select-submit", function(event) {
     event.preventDefault();
     $("html, body").animate({ scrollTop: 0 }, "slow");
 
