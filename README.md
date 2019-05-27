@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.19 (2019-05-27)
+* Refaktoring kodu, mogą przestać działać niektóre rzeczy, zgłaszać
+
 3.18.1 (2019-05-24)
 * Dodanie automatycznego wbijania Jeszcze dokładke?
 
