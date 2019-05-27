@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.18.1
+// @version      3.19
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -18,7 +18,7 @@
 
 // Wszystkie funkcje od góry:
 //
-// 1.  initTest
+// 1.  initOtworzWNowymOknie
 // 2.  initSkins
 // 3.  initAutoGo
 // 4.  initAutouzupelnianiePol
@@ -41,72 +41,138 @@
 // 21. initWbijanieJeszczeDokladke
 
 
+
+// **********************
+//
+// funkcja do zapisu do bra1ns.pl
+//
+// **********************
 function requestBra1nsPL(url, callback){
     $.ajax(url)
         .done(data => callback == null ? "" : callback(data))
         .fail((xhr, status) => console.log('error:', status));
 }
+requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_user.php?bot_version=" + GM_info.script.version + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim(), null);
 
 
-requestBra1nsPL("https://brains.e-kei.pl/pokelife/api/update_user.php?bot_version=" + GM_info.script.version + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim(), null);
 
-window.onReloadSidebarFunctions = [];
+// **********************
+//
+// zmienne globalne
+//
+// **********************
+
 var AutoGoSettings = new Object();
 
+
+// **********************
+//
+// eventy do wykorzystania przy pisaniu dodatków
+//
+// **********************
+window.onReloadSidebarFunctions = [];
 function onReloadSidebar(fn) {
     window.onReloadSidebarFunctions.push(fn);
 }
 
 window.onReloadMainFunctions = [];
-
 function onReloadMain(fn) {
     window.onReloadMainFunctions.push(fn);
 }
 
 window.afterReloadMainFunctions = [];
-
 function afterReloadMain(fn) {
     window.afterReloadMainFunctions.push(fn);
 }
 
+
+// **********************
+//
+// loggery
+//
+// **********************
 function updateEvent(text, eventTypeId, dzicz){
     if(dzicz != null){
-        requestBra1nsPL("https://brains.e-kei.pl/pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId + "&dzicz=" + dzicz + "&time="+Date.now(), function(response){
+        requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId + "&dzicz=" + dzicz + "&time="+Date.now(), function(response){
             console.log("updateEvent: "+eventTypeId+" => "+ text);
         })
     } else {
-        requestBra1nsPL("https://brains.e-kei.pl/pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId + "&time="+Date.now(), function(response){
+        requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId + "&time="+Date.now(), function(response){
             console.log("updateEvent: "+eventTypeId+" => "+ text);
         })
     }
 }
 
-
 function updateStats(name, value){
-    requestBra1nsPL("https://brains.e-kei.pl/pokelife/api/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name="+name + "&value=" + value + "&time="+Date.now(), function(response){
+    requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name="+name + "&value=" + value + "&time="+Date.now(), function(response){
         console.log("UpdateStats: "+name+" => "+ value);
     })
 }
 
 function updateStatsDoswiadczenie(json){
-    requestBra1nsPL("https://brains.e-kei.pl/pokelife/api/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json="+json + "&time="+Date.now(), function(response){
+    requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json="+json + "&time="+Date.now(), function(response){
         console.log("updateStatsDoswiadczenie: " + json);
     })
 }
 
-$(document).ready(function() {
-    $("a").each(function(){
-        if($(this).attr('href').charAt(0)!='#' && !$(this).hasClass( "link" )) {
-            $(this).attr("href", "index.php?url="+$(this).attr("href"));
-        };
+
+
+// **********************
+//
+// nadpisanie glownych funkcji jQuery i funkcji gry
+//
+// **********************
+
+function reloadMain(selector, url, callback, callback2){
+    $.get(url, function(data) {
+        var THAT = $('<div>').append($(data).clone());
+        window.onReloadMainFunctions.forEach(function(item) {
+            item.call(THAT, url);
+        })
+        if(callback2 != undefined && callback2 != null){
+            callback2.call(THAT, url);
+        }
+        $(""+selector).html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',""));
+        $.get('inc/stan.php', function(data) {
+            $("#sidebar").html(data);
+            window.afterReloadMainFunctions.forEach(function(item) {
+                item.call();
+            })
+            if(callback != undefined && callback != null){
+                callback.call();
+            }
+        });
     });
+}
 
-    if(window.location.search.indexOf('url=') != -1){
-        reloadMain(window.location.search.split('url=')[1], function(){history.replaceState('data to be passed', 'Title of the page', 'index.php');});
-    }
-});
-
-
+function reloadMainPOST(selector, url, postData, callback, callback2){
+    $.ajax({
+        type : 'GET',
+        url : url,
+        data: {
+            postData : postData
+        },
+        success:function (data) {
+            var THAT = $('<div>').append($(data).clone());
+            window.onReloadMainFunctions.forEach(function(item) {
+                item.call(THAT, url);
+            })
+            if(callback2 != undefined && callback2 != null){
+                callback2.call(THAT, url);
+            }
+            $(""+selector).html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',""));
+            $.get('inc/stan.php', function(data) {
+                $("#sidebar").html(data);
+                window.afterReloadMainFunctions.forEach(function(item) {
+                    item.call();
+                })
+                if(callback != undefined && callback != null){
+                    callback.call();
+                }
+            });
+        }
+    });
+}
 
 var pa_before = $('#sidebar .progress-bar:contains("PA")').attr("aria-valuenow");
 const oldShow = jQuery.fn.html
@@ -130,6 +196,71 @@ jQuery.fn.html = function() {
     return ret
 }
 
+$(document).off("click", ".btn-edycja-nazwy-grupy");
+$(document).on("click", "btn-edycja-nazwy-grupy", function(event) {
+    $("#panel_grupa_id_"+$(this).attr('data-grupa-id')).html('<form action="druzyna.php?p=2&zmien_nazwe_grupy='+$(this).attr('data-grupa-id')+'" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="'+ $(this).attr('data-obecna-nazwa')+'"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>');
+});
+
+$(document).off("click", ".nauka-ataku");
+$(document).on("click", ".nauka-ataku", function(event) {
+    event.preventDefault();
+    $("html, body").animate({ scrollTop: 0 }, "slow");
+
+    var naucz_zamiast = $("input[name=nauczZamiast-"+$(this).attr("data-pokemon-id")+"]:checked").val();
+
+    if ($(this).attr("data-tm-zapomniany")) {
+        reloadMain("#glowne_okno", 'gra/sala.php?zabezpieczone_id='+$(this).attr('zabezpieczone-id')+'&p='+$(this).attr("data-pokemon-id")+'&tm_zapomniany='+$(this).attr("data-tm-zapomniany")+'&naucz_zamiast='+naucz_zamiast+'&zrodlo='+$(this).attr('data-zrodlo'));
+    } else if ($(this).attr("data-tm")) {
+        reloadMain("#glowne_okno", 'gra/sala.php?zabezpieczone_id='+$(this).attr('zabezpieczone-id')+'&p='+$(this).attr("data-pokemon-id")+'&tm='+$(this).attr("data-tm")+'&naucz_zamiast='+naucz_zamiast+'&zrodlo='+$(this).attr('data-zrodlo'));
+    } else {
+        reloadMain("#glowne_okno", 'gra/sala.php?zabezpieczone_id='+$(this).attr('zabezpieczone-id')+'&p='+$(this).attr("data-pokemon-id")+'&nauka_ataku='+$(this).attr('data-nazwa-ataku')+'&naucz_zamiast='+naucz_zamiast+'&zrodlo='+$(this).attr('data-zrodlo'));
+    }
+});
+
+$(document).off("blur change", ".nauka-ataku");
+$(document).one("blur change", ".nauka-ataku", function(event) {
+    event.preventDefault();
+    $("html, body").animate({ scrollTop: 0 }, "slow");
+
+    //Obejście modali
+    $('body').removeClass('modal-open');
+    $('body').css({"padding-right":"0px"});
+    $('.modal-backdrop').remove();
+
+    var postData = $(this).closest('form').serializeArray();
+
+    $("html, body").animate({ scrollTop: 0 }, "fast");
+
+    reloadMainPOST("#glowne_okno", 'gra/'+$(this).closest('form').attr('action'), postData);
+});
+
+$(document).off("click", "#zatwierdz_reprezentacje");
+$(document).on("click", "#zatwierdz_reprezentacje", function(event) {
+    $("html, body").animate({ scrollTop: 0 }, "slow");
+
+    //Obejście modali
+    $('body').removeClass('modal-open');
+    $('body').css({"padding-right":"0px"});
+    $('.modal-backdrop').remove();
+
+    var postData = $(this).closest('form').serializeArray();
+
+    $("html, body").animate({ scrollTop: 0 }, "fast");
+
+    reloadMainPOST("#glowne_okno", 'gra/'+$(this).closest('form').attr('action'), postData);
+
+    event.preventDefault();
+});
+
+$(document).off("click", ".collapse_toggle_icon");
+$(document).on("click", ".collapse_toggle_icon", function(event) {
+    if($(".collapse_toggle_icon" ).hasClass("glyphicon-chevron-down")) {
+        $(".collapse_toggle_icon").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
+    } else {
+        $(".collapse_toggle_icon").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
+    }
+});
+
 $(document).off("click", "nav a");
 $(document).on("click", "nav a", function(event) {
     if($(this).attr('href').charAt(0)!='#' && !$(this).hasClass( "link" )) {
@@ -147,7 +278,7 @@ $(document).on("click", "nav a", function(event) {
             url = 'gra/'+url;
         }
 
-        reloadMain(url, null);
+        reloadMain("#glowne_okno", url);
 
         $('.collapse-hidefix').collapse('hide');
     }
@@ -189,31 +320,38 @@ $(document).on("click", ".btn-akcja", function(event) {
         updateStats("zarobki_z_hodowli", zarobek);
     }
 
-    reloadMain('gra/'+$(this).attr('href'), null);
+    reloadMain("#glowne_okno", 'gra/'+$(this).attr('href'));
 });
 
+$(document).off( "click", ".stan-pokemon");
+$(document).on( "click", ".stan-pokemon", function(event) {
+    reloadMain("#glowne_okno", 'gra/stan.php?p='+$(this).attr('data-pokemon-id'));
+});
 
-function reloadMain(url, callback, callback2){
-    $.get(url, function(data) {
-        var THAT = $('<div>').append($(data).clone());
-        window.onReloadMainFunctions.forEach(function(item) {
-            item.call(THAT, url);
-        })
-        if(callback2 != undefined && callback2 != null){
-            callback2.call(THAT, url);
-        }
-        $("#glowne_okno").html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"")+'<script>$(".btn-edycja-nazwy-grupy").click(function(a){$("#panel_grupa_id_"+$(this).attr("data-grupa-id")).html(\'<form action="druzyna.php?p=2&zmien_nazwe_grupy='+$(this).attr("data-grupa-id")+'" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="'+$(this).attr("data-obecna-nazwa")+'"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>\')}),$(".nauka-ataku").click(function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow");var t=$("input[name=nauczZamiast-"+$(this).attr("data-pokemon-id")+"]:checked").val();$(this).attr("data-tm-zapomniany")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm_zapomniany="+$(this).attr("data-tm-zapomniany")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$(this).attr("data-tm")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm="+$(this).attr("data-tm")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&nauka_ataku="+$(this).attr("data-nazwa-ataku")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)})}),$(".select-submit").one("blur change",function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$("html, body").animate({scrollTop:0},"fast"),$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}})}),$("#zatwierdz_reprezentacje").click(function(a){$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$("html, body").animate({scrollTop:0},"fast"),$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}}),a.preventDefault()}),$(".collapse_toggle_icon").click(function(a){$(".collapse_toggle_icon").hasClass("glyphicon-chevron-down")?$(".collapse_toggle_icon").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up"):$(".collapse_toggle_icon").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down")});</script>');
-        $.get('inc/stan.php', function(data) {
-            $("#sidebar").html(data);
-            window.afterReloadMainFunctions.forEach(function(item) {
-                item.call();
-            })
-            if(callback != null){
-                callback.call();
-            }
-        });
-    });
-}
+$(document).off( "click", ".pokazpoka");
+$(document).on( "click", ".pokazpoka", function(event) {
+    var ukrycie = 0;
+    var zmienna = $(this).attr('data-ignoruj-ukrycie');
+    if (typeof zmienna !== typeof undefined && zmienna !== false) {
+        ukrycie = 1;
+    }
+    var hala = 0;
+    var zmienna2 = $(this).attr('data-ograniczenia-hali');
+    if (typeof zmienna2 !== typeof undefined && zmienna2 !== false) {
+        hala = 1;
+    }
+    var hala2 = 0;
+    var zmienna3 = $(this).attr('data-pokemon-hala');
+    if (typeof zmienna3 !== typeof undefined && zmienna3 !== false) {
+        hala2 = 1;
+    }
+    var rank = 0;
+    var zmienna4 = $(this).attr('data-ranking-staty');
+    if (typeof zmienna4 !== typeof undefined && zmienna4 !== false) {
+        rank = zmienna4;
+    }
+    reloadMain("#podgladPoka_content", 'gra/pokemon_skr.php?nopanel&p='+$(this).attr('data-id-pokemona')+'&ignoruj_ukrycie='+ukrycie+'&ograniczenia_hali='+hala+'&pokemon_hala='+hala2+'&treningi_rank='+rank);
+});
 
 $(document).off('submit', 'form');
 $(document).on('submit', 'form', function(e) {
@@ -230,37 +368,9 @@ $(document).on('submit', 'form', function(e) {
         var postData = $(this).serializeArray();
 
         if ($(this).attr("form-target")) {
-            $.ajax({
-                type : 'GET',
-                url : 'gra/'+$(this).attr('action'),
-                data: {
-                    postData : postData
-                },
-                success:function (data) {
-                    $($(this).attr('form-target')).html( data );
-                }
-            });
+            reloadMainPOST($(this).attr('form-target'), 'gra/'+$(this).attr('action'), postData);
         } else {
-            $.ajax({
-                type : 'GET',
-                url : 'gra/'+$(this).attr('action'),
-                data: {
-                    postData : postData
-                },
-                success:function (data) {
-                    var THAT = $('<div>').append($(data).clone());
-                    window.onReloadMainFunctions.forEach(function(item) {
-                        item.call(THAT, null);
-                    })
-                    $("#glowne_okno").html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"")+'<script>$(".btn-edycja-nazwy-grupy").click(function(a){$("#panel_grupa_id_"+$(this).attr("data-grupa-id")).html(\'<form action="druzyna.php?p=2&zmien_nazwe_grupy='+$(this).attr("data-grupa-id")+'" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="'+$(this).attr("data-obecna-nazwa")+'"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>\')}),$(".nauka-ataku").click(function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow");var t=$("input[name=nauczZamiast-"+$(this).attr("data-pokemon-id")+"]:checked").val();$(this).attr("data-tm-zapomniany")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm_zapomniany="+$(this).attr("data-tm-zapomniany")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$(this).attr("data-tm")?$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&tm="+$(this).attr("data-tm")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)}):$.get("gra/sala.php?zabezpieczone_id="+$(this).attr("zabezpieczone-id")+"&p="+$(this).attr("data-pokemon-id")+"&nauka_ataku="+$(this).attr("data-nazwa-ataku")+"&naucz_zamiast="+t+"&zrodlo="+$(this).attr("data-zrodlo"),function(a){$("#glowne_okno").html(a)})}),$(".select-submit").one("blur change",function(a){a.preventDefault(),$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$("html, body").animate({scrollTop:0},"fast"),$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}})}),$("#zatwierdz_reprezentacje").click(function(a){$("html, body").animate({scrollTop:0},"slow"),$("body").removeClass("modal-open"),$("body").css({"padding-right":"0px"}),$(".modal-backdrop").remove();var t=$(this).closest("form").serializeArray();$("html, body").animate({scrollTop:0},"fast"),$.ajax({type:"GET",url:"gra/"+$(this).closest("form").attr("action"),data:{postData:t},success:function(a){$("#glowne_okno").html(a)}}),a.preventDefault()}),$(".collapse_toggle_icon").click(function(a){$(".collapse_toggle_icon").hasClass("glyphicon-chevron-down")?$(".collapse_toggle_icon").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up"):$(".collapse_toggle_icon").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down")});</script>');
-                    $.get('inc/stan.php', function(data) {
-                        $("#sidebar").html(data);
-                        window.afterReloadMainFunctions.forEach(function(item) {
-                            item.call();
-                        })
-                    });
-                }
-            });
+            reloadMainPOST("#glowne_okno", 'gra/'+$(this).attr('action'), postData);
         }
     }
 });
@@ -270,25 +380,27 @@ $(document).on('click', '#zaloguj_chat', function(e) {
 })
 
 
-function initTest(){
-    //     onReloadSidebar(function(){
-    //         console.log("onReloadSidebar");
-    //         console.log(this);
-    //     })
 
-    //     onReloadMain(function(){
-    //         console.log("onReloadMain");
-    //         console.log(this);
-    //     })
+// **********************
+//
+// initOtworzWNowymOknie
+// funkcja dodająca mozliwosc otwarca w nowym oknie zakladek
+//
+// **********************
+function initOtworzWNowymOknie(){
+    $(document).ready(function() {
+        $("a").each(function(){
+            if($(this).attr('href').charAt(0)!='#' && !$(this).hasClass( "link" )) {
+                $(this).attr("href", "index.php?url="+$(this).attr("href"));
+            };
+        });
 
-    //     afterReloadMain(function(){
-    //         console.log("onReloadMain");
-    //         console.log(this);
-    //     })
-
-    //     console.log(AutoGoSettings);
+        if(window.location.search.indexOf('url=') != -1){
+            reloadMain("#glowne_okno", window.location.search.split('url=')[1], function(){history.replaceState('data to be passed', 'PokeLife - Gra Pokemon Online', 'index.php');});
+        }
+    });
 }
-initTest();
+initOtworzWNowymOknie();
 
 
 
@@ -658,7 +770,7 @@ function initAutoGo(){
                         console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
                         autoGo = false;
                         $('#goAutoButton').html('AutoGO');
-                        requestBra1nsPL("https://brains.e-kei.pl/pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now(), null);
+                        requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now(), null);
                     } else if (window.localStorage.catchMode == "true" && $('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
                         console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
                         autoGo = false;
@@ -731,7 +843,7 @@ function initAutoGo(){
         if (autoGo) {
             click();
         } else {
-            $("html, body").animate({ scrollTop: 0 }, "fast");
+            //$("html, body").animate({ scrollTop: 0 }, "fast");
         }
     })
 
@@ -871,7 +983,7 @@ function initShinyWidget(){
     var shinyWidget;
 
     function refreshShinyWidget(){
-        var api = "https://brains.e-kei.pl/pokelife/api/get_shiny.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now();
+        var api = "https://bra1ns.pl/pokelife/api/get_shiny.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now();
         $.getJSON(api, {
             format: "json"
         }).done(function (data) {
@@ -1020,8 +1132,8 @@ initPlecakTMView();
 //
 // **********************
 function initStatystykiLink(){
-    $('body').append('<a id="PokeLifeScriptStats" style="color: #333333 !important;text-decoration:none;" target="_blank" href="https://brains.e-kei.pl/pokelife/stats/"><div class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;top: 15px;left: 220px;font-size: 19px;text-align: center;width: 100px;height: 30px;line-height: 35px;z-index: 9998;text-align: center;line-height: 30px;color: #333333;">Statystyki</div></a>');
-    $("#PokeLifeScriptStats").attr("href", "https://brains.e-kei.pl/pokelife/stats/?login="+$('#wyloguj').parent().parent().html().split("<div")[0].trim());
+    $('body').append('<a id="PokeLifeScriptStats" style="color: #333333 !important;text-decoration:none;" target="_blank" href="https://bra1ns.pl/pokelife/stats/"><div class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;top: 15px;left: 220px;font-size: 19px;text-align: center;width: 100px;height: 30px;line-height: 35px;z-index: 9998;text-align: center;line-height: 30px;color: #333333;">Statystyki</div></a>');
+    $("#PokeLifeScriptStats").attr("href", "https://bra1ns.pl/pokelife/stats/?login="+$('#wyloguj').parent().parent().html().split("<div")[0].trim());
 }
 initStatystykiLink();
 
@@ -1452,6 +1564,9 @@ function initPoprawaWygladuPokow(){
         this.find('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/ms3.png');
         this.find('img[src="pokemony/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/srednie_ms3.png');
     });
+
+    $('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/ms3.png');
+    $('img[src="pokemony/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/srednie_ms3.png');
 }
 initPoprawaWygladuPokow();
 
@@ -1484,19 +1599,8 @@ function initSzybkiSklep(){
             $('#fastShop').css('display', "block");
         } else {
             $('#fastShop').css('display', "none");
+            $('#fastShop button').removeClass('confirm');
         }
-    });
-
-    $(document).click(function(e){
-        if( $(e.target).closest("#goFastShop").length > 0 ) {
-            return false;
-        }
-        if( $(e.target).closest("#fastShop").length > 0 ) {
-            return false;
-        }
-
-        $('#fastShop').css('display', "none");
-        $('#fastShop button').removeClass('confirm');
     });
 
     $(document).on("click", "#fastShop button:not('.confirm')", function (event) {
@@ -1746,7 +1850,7 @@ function initKomunikat(){
     }
 
     var isHidden = false;
-    var komunikatAPI = "https://brains.e-kei.pl/pokelife/api/get_alert.php" + "?time="+Date.now();
+    var komunikatAPI = "https://bra1ns.pl/pokelife/api/get_alert.php" + "?time="+Date.now();
     $.getJSON(komunikatAPI, {
         format: "json"
     }).done(function (data) {
@@ -1887,7 +1991,7 @@ function initWbijanieSzkoleniowca(){
 
 
     $(document).on('click', '#skrot_szkoleniowiec', function(){
-        reloadMain('gra/druzyna.php?p=3', function(){
+        reloadMain("#glowne_okno", 'gra/druzyna.php?p=3', function(){
             $('#wbijajSzkoleniowca').trigger('click');
         });
     });
@@ -1900,7 +2004,7 @@ function initWbijanieSzkoleniowca(){
 
     function trenuj(array, callback){
         if(array.length > 0){
-            reloadMain("gra/"+array.pop(), function(){
+            reloadMain("#glowne_okno", "gra/"+array.pop(), function(){
                 price = Number(price) + Number($('.alert-success b:nth(1)').html().split(" ¥")[0].replace(/\./g, ''));
                 trenuj(array, callback);
             })
@@ -1919,7 +2023,7 @@ function initWbijanieSzkoleniowca(){
             }
             var id = array.pop();
             now++;
-            reloadMain("gra/sala.php?p="+id+"&zrodlo=rezerwa", function(){
+            reloadMain("#glowne_okno", "gra/sala.php?p="+id+"&zrodlo=rezerwa", function(){
                 var treningi = [];
                 var i;
                 for(var j = 1; j <=6; j++){
@@ -1940,7 +2044,7 @@ function initWbijanieSzkoleniowca(){
             })
         } else {
             $('#szkoleniowiec_progress').remove();
-            reloadMain('gra/druzyna.php?p=3', function(){
+            reloadMain("#glowne_okno", 'gra/druzyna.php?p=3', function(){
                 $('#pokemony-przechowalnia select[name="kolejnosc"]').parent().prepend('<p class="alert alert-success text-center">Wykonano <b>'+affected+'</b> treningów o łącznej wartości <b>'+price+' ¥</b></p>');
                 price = 0;
                 affected = 0;
@@ -2222,8 +2326,8 @@ function initWbijanieJeszczeDokladke(){
     $('body').off('click', '#skrot_jeszcze_dokladke');
     $('body').on('click', '#skrot_jeszcze_dokladke', function () {
         pokemonZDruzynyId = $($('#sidebar .stan-pokemon')[$('#sidebar .stan-pokemon').length -1]).data('pokemon-id');
-        reloadMain("gra/druzyna.php?przechowuj="+pokemonZDruzynyId, function(){
-            reloadMain('gra/druzyna.php?p=3', function(){
+        reloadMain("#glowne_okno", "gra/druzyna.php?przechowuj="+pokemonZDruzynyId, function(){
+            reloadMain("#glowne_okno", 'gra/druzyna.php?p=3', function(){
                 max = array.length;
                 wbijaj(array);
             }, function(){
@@ -2251,10 +2355,10 @@ function initWbijanieJeszczeDokladke(){
             }
 
             var id_pokemona = array.pop();
-            reloadMain("gra/druzyna.php?p=3&postData%5B0%5D%5Bname%5D=kolejnosc&postData%5B0%5D%5Bvalue%5D=2&postData%5B1%5D%5Bname%5D=akcja&postData%5B1%5D%5Bvalue%5D=druzyna&postData%5B2%5D%5Bname%5D=p_"+id_pokemona+"&postData%5B2%5D%5Bvalue%5D="+id_pokemona, function(){
-                reloadMain("gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=przysmaki&postData%5B1%5D%5Bname%5D=druzyna_numer&postData%5B1%5D%5Bvalue%5D="+($('#sidebar .stan-pokemon').length/2-1)+"&postData%5B2%5D%5Bname%5D=ilosc&postData%5B2%5D%5Bvalue%5D=100", function(){
-                    reloadMain("gra/druzyna.php?przechowuj="+id_pokemona, function(){
-                        reloadMain("gra/druzyna.php?p=2&postData%5B0%5D%5Bname%5D=kolejnosc&postData%5B0%5D%5Bvalue%5D=2&postData%5B1%5D%5Bname%5D=akcja&postData%5B1%5D%5Bvalue%5D=przechowalnia&postData%5B2%5D%5Bname%5D=p_"+id_pokemona+"&postData%5B2%5D%5Bvalue%5D="+id_pokemona, function(){
+            reloadMain("#glowne_okno", "gra/druzyna.php?p=3&postData%5B0%5D%5Bname%5D=kolejnosc&postData%5B0%5D%5Bvalue%5D=2&postData%5B1%5D%5Bname%5D=akcja&postData%5B1%5D%5Bvalue%5D=druzyna&postData%5B2%5D%5Bname%5D=p_"+id_pokemona+"&postData%5B2%5D%5Bvalue%5D="+id_pokemona, function(){
+                reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=przysmaki&postData%5B1%5D%5Bname%5D=druzyna_numer&postData%5B1%5D%5Bvalue%5D="+($('#sidebar .stan-pokemon').length/2-1)+"&postData%5B2%5D%5Bname%5D=ilosc&postData%5B2%5D%5Bvalue%5D=100", function(){
+                    reloadMain("#glowne_okno", "gra/druzyna.php?przechowuj="+id_pokemona, function(){
+                        reloadMain("#glowne_okno", "gra/druzyna.php?p=2&postData%5B0%5D%5Bname%5D=kolejnosc&postData%5B0%5D%5Bvalue%5D=2&postData%5B1%5D%5Bname%5D=akcja&postData%5B1%5D%5Bvalue%5D=przechowalnia&postData%5B2%5D%5Bname%5D=p_"+id_pokemona+"&postData%5B2%5D%5Bvalue%5D="+id_pokemona, function(){
                             wbijaj(array);
                         })
                     })
@@ -2267,7 +2371,7 @@ function initWbijanieJeszczeDokladke(){
             })
         } else {
             $('#jeszcze_dokladke_progress').remove();
-            reloadMain("gra/druzyna.php?p=3&postData%5B0%5D%5Bname%5D=kolejnosc&postData%5B0%5D%5Bvalue%5D=2&postData%5B1%5D%5Bname%5D=akcja&postData%5B1%5D%5Bvalue%5D=druzyna&postData%5B2%5D%5Bname%5D=p_"+pokemonZDruzynyId+"&postData%5B2%5D%5Bvalue%5D="+pokemonZDruzynyId, function(){
+            reloadMain("#glowne_okno", "gra/druzyna.php?p=3&postData%5B0%5D%5Bname%5D=kolejnosc&postData%5B0%5D%5Bvalue%5D=2&postData%5B1%5D%5Bname%5D=akcja&postData%5B1%5D%5Bvalue%5D=druzyna&postData%5B2%5D%5Bname%5D=p_"+pokemonZDruzynyId+"&postData%5B2%5D%5Bvalue%5D="+pokemonZDruzynyId, function(){
 
             })
         }
