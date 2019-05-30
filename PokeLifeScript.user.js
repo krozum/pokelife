@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.20.2
+// @version      3.20.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -2450,7 +2450,7 @@ function initEventWyspaUnikatow(){
                 console.log(pokemonyDoZlapania);
                 console.log(pokemonImg);
                 console.log(pokemonyDoZlapania.indexOf(pokemonImg));
-                if(pokemonyDoZlapania.indexOf(pokemonImg) != -1){
+                if(pokemonyDoZlapania.indexOf(pokemonImg) != -1 && this.find('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50){
                     html = '<p class="alert alert-danger text-center">Pokemon do złapania w event</strong></p>';
                     this.find("h2:nth(0)").before(html);
                     AutoGoSettings.przerwij();
