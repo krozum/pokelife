@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.20.1
+// @version      3.20.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -852,9 +852,12 @@ function initAutoGo(){
     onReloadMain(function(){
         if (autoGo) {
             if(this.find(".panel-body > p.alert-danger").length > 0){
+            console.log(this.find('.panel-body > p.alert-danger').html());
                 if(this.find(".panel-body > p.alert-danger:contains('Posiadasz za mało punktów akcji')").length > 0){
                     przerwijAutoGoZPowoduBrakuPA();
                 } else if(this.find(".panel-body > p.alert-danger:contains('Nie masz wystarczającej ilości Punktów Akcji')").length > 0){
+                    przerwijAutoGoZPowoduBrakuPA();
+                } else if(this.find('.panel-body > p.alert-danger').html() == "Nie masz wystarczającej ilośći Punktów Akcji."){
                     przerwijAutoGoZPowoduBrakuPA();
                 }
             }
