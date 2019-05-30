@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.20
+// @version      3.20.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -937,7 +937,7 @@ function initAutoGo(){
 
     AutoGoSettings.przerwij = function(){
         var autoGoBefore = autoGo;
-        console.log('PokeLifeScript: brak PA, przerywam AutoGo');
+        console.log('PokeLifeScript: przerywam na żądanie');
         blockGoButton = false;
         autoGo = false;
         $('#goAutoButton').html('AutoGO');
