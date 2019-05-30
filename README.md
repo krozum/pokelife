@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.20.3 (2019-05-30)
+* Dodanie obsługi eventu Wyspa unikatów
+
 3.19 (2019-05-27)
 * Refaktoring kodu, mogą przestać działać niektóre rzeczy, zgłaszać
 
