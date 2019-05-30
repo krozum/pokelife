@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.19.1
+// @version      3.20
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -39,6 +39,8 @@
 // 19. initWbijanieSzkoleniowca
 // 20. initWystawView
 // 21. initWbijanieJeszczeDokladke
+// 22. initEventWyspaUnikatow
+
 
 
 
@@ -932,6 +934,14 @@ function initAutoGo(){
             }
         }
     });
+
+    AutoGoSettings.przerwij = function(){
+        var autoGoBefore = autoGo;
+        console.log('PokeLifeScript: brak PA, przerywam AutoGo');
+        blockGoButton = false;
+        autoGo = false;
+        $('#goAutoButton').html('AutoGO');
+    }
 };
 initAutoGo();
 
@@ -2381,3 +2391,78 @@ function initWbijanieJeszczeDokladke(){
 
 }
 initWbijanieJeszczeDokladke();
+
+
+
+// **********************
+//
+// initEventWyspaUnikatow()
+// Funkcja automatycznie dodajaca sprawdzanie pokow z wyspy unikatow
+//
+// **********************
+function initEventWyspaUnikatow(){
+    var widget = "";
+    var pokemonyDoZlapania = [];
+    var d = new Date();
+    if((d.getDate() <= 5 && d.getMonth() == 5) || (d.getDate() >= 30 && d.getMonth() == 4)){
+        function refreshWidget(){
+            pokemonyDoZlapania = [];
+            $.ajax({
+                type: 'POST',
+                url: "gra/zadania.php"
+            }).done(function (response) {
+                var html = '<div class="panel panel-primary"><div class="panel-heading">Wyspa unikatów<div class="navbar-right"><span id="refreshWyspaUnikatowWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
+                var countZlapane = $(response).find('#zadania_jednorazowe .panel-primary:nth(5) .panel-body > div').length;
+                var countZostalo = $(response).find('#zadania_jednorazowe .panel-primary:nth(6) .panel-body > div').length;
+
+                $.each($(response).find('#zadania_jednorazowe .panel-primary:nth(6) .panel-body .img-responsive'), function (index, item) {
+                    pokemonyDoZlapania.push($(item).attr('src').replace('srednie/',''));
+                });
+
+                if(countZostalo < 1){
+                    html = html +'<p style=" margin: 5px 0; text-align: center; font-size: 19px; ">Złapano wszystkie</p>';
+                } else {
+                    var text = ""+ countZlapane + " / " + (countZostalo+countZlapane);
+                    html = html + '<p style=" margin: 5px 0; text-align: center; font-size: 19px; ">Złapano ' + text + '</p>';
+                }
+                html = html + '</tbody></table></div>';
+                widget = html;
+            });
+        }
+        refreshWidget();
+
+        onReloadSidebar(function(){
+            this.find(".panel-heading:contains('Drużyna')").parent().before(widget);
+        })
+
+        $(document).on("click", "#refreshWyspaUnikatowWidget", function (event) {
+            refreshWidget();
+            $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+        });
+
+        onReloadMain(function(){
+            if (this.find('.dzikipokemon-background-normalny').length > 0) {
+                var pokemonImg = this.find('.dzikipokemon-background-normalny .img-responsive').attr('src');
+                var html = "";
+                console.log(pokemonyDoZlapania);
+                console.log(pokemonImg);
+                console.log(pokemonyDoZlapania.indexOf(pokemonImg));
+                if(pokemonyDoZlapania.indexOf(pokemonImg) != -1){
+                    html = '<p class="alert alert-danger text-center">Pokemon do złapania w event</strong></p>';
+                    this.find("h2:nth(0)").before(html);
+                    AutoGoSettings.przerwij();
+                } else {
+                    html = '<p class="alert alert-warning text-center">Juz złapałeś tego pokemona w tym evencie</strong></p>';
+                    this.find("h2:nth(0)").before(html);
+                }
+            }
+
+            if(this.find(".panel-body > p.alert-success:contains('Udało Ci się złapać')").length > 0){
+                refreshWidget();
+                $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+            }
+        });
+
+    }
+}
+initEventWyspaUnikatow();
