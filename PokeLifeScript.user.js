@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.20.3
+// @version      3.21
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -40,6 +40,7 @@
 // 20. initWystawView
 // 21. initWbijanieJeszczeDokladke
 // 22. initEventWyspaUnikatow
+// 23. initZamianaPrzedmiotow
 
 
 
@@ -2469,3 +2470,63 @@ function initEventWyspaUnikatow(){
     }
 }
 initEventWyspaUnikatow();
+
+
+
+// **********************
+//
+// initZamianaPrzedmiotow()
+// Funkcja automatycznie dodajaca sprawdzanie pokow z wyspy unikatow
+//
+function initZamianaPrzedmiotow(){
+    $('body').append('<div id="openZamianaPrzedmiotowBox" style="position: fixed;cursor: pointer;top: 20px;right: 310px;font-size: 20px;text-align: center;width: 25px;height: 25px;line-height: 29px;z-index: 9999;"><span style="color: ' + $('.panel-heading').css('background-color') + ';" class="glyphicon glyphicon-transfer" aria-hidden="true"></span></div>');
+
+    $(document).on("click", "#openZamianaPrzedmiotowBox", function (event) {
+        $('body').append('<div id="disabledBox" style="width: 100%;height: 100%;background: black;position: fixed;top: 0;opacity: 0.7;z-index: 99998;"></div>');
+        $('body').append('<div id="zamianaPrzedmiotowBox" style="box-shadow: 10px 10px 55px 0px rgba(0,0,0,0.75);width: 600px;min-height: 400px;max-height: 86%; overflow-y: auto; padding: 15px; background: white;position: fixed;top: 50px;z-index: 99999; left: 0; right: 0; margin: 0 auto;"><div id="setAkutalne" class="row" style="border: 1px dashed #e3e3e3; margin: 15px; padding: 15px;"></div><div id="set1" class="row" style="border: 1px dashed #e3e3e3; margin: 15px; padding: 15px;"></div><div id="set2" class="row" style="border: 1px dashed #e3e3e3; margin: 15px; padding: 15px;"></div></div>');
+
+        $.ajax({
+            type: 'POST',
+            url: "gra/plecak.php"
+        }).done(function (response) {
+            var arrayUzywane = [];
+            $.each($(response).find('#plecak-trzymane > .row > div'), function (index, item) {
+                if($(item).find(".caption .text-center:contains('Używa: ')").length > 0){
+                    arrayUzywane.push($(item));
+                }
+            })
+
+            var html_element = '<div class="col-md-2" style=" text-align: center; "><h5>NAME</h5> <img src="IMAGE_SRC" style=" max-width: 100%; "></div>';
+
+            $.each(arrayUzywane, function (index, item) {
+                $('#setAkutalne').append(html_element.replace("IMAGE_SRC", $(item).find('img').attr('src')).replace("NAME", $(item).find('strong:nth(1)').html()));
+            })
+
+            $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>Gliscor</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/lucky_egg.png" style=" max-width: 100%; "></div>');
+            $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>PorygonZ</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/lucky_egg.png" style=" max-width: 100%; "></div>');
+            $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>Skarmory</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/lucky_egg.png" style=" max-width: 100%; "></div>');
+            $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>Charizard</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/lucky_egg.png" style=" max-width: 100%; "></div>');
+            $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>Venusaur</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/lucky_egg.png" style=" max-width: 100%; "></div>');
+            $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>Empoleon</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/lucky_egg.png" style=" max-width: 100%; "></div>');
+            $('#set1').append('<div class="col-md-3 col-md-offset-3" style=" text-align: center; "><button style=" border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
+            $('#set1').append('<div class="col-md-3" style=" text-align: center; "><button style=" border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
+
+
+            $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>Gliscor</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/toxic_orb.png" style=" max-width: 100%; "></div>');
+            $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>PorygonZ</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/gem_1.png" style=" max-width: 100%; "></div>');
+            $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>Skarmory</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/x_atak.png" style=" max-width: 100%; "></div>');
+            $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>Charizard</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/pow_2.png" style=" max-width: 100%; "></div>');
+            $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>Venusaur</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/mega_stone_3.png" style=" max-width: 100%; "></div>');
+            $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>Empoleon</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/pow_3.png" style=" max-width: 100%; "></div>');
+            $('#set2').append('<div class="col-md-3 col-md-offset-3" style=" text-align: center; "><button style=" border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
+            $('#set2').append('<div class="col-md-3" style=" text-align: center; "><button style=" border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
+        })
+    });
+
+    $(document).on("click", "#disabledBox", function (event) {
+        $('#disabledBox').remove();
+        $('#zamianaPrzedmiotowBox').remove();
+    })
+
+}
+initZamianaPrzedmiotow();
