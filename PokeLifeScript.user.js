@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.21
+// @version      3.21.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -2479,6 +2479,32 @@ initEventWyspaUnikatow();
 // Funkcja automatycznie dodajaca sprawdzanie pokow z wyspy unikatow
 //
 function initZamianaPrzedmiotow(){
+    var listaPrzedmiotow = [];
+
+    var set1 = new Object();
+    if(window.localStorage.set1 != undefined){
+        set1 = JSON.parse(window.localStorage.set1);
+    } else {
+        set1[1] = "none";
+        set1[2] = "none";
+        set1[3] = "none";
+        set1[4] = "none";
+        set1[5] = "none";
+        set1[6] = "none";
+    }
+
+    var set2 = new Object();
+    if(window.localStorage.set2 != undefined){
+        set2 = JSON.parse(window.localStorage.set2);
+    } else {
+        set2[1] = "none";
+        set2[2] = "none";
+        set2[3] = "none";
+        set2[4] = "none";
+        set2[5] = "none";
+        set2[6] = "none";
+    }
+
     $('body').append('<div id="openZamianaPrzedmiotowBox" style="position: fixed;cursor: pointer;top: 20px;right: 310px;font-size: 20px;text-align: center;width: 25px;height: 25px;line-height: 29px;z-index: 9999;"><span style="color: ' + $('.panel-heading').css('background-color') + ';" class="glyphicon glyphicon-transfer" aria-hidden="true"></span></div>');
 
     $(document).on("click", "#openZamianaPrzedmiotowBox", function (event) {
@@ -2494,7 +2520,24 @@ function initZamianaPrzedmiotow(){
                 if($(item).find(".caption .text-center:contains('Używa: ')").length > 0){
                     arrayUzywane.push($(item));
                 }
+                if($(item).find('.thumbnail-plecak').data('target') != undefined){
+                    var id = $(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1];
+                    var img = $(item).find('.thumbnail-plecak img').attr('src');
+                    $(item).find('.thumbnail-plecak h5 strong').append(" ");
+                    var name = $(item).find('.thumbnail-plecak h5').text();
+                    var wymagaNaprawy = $(item).find('.thumbnail-plecak h5:contains("Wymaga naprawy")').length > 0;
+                    var object = new Object();
+                    object.id = id;
+                    object.img = img;
+                    object.name = name;
+                    object.wymaga_naprawy = wymagaNaprawy;
+                    if(id != "pyl-odnowy"){
+                        listaPrzedmiotow["id-"+id] = object;
+                    }
+                }
             })
+
+            console.log(listaPrzedmiotow);
 
             var html_element = '<div class="col-md-2" style=" text-align: center; "><h5>NAME</h5> <img src="IMAGE_SRC" style=" max-width: 100%; "></div>';
 
@@ -2502,26 +2545,126 @@ function initZamianaPrzedmiotow(){
                 $('#setAkutalne').append(html_element.replace("IMAGE_SRC", $(item).find('img').attr('src')).replace("NAME", $(item).find('strong:nth(1)').html()));
             })
 
-            $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>Gliscor</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/lucky_egg.png" style=" max-width: 100%; "></div>');
-            $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>PorygonZ</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/lucky_egg.png" style=" max-width: 100%; "></div>');
-            $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>Skarmory</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/lucky_egg.png" style=" max-width: 100%; "></div>');
-            $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>Charizard</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/lucky_egg.png" style=" max-width: 100%; "></div>');
-            $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>Venusaur</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/lucky_egg.png" style=" max-width: 100%; "></div>');
-            $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>Empoleon</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/lucky_egg.png" style=" max-width: 100%; "></div>');
-            $('#set1').append('<div class="col-md-3 col-md-offset-3" style=" text-align: center; "><button style=" border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
-            $('#set1').append('<div class="col-md-3" style=" text-align: center; "><button style=" border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
+            $.each(set1, function (index, item) {
+                if(item == "none"){
+                    $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Saint_Andrew%27s_cross_black.svg/480px-Saint_Andrew%27s_cross_black.svg.png" style=" max-width: 100%; "></div>');
+                } else {
+                    $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="'+listaPrzedmiotow["id-"+item].img+'" style=" max-width: 100%; "></div>');
+                }
+            })
+            $('#set1').append('<div class="col-md-3 col-md-offset-3" style=" text-align: center; "><button  id="useSet" data-id="1" style=" border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
+            $('#set1').append('<div class="col-md-3" style=" text-align: center; "><button id="editSet" data-id="1" style=" border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
 
-
-            $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>Gliscor</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/toxic_orb.png" style=" max-width: 100%; "></div>');
-            $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>PorygonZ</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/gem_1.png" style=" max-width: 100%; "></div>');
-            $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>Skarmory</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/x_atak.png" style=" max-width: 100%; "></div>');
-            $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>Charizard</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/pow_2.png" style=" max-width: 100%; "></div>');
-            $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>Venusaur</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/mega_stone_3.png" style=" max-width: 100%; "></div>');
-            $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>Empoleon</h5> <img src="https://gra.pokelife.pl/images/przedmioty/100x100/pow_3.png" style=" max-width: 100%; "></div>');
-            $('#set2').append('<div class="col-md-3 col-md-offset-3" style=" text-align: center; "><button style=" border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
-            $('#set2').append('<div class="col-md-3" style=" text-align: center; "><button style=" border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
+            $.each(set2, function (index, item) {
+                if(item == "none"){
+                    $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Saint_Andrew%27s_cross_black.svg/480px-Saint_Andrew%27s_cross_black.svg.png" style=" max-width: 100%; "></div>');
+                } else {
+                    $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="'+listaPrzedmiotow["id-"+item].img+'" style=" max-width: 100%; "></div>');
+                }
+            })
+            $('#set2').append('<div class="col-md-3 col-md-offset-3" style=" text-align: center; "><button id="useSet" data-id="2" style=" border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
+            $('#set2').append('<div class="col-md-3" style=" text-align: center; "><button id="editSet" data-id="2" style=" border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
         })
     });
+
+    $(document).on("click", "#editSet", function (event) {
+        var id = $(this).data('id');
+        var set;
+        if(id == 1){
+            set = set1;
+        }
+        if(id == 2){
+            set = set2;
+        }
+
+        $('#zamianaPrzedmiotowBox').html('<div class="row"></div>');
+        $('#zamianaPrzedmiotowBox > div').append('<div class="col-md-4" style=" text-align: center; "><h4>'+$('#sidebar .stan-pokemon[align="left"]:nth(0) b').html().split('(')[0]+'</h4><select style="width: 100%;" data-id="1"></select></div>');
+        $('#zamianaPrzedmiotowBox > div').append('<div class="col-md-4" style=" text-align: center; "><h4>'+$('#sidebar .stan-pokemon[align="left"]:nth(1) b').html().split('(')[0]+'</h4><select style="width: 100%;" data-id="2"></select></div>');
+        $('#zamianaPrzedmiotowBox > div').append('<div class="col-md-4" style=" text-align: center; "><h4>'+$('#sidebar .stan-pokemon[align="left"]:nth(2) b').html().split('(')[0]+'</h4><select style="width: 100%;" data-id="3"></select></div>');
+        $('#zamianaPrzedmiotowBox > div').append('<div class="col-md-4" style=" text-align: center; "><h4>'+$('#sidebar .stan-pokemon[align="left"]:nth(3) b').html().split('(')[0]+'</h4><select style="width: 100%;" data-id="4"></select></div>');
+        $('#zamianaPrzedmiotowBox > div').append('<div class="col-md-4" style=" text-align: center; "><h4>'+$('#sidebar .stan-pokemon[align="left"]:nth(4) b').html().split('(')[0]+'</h4><select style="width: 100%;" data-id="5"></select></div>');
+        $('#zamianaPrzedmiotowBox > div').append('<div class="col-md-4" style=" text-align: center; "><h4>'+$('#sidebar .stan-pokemon[align="left"]:nth(5) b').html().split('(')[0]+'</h4><select style="width: 100%;" data-id="6"></select></div>');
+        $('#zamianaPrzedmiotowBox > div').append('<div class="col-md-12" style="margin-top:40px; text-align: center; "><button id="saveEditSet" data-id="'+id+'">Zapisz</button></div>');
+
+        Object.keys(listaPrzedmiotow).forEach(function(item) {
+            $('#zamianaPrzedmiotowBox select').append('<option value="'+listaPrzedmiotow[item].id+'">'+listaPrzedmiotow[item].name+'</option>');
+        });
+        $('#zamianaPrzedmiotowBox select').append('<option value="none">Brak przedmiotu</option>');
+
+        $('#zamianaPrzedmiotowBox select[data-id="1"] option[value="'+set[1]+'"]').attr('selected','selected');
+        $('#zamianaPrzedmiotowBox select[data-id="2"] option[value="'+set[2]+'"]').attr('selected','selected');
+        $('#zamianaPrzedmiotowBox select[data-id="3"] option[value="'+set[3]+'"]').attr('selected','selected');
+        $('#zamianaPrzedmiotowBox select[data-id="4"] option[value="'+set[4]+'"]').attr('selected','selected');
+        $('#zamianaPrzedmiotowBox select[data-id="5"] option[value="'+set[5]+'"]').attr('selected','selected');
+        $('#zamianaPrzedmiotowBox select[data-id="6"] option[value="'+set[6]+'"]').attr('selected','selected');
+
+    })
+
+    $(document).on("click", "#saveEditSet", function (event) {
+        var id = $(this).data('id');
+        var set;
+        if(id == 1){
+            set = set1;
+        }
+        if(id == 2){
+            set = set2;
+        }
+
+        set[1] = $('#zamianaPrzedmiotowBox select[data-id="1"]').val();
+        set[2] = $('#zamianaPrzedmiotowBox select[data-id="2"]').val();
+        set[3] = $('#zamianaPrzedmiotowBox select[data-id="3"]').val();
+        set[4] = $('#zamianaPrzedmiotowBox select[data-id="4"]').val();
+        set[5] = $('#zamianaPrzedmiotowBox select[data-id="5"]').val();
+        set[6] = $('#zamianaPrzedmiotowBox select[data-id="6"]').val();
+        $('#disabledBox').remove();
+        $('#zamianaPrzedmiotowBox').remove();
+
+        if(id == 1){
+            window.localStorage.set1 = JSON.stringify(set);
+        }
+        if(id == 2){
+            window.localStorage.set2 = JSON.stringify(set);
+        }
+    })
+
+    $(document).on("click", "#useSet", function (event) {
+        var id = $(this).data('id');
+        var set;
+        if(id == 1){
+            set = set1;
+        }
+        if(id == 2){
+            set = set2;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: "gra/plecak.php"
+        }).done(function (response) {
+            var arrayUzywane = [];
+            $.each($(response).find('#plecak-trzymane > .row > div'), function (index, item) {
+                if($(item).find(".caption .text-center:contains('Używa: ')").length > 0){
+                    arrayUzywane.push($(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1]);
+                }
+            })
+
+            $.each(arrayUzywane, function (index, item) {
+                var url = 'gra/plecak.php?odloz='+item+'&p=4';
+                $.get(url, function(data) {});
+            })
+
+            $.each(set, function (index, item) {
+                if(item != "none"){
+                    var url = 'gra/plecak.php?daj&p=4&postData%5B0%5D%5Bname%5D=id_przedmiotu&postData%5B0%5D%5Bvalue%5D='+item+'&postData%5B1%5D%5Bname%5D=druzyna_numer&postData%5B1%5D%5Bvalue%5D='+(index-1);
+                    $.get(url, function(data) {});
+                }
+            })
+            $('#disabledBox').remove();
+            $('#zamianaPrzedmiotowBox').remove();
+        })
+
+    })
+
 
     $(document).on("click", "#disabledBox", function (event) {
         $('#disabledBox').remove();
