@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.21.1
+// @version      3.21.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -57,6 +57,26 @@ function requestBra1nsPL(url, callback){
 }
 requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_user.php?bot_version=" + GM_info.script.version + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim(), null);
 
+
+
+// **********************
+//
+// funkcja do masowego wykonania kilku akcji w kolejnosci bez przeladowania strony
+//
+// **********************
+function callUrlsFromArray(array, callback){
+    if(array.length > 0){
+        var url = array.shift();
+        $.get(url, function(data) {
+            callUrlsFromArray(array, callback);
+        });
+    } else {
+        console.log(callback);
+        if(callback != undefined){
+            callback.call();
+        }
+    }
+}
 
 
 // **********************
@@ -2641,29 +2661,29 @@ function initZamianaPrzedmiotow(){
             type: 'POST',
             url: "gra/plecak.php"
         }).done(function (response) {
-            var arrayUzywane = [];
+            var array = [];
+
             $.each($(response).find('#plecak-trzymane > .row > div'), function (index, item) {
                 if($(item).find(".caption .text-center:contains('Używa: ')").length > 0){
-                    arrayUzywane.push($(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1]);
+                    array.push('gra/plecak.php?odloz='+$(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1]+'&p=4');
                 }
-            })
-
-            $.each(arrayUzywane, function (index, item) {
-                var url = 'gra/plecak.php?odloz='+item+'&p=4';
-                $.get(url, function(data) {});
             })
 
             $.each(set, function (index, item) {
                 if(item != "none"){
                     var url = 'gra/plecak.php?daj&p=4&postData%5B0%5D%5Bname%5D=id_przedmiotu&postData%5B0%5D%5Bvalue%5D='+item+'&postData%5B1%5D%5Bname%5D=druzyna_numer&postData%5B1%5D%5Bvalue%5D='+(index-1);
-                    $.get(url, function(data) {});
+                    array.push(url);
                 }
             })
-            $('#disabledBox').remove();
-            $('#zamianaPrzedmiotowBox').remove();
-        })
 
+            callUrlsFromArray(array, function(){
+                $('#disabledBox').remove();
+                $('#zamianaPrzedmiotowBox').remove();
+            });
+        })
     })
+
+
 
 
     $(document).on("click", "#disabledBox", function (event) {
