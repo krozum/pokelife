@@ -27,6 +27,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.21.2 (2019-05-06)
+* Dodanie wyboru Setów z przedmiotami i szybkiej podmiany ich.
+* Przeniesiono zapis konfiguracji do sql, teraz powinno przenosić ustawienia pomiędzy przeglądarkami. 
+
 3.20.3 (2019-05-30)
 * Dodanie obsługi eventu Wyspa unikatów
 
