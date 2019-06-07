@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.21.2
+// @version      3.21.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1719,6 +1719,8 @@ function initPokeLifeScript(){
 
             if (Number(ilosc_yenow) < Number("1250000")) {
                 $('#shop3 button').attr("disabled", true);
+            } else {
+                $('#shop3 button').attr("disabled", false);
             }
 
             // nestballe
@@ -1727,9 +1729,9 @@ function initPokeLifeScript(){
             $('#shop4 .ilosc').html(1000);
 
             if (Number(ilosc_yenow) < Number("400000")) {
-                $('#shop3 button').attr("disabled", true);
+                $('#shop4 button').attr("disabled", true);
             } else {
-                $('#shop3 button').attr("disabled", false);
+                $('#shop4 button').attr("disabled", false);
             }
 
             // niebieskie napoje
