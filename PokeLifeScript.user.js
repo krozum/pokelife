@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.21.3
+// @version      3.21.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1650,12 +1650,7 @@ function initPokeLifeScript(){
 
         $(document).on("click", "#fastShop button.confirm", function (event) {
             var url = $(this).parent().parent().attr('url');
-            if(url.indexOf('niebieskie_jagody') != -1){
-                updateStats("wydatki_na_pa",  $(this).parent().parent().find('.cena').html().replace(" ¥", "").replace(/ /g, ''));
-            }
-            if(url.indexOf('napoj_energetyczny') != -1){
-                updateStats("wydatki_na_pa",  $(this).parent().parent().find('.cena').html().replace(" ¥", "").replace(/ /g, ''));
-            }
+            var ilosc_yenow_przed = Number($('a[href="http://pokelife.pl/pokedex/index.php?title=Pieniądze"]').parent().html().split("</a>")[1].split("<a")[0].replace(/\./g, ''));
 
             $.ajax({
                 type : 'POST',
@@ -1663,6 +1658,13 @@ function initPokeLifeScript(){
                 success:function (data) {
                     $.get('inc/stan.php', function(data) {
                         $("#sidebar").html(data);
+                        var ilosc_yenow_teraz = $(data).find('a[href="http://pokelife.pl/pokedex/index.php?title=Pieniądze"]').parent().html().split("</a>")[1].split("<a")[0].replace(/\./g, '');
+                        if(url.indexOf('niebieskie_jagody') != -1){
+                            updateStats("wydatki_na_pa",  ilosc_yenow_przed - ilosc_yenow_teraz);
+                        }
+                        if(url.indexOf('napoj_energetyczny') != -1){
+                            updateStats("wydatki_na_pa",  ilosc_yenow_przed - ilosc_yenow_teraz);
+                        }
                         refreshShop();
                     });
                 }
@@ -1773,11 +1775,22 @@ function initPokeLifeScript(){
                 $('#shop6').attr('url', url);
                 $('#shop6 .cena').html(price_with_dot + " ¥");
                 $('#shop6 .ilosc').html(max);
+                $('#shop6 button').attr("disabled", false);
 
                 if (Number(ilosc_yenow) < Number(price)) {
-                    $('#shop6 button').attr("disabled", true);
-                } else {
-                    $('#shop6 button').attr("disabled", false);
+                    var priceOne = (price / max);
+                    max = Math.floor(Number(ilosc_yenow / (price / max)));
+                    console.log(Math.floor(max));
+                    price = Number(max * priceOne).toFixed(0);
+                    price_with_dot = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+                    if(priceOne > ilosc_yenow){
+                        $('#shop6 button').attr("disabled", true);
+                        $('#shop6 .cena').html(priceOne.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + " ¥");
+                        $('#shop6 .ilosc').html(1);
+                    } else {
+                        $('#shop6 .cena').html(price_with_dot + " ¥");
+                        $('#shop6 .ilosc').html(max);
+                    }
                 }
             });
 
