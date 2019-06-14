@@ -27,7 +27,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
-3.21.2 (2019-05-06)
+3.22 (2019-06-14)
+* Dodanie opcji podglądu poka ligowe nawet gdy jest on zablokowany, oraz rozłożenia statystyk
+
+3.21.2 (2019-06-06)
 * Dodanie wyboru Setów z przedmiotami i szybkiej podmiany ich.
 * Przeniesiono zapis konfiguracji do sql, teraz powinno przenosić ustawienia pomiędzy przeglądarkami. 
 
