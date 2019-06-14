@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.21.4
+// @version      3.22
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -41,6 +41,7 @@
 // 21. initWbijanieJeszczeDokladke
 // 22. initEventWyspaUnikatow
 // 23. initZamianaPrzedmiotow
+// 24. initPodgladPokowWLidze
 
 
 
@@ -2692,4 +2693,33 @@ function initPokeLifeScript(){
 
     }
     initZamianaPrzedmiotow();
+
+
+
+    // **********************
+    //
+    // initZamianaPrzedmiotow()
+    // Funkcja automatycznie dodajaca sprawdzanie pokow z wyspy unikatow
+    //
+    function initPodgladPokowWLidze(){
+        onReloadMain(function(){
+            if (this.find('.panel-heading:contains("Pokemony w lidze")').length > 0) {
+                var THAT = this;
+                var html = '<div class="row wlidze">';
+
+                this.find(".panel-heading:contains('Pokemony w lidze')").parent().find('.pokazpoka').each(function(index, value){
+                    html = html + '<button class="col-xs-2 pokazPokaWLidze" data-id="'+$(value).data('id-pokemona')+'">Pokaz pokemona w lidze</button>';
+                })
+
+                html = html + '</div>';
+                this.find(".panel-heading:contains('Pokemony w lidze')").parent().find('.row').after(html);
+            }
+        })
+
+        $(document).on("click", ".pokazPokaWLidze", function (event) {
+            reloadMain("#podgladPoka_content", 'gra/pokemon_skr.php?nopanel&p='+$(this).data('id')+'&ignoruj_ukrycie=1&ograniczenia_hali=0&pokemon_hala=0&treningi_rank=1');
+            $('#podgladPoka').modal('show');
+        })
+    }
+    initPodgladPokowWLidze();
 }
