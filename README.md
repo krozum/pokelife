@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.23 (2019-06-14)
+* Dodanie przycisku do szybkich walk w lidze
+
 3.22 (2019-06-14)
 * Dodanie opcji podglądu poka ligowe nawet gdy jest on zablokowany, oraz rozłożenia statystyk
 
