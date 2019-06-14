@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.22
+// @version      3.23
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -42,6 +42,7 @@
 // 22. initEventWyspaUnikatow
 // 23. initZamianaPrzedmiotow
 // 24. initPodgladPokowWLidze
+// 25. initSzybkaWalkaWLidze
 
 
 
@@ -2722,4 +2723,54 @@ function initPokeLifeScript(){
         })
     }
     initPodgladPokowWLidze();
+
+
+
+    // **********************
+    //
+    // initSzybkaWalkaWLidze()
+    // Funkcja automatycznie dodajaca sprawdzanie pokow z wyspy unikatow
+    //
+    function initSzybkaWalkaWLidze(){
+        onReloadMain(function(){
+            var THAT = this;
+            if (this.find('.panel-heading:contains("Ranking")').length > 0) {
+                this.find(".pagination:even()").before('<button id="addButtonToFastFights" style="display: block; text-align: center; margin: 0 auto; margin-top: 20px; background: #337ab7; border: none; border-radius: 3px; padding: 5px 10px; color: white; line-height: 25px; ">Dodaj przycisk do szybkich walk</button>');
+            }
+        })
+
+        $(document).on("click", "#addButtonToFastFights", function (event) {
+            $('.fastFight').remove();
+            $('form[action="liga_walki.php"]').parent().append('<button class="fastFight" style=" margin-top: 10px; ">Szybka walka</button>');
+        })
+
+        $(document).on("click", ".fastFight", function (event) {
+            var zapezpieczenie = $(this).parent().find('input[name="zabezpieczenie"]').val();
+            var walcz = $(this).parent().find('input[name="walcz"]').val();
+            var THAT = $(this).parent();
+
+            $.ajax({
+                type : 'GET',
+                url : 'gra/liga_walki.php?postData%5B0%5D%5Bname%5D=walcz&postData%5B0%5D%5Bvalue%5D='+walcz+'&postData%5B1%5D%5Bname%5D=zabezpieczenie&postData%5B1%5D%5Bvalue%5D='+zapezpieczenie,
+                success:function (data) {
+                    var postData = $(data).find('form').serializeArray();
+                    $.ajax({
+                        type : 'GET',
+                        url : 'gra/liga_walki.php',
+                        data: {
+                            postData : postData
+                        },
+                        success:function (data) {
+                            if($(data).find('.alert-success:contains("Trzymaj tak dalej!")').length > 0){
+                                THAT.html('<span style="color: green">Wygrana<span>');
+                            } else {
+                                THAT.html('<span style="color: red">Przegrana<span>');
+                            }
+                        }
+                    });
+                }
+            });
+        })
+    }
+    initSzybkaWalkaWLidze();
 }
