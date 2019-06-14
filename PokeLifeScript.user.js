@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.23.1
+// @version      3.23.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -2761,12 +2761,13 @@ function initPokeLifeScript(){
                             postData : postData
                         },
                         success:function (data) {
+                            var data2 = data;
                             $.get( 'inc/stan.php', function( data ) {
                                 $( "#sidebar" ).html( data );
-                                if($(data).find('.alert-success:contains("Trzymaj tak dalej!")').length > 0){
+                                if($(data2).find('.alert-success:contains("Trzymaj tak dalej")').length > 0){
                                     THAT.html('<span style="color: green">Wygrana<span>');
                                 } else {
-                                    if($(data).find('.alert-danger:contains("Posiadasz za mało punktów akcji")'.length > 0)){
+                                    if($(data2).find('.alert-danger:contains("Posiadasz za mało punktów akcji")'.length > 0)){
 
                                     } else {
                                         THAT.html('<span style="color: red">Przegrana<span>');
