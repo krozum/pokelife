@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.23.2
+// @version      3.24
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -108,6 +108,7 @@ function updateConfig(config, callback){
 }
 
 var AutoGoSettings = new Object();
+var previousPageContent = null;
 
 
 
@@ -129,6 +130,10 @@ function onReloadMain(fn) {
 window.afterReloadMainFunctions = [];
 function afterReloadMain(fn) {
     window.afterReloadMainFunctions.push(fn);
+}
+
+function getPreviousPageContent() {
+    return previousPageContent;
 }
 
 
@@ -170,6 +175,7 @@ function updateStatsDoswiadczenie(json){
 // **********************
 
 function reloadMain(selector, url, callback, callback2){
+    previousPageContent = $('body').html();
     $.get(url, function(data) {
         var THAT = $('<div>').append($(data).clone());
         window.onReloadMainFunctions.forEach(function(item) {
@@ -192,6 +198,7 @@ function reloadMain(selector, url, callback, callback2){
 }
 
 function reloadMainPOST(selector, url, postData, callback, callback2){
+    previousPageContent = $('body').html();
     $.ajax({
         type : 'GET',
         url : url,
@@ -691,7 +698,11 @@ function initPokeLifeScript(){
                 {
                     'iconFilePath': "images/pokesklep/safariballe.jpg",
                     'iconValue': function(){
-                        if($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50){
+                        console.log($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length);
+                        console.log($('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc1.png"]').length);
+                        if($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $(previousPageContent).find('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50){
+                            return '&zlap_pokemona=safariballe';
+                        } else if($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc1.png"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 40){
                             return '&zlap_pokemona=safariballe';
                         } else if ($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0)  {
                             $('button:contains("Pomiń i szukaj dalej")').click();
