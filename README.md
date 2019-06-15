@@ -27,6 +27,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.24 (2019-06-15)
+* Poprawki do safari, naprawiono błąd który powodował ze zawsze pomijał, nigdy nie rzucał balli.
+* Zmiana dla safariballa, rzuca w pokemony niezłapane oraz w pokemony o łatwości łapania I z poziomem mniejszym lub równym 40.
+
 3.23 (2019-06-14)
 * Dodanie przycisku do szybkich walk w lidze
 
