@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.24.1
+// @version      3.24.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -698,19 +698,21 @@ function initPokeLifeScript(){
                 {
                     'iconFilePath': "images/pokesklep/safariballe.jpg",
                     'iconValue': function(){
-                        console.log($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length);
-                        console.log($('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc1.png"]').length);
-                        if($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $(previousPageContent).find('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50){
-                            return '&zlap_pokemona=safariballe';
-                        } else if($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc1.png"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 40){
-                            return '&zlap_pokemona=safariballe';
-                        } else if($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc2.png"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 15){
-                            return '&zlap_pokemona=safariballe';
-                        } else if ($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0)  {
-                            $('button:contains("Pomiń i szukaj dalej")').click();
+                        if(Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1){
+                            if($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $(previousPageContent).find('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50){
+                                return '&zlap_pokemona=safariballe';
+                            } else if($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc1.png"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 40){
+                                return '&zlap_pokemona=safariballe';
+                            } else if($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc2.png"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 15){
+                                return '&zlap_pokemona=safariballe';
+                            } else if ($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0)  {
+                                $('button:contains("Pomiń i szukaj dalej")').click();
+                                return "";
+                            }
                             return "";
                         } else {
-                            return "xxx";
+                            $('button:contains("Pomiń i szukaj dalej")').click();
+                            return "";
                         }
                     }
                 }
@@ -1004,7 +1006,7 @@ function initPokeLifeScript(){
     // **********************
     function initAutouzupelnianiePol(){
 
-        $(document).on("click", "#plecak-jagody .thumbnail-plecak, .thumbnail-plecak[data-target='#plecak-11'], .thumbnail-plecak[data-target='#plecak-15'], .thumbnail-plecak[data-target='#plecak-8']", function (event) {
+        $(document).on("click", "#plecak-jagody .thumbnail-plecak, .thumbnail-plecak[data-target='#plecak-11'], .thumbnail-plecak[data-target='#plecak-15'], .thumbnail-plecak[data-target='#plecak-8'], .thumbnail-plecak[data-target='#plecak-7'], .thumbnail-plecak[data-target='#plecak-19'], .thumbnail-plecak[data-target='#plecak-16']", function (event) {
             var id = $(this).data("target");
             var ilosc = $(this).find("h5").html().split(" ")[0];
             $(id+' input[name="ilosc"]').val(ilosc);
@@ -2780,7 +2782,7 @@ function initPokeLifeScript(){
                                 if($(data2).find('.alert-success:contains("Trzymaj tak dalej")').length > 0){
                                     THAT.html('<span style="color: green">Wygrana<span>');
                                 } else {
-                                    if($(data2).find('.alert-danger:contains("Posiadasz za mało punktów akcji")'.length > 0)){
+                                    if($(data2).find('.alert-danger:contains("Posiadasz za mało punktów akcji")').length > 0){
 
                                     } else {
                                         THAT.html('<span style="color: red">Przegrana<span>');
