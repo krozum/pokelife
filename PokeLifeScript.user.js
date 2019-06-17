@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.26
+// @version      3.26.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -44,7 +44,7 @@
 // 24. initPodgladPokowWLidze
 // 25. initSzybkaWalkaWLidze
 // 26. initPrzypomnienieOPracy
-// 27. initSzybkkaAktywnosc
+// 27. initSzybkaAktywnosc
 
 
 
@@ -894,6 +894,11 @@ function initPokeLifeScript(){
             var isChecked = $('#autoUseCzerwoneNapoje').prop('checked');
             config.useCzerwoneNapoje = isChecked;
             updateConfig(config);
+        });
+
+        $('body').off('dblclick', ':not(#settingsAutoGo *)');
+        $('body').on('dblclick', ':not(#settingsAutoGo *)', function () {
+            $('#settingsAutoGo').css('display', "none");
         });
 
         $(document).on("click", "#goButton", function(){
@@ -2842,11 +2847,11 @@ function initPokeLifeScript(){
 
     // **********************
     //
-    // initSzybkkaAktywnosc
+    // initSzybkaAktywnosc
     // Funkcja dodająca szybka aktywnosc
     //
     // **********************
-    function initSzybkkaAktywnosc(){
+    function initSzybkaAktywnosc(){
         $('body').append('<div id="goFastJob" style="position: fixed;cursor: pointer;bottom: 9px;left: 105px;font-size: 20px;text-align: center;width: 25px;height: 25px;line-height: 25px;z-index: 9999;"><span style="color: ' + $('.panel-heading').css('background-color') + ';" class="glyphicon glyphicon-briefcase" aria-hidden="true"></span></div>');
         $('body').append('<div id="fastJob"></div>');
         $('#fastJob').append('<table> <tr> <th></th> <th></th></tr></table>');
@@ -2878,5 +2883,5 @@ function initPokeLifeScript(){
         });
 
     };
-    initSzybkkaAktywnosc();
+    initSzybkaAktywnosc();
 }
