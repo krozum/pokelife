@@ -29,6 +29,7 @@ Changelog
 ---------
 3.25 (2019-06-17)
 * Dodanie przypomnienie o aktywności
+* Dodanie informacji gdzie występuje dane shiny w shinyWidget
 
 3.24 (2019-06-15)
 * Poprawki do safari, naprawiono błąd który powodował ze zawsze pomijał, nigdy nie rzucał balli.
