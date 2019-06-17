@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.25.1
+// @version      3.25.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -43,6 +43,7 @@
 // 23. initZamianaPrzedmiotow
 // 24. initPodgladPokowWLidze
 // 25. initSzybkaWalkaWLidze
+// 26. initPrzypomnienieOPracy
 
 
 
