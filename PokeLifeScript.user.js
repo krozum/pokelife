@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.25
+// @version      3.25.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -43,7 +43,6 @@
 // 23. initZamianaPrzedmiotow
 // 24. initPodgladPokowWLidze
 // 25. initSzybkaWalkaWLidze
-// 26. initPrzypomnienieOPracy
 
 
 
@@ -69,6 +68,10 @@ requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_user.php?bot_version=" + 
 // **********************
 
 var config = new Object();
+var AutoGoSettings = new Object();
+var previousPageContent = null;
+var pokemonData;
+var region;
 
 $.getJSON("https://bra1ns.pl/pokelife/api/get_user.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now(), {
     format: "json"
@@ -108,8 +111,25 @@ function updateConfig(config, callback){
     requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_config.php?config=" + JSON.stringify(config) + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim(), callback != undefined ? function(){ callback.call()} : null);
 }
 
-var AutoGoSettings = new Object();
-var previousPageContent = null;
+$.getJSON("https://raw.githubusercontent.com/krozum/pokelife/master/pokemon.json", {
+    format: "json"
+}).done(function (data) {
+    pokemonData = data;
+})
+
+if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=las"]').length > 0){
+    region = 'kanto';
+} else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=puszcza"]').length > 0){
+    region = 'johto';
+} else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=opuszczona_elektrownia"]').length > 0){
+    region = 'hoenn';
+} else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=koronny_szczyt"]').length > 0){
+    region = 'sinnoh';
+} else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=ranczo"]').length > 0){
+    region = 'unova';
+} else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=francuski_labirynt"]').length > 0){
+    region = 'kalos';
+}
 
 
 
@@ -1051,7 +1071,21 @@ function initPokeLifeScript(){
             }).done(function (data) {
                 var html = '<div class="panel panel-primary"><div class="panel-heading">Ostatnio spotkane shiny<div class="navbar-right"><span id="refreshShinyWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody><tr>';
                 $.each(data.list, function (key, value) {
-                    html = html + "<td data-toggle='tooltip' data-placement='top' title='' data-original-title='Spotkany: "+value['creation_date']+"' style='text-align: center;'><img src='https://poke-life.net/pokemony/srednie/s" + value['pokemon_id'] + ".png' style='width: 40px; height: 40px;'></td>";
+                    var wystepowanie = "";
+                    if(pokemonData != undefined){
+                        if(pokemonData['kanto'][value['pokemon_id']] != undefined){
+                            wystepowanie =  "Kanto, " + pokemonData['kanto'][value['pokemon_id']].wystepowanie;
+                        } else if (pokemonData['johto'][value['pokemon_id']] != undefined){
+                            wystepowanie =  "Johto, " + pokemonData['kanto'][value['pokemon_id']].wystepowanie;
+                        } else if (pokemonData['hoenn'][value['pokemon_id']] != undefined){
+                            wystepowanie =  "Hoenn, " + pokemonData['kanto'][value['pokemon_id']].wystepowanie;
+                        } else if (pokemonData['sinnoh'][value['pokemon_id']] != undefined){
+                            wystepowanie =  "Sinnoh, " + pokemonData['kanto'][value['pokemon_id']].wystepowanie;
+                        } else if (pokemonData['Unova'][value['pokemon_id']] != undefined){
+                            wystepowanie =  "Unova, " + pokemonData['kanto'][value['pokemon_id']].wystepowanie;
+                        }
+                    }
+                    html = html + "<td data-toggle='tooltip' data-placement='top' title='' data-original-title='Spotkany : "+value['creation_date']+", "+wystepowanie+"' style='text-align: center;'><img src='https://poke-life.net/pokemony/srednie/s" + value['pokemon_id'] + ".png' style='width: 40px; height: 40px;'></td>";
                 });
                 html = html + '</tr></tbody></table></div>';
                 shinyWidget = html;
@@ -1397,90 +1431,68 @@ function initPokeLifeScript(){
     // **********************
     function initRozbudowanyOpisDziczy(){
         var kolekcjaData = [];
-        var pokemonData = [];
-        var region;
 
-        if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=las"]').length > 0){
-            region = 'kanto';
-        } else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=puszcza"]').length > 0){
-            region = 'johto';
-        } else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=opuszczona_elektrownia"]').length > 0){
-            region = 'hoenn';
-        } else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=koronny_szczyt"]').length > 0){
-            region = 'sinnoh';
-        } else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=ranczo"]').length > 0){
-            region = 'unova';
-        } else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=francuski_labirynt"]').length > 0){
-            region = 'kalos';
-        }
 
-        var api = "https://raw.githubusercontent.com/krozum/pokelife/master/pokemon.json";
-        $.getJSON(api, {
-            format: "json"
-        }).done(function (data) {
-            pokemonData = data;
+        $.get('gra/kolekcja.php', function( data ) {
+            kolekcjaData.kanto = new Object();
+            $(data).find('#kolekcja-1 div').each(function(index, value){
+                kolekcjaData.kanto[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+            })
 
-            $.get('gra/kolekcja.php', function( data ) {
-                kolekcjaData.kanto = new Object();
-                $(data).find('#kolekcja-1 div').each(function(index, value){
-                    kolekcjaData.kanto[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
-                })
+            kolekcjaData.johto = new Object();
+            $(data).find('#kolekcja-2 div').each(function(index, value){
+                kolekcjaData.johto[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+            })
 
-                kolekcjaData.johto = new Object();
-                $(data).find('#kolekcja-2 div').each(function(index, value){
-                    kolekcjaData.johto[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
-                })
+            kolekcjaData.hoenn = new Object();
+            $(data).find('#kolekcja-3 div').each(function(index, value){
+                kolekcjaData.hoenn[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+            })
 
-                kolekcjaData.hoenn = new Object();
-                $(data).find('#kolekcja-3 div').each(function(index, value){
-                    kolekcjaData.hoenn[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
-                })
+            kolekcjaData.sinnoh = new Object();
+            $(data).find('#kolekcja-4 div').each(function(index, value){
+                kolekcjaData.sinnoh[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+            })
 
-                kolekcjaData.sinnoh = new Object();
-                $(data).find('#kolekcja-4 div').each(function(index, value){
-                    kolekcjaData.sinnoh[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
-                })
+            kolekcjaData.unova = new Object();
+            $(data).find('#kolekcja-5 div').each(function(index, value){
+                kolekcjaData.unova[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+            })
 
-                kolekcjaData.unova = new Object();
-                $(data).find('#kolekcja-5 div').each(function(index, value){
-                    kolekcjaData.unova[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
-                })
+            kolekcjaData.kalos = new Object();
+            $(data).find('#kolekcja-6 div').each(function(index, value){
+                kolekcjaData.kalos[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+            })
 
-                kolekcjaData.kalos = new Object();
-                $(data).find('#kolekcja-6 div').each(function(index, value){
-                    kolekcjaData.kalos[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
-                })
+            $.each($('#pasek_skrotow li'), function (index, item) {
+                if ($(item).find('a').attr('href').substring(14, 23) == "gra/dzicz") {
+                    var url = $(item).find('a').attr('href').split('url=')[1].substring(28);
+                    var name = $(item).find('a').data('original-title').split('Wyprawa: ')[1];
 
-                $.each($('#pasek_skrotow li'), function (index, item) {
-                    if ($(item).find('a').attr('href').substring(14, 23) == "gra/dzicz") {
-                        var url = $(item).find('a').attr('href').split('url=')[1].substring(28);
-                        var name = $(item).find('a').data('original-title').split('Wyprawa: ')[1];
+                    $(document).on('mouseenter', 'a[href="index.php?url=gra/dzicz.php?poluj&miejsce='+url+'"]', function(){
+                        var html = '<div class="row" id="opis'+name.replace(/[ ]/g, '')+'" style="z-index: 999; width: 600px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">';
+                        var wszystkie = true;
 
-                        $(document).on('mouseenter', 'a[href="index.php?url=gra/dzicz.php?poluj&miejsce='+url+'"]', function(){
-                            var html = '<div class="row" id="opis'+name.replace(/[ ]/g, '')+'" style="z-index: 999; width: 600px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">';
-                            var wszystkie = true;
-
-                            $.each(pokemonData[region], function(index, value) {
-                                if(value.wystepowanie == name && value.do_zlapania == 1 && kolekcjaData[region][value.id] == false){
-                                    wszystkie = false;
-                                    html = html + '<div class="col-xs-2" style="display: inline; float: left; padding: 0; margin-top: 5px; text-align: center;"><img style="margin-bottom: 5px; text-align: center; max-width: 80%;" src="https://gra.pokelife.pl/pokemony/niezdobyte/'+value.id+'.png"><p style="margin: 0; margin-top: 5px; margin-bottom: 5px">'+value.name+'</p></div>';
-                                }
-                            })
-                            if(wszystkie){
-                                html = html + "Udało ci się złapać wszystkie poki w tej dziczy";
+                        $.each(pokemonData[region], function(index, value) {
+                            if(value.wystepowanie == name && value.do_zlapania == 1 && kolekcjaData[region][value.id] == false){
+                                wszystkie = false;
+                                html = html + '<div class="col-xs-2" style="display: inline; float: left; padding: 0; margin-top: 5px; text-align: center;"><img style="margin-bottom: 5px; text-align: center; max-width: 80%;" src="https://gra.pokelife.pl/pokemony/niezdobyte/'+value.id+'.png"><p style="margin: 0; margin-top: 5px; margin-bottom: 5px">'+value.name+'</p></div>';
                             }
-                            html = html + '</div>';
-                            $('body').append(html);
                         })
+                        if(wszystkie){
+                            html = html + "Udało ci się złapać wszystkie poki w tej dziczy";
+                        }
+                        html = html + '</div>';
+                        $('body').append(html);
+                    })
 
 
-                        $(document).on('mouseleave', 'a[href="index.php?url=gra/dzicz.php?poluj&miejsce='+url+'"]', function(){
-                            $('#opis'+name.replace(/[ ]/g, '')).remove();
-                        })
-                    }
-                });
-
+                    $(document).on('mouseleave', 'a[href="index.php?url=gra/dzicz.php?poluj&miejsce='+url+'"]', function(){
+                        $('#opis'+name.replace(/[ ]/g, '')).remove();
+                    })
+                }
             });
+
         });
     }
     initRozbudowanyOpisDziczy();
@@ -1498,21 +1510,6 @@ function initPokeLifeScript(){
         if(d.getDate() <= 28 && d.getDate() >= 15 && d.getMonth() == 3){
             var wielkanocWidget;
             var aktualnaDziczZJajem = $('#pasek_skrotow a:nth(0)').attr('href').split('miejsce=')[1];
-            var region;
-
-            if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=las"]').length > 0){
-                region = 'kanto';
-            } else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=puszcza"]').length > 0){
-                region = 'johto';
-            } else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=opuszczona_elektrownia"]').length > 0){
-                region = 'hoenn';
-            } else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=koronny_szczyt"]').length > 0){
-                region = 'sinnoh';
-            } else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=ranczo"]').length > 0){
-                region = 'unova';
-            } else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=francuski_labirynt"]').length > 0){
-                region = 'kalos';
-            }
 
             function refreshWielkanocWidget(){
                 $.ajax({
