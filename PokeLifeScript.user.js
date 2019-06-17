@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.25.2
+// @version      3.26
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -8,7 +8,7 @@
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @require      https://bug7a.github.io/iconselect.js/sample/lib/control/iconselect.js
-// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=2
+// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=3
 // @resource     customCSS_style_1  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_1.css?ver=1
 // @resource     customCSS_style_2  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_2.css?ver=1
 // @resource     customCSS_style_3  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_3.css?ver=1
@@ -44,6 +44,7 @@
 // 24. initPodgladPokowWLidze
 // 25. initSzybkaWalkaWLidze
 // 26. initPrzypomnienieOPracy
+// 27. initSzybkkaAktywnosc
 
 
 
@@ -1635,7 +1636,7 @@ function initPokeLifeScript(){
     //
     // **********************
     function initSzybkiSklep(){
-        $('body').append('<div class="plugin-button" id="goFastShop" style="border-radius: 4px; position: fixed; cursor: pointer; bottom: 10px; left: 80px; font-size: 19px; text-align: center; width: auto; height: 30px; line-height: 35px; z-index: 99998; text-align: left; line-height: 30px;"><a style="color: #272727 !important;text-decoration:none; padding: 5px">Szybki sklep</a></div>');
+        $('body').append('<div id="goFastShop" style="position: fixed;cursor: pointer;bottom: 10px;left: 65px;font-size: 20px;text-align: center;width: 25px;height: 25px;line-height: 25px;z-index: 9999;"><span style="color: ' + $('.panel-heading').css('background-color') + ';" class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span></div>');
         $('body').append('<div id="fastShop"></div>');
         $('#fastShop').append('<table> <tr> <th></th> <th></th> <th></th><th></th> </tr></table>');
         $('#fastShop table').append('<col width="100"> <col width="180"><col width="60"><col width="130">');
@@ -1651,12 +1652,18 @@ function initPokeLifeScript(){
 
         $(document).on("click", '#goFastShop', function () {
             if ($('#fastShop').css('display') == "none") {
+                $('#fastJob').css('display', "none");
                 refreshShop();
                 $('#fastShop').css('display', "block");
             } else {
                 $('#fastShop').css('display', "none");
                 $('#fastShop button').removeClass('confirm');
             }
+        });
+
+        $('body').off('dblclick', ':not(#fastShop *)');
+        $('body').on('dblclick', ':not(#fastShop *)', function () {
+            $('#fastShop').css('display', "none");
         });
 
         $(document).on("click", "#fastShop button:not('.confirm')", function (event) {
@@ -2830,4 +2837,46 @@ function initPokeLifeScript(){
         });
     }
     initPrzypomnienieOPracy();
+
+
+
+    // **********************
+    //
+    // initSzybkkaAktywnosc
+    // Funkcja dodająca szybka aktywnosc
+    //
+    // **********************
+    function initSzybkkaAktywnosc(){
+        $('body').append('<div id="goFastJob" style="position: fixed;cursor: pointer;bottom: 9px;left: 105px;font-size: 20px;text-align: center;width: 25px;height: 25px;line-height: 25px;z-index: 9999;"><span style="color: ' + $('.panel-heading').css('background-color') + ';" class="glyphicon glyphicon-briefcase" aria-hidden="true"></span></div>');
+        $('body').append('<div id="fastJob"></div>');
+        $('#fastJob').append('<table> <tr> <th></th> <th></th></tr></table>');
+        $('#fastJob table').append('<col width="100"> <col width="80">');
+        $('#fastJob table').append('<tr url=""><td><h5>Praca</h5></td> </tr>');
+        $('#fastJob table').append('<tr url=""><td style="padding-top: 5px"><img style="width: 70px;" src="images/aktywnosci/zrywanie_jagod.jpg"></td> <td><button class="btn btn-akcja" href="aktywnosc.php?p=praca&amp;praca=2">Pracuj</button></td> </tr>');
+        $('#fastJob table').append('<tr url=""><td><h5>Trening</h5></td> </tr>');
+        $('#fastJob table').append('<tr url=""><td style="padding-top: 5px"><img style="width: 70px;" src="images/aktywnosci/trening_poczatkuj%C4%85cego.jpg"></td> <td><button class="btn btn-akcja" href="aktywnosc.php?p=trening&trening=0&postData%5B0%5D%5Bname%5D=druzyna_numer1&postData%5B0%5D%5Bvalue%5D=0">Trenuj</button></td> </tr>');
+        $('#fastJob table').append('<tr url=""><td style="padding-top: 5px"><img style="width: 70px;" src="images/aktywnosci/zrownowazony_trening.jpg"></td> <td><button class="btn btn-akcja" href="aktywnosc.php?p=trening&amp;trening=1">Trenuj</button></td> </tr>');
+
+
+        $(document).on("click", '#goFastJob', function () {
+            if ($('#fastJob').css('display') == "none") {
+                $('#fastShop').css('display', "none");
+                $('#fastJob').css('display', "block");
+            } else {
+                $('#fastJob').css('display', "none");
+            }
+        });
+
+        $(document).on("click", '#fastJob button', function () {
+            $(this).attr("disabled", false);
+            $('#fastJob').css('display', "none");
+        });
+
+        $('body').off('dblclick', ':not(#fastJob *)');
+        $('body').on('dblclick', ':not(#fastJob *)', function () {
+            $('#fastJob').css('display', "none");
+        });
+
+    };
+    initSzybkkaAktywnosc();
 }
