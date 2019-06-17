@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.26 (2019-06-17)
+* Dodanie szybkiej aktywności
+
 3.25 (2019-06-17)
 * Dodanie przypomnienie o aktywności
 * Dodanie informacji gdzie występuje dane shiny w shinyWidget
