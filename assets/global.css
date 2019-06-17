@@ -29,7 +29,7 @@
     background: #adadadd1;
 }
 
-#fastShop {
+#fastShop, #fastJob {
     display: none; 
     height: auto;
     left: 10px;
