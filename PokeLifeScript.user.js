@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.26.1
+// @version      3.26.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -105,32 +105,32 @@ $.getJSON("https://bra1ns.pl/pokelife/api/get_user.php?login=" + $('#wyloguj').p
         config.set2[6] = "none";
         updateConfig(config);
     }
-    initPokeLifeScript();
+    $.getJSON("https://raw.githubusercontent.com/krozum/pokelife/master/pokemon.json", {
+        format: "json"
+    }).done(function (data) {
+        pokemonData = data;
+        if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=las"]').length > 0){
+            region = 'kanto';
+        } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=puszcza"]').length > 0){
+            region = 'johto';
+        } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=opuszczona_elektrownia"]').length > 0){
+            region = 'hoenn';
+        } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=koronny_szczyt"]').length > 0){
+            region = 'sinnoh';
+        } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=ranczo"]').length > 0){
+            region = 'unova';
+        } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=francuski_labirynt"]').length > 0){
+            region = 'kalos';
+        }
+        console.log(region);
+        initPokeLifeScript();
+    })
+
 })
 
 function updateConfig(config, callback){
     console.log(config);
     requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_config.php?config=" + JSON.stringify(config) + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim(), callback != undefined ? function(){ callback.call()} : null);
-}
-
-$.getJSON("https://raw.githubusercontent.com/krozum/pokelife/master/pokemon.json", {
-    format: "json"
-}).done(function (data) {
-    pokemonData = data;
-})
-
-if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=las"]').length > 0){
-    region = 'kanto';
-} else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=puszcza"]').length > 0){
-    region = 'johto';
-} else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=opuszczona_elektrownia"]').length > 0){
-    region = 'hoenn';
-} else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=koronny_szczyt"]').length > 0){
-    region = 'sinnoh';
-} else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=ranczo"]').length > 0){
-    region = 'unova';
-} else if($('#pasek_skrotow a[href="index.php?url=gra/dzicz.php?poluj&miejsce=francuski_labirynt"]').length > 0){
-    region = 'kalos';
 }
 
 
@@ -1083,13 +1083,13 @@ function initPokeLifeScript(){
                         if(pokemonData['kanto'][value['pokemon_id']] != undefined){
                             wystepowanie =  "Kanto, " + pokemonData['kanto'][value['pokemon_id']].wystepowanie;
                         } else if (pokemonData['johto'][value['pokemon_id']] != undefined){
-                            wystepowanie =  "Johto, " + pokemonData['kanto'][value['pokemon_id']].wystepowanie;
+                            wystepowanie =  "Johto, " + pokemonData['johto'][value['pokemon_id']].wystepowanie;
                         } else if (pokemonData['hoenn'][value['pokemon_id']] != undefined){
-                            wystepowanie =  "Hoenn, " + pokemonData['kanto'][value['pokemon_id']].wystepowanie;
+                            wystepowanie =  "Hoenn, " + pokemonData['hoenn'][value['pokemon_id']].wystepowanie;
                         } else if (pokemonData['sinnoh'][value['pokemon_id']] != undefined){
-                            wystepowanie =  "Sinnoh, " + pokemonData['kanto'][value['pokemon_id']].wystepowanie;
-                        } else if (pokemonData['Unova'][value['pokemon_id']] != undefined){
-                            wystepowanie =  "Unova, " + pokemonData['kanto'][value['pokemon_id']].wystepowanie;
+                            wystepowanie =  "Sinnoh, " + pokemonData['sinnoh'][value['pokemon_id']].wystepowanie;
+                        } else if (pokemonData['unova'][value['pokemon_id']] != undefined){
+                            wystepowanie =  "Unova, " + pokemonData['unova'][value['pokemon_id']].wystepowanie;
                         }
                     }
                     html = html + "<td data-toggle='tooltip' data-placement='top' title='' data-original-title='Spotkany : "+value['creation_date']+", "+wystepowanie+"' style='text-align: center;'><img src='https://poke-life.net/pokemony/srednie/s" + value['pokemon_id'] + ".png' style='width: 40px; height: 40px;'></td>";
@@ -1480,6 +1480,8 @@ function initPokeLifeScript(){
                         var html = '<div class="row" id="opis'+name.replace(/[ ]/g, '')+'" style="z-index: 999; width: 600px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">';
                         var wszystkie = true;
 
+                        console.log(pokemonData);
+                        console.log(region);
                         $.each(pokemonData[region], function(index, value) {
                             if(value.wystepowanie == name && value.do_zlapania == 1 && kolekcjaData[region][value.id] == false){
                                 wszystkie = false;
