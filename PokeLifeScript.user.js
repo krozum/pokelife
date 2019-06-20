@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.26.2
+// @version      3.27
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -80,6 +80,16 @@ $.getJSON("https://bra1ns.pl/pokelife/api/get_user.php?login=" + $('#wyloguj').p
 }).done(function (data) {
     if(data.user != null && data.user.config != ""){
         config = JSON.parse(data.user.config);
+        if(config.set3 == undefined){
+            config.set3 = new Object();
+            config.set3[1] = "none";
+            config.set3[2] = "none";
+            config.set3[3] = "none";
+            config.set3[4] = "none";
+            config.set3[5] = "none";
+            config.set3[6] = "none";
+            updateConfig(config);
+        }
     } else {
         config.skinStyle = 3;
         config.useNiebieskieJagody = false;
@@ -103,6 +113,13 @@ $.getJSON("https://bra1ns.pl/pokelife/api/get_user.php?login=" + $('#wyloguj').p
         config.set2[4] = "none";
         config.set2[5] = "none";
         config.set2[6] = "none";
+        config.set3 = new Object();
+        config.set3[1] = "none";
+        config.set3[2] = "none";
+        config.set3[3] = "none";
+        config.set3[4] = "none";
+        config.set3[5] = "none";
+        config.set3[6] = "none";
         updateConfig(config);
     }
     $.getJSON("https://raw.githubusercontent.com/krozum/pokelife/master/pokemon.json", {
@@ -2548,15 +2565,16 @@ function initPokeLifeScript(){
     //
     function initZamianaPrzedmiotow(){
         var listaPrzedmiotow = [];
-
         var set1 = config.set1;
         var set2 = config.set2;
+        var set3 = config.set3;
 
         $('body').append('<div id="openZamianaPrzedmiotowBox" style="position: fixed;cursor: pointer;top: 20px;right: 310px;font-size: 20px;text-align: center;width: 25px;height: 25px;line-height: 29px;z-index: 9999;"><span style="color: ' + $('.panel-heading').css('background-color') + ';" class="glyphicon glyphicon-transfer" aria-hidden="true"></span></div>');
 
         $(document).on("click", "#openZamianaPrzedmiotowBox", function (event) {
+            listaPrzedmiotow = [];
             $('body').append('<div id="disabledBox" style="width: 100%;height: 100%;background: black;position: fixed;top: 0;opacity: 0.7;z-index: 99998;"></div>');
-            $('body').append('<div id="zamianaPrzedmiotowBox" style="box-shadow: 10px 10px 55px 0px rgba(0,0,0,0.75);width: 600px;min-height: 400px;max-height: 86%; overflow-y: auto; padding: 15px; background: white;position: fixed;top: 50px;z-index: 99999; left: 0; right: 0; margin: 0 auto;"><div id="setAkutalne" class="row" style="border: 1px dashed #e3e3e3; margin: 15px; padding: 15px;"></div><div id="set1" class="row" style="border: 1px dashed #e3e3e3; margin: 15px; padding: 15px;"></div><div id="set2" class="row" style="border: 1px dashed #e3e3e3; margin: 15px; padding: 15px;"></div></div>');
+            $('body').append('<div id="zamianaPrzedmiotowBox" style="box-shadow: 10px 10px 55px 0px rgba(0,0,0,0.75);width: 600px;min-height: 400px;max-height: 86%; overflow-y: auto; padding: 15px; background: white;position: fixed;top: 50px;z-index: 99999; left: 0; right: 0; margin: 0 auto;"><div id="setAkutalne" class="row" style="border: 1px dashed #e3e3e3; margin: 15px; padding: 15px;"></div><div id="set1" class="row" style="border: 1px dashed #e3e3e3; margin: 15px; padding: 15px;"></div><div id="set2" class="row" style="border: 1px dashed #e3e3e3; margin: 15px; padding: 15px;"></div><div id="set3" class="row" style="border: 1px dashed #e3e3e3; margin: 15px; padding: 15px;"></div></div>');
 
             $.ajax({
                 type: 'POST',
@@ -2571,46 +2589,60 @@ function initPokeLifeScript(){
                         var id = $(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1];
                         var img = $(item).find('.thumbnail-plecak img').attr('src');
                         $(item).find('.thumbnail-plecak h5 strong').append(" ");
-                        var name = $(item).find('.thumbnail-plecak h5').text();
-                        var wymagaNaprawy = $(item).find('.thumbnail-plecak h5:contains("Wymaga naprawy")').length > 0;
+                        var name = $(item).find('.thumbnail-plecak h5 strong:nth(0)').text();
                         var object = new Object();
-                        object.id = id;
                         object.img = img;
-                        object.name = name;
-                        object.wymaga_naprawy = wymagaNaprawy;
+                        object.ilosc = 1;
+                        if($(item).find('.thumbnail-plecak h5:contains("Ilość: ")').length > 0){
+                            object.ilosc = Number($(item).find('.thumbnail-plecak h5').html().split('Ilość: ')[1]);
+                        }
                         if(id != "pyl-odnowy"){
-                            listaPrzedmiotow["id-"+id] = object;
+                            if(listaPrzedmiotow[name] != undefined){
+                                object.ilosc = object.ilosc + listaPrzedmiotow[name].ilosc;
+                            }
+                            object.name = name + ", Ilość: " + object.ilosc;
+                            listaPrzedmiotow[name] = object;
                         }
                     }
                 })
-
-                console.log(listaPrzedmiotow);
-
-                var html_element = '<div class="col-md-2" style=" text-align: center; "><h5>NAME</h5> <img src="IMAGE_SRC" style=" max-width: 100%; "></div>';
+                var html_element = '<div class="col-md-2" style=" text-align: center; "><h5>NAME</h5> <img src="IMAGE_SRC" style=" max-width: 100%; "><h6>PRZEDMIOT<h6></div>';
 
                 $.each(arrayUzywane, function (index, item) {
-                    $('#setAkutalne').append(html_element.replace("IMAGE_SRC", $(item).find('img').attr('src')).replace("NAME", $(item).find('strong:nth(1)').html()));
+                    $('#setAkutalne').append(html_element.replace("IMAGE_SRC", $(item).find('img').attr('src')).replace("NAME", $(item).find('strong:nth(1)').html()).replace("PRZEDMIOT", $(item).find('strong:nth(0)').html()));
                 })
+                $('#setAkutalne').append('<div class="col-md-12" style=" text-align: center; "><button id="odlozWszystkiePrzedmioty" style="padding: 10px; border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Odłóź przedmioty</button></div>');
 
                 $.each(set1, function (index, item) {
                     if(item == "none"){
-                        $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Saint_Andrew%27s_cross_black.svg/480px-Saint_Andrew%27s_cross_black.svg.png" style=" max-width: 100%; "></div>');
+                        $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Saint_Andrew%27s_cross_black.svg/480px-Saint_Andrew%27s_cross_black.svg.png" style=" max-width: 100%; "><h6>brak przedmiotu</h6></div>');
                     } else {
-                        $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="'+listaPrzedmiotow["id-"+item].img+'" style=" max-width: 100%; "></div>');
+                        $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="'+listaPrzedmiotow[item].img+'" style=" max-width: 100%; "><h6>'+listaPrzedmiotow[item].name.split(",")[0]+'</h6></div>');
                     }
                 })
-                $('#set1').append('<div class="col-md-3 col-md-offset-3" style=" text-align: center; "><button  id="useSet" data-id="1" style=" border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
-                $('#set1').append('<div class="col-md-3" style=" text-align: center; "><button id="editSet" data-id="1" style=" border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
+                $('#set1').append('<div class="col-md-12" style=" text-align: center; "><button id="useSet" data-id="1" style="padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
+                $('#set1').append('<div class="col-md-12" style=" text-align: center; "><button id="editSet" data-id="1" style="padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
 
                 $.each(set2, function (index, item) {
                     if(item == "none"){
-                        $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Saint_Andrew%27s_cross_black.svg/480px-Saint_Andrew%27s_cross_black.svg.png" style=" max-width: 100%; "></div>');
+                        $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Saint_Andrew%27s_cross_black.svg/480px-Saint_Andrew%27s_cross_black.svg.png" style=" max-width: 100%; "><h6>brak przedmiotu</h6></div>');
                     } else {
-                        $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="'+listaPrzedmiotow["id-"+item].img+'" style=" max-width: 100%; "></div>');
+                        $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="'+listaPrzedmiotow[item].img+'" style=" max-width: 100%; "><h6>'+listaPrzedmiotow[item].name.split(",")[0]+'</h6></div>');
                     }
                 })
-                $('#set2').append('<div class="col-md-3 col-md-offset-3" style=" text-align: center; "><button id="useSet" data-id="2" style=" border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
-                $('#set2').append('<div class="col-md-3" style=" text-align: center; "><button id="editSet" data-id="2" style=" border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
+                $('#set2').append('<div class="col-md-12" style=" text-align: center; "><button id="useSet" data-id="2" style="padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
+                $('#set2').append('<div class="col-md-12" style=" text-align: center; "><button id="editSet" data-id="2" style="padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
+
+
+                $.each(set3, function (index, item) {
+                    if(item == "none"){
+                        $('#set3').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Saint_Andrew%27s_cross_black.svg/480px-Saint_Andrew%27s_cross_black.svg.png" style=" max-width: 100%; "><h6>brak przedmiotu</h6></div>');
+                    } else {
+                        $('#set3').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="'+listaPrzedmiotow[item].img+'" style=" max-width: 100%; "><h6>'+listaPrzedmiotow[item].name.split(",")[0]+'</h6></div>');
+                    }
+                })
+                $('#set3').append('<div class="col-md-12" style=" text-align: center; "><button id="useSet" data-id="3" style="padding: 10px; border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
+                $('#set3').append('<div class="col-md-12" style=" text-align: center; "><button id="editSet" data-id="3" style="padding: 10px; border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
+
             })
         });
 
@@ -2623,6 +2655,9 @@ function initPokeLifeScript(){
             if(id == 2){
                 set = set2;
             }
+            if(id == 3){
+                set = set3;
+            }
 
             $('#zamianaPrzedmiotowBox').html('<div class="row"></div>');
             $('#zamianaPrzedmiotowBox > div').append('<div class="col-md-4" style=" text-align: center; "><h4>'+$('#sidebar .stan-pokemon[align="left"]:nth(0) b').html().split('(')[0]+'</h4><select style="width: 100%;" data-id="1"></select></div>');
@@ -2634,7 +2669,7 @@ function initPokeLifeScript(){
             $('#zamianaPrzedmiotowBox > div').append('<div class="col-md-12" style="margin-top:40px; text-align: center; "><button id="saveEditSet" data-id="'+id+'">Zapisz</button></div>');
 
             Object.keys(listaPrzedmiotow).forEach(function(item) {
-                $('#zamianaPrzedmiotowBox select').append('<option value="'+listaPrzedmiotow[item].id+'">'+listaPrzedmiotow[item].name+'</option>');
+                $('#zamianaPrzedmiotowBox select').append('<option value="'+listaPrzedmiotow[item].name.split(',')[0]+'">'+listaPrzedmiotow[item].name+'</option>');
             });
             $('#zamianaPrzedmiotowBox select').append('<option value="none">Brak przedmiotu</option>');
 
@@ -2656,6 +2691,9 @@ function initPokeLifeScript(){
             if(id == 2){
                 set = set2;
             }
+            if(id == 3){
+                set = set3;
+            }
 
             set[1] = $('#zamianaPrzedmiotowBox select[data-id="1"]').val();
             set[2] = $('#zamianaPrzedmiotowBox select[data-id="2"]').val();
@@ -2674,7 +2712,38 @@ function initPokeLifeScript(){
                 config.set2 = set;
                 updateConfig(config);
             }
+            if(id == 3){
+                config.set3 = set;
+                updateConfig(config);
+            }
         })
+
+
+        $(document).on("click", "#odlozWszystkiePrzedmioty", function (event) {
+            $.ajax({
+                type: 'POST',
+                url: "gra/plecak.php"
+            }).done(function (response) {
+                var arrayUzywane = new Object();
+                $.each($(response).find('#plecak-trzymane > .row > div'), function (index, item) {
+                    if($(item).find(".caption .text-center:contains('Używa: ')").length > 0){
+                        arrayUzywane[$(item).find(".caption .text-center strong:nth(0)").html()] = $(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1];
+                    }
+                })
+
+                var arrayOfUrls = [];
+                $.each(arrayUzywane, function (index, item) {
+                    var url = 'gra/plecak.php?odloz='+item+'&p=4';
+                    arrayOfUrls.push(url);
+                })
+
+                odlozPrzedmioty(arrayOfUrls, function(){
+                    $('#disabledBox').remove();
+                    $('#zamianaPrzedmiotowBox').remove();
+                });
+
+            })
+        });
 
         $(document).on("click", "#useSet", function (event) {
             var id = $(this).data('id');
@@ -2685,40 +2754,110 @@ function initPokeLifeScript(){
             if(id == 2){
                 set = set2;
             }
+            if(id == 3){
+                set = set3;
+            }
 
             $.ajax({
                 type: 'POST',
                 url: "gra/plecak.php"
             }).done(function (response) {
-                var arrayUzywane = [];
+                var arrayUzywane = new Object();
                 $.each($(response).find('#plecak-trzymane > .row > div'), function (index, item) {
                     if($(item).find(".caption .text-center:contains('Używa: ')").length > 0){
-                        arrayUzywane.push($(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1]);
+                        arrayUzywane[$(item).find(".caption .text-center strong:nth(0)").html()] = $(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1];
                     }
                 })
 
+                var arrayOfUrls = [];
                 $.each(arrayUzywane, function (index, item) {
                     var url = 'gra/plecak.php?odloz='+item+'&p=4';
-                    $.get(url, function(data) {});
+                    arrayOfUrls.push(url);
                 })
 
-                $.each(set, function (index, item) {
-                    if(item != "none"){
-                        var url = 'gra/plecak.php?daj&p=4&postData%5B0%5D%5Bname%5D=id_przedmiotu&postData%5B0%5D%5Bvalue%5D='+item+'&postData%5B1%5D%5Bname%5D=druzyna_numer&postData%5B1%5D%5Bvalue%5D='+(index-1);
-                        $.get(url, function(data) {});
-                    }
-                })
-                $('#disabledBox').remove();
-                $('#zamianaPrzedmiotowBox').remove();
+                odlozPrzedmioty(arrayOfUrls, function(){zalozPrzedmioty(set)});
+
             })
 
         })
+
+        function getIdFromResponse(response, name){
+            var arrayUzywane = new Object();
+            var arrayAktywne = new Object();
+            var arrayNieaktywne = new Object();
+            $.each($(response).find('#plecak-trzymane > .row > div'), function (index, item) {
+                if($(item).find(".caption .text-center:contains('Używa: ')").length > 0){
+                    arrayUzywane[$(item).find(".caption .text-center strong:nth(0)").html()] = $(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1];
+                }
+            })
+
+            $.each($(response).find('#plecak-trzymane > .row > div'), function (index, item) {
+                if($(item).find(".caption .text-center:contains('Pozostało: ')").length > 0){
+                    arrayAktywne[$(item).find(".caption .text-center strong:nth(0)").html()] = $(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1];
+                }
+            })
+
+            $.each($(response).find('#plecak-trzymane > .row > div'), function (index, item) {
+                if($(item).find(".caption .text-center:contains('Pozostało: ')").length == 0){
+                    if($(item).find('.thumbnail-plecak').html() != undefined){
+                        arrayNieaktywne[$(item).find(".caption .text-center strong:nth(0)").html()] = $(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1];
+                    }
+                }
+            })
+
+
+            name = name.trim();
+
+            if(arrayAktywne[name] != undefined){
+                return arrayAktywne[name];
+            }
+            if(arrayNieaktywne[name] != undefined){
+                return arrayNieaktywne[name];
+            }
+            return null;
+        }
 
 
         $(document).on("click", "#disabledBox", function (event) {
             $('#disabledBox').remove();
             $('#zamianaPrzedmiotowBox').remove();
         })
+
+        function odlozPrzedmioty(urls, callback){
+            console.log('aa');
+            if(urls.length > 0){
+                var url = urls.pop();
+                $.get(url, function(data) {
+                    odlozPrzedmioty(urls, callback);
+                });
+            } else {
+                if(callback != undefined){
+                    callback.call();
+                }
+            }
+        }
+
+        function zalozPrzedmioty(set){
+            $.ajax({
+                type: 'POST',
+                url: "gra/plecak.php"
+            }).done(function (response) {
+                $.each(set, function (index, item) {
+                    if(item != "none"){
+                        var id = getIdFromResponse(response, item);
+                        if(id != null){
+                            var url = 'gra/plecak.php?daj&p=4&postData%5B0%5D%5Bname%5D=id_przedmiotu&postData%5B0%5D%5Bvalue%5D='+id+'&postData%5B1%5D%5Bname%5D=druzyna_numer&postData%5B1%5D%5Bvalue%5D='+(index-1);
+                            $.get(url, function(data) {
+                                console.log('bbb');
+                                response = data;
+                            });
+                            $('#disabledBox').remove();
+                            $('#zamianaPrzedmiotowBox').remove();
+                        }
+                    }
+                })
+            })
+        }
 
     }
     initZamianaPrzedmiotow();
