@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.28 (2019-06-21)
+* Dodanie opcji szybkiej zmiany poków w druzynie na zdefiniowane
+
 3.26 (2019-06-17)
 * Dodanie szybkiej aktywności
 * Podwójne kliknięcie gdziekolwiek, zamyka szybki sklep, szybka aktywność oraz ustawienia przywracania PA
