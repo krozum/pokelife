@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.27
+// @version      3.28
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -45,6 +45,7 @@
 // 25. initSzybkaWalkaWLidze
 // 26. initPrzypomnienieOPracy
 // 27. initSzybkaAktywnosc
+// 28. initZamianaPokemonow
 
 
 
@@ -82,12 +83,42 @@ $.getJSON("https://bra1ns.pl/pokelife/api/get_user.php?login=" + $('#wyloguj').p
         config = JSON.parse(data.user.config);
         if(config.set3 == undefined){
             config.set3 = new Object();
-            config.set3[1] = "none";
+            config.set3[1] = $('#sidebar .stan-pokemon:nth(0)').data('pokemon-id');
             config.set3[2] = "none";
             config.set3[3] = "none";
             config.set3[4] = "none";
             config.set3[5] = "none";
             config.set3[6] = "none";
+            updateConfig(config);
+        }
+        if(config.pokeSet1 == undefined){
+            config.pokeSet1 = new Object();
+            config.pokeSet1[1] = $('#sidebar .stan-pokemon:nth(0)').data('pokemon-id');
+            config.pokeSet1[2] = "none";
+            config.pokeSet1[3] = "none";
+            config.pokeSet1[4] = "none";
+            config.pokeSet1[5] = "none";
+            config.pokeSet1[6] = "none";
+            updateConfig(config);
+        }
+        if(config.pokeSet2 == undefined){
+            config.pokeSet2 = new Object();
+            config.pokeSet2[1] = $('#sidebar .stan-pokemon:nth(0)').data('pokemon-id');
+            config.pokeSet2[2] = "none";
+            config.pokeSet2[3] = "none";
+            config.pokeSet2[4] = "none";
+            config.pokeSet2[5] = "none";
+            config.pokeSet2[6] = "none";
+            updateConfig(config);
+        }
+        if(config.pokeSet3 == undefined){
+            config.pokeSet3 = new Object();
+            config.pokeSet3[1] = "none";
+            config.pokeSet3[2] = "none";
+            config.pokeSet3[3] = "none";
+            config.pokeSet3[4] = "none";
+            config.pokeSet3[5] = "none";
+            config.pokeSet3[6] = "none";
             updateConfig(config);
         }
     } else {
@@ -139,14 +170,16 @@ $.getJSON("https://bra1ns.pl/pokelife/api/get_user.php?login=" + $('#wyloguj').p
         } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=francuski_labirynt"]').length > 0){
             region = 'kalos';
         }
-        console.log(region);
+        console.log("Wykryty region: " + region);
         initPokeLifeScript();
     })
 
 })
 
 function updateConfig(config, callback){
+    console.log("------------");
     console.log(config);
+    console.log("------------");
     requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_config.php?config=" + JSON.stringify(config) + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim(), callback != undefined ? function(){ callback.call()} : null);
 }
 
@@ -1497,8 +1530,6 @@ function initPokeLifeScript(){
                         var html = '<div class="row" id="opis'+name.replace(/[ ]/g, '')+'" style="z-index: 999; width: 600px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">';
                         var wszystkie = true;
 
-                        console.log(pokemonData);
-                        console.log(region);
                         $.each(pokemonData[region], function(index, value) {
                             if(value.wystepowanie == name && value.do_zlapania == 1 && kolekcjaData[region][value.id] == false){
                                 wszystkie = false;
@@ -1564,7 +1595,6 @@ function initPokeLifeScript(){
                 format: "json"
             }).done(function (data) {
                 var wielkanocData = data[region];
-                console.log(wielkanocData);
                 var html;
                 var url;
 
@@ -1586,7 +1616,6 @@ function initPokeLifeScript(){
 
                         if(this.find(".alert-warning:not(:contains('\"R\"')) b").length > 1){
                             text = this.find(".alert-warning:not(:contains('\"R\"')) b:nth(1)").html();
-                            console.log(text);
                             if(typeof wielkanocData[text] != "undefined"){
                                 html = '<p class="alert alert-warning text-center">Jajko jest w <strong>'+wielkanocData[text]+'</strong></p>';
                                 this.find(".panel-body p:nth(0)").after(html);
@@ -1827,7 +1856,6 @@ function initPokeLifeScript(){
                 if (Number(ilosc_yenow) < Number(price)) {
                     var priceOne = (price / max);
                     max = Math.floor(Number(ilosc_yenow / (price / max)));
-                    console.log(Math.floor(max));
                     price = Number(max * priceOne).toFixed(0);
                     price_with_dot = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
                     if(priceOne > ilosc_yenow){
@@ -2463,7 +2491,6 @@ function initPokeLifeScript(){
                         })
                     }, function(){
                         if(this.find('.alert-danger').length > 0 && this.find('.alert-danger').html() != 'Twój pokemon nie jest w stanie dzisiaj zjeść już więcej przysmaków.'){
-                            console.log(this.find('.alert-danger').html());
                             array = [];
                         }
                     })
@@ -2533,9 +2560,6 @@ function initPokeLifeScript(){
                 if (this.find('.dzikipokemon-background-normalny').length > 0) {
                     var pokemonImg = this.find('.dzikipokemon-background-normalny .img-responsive').attr('src');
                     var html = "";
-                    console.log(pokemonyDoZlapania);
-                    console.log(pokemonImg);
-                    console.log(pokemonyDoZlapania.indexOf(pokemonImg));
                     if(pokemonyDoZlapania.indexOf(pokemonImg) != -1 && this.find('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50){
                         html = '<p class="alert alert-danger text-center">Pokemon do złapania w event</strong></p>';
                         this.find("h2:nth(0)").before(html);
@@ -2568,6 +2592,7 @@ function initPokeLifeScript(){
         var set1 = config.set1;
         var set2 = config.set2;
         var set3 = config.set3;
+        var dots;
 
         $('body').append('<div id="openZamianaPrzedmiotowBox" style="position: fixed;cursor: pointer;top: 20px;right: 310px;font-size: 20px;text-align: center;width: 25px;height: 25px;line-height: 29px;z-index: 9999;"><span style="color: ' + $('.panel-heading').css('background-color') + ';" class="glyphicon glyphicon-transfer" aria-hidden="true"></span></div>');
 
@@ -2619,8 +2644,8 @@ function initPokeLifeScript(){
                         $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="'+listaPrzedmiotow[item].img+'" style=" max-width: 100%; "><h6>'+listaPrzedmiotow[item].name.split(",")[0]+'</h6></div>');
                     }
                 })
-                $('#set1').append('<div class="col-md-12" style=" text-align: center; "><button id="useSet" data-id="1" style="padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
-                $('#set1').append('<div class="col-md-12" style=" text-align: center; "><button id="editSet" data-id="1" style="padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
+                $('#set1').append('<div class="col-md-12" style=" text-align: center; "><button id="useSet" data-id="1" style="min-width: 170px;padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
+                $('#set1').append('<div class="col-md-12" style=" text-align: center; "><button id="editSet" data-id="1" style="min-width: 170px;padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
 
                 $.each(set2, function (index, item) {
                     if(item == "none"){
@@ -2629,8 +2654,8 @@ function initPokeLifeScript(){
                         $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="'+listaPrzedmiotow[item].img+'" style=" max-width: 100%; "><h6>'+listaPrzedmiotow[item].name.split(",")[0]+'</h6></div>');
                     }
                 })
-                $('#set2').append('<div class="col-md-12" style=" text-align: center; "><button id="useSet" data-id="2" style="padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
-                $('#set2').append('<div class="col-md-12" style=" text-align: center; "><button id="editSet" data-id="2" style="padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
+                $('#set2').append('<div class="col-md-12" style=" text-align: center; "><button id="useSet" data-id="2" style="min-width: 170px;padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
+                $('#set2').append('<div class="col-md-12" style=" text-align: center; "><button id="editSet" data-id="2" style="min-width: 170px;padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
 
 
                 $.each(set3, function (index, item) {
@@ -2640,8 +2665,8 @@ function initPokeLifeScript(){
                         $('#set3').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon[align="left"]:nth('+(index-1)+') b').html().split('(')[0]+'</h5> <img src="'+listaPrzedmiotow[item].img+'" style=" max-width: 100%; "><h6>'+listaPrzedmiotow[item].name.split(",")[0]+'</h6></div>');
                     }
                 })
-                $('#set3').append('<div class="col-md-12" style=" text-align: center; "><button id="useSet" data-id="3" style="padding: 10px; border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
-                $('#set3').append('<div class="col-md-12" style=" text-align: center; "><button id="editSet" data-id="3" style="padding: 10px; border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
+                $('#set3').append('<div class="col-md-12" style=" text-align: center; "><button id="useSet" data-id="3" style="min-width: 170px;padding: 10px; border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
+                $('#set3').append('<div class="col-md-12" style=" text-align: center; "><button id="editSet" data-id="3" style="min-width: 170px;padding: 10px; border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
 
             })
         });
@@ -2703,6 +2728,7 @@ function initPokeLifeScript(){
             set[6] = $('#zamianaPrzedmiotowBox select[data-id="6"]').val();
             $('#disabledBox').remove();
             $('#zamianaPrzedmiotowBox').remove();
+            clearInterval(dots);
 
             if(id == 1){
                 config.set1 = set;
@@ -2724,10 +2750,10 @@ function initPokeLifeScript(){
                 type: 'POST',
                 url: "gra/plecak.php"
             }).done(function (response) {
-                var arrayUzywane = new Object();
+                var arrayUzywane = [];
                 $.each($(response).find('#plecak-trzymane > .row > div'), function (index, item) {
                     if($(item).find(".caption .text-center:contains('Używa: ')").length > 0){
-                        arrayUzywane[$(item).find(".caption .text-center strong:nth(0)").html()] = $(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1];
+                        arrayUzywane.push($(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1]);
                     }
                 })
 
@@ -2740,12 +2766,21 @@ function initPokeLifeScript(){
                 odlozPrzedmioty(arrayOfUrls, function(){
                     $('#disabledBox').remove();
                     $('#zamianaPrzedmiotowBox').remove();
+                    clearInterval(dots);
                 });
 
             })
         });
 
         $(document).on("click", "#useSet", function (event) {
+            var THAT = $(this);
+            dots = window.setInterval( function() {
+                if (THAT.html().length > 3 )
+                    THAT.html(".");
+                else
+                    THAT.html(THAT.html() + ".")
+            }, 400);
+
             var id = $(this).data('id');
             var set;
             if(id == 1){
@@ -2762,10 +2797,10 @@ function initPokeLifeScript(){
                 type: 'POST',
                 url: "gra/plecak.php"
             }).done(function (response) {
-                var arrayUzywane = new Object();
+                var arrayUzywane = [];
                 $.each($(response).find('#plecak-trzymane > .row > div'), function (index, item) {
                     if($(item).find(".caption .text-center:contains('Używa: ')").length > 0){
-                        arrayUzywane[$(item).find(".caption .text-center strong:nth(0)").html()] = $(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1];
+                        arrayUzywane.push($(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1]);
                     }
                 })
 
@@ -2792,7 +2827,7 @@ function initPokeLifeScript(){
             })
 
             $.each($(response).find('#plecak-trzymane > .row > div'), function (index, item) {
-                if($(item).find(".caption .text-center:contains('Pozostało: ')").length > 0){
+                if($(item).find(".caption .text-center:contains('Pozostało: ')").length > 0 && $(item).find(".caption .text-center:contains('Używa: ')").length == 0){
                     arrayAktywne[$(item).find(".caption .text-center strong:nth(0)").html()] = $(item).find('.thumbnail-plecak').data('target').split('plecak-przedmiot-')[1];
                 }
             })
@@ -2804,7 +2839,6 @@ function initPokeLifeScript(){
                     }
                 }
             })
-
 
             name = name.trim();
 
@@ -2821,10 +2855,10 @@ function initPokeLifeScript(){
         $(document).on("click", "#disabledBox", function (event) {
             $('#disabledBox').remove();
             $('#zamianaPrzedmiotowBox').remove();
+            clearInterval(dots);
         })
 
         function odlozPrzedmioty(urls, callback){
-            console.log('aa');
             if(urls.length > 0){
                 var url = urls.pop();
                 $.get(url, function(data) {
@@ -2842,21 +2876,28 @@ function initPokeLifeScript(){
                 type: 'POST',
                 url: "gra/plecak.php"
             }).done(function (response) {
-                $.each(set, function (index, item) {
-                    if(item != "none"){
-                        var id = getIdFromResponse(response, item);
-                        if(id != null){
-                            var url = 'gra/plecak.php?daj&p=4&postData%5B0%5D%5Bname%5D=id_przedmiotu&postData%5B0%5D%5Bvalue%5D='+id+'&postData%5B1%5D%5Bname%5D=druzyna_numer&postData%5B1%5D%5Bvalue%5D='+(index-1);
-                            $.get(url, function(data) {
-                                console.log('bbb');
-                                response = data;
-                            });
-                            $('#disabledBox').remove();
-                            $('#zamianaPrzedmiotowBox').remove();
-                        }
-                    }
-                })
+                wykonaj(set, 1, response);
             })
+        }
+
+        function wykonaj(set, index, response){
+            if(index <= 6){
+                if(set[index] != "none"){
+                    var id = getIdFromResponse(response, set[index]);
+                    if(id != null){
+                        var url = 'gra/plecak.php?daj&p=4&postData%5B0%5D%5Bname%5D=id_przedmiotu&postData%5B0%5D%5Bvalue%5D='+id+'&postData%5B1%5D%5Bname%5D=druzyna_numer&postData%5B1%5D%5Bvalue%5D='+(index-1);
+                        $.get(url, function(data) {
+                            wykonaj(set, index+1, data);
+                        });
+                    }
+                } else {
+                    wykonaj(set, index+1, response);
+                }
+            } else {
+                $('#disabledBox').remove();
+                $('#zamianaPrzedmiotowBox').remove();
+                clearInterval(dots);
+            }
         }
 
     }
@@ -3025,4 +3066,239 @@ function initPokeLifeScript(){
 
     };
     initSzybkaAktywnosc();
+
+
+
+    // **********************
+    //
+    // initZamianaPokemonow()
+    // Funkcja dodająca zamiane pokemonow
+    //
+    function initZamianaPokemonow(){
+        var listaPokemonow = [];
+        var dots;
+        var listaPokemonowObject = new Object();
+        var set1 = config.pokeSet1;
+        var set2 = config.pokeSet2;
+        var set3 = config.pokeSet3;
+
+        $('body').append('<div id="openZamianaPokemonowBox" style="position: fixed;cursor: pointer;top: 20px;right: 343px;font-size: 15px;text-align: center;width: 25px;height: 25px;line-height: 25px;z-index: 9999;"><span style="color: ' + $('.panel-heading').css('background-color') + ';" class="glyphicon glyphicon-th-list" aria-hidden="true"></span></div>');
+
+        $(document).on("click", "#openZamianaPokemonowBox", function (event) {
+            listaPokemonow = [];
+            $('body').append('<div id="disabledBox" style="width: 100%;height: 100%;background: black;position: fixed;top: 0;opacity: 0.7;z-index: 99998;"></div>');
+            $('body').append('<div id="zamianaPokomonowBox" style="box-shadow: 10px 10px 55px 0px rgba(0,0,0,0.75);width: 600px;min-height: 400px;max-height: 86%; overflow-y: auto; padding: 15px; background: white;position: fixed;top: 50px;z-index: 99999; left: 0; right: 0; margin: 0 auto;"><div id="setAkutalne" class="row" style="border: 1px dashed #e3e3e3; margin: 15px; padding: 15px;"></div><div id="set1" class="row" style="border: 1px dashed #e3e3e3; margin: 15px; padding: 15px;"></div><div id="set2" class="row" style="border: 1px dashed #e3e3e3; margin: 15px; padding: 15px;"></div><div id="set3" class="row" style="border: 1px dashed #e3e3e3; margin: 15px; padding: 15px;"></div></div>');
+
+
+            $.ajax({
+                type: 'POST',
+                url: "gra/druzyna.php"
+            }).done(function (response) {
+                var listPokemonow = [];
+                $.each($(response).find('#pokemony-druzyna tr'), function (index, item) {
+                    listaPokemonow.push($(item).find('big b').html() + "|" + $(item).find('.pokazpoka').data('id-pokemona') + "|" + $(item).find('td > b:nth(0)').html().split('Poziom: ')[1]);
+                    listaPokemonowObject[$(item).find('.pokazpoka').data('id-pokemona')] = new Object();
+                    listaPokemonowObject[$(item).find('.pokazpoka').data('id-pokemona')].name = $(item).find('big b').html();
+                    listaPokemonowObject[$(item).find('.pokazpoka').data('id-pokemona')].id = $(item).find('.pokazpoka').data('id-pokemona');
+                    listaPokemonowObject[$(item).find('.pokazpoka').data('id-pokemona')].poziom = $(item).find('td > b:nth(0)').html().split('Poziom: ')[1];
+                    listaPokemonowObject[$(item).find('.pokazpoka').data('id-pokemona')].img = $(item).find('img').attr('src');
+                })
+
+                $.each($(response).find('#pokemony-rezerwa label'), function (index, item) {
+                    listaPokemonow.push($(item).find('b i').html() + "|" + $(item).find('input').val() + "|" + $(item).data('poziom'));
+                    listaPokemonowObject[$(item).find('input').val()] = new Object();
+                    listaPokemonowObject[$(item).find('input').val()].name = $(item).find('b i').html();
+                    listaPokemonowObject[$(item).find('input').val()].id = $(item).find('input').val();
+                    listaPokemonowObject[$(item).find('input').val()].poziom = $(item).data('poziom');
+                    listaPokemonowObject[$(item).find('input').val()].img = $(item).find('img').attr('src');
+                })
+
+                $.each($('#sidebar .stan-pokemon:odd()'), function (index, item) {
+                    $('#setAkutalne').append('<div class="col-md-2" style=" text-align: center; "><h5>'+$('#sidebar .stan-pokemon:odd():nth('+index+') b').html().split('(')[0]+'</h5> <img src="'+$('#sidebar .stan-pokemon:even():nth('+index+') img').attr('src')+'" style=" max-width: 100%; "></div>');
+                })
+
+                $.each(set1, function (index, item) {
+                    if(item == "none"){
+                        $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>brak</h5> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Saint_Andrew%27s_cross_black.svg/480px-Saint_Andrew%27s_cross_black.svg.png" style=" max-width: 100%; "></div>');
+                    } else {
+                        $('#set1').append('<div class="col-md-2" style=" text-align: center; "><h5>'+listaPokemonowObject[item].name+'</h5> <img src="'+listaPokemonowObject[item].img+'" style=" max-width: 100%; "></div>');
+                    }
+                })
+
+                $.each(set2, function (index, item) {
+                    if(item == "none"){
+                        $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>brak</h5> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Saint_Andrew%27s_cross_black.svg/480px-Saint_Andrew%27s_cross_black.svg.png" style=" max-width: 100%; "></div>');
+                    } else {
+                        $('#set2').append('<div class="col-md-2" style=" text-align: center; "><h5>'+listaPokemonowObject[item].name+'</h5> <img src="'+listaPokemonowObject[item].img+'" style=" max-width: 100%; "></div>');
+                    }
+                })
+
+                $.each(set3, function (index, item) {
+                    if(item == "none"){
+                        $('#set3').append('<div class="col-md-2" style=" text-align: center; "><h5>brak</h5> <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Saint_Andrew%27s_cross_black.svg/480px-Saint_Andrew%27s_cross_black.svg.png" style=" max-width: 100%; "></div>');
+                    } else {
+                        $('#set3').append('<div class="col-md-2" style=" text-align: center; "><h5>'+listaPokemonowObject[item].name+'</h5> <img src="'+listaPokemonowObject[item].img+'" style=" max-width: 100%; "></div>');
+                    }
+                })
+
+                $('#set1').append('<div class="col-md-12" style=" text-align: center; "><button id="usePokeSet" data-id="1" style="min-width: 170px;padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
+                $('#set1').append('<div class="col-md-12" style=" text-align: center; "><button id="editPokeSet" data-id="1" style="min-width: 170px;padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
+
+                $('#set2').append('<div class="col-md-12" style=" text-align: center; "><button id="usePokeSet" data-id="2" style="min-width: 170px;padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
+                $('#set2').append('<div class="col-md-12" style=" text-align: center; "><button id="editPokeSet" data-id="2" style="min-width: 170px;padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
+
+                $('#set3').append('<div class="col-md-12" style=" text-align: center; "><button id="usePokeSet" data-id="3" style="min-width: 170px;padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #d3e5ee; ">Uzyj tego zestawu</button></div>');
+                $('#set3').append('<div class="col-md-12" style=" text-align: center; "><button id="editPokeSet" data-id="3" style="min-width: 170px;padding: 10px;  border: none; border-radius: 3px; margin-top: 20px; background: #fae6e8; ">Edytuj zestaw</button></div>');
+
+
+            })
+        })
+
+        $(document).on("click", "#editPokeSet", function (event) {
+            var id = $(this).data('id');
+            var set;
+            if(id == 1){
+                set = set1;
+            }
+            if(id == 2){
+                set = set2;
+            }
+            if(id == 3){
+                set = set3;
+            }
+
+            $('#zamianaPokomonowBox').html('<div class="row"></div>');
+            $('#zamianaPokomonowBox > div').append('<div class="col-md-4" style=" text-align: center; "><h4>#1</h4><select style="width: 100%;" data-id="1"></select></div>');
+            $('#zamianaPokomonowBox > div').append('<div class="col-md-4" style=" text-align: center; "><h4>#2</h4><select style="width: 100%;" data-id="2"></select></div>');
+            $('#zamianaPokomonowBox > div').append('<div class="col-md-4" style=" text-align: center; "><h4>#3</h4><select style="width: 100%;" data-id="3"></select></div>');
+            $('#zamianaPokomonowBox > div').append('<div class="col-md-4" style=" text-align: center; "><h4>#4</h4><select style="width: 100%;" data-id="4"></select></div>');
+            $('#zamianaPokomonowBox > div').append('<div class="col-md-4" style=" text-align: center; "><h4>#5</h4><select style="width: 100%;" data-id="5"></select></div>');
+            $('#zamianaPokomonowBox > div').append('<div class="col-md-4" style=" text-align: center; "><h4>#6</h4><select style="width: 100%;" data-id="6"></select></div>');
+            $('#zamianaPokomonowBox > div').append('<div class="col-md-12" style="margin-top:40px; text-align: center; "><button id="saveEditPokeSet" data-id="'+id+'">Zapisz</button></div>');
+
+            $.each(listaPokemonow, function( key, value ) {
+                var split = value.split("|");
+                $('#zamianaPokomonowBox select').append('<option value="'+split[1]+'">'+split[0]+', poziom: ' + split[2] + '</option>');
+            });
+            $('#zamianaPokomonowBox select').append('<option value="none">Brak pokemona</option>');
+            $('#zamianaPokomonowBox select[data-id="1"]  option[value="none"]').remove();
+
+            $('#zamianaPokomonowBox select[data-id="1"] option[value="'+set[1]+'"]').attr('selected','selected');
+            $('#zamianaPokomonowBox select[data-id="2"] option[value="'+set[2]+'"]').attr('selected','selected');
+            $('#zamianaPokomonowBox select[data-id="3"] option[value="'+set[3]+'"]').attr('selected','selected');
+            $('#zamianaPokomonowBox select[data-id="4"] option[value="'+set[4]+'"]').attr('selected','selected');
+            $('#zamianaPokomonowBox select[data-id="5"] option[value="'+set[5]+'"]').attr('selected','selected');
+            $('#zamianaPokomonowBox select[data-id="6"] option[value="'+set[6]+'"]').attr('selected','selected');
+        })
+
+        $(document).on("click", "#saveEditPokeSet", function (event) {
+            var id = $(this).data('id');
+            var set;
+            if(id == 1){
+                set = set1;
+            }
+            if(id == 2){
+                set = set2;
+            }
+            if(id == 3){
+                set = set3;
+            }
+
+            set[1] = $('#zamianaPokomonowBox select[data-id="1"]').val();
+            set[2] = $('#zamianaPokomonowBox select[data-id="2"]').val();
+            set[3] = $('#zamianaPokomonowBox select[data-id="3"]').val();
+            set[4] = $('#zamianaPokomonowBox select[data-id="4"]').val();
+            set[5] = $('#zamianaPokomonowBox select[data-id="5"]').val();
+            set[6] = $('#zamianaPokomonowBox select[data-id="6"]').val();
+            $('#disabledBox').remove();
+            $('#zamianaPokomonowBox').remove();
+            clearInterval(dots);
+
+            if(id == 1){
+                config.pokeSet1 = set;
+                updateConfig(config);
+            }
+            if(id == 2){
+                config.pokeSet2 = set;
+                updateConfig(config);
+            }
+            if(id == 3){
+                config.pokeSet3 = set;
+                updateConfig(config);
+            }
+        })
+
+        $(document).on("click", "#usePokeSet", function (event) {
+            var THAT = $(this);
+            dots = window.setInterval( function() {
+                if (THAT.html().length > 3 )
+                    THAT.html(".");
+                else
+                    THAT.html(THAT.html() + ".")
+            }, 400);
+
+
+            var id = $(this).data('id');
+            var set;
+            if(id == 1){
+                set = set1;
+            }
+            if(id == 2){
+                set = set2;
+            }
+            if(id == 3){
+                set = set3;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: "gra/druzyna.php"
+            }).done(function (response) {
+                var druzyna = [];
+                var urls = [];
+                $.each($(response).find('#pokemony-druzyna tr'), function (index, item) {
+                    druzyna.push($(item).find('.pokazpoka').data('id-pokemona'));
+                })
+
+                for (var i = 0; i < druzyna.length - 1; i++) {
+                    urls.push("gra/druzyna.php?przechowuj="+druzyna[i]);
+                }
+                urls.push("gra/druzyna.php?p=2&postData%5B0%5D%5Bname%5D=kolejnosc&postData%5B0%5D%5Bvalue%5D=2&postData%5B1%5D%5Bname%5D=akcja&postData%5B1%5D%5Bvalue%5D=druzyna&postData%5B2%5D%5Bname%5D=p_"+set[1]+"&postData%5B2%5D%5Bvalue%5D="+set[1]);
+                urls.push("gra/druzyna.php?przechowuj="+druzyna[druzyna.length-1]);
+                for (var j = 2; j <= 6; j++) {
+                    if(set[j] != "none"){
+                        urls.push("gra/druzyna.php?p=2&postData%5B0%5D%5Bname%5D=kolejnosc&postData%5B0%5D%5Bvalue%5D=2&postData%5B1%5D%5Bname%5D=akcja&postData%5B1%5D%5Bvalue%5D=druzyna&postData%5B2%5D%5Bname%5D=p_"+set[j]+"&postData%5B2%5D%5Bvalue%5D="+set[j]);
+                    }
+                }
+                wykonaj(urls, function(){
+                    $('#disabledBox').remove();
+                    $('#zamianaPokomonowBox').remove();
+                    clearInterval(dots);
+                    $.get('inc/stan.php', function(data) {
+                        $("#sidebar").html(data);
+                    })
+                });
+            })
+        })
+
+        function wykonaj(urls, callback){
+            if(urls.length > 0){
+                var url = urls.shift();
+                $.get(url, function(data) {
+                    wykonaj(urls, callback);
+                });
+            } else {
+                if(callback != undefined){
+                    callback.call();
+                }
+            }
+        }
+
+        $(document).on("click", "#disabledBox", function (event) {
+            $('#disabledBox').remove();
+            $('#zamianaPokomonowBox').remove();
+            clearInterval(dots);
+        })
+    }
+    initZamianaPokemonow();
 }
