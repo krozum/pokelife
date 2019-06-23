@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.28
+// @version      3.28.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1665,18 +1665,69 @@ function initPokeLifeScript(){
     //
     // **********************
     function initPoprawaWygladuPokow(){
-        onReloadSidebar(function(){
-            this.find('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/ms3.png');
-            this.find('img[src="pokemony/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/srednie_ms3.png');
-        });
+        if($('#wyloguj').parent().parent().html().split("<div")[0].trim() == "Azerus"){
+            onReloadSidebar(function(){
+                this.find('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://i.imgur.com/6ex2bp3.png');
+                this.find('img[src="pokemony/ms3.png"]').attr('src', 'https://i.imgur.com/6ex2bp3.png');
+                this.find('img[src="pokemony/srednie/s395.png"]').attr('src', 'https://i.imgur.com/YRUifzZ.png');
+                this.find('img[src="pokemony/s395.png"]').attr('src', 'https://i.imgur.com/YRUifzZ.png');
+                this.find('img[src="pokemony/srednie/s3.png"]').attr('src', 'https://i.imgur.com/pXDauI4.png');
+                this.find('img[src="pokemony/s3.png"]').attr('src', 'https://i.imgur.com/pXDauI4.png');
+                this.find('img[src="pokemony/srednie/s141.png"]').attr('src', 'https://i.imgur.com/3T6qaEC.png');
+                this.find('img[src="pokemony/s141.png"]').attr('src', 'https://i.imgur.com/3T6qaEC.png');
+                this.find('img[src="pokemony/srednie/s330.png"]').attr('src', 'https://i.imgur.com/lWXYdar.png');
+                this.find('img[src="pokemony/s330.png"]').attr('src', 'https://i.imgur.com/lWXYdar.png');
+                this.find('img[src="pokemony/srednie/s6.png"]').attr('src', 'https://i.imgur.com/kK8ut7g.png');
+                this.find('img[src="pokemony/s6.png"]').attr('src', 'https://i.imgur.com/kK8ut7g.png');
+                this.find('img[src="pokemony/srednie/ms6_1.png"]').attr('src', 'https://i.imgur.com/571CxGb.png');
+                this.find('img[src="pokemony/ms6_1.png"]').attr('src', 'https://i.imgur.com/571CxGb.png');
+            });
 
-        onReloadMain(function(){
-            this.find('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/ms3.png');
-            this.find('img[src="pokemony/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/srednie_ms3.png');
-        });
+            onReloadMain(function(){
+                this.find('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://i.imgur.com/6ex2bp3.png');
+                this.find('img[src="pokemony/ms3.png"]').attr('src', 'https://i.imgur.com/6ex2bp3.png');
+                this.find('img[src="pokemony/srednie/s395.png"]').attr('src', 'https://i.imgur.com/YRUifzZ.png');
+                this.find('img[src="pokemony/s395.png"]').attr('src', 'https://i.imgur.com/YRUifzZ.png');
+                this.find('img[src="pokemony/srednie/s3.png"]').attr('src', 'https://i.imgur.com/pXDauI4.png');
+                this.find('img[src="pokemony/s3.png"]').attr('src', 'https://i.imgur.com/pXDauI4.png');
+                this.find('img[src="pokemony/srednie/s141.png"]').attr('src', 'https://i.imgur.com/3T6qaEC.png');
+                this.find('img[src="pokemony/s141.png"]').attr('src', 'https://i.imgur.com/3T6qaEC.png');
+                this.find('img[src="pokemony/srednie/s330.png"]').attr('src', 'https://i.imgur.com/lWXYdar.png');
+                this.find('img[src="pokemony/s330.png"]').attr('src', 'https://i.imgur.com/lWXYdar.png');
+                this.find('img[src="pokemony/srednie/s6.png"]').attr('src', 'https://i.imgur.com/kK8ut7g.png');
+                this.find('img[src="pokemony/s6.png"]').attr('src', 'https://i.imgur.com/kK8ut7g.png');
+                this.find('img[src="pokemony/srednie/ms6_1.png"]').attr('src', 'https://i.imgur.com/571CxGb.png');
+                this.find('img[src="pokemony/ms6_1.png"]').attr('src', 'https://i.imgur.com/571CxGb.png');
+            });
 
-        $('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/ms3.png');
-        $('img[src="pokemony/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/srednie_ms3.png');
+            $('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://i.imgur.com/6ex2bp3.png');
+            $('img[src="pokemony/ms3.png"]').attr('src', 'https://i.imgur.com/6ex2bp3.png');
+            $('img[src="pokemony/srednie/s395.png"]').attr('src', 'https://i.imgur.com/YRUifzZ.png');
+            $('img[src="pokemony/s395.png"]').attr('src', 'https://i.imgur.com/YRUifzZ.png');
+            $('img[src="pokemony/srednie/s3.png"]').attr('src', 'https://i.imgur.com/pXDauI4.png');
+            $('img[src="pokemony/s3.png"]').attr('src', 'https://i.imgur.com/pXDauI4.png');
+            $('img[src="pokemony/srednie/s141.png"]').attr('src', 'https://i.imgur.com/3T6qaEC.png');
+            $('img[src="pokemony/s141.png"]').attr('src', 'https://i.imgur.com/3T6qaEC.png');
+            $('img[src="pokemony/srednie/s330.png"]').attr('src', 'https://i.imgur.com/lWXYdar.png');
+            $('img[src="pokemony/s330.png"]').attr('src', 'https://i.imgur.com/lWXYdar.png');
+            $('img[src="pokemony/srednie/s6.png"]').attr('src', 'https://i.imgur.com/kK8ut7g.png');
+            $('img[src="pokemony/s6.png"]').attr('src', 'https://i.imgur.com/kK8ut7g.png');
+            $('img[src="pokemony/srednie/ms6_1.png"]').attr('src', 'https://i.imgur.com/571CxGb.png');
+            $('img[src="pokemony/ms6_1.png"]').attr('src', 'https://i.imgur.com/571CxGb.png');
+        } else {
+            onReloadSidebar(function(){
+                this.find('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/ms3.png');
+                this.find('img[src="pokemony/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/srednie_ms3.png');
+            });
+
+            onReloadMain(function(){
+                this.find('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/ms3.png');
+                this.find('img[src="pokemony/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/srednie_ms3.png');
+            });
+
+            $('img[src="pokemony/srednie/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/ms3.png');
+            $('img[src="pokemony/ms3.png"]').attr('src', 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/srednie_ms3.png');
+        }
     }
     initPoprawaWygladuPokow();
 
@@ -2603,7 +2654,8 @@ function initPokeLifeScript(){
 
             $.ajax({
                 type: 'POST',
-                url: "gra/plecak.php"
+                url: "gra/plecak.php",
+                dataType : "text"
             }).done(function (response) {
                 var arrayUzywane = [];
                 $.each($(response).find('#plecak-trzymane > .row > div'), function (index, item) {
