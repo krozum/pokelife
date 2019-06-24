@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.28.1
+// @version      3.28.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -608,6 +608,7 @@ function initPokeLifeScript(){
         var blockGoButton = false;
 
         function initPokemonIcon() {
+            $('#setPokemon').remove();
             $('body').append('<div id="setPokemon" style="position: fixed; cursor: pointer; top: 0; left: 10px; z-index: 9999"></div>');
 
             IconSelect.COMPONENT_ICON_FILE_PATH = "";
@@ -1070,6 +1071,10 @@ function initPokeLifeScript(){
             blockGoButton = false;
             autoGo = false;
             $('#goAutoButton').html('AutoGO');
+        }
+
+        AutoGoSettings.refreshPokemonIcon = function(){
+            initPokemonIcon();
         }
     };
     initAutoGo();
@@ -3328,6 +3333,7 @@ function initPokeLifeScript(){
                     clearInterval(dots);
                     $.get('inc/stan.php', function(data) {
                         $("#sidebar").html(data);
+                        AutoGoSettings.refreshPokemonIcon();
                     })
                 });
             })
