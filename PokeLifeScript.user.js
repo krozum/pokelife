@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.28.2
+// @version      3.29
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -46,6 +46,7 @@
 // 26. initPrzypomnienieOPracy
 // 27. initSzybkaAktywnosc
 // 28. initZamianaPokemonow
+// 29. initDbclickToHide
 
 
 
@@ -947,11 +948,6 @@ function initPokeLifeScript(){
             updateConfig(config);
         });
 
-        $('body').off('dblclick', ':not(#settingsAutoGo *)');
-        $('body').on('dblclick', ':not(#settingsAutoGo *)', function () {
-            $('#settingsAutoGo').css('display', "none");
-        });
-
         $(document).on("click", "#goButton", function(){
             click();
         });
@@ -1768,11 +1764,6 @@ function initPokeLifeScript(){
                 $('#fastShop').css('display', "none");
                 $('#fastShop button').removeClass('confirm');
             }
-        });
-
-        $('body').off('dblclick', ':not(#fastShop *)');
-        $('body').on('dblclick', ':not(#fastShop *)', function () {
-            $('#fastShop').css('display', "none");
         });
 
         $(document).on("click", "#fastShop button:not('.confirm')", function (event) {
@@ -3116,11 +3107,6 @@ function initPokeLifeScript(){
             $('#fastJob').css('display', "none");
         });
 
-        $('body').off('dblclick', ':not(#fastJob *)');
-        $('body').on('dblclick', ':not(#fastJob *)', function () {
-            $('#fastJob').css('display', "none");
-        });
-
     };
     initSzybkaAktywnosc();
 
@@ -3359,4 +3345,22 @@ function initPokeLifeScript(){
         })
     }
     initZamianaPokemonow();
+
+
+
+    // **********************
+    //
+    // initDbclickToHide()
+    // Funkcja dodająca ukrywanie elementow na podwojne kliknięcie
+    //
+    function initDbclickToHide(){
+        $('body').off('dblclick', ':not(#fastJob *, #settingsAutoGo *, #fastShop *)');
+        $('body').on('dblclick', ':not(#fastJob, #fastJob *, #settingsAutoGo, #settingsAutoGo *, #fastShop, #fastShop *)', function () {
+            $('#fastShop').css('display', "none");
+            $('#fastJob').css('display', "none");
+            $('#settingsAutoGo').css('display', "none");
+        });
+    }
+    initDbclickToHide();
+
 }
