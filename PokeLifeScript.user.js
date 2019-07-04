@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.29.1
+// @version      3.29.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -3088,6 +3088,7 @@ function initPokeLifeScript(){
         $('#fastJob table').append('<col width="100"> <col width="80">');
         $('#fastJob table').append('<tr url=""><td><h5>Praca</h5></td> </tr>');
         $('#fastJob table').append('<tr url=""><td style="padding-top: 5px"><img style="width: 70px;" src="images/aktywnosci/zrywanie_jagod.jpg"></td> <td><button class="btn btn-akcja" href="aktywnosc.php?p=praca&amp;praca=2">Pracuj</button></td> </tr>');
+        $('#fastJob table').append('<tr url=""><td style="padding-top: 5px"><img style="width: 70px;" src="images/aktywnosci/praca_w_kopalni.jpg"></td> <td><button class="btn btn-akcja" href="aktywnosc.php?p=praca&amp;praca=3">Pracuj</button></td> </tr>');
         $('#fastJob table').append('<tr url=""><td><h5>Trening</h5></td> </tr>');
         $('#fastJob table').append('<tr url=""><td style="padding-top: 5px"><img style="width: 70px;" src="images/aktywnosci/trening_poczatkuj%C4%85cego.jpg"></td> <td><button class="btn btn-akcja" href="aktywnosc.php?p=trening&trening=0&postData%5B0%5D%5Bname%5D=druzyna_numer1&postData%5B0%5D%5Bvalue%5D=0">Trenuj</button></td> </tr>');
         $('#fastJob table').append('<tr url=""><td style="padding-top: 5px"><img style="width: 70px;" src="images/aktywnosci/zrownowazony_trening.jpg"></td> <td><button class="btn btn-akcja" href="aktywnosc.php?p=trening&amp;trening=1">Trenuj</button></td> </tr>');
@@ -3119,6 +3120,7 @@ function initPokeLifeScript(){
 
             ile++;
             if(document.getElementById('timerAktywnosci') != undefined){
+                document.title = godzin + ':' + minut + ':' + sekund;
                 document.getElementById('timerAktywnosci').innerHTML = godzin + ':' + minut + ':' + sekund;
             }
         }
@@ -3129,6 +3131,7 @@ function initPokeLifeScript(){
                 this.find('a[href="aktywnosc.php"]').after("<div id='timerAktywnosci'></div>");
             } else {
                 clearInterval(interval);
+                document.title = "PokeLife - Gra Pokemon Online";
             }
         })
 
