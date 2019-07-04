@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.29
+// @version      3.29.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -3106,6 +3106,41 @@ function initPokeLifeScript(){
             $(this).attr("disabled", false);
             $('#fastJob').css('display', "none");
         });
+
+        var ile;
+        var interval;
+        function liczCzas() {
+            var godzin = Math.floor((ile )/ 3600);
+            var minut = Math.floor((ile  - godzin * 3600) / 60);
+            var sekund = ile  - minut * 60 - godzin * 3600;
+            if (godzin < 10){ godzin = '0'+ godzin; }
+            if (minut < 10){ minut = '0' + minut; }
+            if (sekund < 10){ sekund = '0' + sekund; }
+
+            ile++;
+            if(document.getElementById('timerAktywnosci') != undefined){
+                document.getElementById('timerAktywnosci').innerHTML = godzin + ':' + minut + ':' + sekund;
+            }
+        }
+
+
+        onReloadSidebar(function(){
+            if(this.find('a[href="aktywnosc.php"]').length > 0){
+                this.find('a[href="aktywnosc.php"]').after("<div id='timerAktywnosci'></div>");
+            } else {
+                clearInterval(interval);
+            }
+        })
+
+        $.ajax({
+            type: 'POST',
+            url: "gra/aktywnosc.php"
+        }).done(function (response) {
+            if(typeof $(response).find('script:contains("liczCzas"):nth(1)').html() != undefined){
+                ile = $(response).find('script:contains("liczCzas"):nth(1)').html().split('(')[1].split(')')[0];
+                interval = setInterval(function(){liczCzas()}, 1000);
+            }
+        })
 
     };
     initSzybkaAktywnosc();
