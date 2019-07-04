@@ -27,9 +27,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
-3.29.1 (2019-07-04)
+3.29.2 (2019-07-04)
 * Podwójne kliknięcie poza panele (szybki sklep, praca, ustawienia auto go) ukrywa je
 * BETA: Pokazanie w sidebarze ile czasu sie jest juz w aktywnosci
+* Dodanie czasu pracy do tytułu strony, tak aby było widac w liście kart ile juz sie pracuje
 
 3.28 (2019-06-21)
 * Dodanie opcji szybkiej zmiany poków w druzynie na zdefiniowane
