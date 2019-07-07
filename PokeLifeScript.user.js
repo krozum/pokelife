@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.29.2
+// @version      3.29.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -3110,7 +3110,7 @@ function initPokeLifeScript(){
 
         var ile;
         var interval;
-        function liczCzas() {
+        function liczCzas(x) {
             var godzin = Math.floor((ile )/ 3600);
             var minut = Math.floor((ile  - godzin * 3600) / 60);
             var sekund = ile  - minut * 60 - godzin * 3600;
@@ -3118,7 +3118,12 @@ function initPokeLifeScript(){
             if (minut < 10){ minut = '0' + minut; }
             if (sekund < 10){ sekund = '0' + sekund; }
 
-            ile++;
+            if(ile == 0){
+                clearInterval(interval);
+                document.title = "PokeLife - Gra Pokemon Online";
+            }
+
+            ile = Number(ile) + Number(x);
             if(document.getElementById('timerAktywnosci') != undefined){
                 document.title = godzin + ':' + minut + ':' + sekund;
                 document.getElementById('timerAktywnosci').innerHTML = godzin + ':' + minut + ':' + sekund;
@@ -3141,7 +3146,11 @@ function initPokeLifeScript(){
         }).done(function (response) {
             if(typeof $(response).find('script:contains("liczCzas"):nth(1)').html() != undefined){
                 ile = $(response).find('script:contains("liczCzas"):nth(1)').html().split('(')[1].split(')')[0];
-                interval = setInterval(function(){liczCzas()}, 1000);
+                if($(response).find('center:contains("Pomagasz w PokeCentrum")').length > 0){
+                    interval = setInterval(function(){liczCzas(-1)}, 1000);
+                } else {
+                    interval = setInterval(function(){liczCzas(1)}, 1000);
+                }
             }
         })
 
