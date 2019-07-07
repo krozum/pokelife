@@ -27,6 +27,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.29.3 (2019-07-07)
+* Poprawka do odliczania czasu, w przypadku opienki odlicza do zera
+
 3.29.2 (2019-07-04)
 * Podwójne kliknięcie poza panele (szybki sklep, praca, ustawienia auto go) ukrywa je
 * BETA: Pokazanie w sidebarze ile czasu sie jest juz w aktywnosci
