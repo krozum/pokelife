@@ -11,6 +11,7 @@
 * Rozbudowany widok plecaka:
   - Ulepszony widok zakładki TM
   - Ulepszony widok zakładki Trzymane
+* Strona ze statystykami gdzie można podejrzeć sumę zarobionych yenów, zdobytego doświadczenia, jak i wszystkie wydarzenia w dziczy  
 * Rozbudowany sidebar:
   - Ostatnio 3 spotkane shiny przez graczy z informacją kiedy i gdzie
   - Widget z dostępnymi zadaniami
