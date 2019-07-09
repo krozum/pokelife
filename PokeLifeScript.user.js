@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.29.3
+// @version      3.30
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -122,6 +122,10 @@ $.getJSON("https://bra1ns.pl/pokelife/api/get_user.php?login=" + $('#wyloguj').p
             config.pokeSet3[6] = "none";
             updateConfig(config);
         }
+        if(config.useOnlyInNight == undefined){
+            config.useOnlyInNight = false;
+            updateConfig(config);
+        }
     } else {
         config.skinStyle = 3;
         config.useNiebieskieJagody = false;
@@ -130,6 +134,7 @@ $.getJSON("https://bra1ns.pl/pokelife/api/get_user.php?login=" + $('#wyloguj').p
         config.pokemonIconsIndex = 0;
         config.pokeballIconsIndex = 8;
         config.locationIconsIndex = 0;
+        config.useOnlyInNight = false;
         config.lastVersion = GM_info.script.version;
         config.set1 = new Object();
         config.set1[1] = "none";
@@ -926,6 +931,7 @@ function initPokeLifeScript(){
                 $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" '+(config.useCzerwoneNapoje == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj czerwonych napoi gdy zabraknie PA</label></td> </tr>');
                 $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieNapoje" name="autoUseNiebieskieNapoje" value="1" '+(config.useNiebieskieNapoje == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj niebieskich napoi gdy zabraknie PA</label></td> </tr>');
                 $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/niebieskie_jagody.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieJagody" name="autoUseNiebieskieJagody" value="1" '+(config.useNiebieskieJagody == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj niebieskich jagód gdy zabraknie PA</label></td> </tr>');
+                $('#settingsAutoGo table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" '+(config.useOnlyInNight == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
                 $('#settingsAutoGo').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Niebieskie napoje</b> -> <b>Czerwone napoje</b></p>');
             }
         });
@@ -945,6 +951,12 @@ function initPokeLifeScript(){
         $(document).on("click", "#autoUseCzerwoneNapoje", function(){
             var isChecked = $('#autoUseCzerwoneNapoje').prop('checked');
             config.useCzerwoneNapoje = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#useOnlyInNight", function(){
+            var isChecked = $('#useOnlyInNight').prop('checked');
+            config.useOnlyInNight = isChecked;
             updateConfig(config);
         });
 
@@ -1046,7 +1058,15 @@ function initPokeLifeScript(){
             if(config.useNiebieskieJagody == true){
                 array.push("gra/plecak.php?uzyj&rodzaj_przedmiotu=niebieskie_jagody&tylko_komunikat&ulecz_wszystkie&zjedz_max");
             }
-            probujWznowicAutoGo(array, autoGoBefore);
+            if(config.useOnlyInNight == true){
+                var d = new Date();
+                var h = d.getHours();
+                if (h >= 22 || h < 6) {
+                    probujWznowicAutoGo(array, autoGoBefore);
+                }
+            } else {
+                probujWznowicAutoGo(array, autoGoBefore);
+            }
         }
 
         $(window).keypress(function (e) {
@@ -3084,19 +3104,23 @@ function initPokeLifeScript(){
     function initSzybkaAktywnosc(){
         $('body').append('<div id="goFastJob" style="position: fixed;cursor: pointer;bottom: 9px;left: 105px;font-size: 20px;text-align: center;width: 25px;height: 25px;line-height: 25px;z-index: 9999;"><span style="color: ' + $('.panel-heading').css('background-color') + ';" class="glyphicon glyphicon-briefcase" aria-hidden="true"></span></div>');
         $('body').append('<div id="fastJob"></div>');
-        $('#fastJob').append('<table> <tr> <th></th> <th></th></tr></table>');
-        $('#fastJob table').append('<col width="100"> <col width="80">');
-        $('#fastJob table').append('<tr url=""><td><h5>Praca</h5></td> </tr>');
-        $('#fastJob table').append('<tr url=""><td style="padding-top: 5px"><img style="width: 70px;" src="images/aktywnosci/zrywanie_jagod.jpg"></td> <td><button class="btn btn-akcja" href="aktywnosc.php?p=praca&amp;praca=2">Pracuj</button></td> </tr>');
-        $('#fastJob table').append('<tr url=""><td style="padding-top: 5px"><img style="width: 70px;" src="images/aktywnosci/praca_w_kopalni.jpg"></td> <td><button class="btn btn-akcja" href="aktywnosc.php?p=praca&amp;praca=3">Pracuj</button></td> </tr>');
-        $('#fastJob table').append('<tr url=""><td><h5>Trening</h5></td> </tr>');
-        $('#fastJob table').append('<tr url=""><td style="padding-top: 5px"><img style="width: 70px;" src="images/aktywnosci/trening_poczatkuj%C4%85cego.jpg"></td> <td><button class="btn btn-akcja" href="aktywnosc.php?p=trening&trening=0&postData%5B0%5D%5Bname%5D=druzyna_numer1&postData%5B0%5D%5Bvalue%5D=0">Trenuj</button></td> </tr>');
-        $('#fastJob table').append('<tr url=""><td style="padding-top: 5px"><img style="width: 70px;" src="images/aktywnosci/zrownowazony_trening.jpg"></td> <td><button class="btn btn-akcja" href="aktywnosc.php?p=trening&amp;trening=1">Trenuj</button></td> </tr>');
 
 
         $(document).on("click", '#goFastJob', function () {
             if ($('#fastJob').css('display') == "none") {
                 $('#fastShop').css('display', "none");
+                $('#fastJob').html('');
+                $('#fastJob').append('<table> <tr> <th></th> <th></th><th></th></tr></table>');
+                $('#fastJob table').append('<col width="100"><col width="240"><col width="80">');
+                $('#fastJob table').append('<tr url=""><td><h5 style=" font-size: 20px; font-weight: 500; ">Praca</h5></td> </tr>');
+                $('#fastJob table').append('<tr url=""><td style="padding-top: 15px"><img style="width: 70px;" src="images/aktywnosci/asystent_w_pokesklepie.jpg"></td><td style=" padding-top: 15px; "><b>Zarobki</b>: średnie.<br> Wypłata: za 1h.<br> Max długość: 1.5 dnia.</td> <td style=" padding-top: 15px; "><button class="btn btn-akcja" href="aktywnosc.php?p=praca&amp;praca=0">Pracuj</button></td> </tr>');
+                $('#fastJob table').append('<tr url=""><td style="padding-top: 15px"><img style="width: 70px;" src="images/aktywnosci/sprzatanie_w_hodowli.jpg"></td><td style=" padding-top: 15px; "><b>Zarobki</b>: średnie.<br> Wypłata: za 4h. <br>Max długość: 3 dnia.</td> <td style=" padding-top: 15px; "><button class="btn btn-akcja" href="aktywnosc.php?p=praca&amp;praca=1">Pracuj</button></td> </tr>');
+                $('#fastJob table').append('<tr url=""><td style="padding-top: 15px"><img style="width: 70px;" src="images/aktywnosci/zrywanie_jagod.jpg"></td><td style=" padding-top: 15px; "><b>Zarobki</b>: znikome(jagody).<br> Wypłata: za 2h. <br>Max długość: 16h.</td> <td style=" padding-top: 15px; "><button class="btn btn-akcja" href="aktywnosc.php?p=praca&amp;praca=2">Pracuj</button></td> </tr>');
+                $('#fastJob table').append('<tr url=""><td style="padding-top: 15px"><img style="width: 70px;" src="images/aktywnosci/praca_w_kopalni.jpg"></td><td style=" padding-top: 15px; "><b>Zarobki</b>: niskie-najwyższe.<br> Wypłata: za 2h.<br> Max długość: 8h.</td> <td style=" padding-top: 15px; "><button class="btn btn-akcja" href="aktywnosc.php?p=praca&amp;praca=3">Pracuj</button></td> </tr>');
+                $('#fastJob table').append('<tr url=""><td><h5 style="padding-top: 35px; font-size: 20px; font-weight: 500; ">Trening</h5></td> </tr>');
+                $('#fastJob table').append('<tr url=""><td style="padding-top: 15px;  vertical-align: top;"><img style="width: 70px;" src="images/aktywnosci/trening_poczatkuj%C4%85cego.jpg"></td><td style=" padding-top: 15px; "><b>Trenowane Pokemony</b>: 1. <br>Doświadczenie na Pokemona: 6 za 15min.<br> Przywiązanie: średni wzrost. <br>Cykl: 15min.<br> Max długość: 36h.</td> <td style=" padding-top: 15px;  vertical-align: top; "><button class="btn btn-akcja" href="aktywnosc.php?p=trening&trening=0&postData%5B0%5D%5Bname%5D=druzyna_numer1&postData%5B0%5D%5Bvalue%5D='+AutoGoSettings.iconPokemon.getSelectedIndex()+'">Trenuj</button></td> </tr>');
+                $('#fastJob table').append('<tr url=""><td style="padding-top: 15px ; vertical-align: top;"><img style="width: 70px;" src="images/aktywnosci/zrownowazony_trening.jpg"></td><td style=" padding-top: 15px; "><b>Trenowane Pokemony</b>: 1 - 6. Doświadczenie na Pokemona: 3 za 30min.<br> Przywiązanie: brak zmiany.<br> Cykl: 30min. <br>Max długość: 16h.</td> <td style=" padding-top: 15px;  vertical-align: top; "><button class="btn btn-akcja" href="aktywnosc.php?p=trening&amp;trening=1">Trenuj</button></td> </tr>');
+                $('#fastJob table').append('<tr url=""><td style="padding-top: 15px ; vertical-align: top;"><img style="width: 70px;" src="images/aktywnosci/przyjacielskie_gry.jpg"></td><td style=" padding-top: 15px; "><b>Trenowane Pokemony</b>: 1. Doświadczenie na Pokemona: 3 za 30min.<br> Przywiązanie: szybki wzrost.<br> Cykl: 30min.<br> Max długość: 32h.</td> <td style=" padding-top: 15px;  vertical-align: top; "><button class="btn btn-akcja" href="aktywnosc.php?p=trening&amp;trening=2&postData%5B0%5D%5Bname%5D=druzyna_numer1&postData%5B0%5D%5Bvalue%5D='+AutoGoSettings.iconPokemon.getSelectedIndex()+'">Trenuj</button></td> </tr>');
                 $('#fastJob').css('display', "block");
             } else {
                 $('#fastJob').css('display', "none");
@@ -3144,7 +3168,7 @@ function initPokeLifeScript(){
             type: 'POST',
             url: "gra/aktywnosc.php"
         }).done(function (response) {
-            if(typeof $(response).find('script:contains("liczCzas"):nth(1)').html() != undefined){
+            if($(response).find('script:contains("liczCzas"):nth(1)').length > 0){
                 ile = $(response).find('script:contains("liczCzas"):nth(1)').html().split('(')[1].split(')')[0];
                 if($(response).find('center:contains("Pomagasz w PokeCentrum")').length > 0){
                     interval = setInterval(function(){liczCzas(-1)}, 1000);
