@@ -37,7 +37,7 @@ Changelog
 * Dodanie opcji "Uzywaj wznawiania PA tylko pomiędzy 22-6"
 
 3.29.3 (2019-07-07)
-* Poprawka do odliczania czasu, w przypadku opienki odlicza do zera
+* Poprawka do odliczania czasu, w przypadku opieki odlicza do zera
 
 3.29.2 (2019-07-04)
 * Podwójne kliknięcie poza panele (szybki sklep, praca, ustawienia auto go) ukrywa je
