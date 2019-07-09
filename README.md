@@ -3,20 +3,24 @@
 * AutoGo czyli automatyczne wyklinanie punktów w wybraną dzicz:
   - Wybór w którą dzicz będzie klikał
   - Wybór jakiego pokemona będzie używał
+  - Wybór pokeballa jakiego będzie rzucał, w tym opcje automatycznego wybierania balli zaleznie od pokemona z którym walczymy
   - Automatyczne leczenie
   - Zatrzymuje się, gdy spotka Shiny Pokemona
   - Zatrzymywanie sie, gdy spotka pokemona niezłapanego
+  - Opcja automatycznego uzywania Niebieskich napoi, jagód aby zrobić limity.
 * Rozbudowany widok plecaka:
-  - Nowy widok zakładki TM<br />
-  [![N|Solid](https://i.imgur.com/rOUR8ZD.png)](https://github.com/krozum/pokelife)
-* Aktualnie dostepne zadania widoczne na sidebarze<br />
-[![N|Solid](https://i.imgur.com/bnEjHrY.png)](https://github.com/krozum/pokelife)
-* Ostatnie 3 spotkane shiny w sidebarze<br />
-[![N|Solid](https://i.imgur.com/0ftDpk0.png)](https://github.com/krozum/pokelife)
-* Dzienne statystyki<br />
-[![N|Solid](https://i.imgur.com/yMtuZ8E.png)](https://github.com/krozum/pokelife)
-* Szybki sklep<br />
-[![N|Solid](https://i.imgur.com/NHHmCQM.png)](https://github.com/krozum/pokelife)
+  - Ulepszony widok zakładki TM
+  - Ulepszony widok zakładki Trzymane
+* Rozbudowany sidebar:
+  - Ostatnio 3 spotkane shiny przez graczy z informacją kiedy i gdzie
+  - Widget z dostępnymi zadaniami
+  - Informacja o pokemonie dnia
+  - Gdy jest włączona jakaś aktywność pokazuje ile juz czasu spędziliśmy/zostało
+* Szybki sklep gdzie mozna kupic potrzebne rzeczy bez wychodzenia z danego widoku
+* Szybka aktywośc gdzie można rozpocząć Prace lub Trening jednym kliknięciem
+* Automatyczne wbijanie osiągnięcia szkoleniowiec i jeszcze dokładke
+* Ulepszony graficznie widok
+[![N|Solid](https://i.imgur.com/LqM5fs7.png)](https://github.com/krozum/pokelife)
 
 Instrukcja instalacji
 ---------
