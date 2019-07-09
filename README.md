@@ -27,6 +27,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.30 (2019-07-09)
+* Ulepszony widok szybkiej pracy
+* Dodanie opcji "Uzywaj wznawiania PA tylko pomiędzy 22-6"
+
 3.29.3 (2019-07-07)
 * Poprawka do odliczania czasu, w przypadku opienki odlicza do zera
 
