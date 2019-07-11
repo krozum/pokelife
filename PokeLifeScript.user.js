@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.30.2
+// @version      3.31
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -645,6 +645,25 @@ function initPokeLifeScript(){
                 }
             });
 
+            selectPokemon.push({
+                'iconFilePath': 'https://cdn0.iconfinder.com/data/icons/seo-smart-pack/128/grey_new_seo-05-512.png',
+                'iconValue': function(){
+                    if(Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 20){
+                        return "&wybierz_pokemona=" + config.pok20;
+                    }
+                    if(Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 40){
+                        return "&wybierz_pokemona=" + config.pok40;
+                    }
+                    if(Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 60){
+                        return "&wybierz_pokemona=" + config.pok60;
+                    }
+                    if(Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 80){
+                        return "&wybierz_pokemona=" + config.pok80;
+                    }
+                    return "&wybierz_pokemona=" + config.pok100;
+                }
+            });
+
             AutoGoSettings.iconPokemon.refresh(selectPokemon);
             AutoGoSettings.iconPokemon.setSelectedIndex(config.pokemonIconsIndex);
 
@@ -925,7 +944,7 @@ function initPokeLifeScript(){
             if($('#settingsAutoGo').length > 0){
                 $('#settingsAutoGo').remove();
             } else {
-                $('body').append('<div id="settingsAutoGo" style="padding: 10px; position:fixed;top: 60px;right: 69px;width: 400px;background: white;opacity: 0.9;border: 3px dashed #ffed14;z-index: 999;"></div>');
+                $('body').append('<div id="settingsAutoGo" style="padding: 10px; position:fixed;top: 60px;right: 69px;width: 400px;background: white;opacity: 1;border: 3px dashed #ffed14;z-index: 999;"></div>');
                 $('#settingsAutoGo').append('<table> <tr> <th></th> <th></th> <th></th> </tr></table>');
                 $('#settingsAutoGo table').append('<col width="60"><col width="20"><col width="300">');
                 $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" '+(config.useCzerwoneNapoje == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj czerwonych napoi gdy zabraknie PA</label></td> </tr>');
@@ -933,7 +952,43 @@ function initPokeLifeScript(){
                 $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/niebieskie_jagody.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieJagody" name="autoUseNiebieskieJagody" value="1" '+(config.useNiebieskieJagody == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj niebieskich jagód gdy zabraknie PA</label></td> </tr>');
                 $('#settingsAutoGo table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" '+(config.useOnlyInNight == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
                 $('#settingsAutoGo').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Niebieskie napoje</b> -> <b>Czerwone napoje</b></p>');
+                $('#settingsAutoGo').append('<div id="exp_mod_settings"></div>');
+                $('#exp_mod_settings').append('<hr><p style=" margin: 0 0 5px; ">Pokemony 1-20</p><select data-order-id="20" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
+                $('#exp_mod_settings').append('<p style=" margin: 0 0 5px; ">Pokemony 21-40</p><select data-order-id="40" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
+                $('#exp_mod_settings').append('<p style=" margin: 0 0 5px; ">Pokemony 41-60</p><select data-order-id="60" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
+                $('#exp_mod_settings').append('<p style=" margin: 0 0 5px; ">Pokemony 61-80</p><select data-order-id="80" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
+                $('#exp_mod_settings').append('<p style=" margin: 0 0 5px; ">Pokemony 81-100</p><select data-order-id="100" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
+
+                $.each($('#sidebar .stan-pokemon:odd()'), function (index, item) {
+                    $('.list_of_poks_in_team').append('<option value="'+index+'">'+$(item).find('b').html()+'</option>');
+                })
+
+                $('.list_of_poks_in_team[data-order-id="20"] option[value="'+config.pok20+'"]').prop("selected", true);
+                $('.list_of_poks_in_team[data-order-id="40"] option[value="'+config.pok40+'"]').prop("selected", true);
+                $('.list_of_poks_in_team[data-order-id="60"] option[value="'+config.pok60+'"]').prop("selected", true);
+                $('.list_of_poks_in_team[data-order-id="80"] option[value="'+config.pok80+'"]').prop("selected", true);
+                $('.list_of_poks_in_team[data-order-id="100"] option[value="'+config.pok100+'"]').prop("selected", true);
             }
+        });
+
+        $(document).on("change", ".list_of_poks_in_team", function(event){
+            var orderId = $(this).data('order-id');
+            if(orderId == 20){
+                config.pok20 = Number($(this).val());
+            }
+            if(orderId == 40){
+                config.pok40 = Number($(this).val());
+            }
+            if(orderId == 60){
+                config.pok60 = Number($(this).val());
+            }
+            if(orderId == 80){
+                config.pok80 = Number($(this).val());
+            }
+            if(orderId == 100){
+                config.pok100 = Number($(this).val());
+            }
+            updateConfig(config);
         });
 
         $(document).on("click", "#autoUseNiebieskieJagody", function(event){
