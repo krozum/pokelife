@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.30.1
+// @version      3.30.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1552,6 +1552,15 @@ function initPokeLifeScript(){
                         var wszystkie = true;
 
                         $.each(pokemonData[region], function(index, value) {
+                            if(name == 'laka'){
+                             name = 'Łąka';
+                            }
+                            if(name == 'wybrzeze'){
+                             name = 'Wybrzeże';
+                            }
+                            if(name == 'gory'){
+                             name = 'Góry';
+                            }
                             if(value.wystepowanie == name && value.do_zlapania == 1 && kolekcjaData[region][value.id] == false){
                                 wszystkie = false;
                                 html = html + '<div class="col-xs-2" style="display: inline; float: left; padding: 0; margin-top: 5px; text-align: center;"><img style="margin-bottom: 5px; text-align: center; max-width: 80%;" src="https://gra.pokelife.pl/pokemony/niezdobyte/'+value.id+'.png"><p style="margin: 0; margin-top: 5px; margin-bottom: 5px">'+value.name+'</p></div>';
