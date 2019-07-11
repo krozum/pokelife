@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.31
+// @version      3.31.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -126,6 +126,14 @@ $.getJSON("https://bra1ns.pl/pokelife/api/get_user.php?login=" + $('#wyloguj').p
             config.useOnlyInNight = false;
             updateConfig(config);
         }
+        if(config.pok20 == undefined){
+            config.pok20 = 0;
+            config.pok40 = 0;
+            config.pok60 = 0;
+            config.pok80 = 0;
+            config.pok100 = 0;
+            updateConfig(config);
+        }
     } else {
         config.skinStyle = 3;
         config.useNiebieskieJagody = false;
@@ -157,6 +165,11 @@ $.getJSON("https://bra1ns.pl/pokelife/api/get_user.php?login=" + $('#wyloguj').p
         config.set3[4] = "none";
         config.set3[5] = "none";
         config.set3[6] = "none";
+        config.pok20 = 0;
+        config.pok40 = 0;
+        config.pok60 = 0;
+        config.pok80 = 0;
+        config.pok100 = 0;
         updateConfig(config);
     }
     $.getJSON("https://raw.githubusercontent.com/krozum/pokelife/master/pokemon.json", {
