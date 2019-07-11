@@ -32,6 +32,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.30.2 (2019-07-11)
+* Poprawka do informacji o dziczy w Kanto
+
 3.30 (2019-07-09)
 * Ulepszony widok szybkiej pracy
 * Dodanie opcji "Uzywaj wznawiania PA tylko pomiędzy 22-6"
