@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.31.1
+// @version      3.31.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -817,6 +817,8 @@ function initPokeLifeScript(){
                                 return '&zlap_pokemona=safariballe';
                             } else if($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc2.png"]').length > 0 && $(previousPageContent).find('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 15){
                                 return '&zlap_pokemona=safariballe';
+                            } else if ($('img[src="images/inne/pokeball_miniature2.png"]').length > 0)  {
+                                return '&zlap_pokemona=safariballe';
                             } else if ($('form[action="dzicz.php?zlap"] label[data-original-title="Safariball"]').length > 0)  {
                                 $('button:contains("Pomiń i szukaj dalej")').click();
                                 return "";
@@ -931,9 +933,16 @@ function initPokeLifeScript(){
                             $('#goAutoButton').html('AutoGO');
                             requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now(), null);
                         } else if ($('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
-                            console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
-                            autoGo = false;
-                            $('#goAutoButton').html('AutoGO');
+                            if($('#setPokeball .selected-box .selected-icon img').attr('src') == "images/pokesklep/safariballe.jpg"){
+                                console.log('PokeLifeScript: spotkany niezłapany pokemona');
+                                console.log('PokeLifeScript: atakuje pokemona');
+                                var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
+                                $('button[href="' + url + '"]').trigger('click');
+                            } else {
+                                console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
+                                autoGo = false;
+                                $('#goAutoButton').html('AutoGO');
+                            }
                         } else if ($('.dzikipokemon-background-normalny').length == 1) {
                             console.log('PokeLifeScript: atakuje pokemona');
                             var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
