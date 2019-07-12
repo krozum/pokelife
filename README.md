@@ -32,6 +32,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.31.2 (2019-07-12)
+* Poprawka do safari, nie zatrzymuje sie juz przy niezlapanych tylko sam rzuca safariballa w nie jak jest ustawiony safariball w selectPokeball
+
 3.31 (2019-07-11)
 * Dodanie exp moda, wybiera pokemona zaleznie od lvl przeciwnika
 
