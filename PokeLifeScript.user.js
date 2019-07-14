@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.32
+// @version      3.32.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -814,8 +814,13 @@ function initPokeLifeScript(){
                 {
                     'iconFilePath': "images/pokesklep/safariballe.jpg",
                     'iconValue': function(){
-                        if($(previousPageContent).find('.dzikipokemon-background-normalny img[src="src="images/inne/pokeball_miniature2.png""]').length > 0){
-                            return '&zlap_pokemona=safariballe';
+                        if(Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1){
+                            if($(previousPageContent).find('.dzikipokemon-background-normalny img[src="src="images/inne/pokeball_miniature2.png""]').length > 0){
+                                return '&zlap_pokemona=safariballe';
+                            } else {
+                                $('button:contains("Pomiń i szukaj dalej")').click();
+                                return "";
+                            }
                         } else {
                             $('button:contains("Pomiń i szukaj dalej")').click();
                             return "";
