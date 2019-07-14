@@ -32,6 +32,12 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.32 (2019-07-14)
+* Kolejne zmiany do balli:
+  * Rozdzielenie safariballi na dwa, ten co sie zatrzymuje gdy spotka złapanego i ten co rzuca w niezłapane safariballe
+  * Levelballe, rzuca od teraz we wszystkie z poziomem złapania I 
+  * Zmiana do nightballi, gdy była 22-6 to zawsze rzzucał night balle, teraz levelballe oraz swarmballe mają priorytet nad nightballami
+
 3.31.2 (2019-07-12)
 * Poprawka do safari, nie zatrzymuje sie juz przy niezlapanych tylko sam rzuca safariballa w nie jak jest ustawiony safariball w selectPokeball
 
