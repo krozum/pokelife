@@ -32,6 +32,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.32.2 (2019-07-21)
+* Fix dla safarballi
+
 3.32 (2019-07-14)
 * Kolejne zmiany do balli:
   * Rozdzielenie safariballi na dwa, ten co sie zatrzymuje gdy spotka złapanego i ten co rzuca w niezłapane safariballe
