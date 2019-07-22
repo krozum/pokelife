@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.32.2
+// @version      3.32.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -3227,12 +3227,13 @@ function initPokeLifeScript(){
         });
 
         $(document).on("click", '#fastJob button', function () {
-            $(this).attr("disabled", false);
             $('#fastJob').css('display', "none");
+            setTimeout(function(){ setTimer(); }, 3000);
         });
 
         var ile;
         var interval;
+        var interval2;
         function liczCzas(x) {
             var godzin = Math.floor((ile )/ 3600);
             var minut = Math.floor((ile  - godzin * 3600) / 60);
@@ -3247,9 +3248,10 @@ function initPokeLifeScript(){
             }
 
             ile = Number(ile) + Number(x);
-            if(document.getElementById('timerAktywnosci') != undefined){
+            var akt = document.getElementById('timerAktywnosci');
+            if(akt != undefined){
                 document.title = godzin + ':' + minut + ':' + sekund;
-                document.getElementById('timerAktywnosci').innerHTML = godzin + ':' + minut + ':' + sekund;
+                akt.innerHTML = godzin + ':' + minut + ':' + sekund;
             }
         }
 
@@ -3259,23 +3261,46 @@ function initPokeLifeScript(){
                 this.find('a[href="aktywnosc.php"]').after("<div id='timerAktywnosci'></div>");
             } else {
                 clearInterval(interval);
+                clearInterval(interval2);
                 document.title = "PokeLife - Gra Pokemon Online";
             }
         })
 
-        $.ajax({
-            type: 'POST',
-            url: "gra/aktywnosc.php"
-        }).done(function (response) {
-            if($(response).find('script:contains("liczCzas"):nth(1)').length > 0){
-                ile = $(response).find('script:contains("liczCzas"):nth(1)').html().split('(')[1].split(')')[0];
-                if($(response).find('center:contains("Pomagasz w PokeCentrum")').length > 0){
-                    interval = setInterval(function(){liczCzas(-1)}, 1000);
-                } else {
-                    interval = setInterval(function(){liczCzas(1)}, 1000);
+        function setTimer(){
+            $.ajax({
+                type: 'POST',
+                url: "gra/aktywnosc.php"
+            }).done(function (response) {
+                $("#sidebar").find('a[href="aktywnosc.php"]').after("<div id='timerAktywnosci'></div>");
+
+                if($(response).find('script:contains("liczCzas"):nth(1)').length > 0){
+                    ile = $(response).find('script:contains("liczCzas"):nth(1)').html().split('(')[1].split(')')[0];
+                    if($(response).find('center:contains("Pomagasz w PokeCentrum")').length > 0){
+                        interval = setInterval(function(){liczCzas(-1)}, 1000);
+                    } else {
+                        interval = setInterval(function(){liczCzas(1)}, 1000);
+                    }
                 }
-            }
-        })
+
+                if($(response).find('.alert-info strong:contains("Praca w Kopalni")').length > 0){
+                    console.log(ile);
+                    interval2 = setInterval(function(){
+                        console.log(ile);
+                        if(ile > 7210){
+                            reloadMain("#glowne_okno", 'gra/aktywnosc.php?p=praca&przerwij');
+                            clearInterval(interval);
+                            clearInterval(interval2);
+                            document.title = "PokeLife - Gra Pokemon Online";
+                            reloadMain("#glowne_okno", 'gra/aktywnosc.php?p=praca&praca=3');
+                            setTimeout(function(){ setTimer(); }, 3000);
+                        } else {
+                            reloadMain("#glowne_okno", 'gra/statystyki.php');
+                        }
+                    }, 20000);
+                }
+            })
+        }
+        setTimer();
 
     };
     initSzybkaAktywnosc();
