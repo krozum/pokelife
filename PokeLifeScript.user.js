@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.32.3
+// @version      3.33
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -3287,12 +3287,14 @@ function initPokeLifeScript(){
                     interval2 = setInterval(function(){
                         console.log(ile);
                         if(ile > 7210){
-                            reloadMain("#glowne_okno", 'gra/aktywnosc.php?p=praca&przerwij');
                             clearInterval(interval);
                             clearInterval(interval2);
                             document.title = "PokeLife - Gra Pokemon Online";
-                            reloadMain("#glowne_okno", 'gra/aktywnosc.php?p=praca&praca=3');
-                            setTimeout(function(){ setTimer(); }, 3000);
+                            reloadMain("#glowne_okno", 'gra/aktywnosc.php?p=praca&przerwij', function(){
+                                reloadMain("#glowne_okno", 'gra/aktywnosc.php?p=praca&praca=3', function(){
+                                    setTimeout(function(){ setTimer(); }, 3000);
+                                });
+                            });
                         } else {
                             reloadMain("#glowne_okno", 'gra/statystyki.php');
                         }
