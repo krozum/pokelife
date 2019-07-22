@@ -32,6 +32,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.33 (2019-07-22)
+* Poprawki do automatycznego odnawiania pracy w kopalni
+
 3.32.3 (2019-07-22)
 * Funkcja testowa: po wybraniu szybkiej aktywnosci - praca w kopalni automatycznie będzie odświeżał stronę co 20s aby utrzymać sesje i w przypadku gdy czas przekroczy 2h zakończy prace i zacznie od nowa
 
