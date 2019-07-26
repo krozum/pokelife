@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.33
+// @version      3.34
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -276,7 +276,7 @@ function reloadMain(selector, url, callback, callback2){
         if(callback2 != undefined && callback2 != null){
             callback2.call(THAT, url);
         }
-        $(""+selector).html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',""));
+        $(""+selector).html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"").replace("http://api.jquery.com/scripts/events.js", "https://gra.pokelife.pl/js/zegar.js"));
         $.get('inc/stan.php', function(data) {
             $("#sidebar").html(data);
             window.afterReloadMainFunctions.forEach(function(item) {
@@ -3109,7 +3109,7 @@ function initPokeLifeScript(){
     function initSzybkaWalkaWLidze(){
         onReloadMain(function(){
             var THAT = this;
-            if (this.find('.panel-heading:contains("Ranking")').length > 0) {
+            if (this.find('.panel-heading:contains("Ranking")').length > 0 && this.find('img[src="images/odznaki/liga/50/1.png"]').length > 0) {
                 this.find(".pagination:even()").before('<button id="addButtonToFastFights" style="display: block; text-align: center; margin: 0 auto; margin-top: 20px; background: #337ab7; border: none; border-radius: 3px; padding: 5px 10px; color: white; line-height: 25px; ">Dodaj przycisk do szybkich walk</button>');
             }
         })
@@ -3234,7 +3234,7 @@ function initPokeLifeScript(){
         var ile;
         var interval;
         var interval2;
-        function liczCzas(x) {
+        function liczCzas2(x) {
             var godzin = Math.floor((ile )/ 3600);
             var minut = Math.floor((ile  - godzin * 3600) / 60);
             var sekund = ile  - minut * 60 - godzin * 3600;
@@ -3254,6 +3254,8 @@ function initPokeLifeScript(){
                 akt.innerHTML = godzin + ':' + minut + ':' + sekund;
             }
         }
+
+
 
 
         onReloadSidebar(function(){
@@ -3276,28 +3278,32 @@ function initPokeLifeScript(){
                 if($(response).find('script:contains("liczCzas"):nth(1)').length > 0){
                     ile = $(response).find('script:contains("liczCzas"):nth(1)').html().split('(')[1].split(')')[0];
                     if($(response).find('center:contains("Pomagasz w PokeCentrum")').length > 0){
-                        interval = setInterval(function(){liczCzas(-1)}, 1000);
+                        interval = setInterval(function(){liczCzas2(-1)}, 1000);
                     } else {
-                        interval = setInterval(function(){liczCzas(1)}, 1000);
+                        interval = setInterval(function(){liczCzas2(1)}, 1000);
                     }
                 }
 
                 if($(response).find('.alert-info strong:contains("Praca w Kopalni")').length > 0){
-                    console.log(ile);
                     interval2 = setInterval(function(){
-                        console.log(ile);
-                        if(ile > 7210){
-                            clearInterval(interval);
-                            clearInterval(interval2);
-                            document.title = "PokeLife - Gra Pokemon Online";
-                            reloadMain("#glowne_okno", 'gra/aktywnosc.php?p=praca&przerwij', function(){
-                                reloadMain("#glowne_okno", 'gra/aktywnosc.php?p=praca&praca=3', function(){
-                                    setTimeout(function(){ setTimer(); }, 3000);
+                        $.ajax({
+                            type: 'POST',
+                            url: "gra/aktywnosc.php",
+                            dataType: "text"
+                        }).done(function (response) {
+                            var time = Number((response.split('liczCzas(')[3].split(')')[0]));
+                            console.log(time);
+                            if(time > 7300){
+                                clearInterval(interval);
+                                clearInterval(interval2);
+                                document.title = "PokeLife - Gra Pokemon Online";
+                                reloadMain("#glowne_okno", 'gra/aktywnosc.php?p=praca&przerwij', function(){
+                                    reloadMain("#glowne_okno", 'gra/aktywnosc.php?p=praca&praca=3', function(){
+                                        setTimeout(function(){ setTimer(); }, 3000);
+                                    });
                                 });
-                            });
-                        } else {
-                            reloadMain("#glowne_okno", 'gra/statystyki.php');
-                        }
+                            }
+                        })
                     }, 20000);
                 }
             })
