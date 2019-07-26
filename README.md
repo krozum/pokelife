@@ -32,6 +32,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.34 (2019-07-26)
+* Kolejne poprawki do automatycznego odnawiania pracy w kopalni
+* Fix na ranking i dodawanie przycisku do szybkich walk
+
 3.33 (2019-07-22)
 * Poprawki do automatycznego odnawiania pracy w kopalni
 
