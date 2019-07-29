@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.34.2
+// @version      3.35
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1442,6 +1442,15 @@ function initPokeLifeScript(){
                 dzicz = url.split('miejsce=')[1].split('&')[0];
             }
             var DATA = this;
+
+            console.log(url);
+            if(url == "gra/aktywnosc.php?p=praca&przerwij"){
+                if(DATA.find("p.alert-success:contains('Otrzymujesz wynagrodzenie w wysokości')").length > 0){
+                    var yeny = DATA.find("p.alert-success b").html().split(' ')[0].replace(/\./g, '');
+                    updateStats("zarobek_z_pracy", yeny);
+                }
+            }
+
 
             if(DATA.find("p.alert-info:contains('Niestety, tym razem nie spotkało cię nic interesującego.')").length > 0){
                 console.log('PokeLifeScript: pusta wyprawa');
