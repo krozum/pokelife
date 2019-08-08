@@ -249,3 +249,13 @@ a {
 #pokemony-druzyna tr td {
     padding-bottom: 25px !important;
 }
+#stowarzyszenieWidget .col-xs-12 {
+    padding: unset;
+}
+#stowarzyszenieWidget .progress {
+    padding: unset;
+    margin-bottom: 2px;
+}
+#stowarzyszenieWidget .progress-bar .progress-bar-info{
+    padding: unset;
+}
