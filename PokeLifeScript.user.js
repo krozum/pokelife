@@ -47,7 +47,7 @@
 // 27. initSzybkaAktywnosc
 // 28. initZamianaPokemonow
 // 29. initDbclickToHide
-
+// 29. initStowarzyszeniaWidget
 
 
 
@@ -1319,8 +1319,6 @@ function initPokeLifeScript(){
         });
     }
     initZadaniaWidget();
-
-
 
     // **********************
     //
@@ -3575,5 +3573,65 @@ function initPokeLifeScript(){
         });
     }
     initDbclickToHide();
+
+        
+    // **********************
+    //
+    // initZadaniaWidget
+    // Funkcja pokazująca aktualne zadania w sidebar
+    //
+    // **********************
+    function initStowarzyszeniaWidget(){
+        var stowarzyszenieWidget;
+
+        function refreshStowarzyszeniaWidget(){
+            $.ajax({
+                type: 'POST',
+                url: "gra/stowarzyszenie.php"
+            }).done(function (response) {
+                var html = '<div id="stowarzyszenieWidget" class="panel panel-primary"><div class="panel-heading">Stan Stowarzyszenia<div class="navbar-right"><span id="refreshStowarzyszeniaWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
+                var stats = $(response).find('#stow-budowa div.row.text-center');
+                if(stats != undefined && stats.length > 0){
+                    let yenn = $(stats[0]).find('div.col-xs-7')[0].innerText
+                              .replace("Yen:","")
+                              .replace("¥","")
+                              .trim();
+
+                    let mats = $(stats[0]).find('div.col-xs-5')[0].innerText
+                              .replace("Materiały:","")
+                              .trim();
+                    html = html + '<tr><td><div style="text-align:center">'+ yenn +'<img src="images/yen.png" class="visible-lg-inline" style="width: 26px;">  <img src="images/pokesklep/materialy_budowlane.jpg" class="visible-lg-inline" style="width: 26px;"> '+mats+' </div></tr></td>';
+                }
+
+                var activeBuild =$(response).find('div[href="stowarzyszenie.php?p=3&anuluj_budowe"] .col-xs-8')
+                if(activeBuild != undefined && activeBuild.length > 0){
+                    html = html + '<tr><td>'+$(activeBuild[0]).find('h3')[0].innerText + '</tr></td>';
+                    let text = activeBuild[0].innerText;
+                    let indexOf = text.indexOf("Do końca zostało");
+                    let indexOfEnd = text.indexOf("h");
+                    html = html + '<tr><td>'+text.substring(indexOf,indexOfEnd+1)+ '</tr></td>';
+                    html = html + '<tr><td>'+$(activeBuild[0]).find('div')[0].innerHTML + '</tr></td>';
+                    console.log(activeBuild);
+                }
+                else{
+                    html = html + '<tr><td> Brak budynków w budowie</tr></td>';
+                }
+                html = html + '</tbody></table></div>';
+                stowarzyszenieWidget = html;
+                $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+            })
+        }
+        refreshStowarzyszeniaWidget();
+
+        onReloadSidebar(function(){
+            this.find(".panel-heading:contains('Drużyna')").parent().after(stowarzyszenieWidget);
+        })
+
+        $(document).on("click", "#refreshStowarzyszeniaWidget", function (event) {
+            refreshStowarzyszeniaWidget();
+            $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+        });
+    }
+    initStowarzyszeniaWidget();
 
 }
