@@ -3600,7 +3600,7 @@ function initPokeLifeScript(){
                     let mats = $(stats[0]).find('div.col-xs-5')[0].innerText
                               .replace("Materiały:","")
                               .trim();
-                    html = html + '<tr><td><div style="text-align:center">'+ yenn +'<img src="images/yen.png" class="visible-lg-inline" style="width: 26px;">  <img src="images/pokesklep/materialy_budowlane.jpg" class="visible-lg-inline" style="width: 26px;"> '+mats+' </div></tr></td>';
+                    html = html + '<tr><td><div style="text-align:center">'+ yenn +'<img src="images/yen.png" class="visible-lg-inline" style="width: 26px;margin-right:10px;margin-left:5px">  <img src="images/pokesklep/materialy_budowlane.jpg" class="visible-lg-inline" style="width: 26px;"> '+mats+' </div></tr></td>';
                 }
 
                 var activeBuild =$(response).find('div[href="stowarzyszenie.php?p=3&anuluj_budowe"] .col-xs-8')
