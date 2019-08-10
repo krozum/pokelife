@@ -32,6 +32,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.36.1 (2019-08-10)
+* Dodanie widgetu Stowarzyszenia
+* Dodanie pokemona dnia Stowarzyszenia
+
 3.34 (2019-07-26)
 * Kolejne poprawki do automatycznego odnawiania pracy w kopalni
 * Fix na ranking i dodawanie przycisku do szybkich walk
