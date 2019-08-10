@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.36.1
+// @version      3.36.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -48,6 +48,7 @@
 // 28. initZamianaPokemonow
 // 29. initDbclickToHide
 // 29. initStowarzyszeniaWidget
+// 30. initPoprawkiDoCzatu
 
 
 
@@ -76,11 +77,13 @@ var AutoGoSettings = new Object();
 var previousPageContent = null;
 var pokemonData;
 var region;
+var lastSeeShoutId;
 
 $.getJSON("https://bra1ns.pl/pokelife/api/get_user.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now(), {
     format: "json"
 }).done(function (data) {
     if(data.user != null && data.user.config != ""){
+        lastSeeShoutId = data.user.last_chat_message_id;
         config = JSON.parse(data.user.config);
         if(config.set3 == undefined){
             config.set3 = new Object();
@@ -3584,8 +3587,8 @@ function initPokeLifeScript(){
 
     // **********************
     //
-    // initZadaniaWidget
-    // Funkcja pokazująca aktualne zadania w sidebar
+    // initStowarzyszeniaWidget
+    // Funkcja pokazująca dane dootyczace stowarzyszenia
     //
     // **********************
     function initStowarzyszeniaWidget(){
@@ -3648,5 +3651,54 @@ function initPokeLifeScript(){
         });
     }
     initStowarzyszeniaWidget();
+
+
+    // **********************
+    //
+    // initPoprawkiDoCzatu
+    // Funkcja wprowadzajaca poprawki do czatu
+    //
+    // **********************
+    function initPoprawkiDoCzatu(){
+        let nieprzeczytane = 0;
+
+
+        $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a span').remove();
+        $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a').append('<span style=" background: #d45b5b; border-radius: 3px; padding: 3px 8px; margin-left: 5px; color: white; ">0</span>');
+
+        $(document).on("click", '#chat-inner .nav-tabs', function (event) {
+            nieprzeczytane = 0;
+            $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a span').remove();
+            $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a').append('<span style=" background: #d45b5b; border-radius: 3px; padding: 3px 8px; margin-left: 5px; color: white; ">0</span>');
+
+
+            lastSeeShoutId = $('#shout_list li:last').attr('id');
+
+            if(lastSeeShoutId != 0 && lastSeeShoutId !== "0" && lastSeeShoutId !== "undefined" && lastSeeShoutId !== undefined){
+                console.log("Przyczytałem nowe wiadomości");
+                requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_last_chat_id.php?last_chat_id=" + lastSeeShoutId + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim(), null);
+            }
+        });
+
+        (function($) {
+            var origAppend = $.fn.append;
+
+            $.fn.append = function () {
+                if($(arguments[0]).find('span.shout_post_name').length > 0){
+                    return origAppend.apply(this, arguments).trigger("append-room");
+                } else {
+                    return origAppend.apply(this, arguments);
+                }
+            };
+        })(jQuery);
+
+        $("#shouts ul").bind("append-room", function() {
+            nieprzeczytane++;
+            $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a span').remove();
+            $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a').append('<span style=" background: #d45b5b; border-radius: 3px; padding: 3px 8px; margin-left: 5px; color: white; ">'+nieprzeczytane+'</span>');
+        });
+
+    }
+    initPoprawkiDoCzatu();
 
 }
