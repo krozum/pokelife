@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.36.2
+// @version      3.36.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -3620,9 +3620,12 @@ function initPokeLifeScript(){
                     html = html + '<tr><td>'+text+ '</tr></td>';
                     html = html + '<tr><td>'+$(activeBuild[0]).find('div')[0].innerHTML + '</tr></td>';
                     console.log(activeBuild);
-                }
-                else{
-                    html = html + '<tr><td> Brak budynków w budowie</tr></td>';
+                } else {
+                    if($(response).find('.btn-akcja[href="stowarzyszenie.php?p=3&zakoncz_budowe"]').length > 0){
+                        html = html + '<tr><td class="btn-akcja" href="stowarzyszenie.php?p=3&zakoncz_budowe"> Budynek ukończony. Kliknij aby zakończyć</tr></td>';
+                    } else {
+                        html = html + '<tr><td> Brak budynków w budowie</tr></td>';
+                    }
                 }
 
                 if($(response).find('button:contains("Nakarmiłeś już dzisiaj Pokemony")').length > 0){
@@ -3661,15 +3664,21 @@ function initPokeLifeScript(){
     // **********************
     function initPoprawkiDoCzatu(){
         let nieprzeczytane = 0;
+        let nieprzeczytane3 = 0;
+        let nieprzeczytane2 = 0;
 
-
-        $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a span').remove();
-        $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a').append('<span style=" background: #d45b5b; border-radius: 3px; padding: 3px 8px; margin-left: 5px; color: white; ">0</span>');
 
         $(document).on("click", '#chat-inner .nav-tabs', function (event) {
             nieprzeczytane = 0;
+            nieprzeczytane2 = 0;
+            nieprzeczytane3 = 0;
+
+            //$('li[data-original-title="Pokój związany z targiem"] a span').remove();
+            //$('li[data-original-title="Pokój związany z targiem"] a').append('<span style=" background: #97adab; border-radius: 3px; padding: 3px 8px; margin-left: 5px; color: white; width: 30px; height: 20px; text-align:center; display: inline-block ">'+nieprzeczytane3+'</span>');
+            //$('li[data-original-title="Pokój do dyskusji ogólnych"] a span').remove();
+            //$('li[data-original-title="Pokój do dyskusji ogólnych"] a').append('<span style=" background: #97adab; border-radius: 3px; padding: 3px 8px; margin-left: 5px; color: white; width: 30px; height: 20px; text-align:center; display: inline-block ">'+nieprzeczytane+'</span>');
             $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a span').remove();
-            $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a').append('<span style=" background: #d45b5b; border-radius: 3px; padding: 3px 8px; margin-left: 5px; color: white; ">0</span>');
+            $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a').append('<span style=" background: #d45b5b; border-radius: 3px; margin-left: 8px; color: white; width: 30px; text-align:center; display: inline-block; line-height: 1; font-size: 11px; padding: 2px 0px 1px 0;">'+nieprzeczytane+'</span>');
 
 
             lastSeeShoutId = $('#shout_list li:last').attr('id');
@@ -3685,17 +3694,34 @@ function initPokeLifeScript(){
 
             $.fn.append = function () {
                 if($(arguments[0]).find('span.shout_post_name').length > 0){
-                    return origAppend.apply(this, arguments).trigger("append-room");
+                    return origAppend.apply(this, arguments).trigger("append-room", arguments[0]);
                 } else {
                     return origAppend.apply(this, arguments);
                 }
             };
         })(jQuery);
 
-        $("#shouts ul").bind("append-room", function() {
-            nieprzeczytane++;
+        $("#shouts ul").bind("append-room", function(event, param) {
             $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a span').remove();
-            $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a').append('<span style=" background: #d45b5b; border-radius: 3px; padding: 3px 8px; margin-left: 5px; color: white; ">'+nieprzeczytane+'</span>');
+            $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a').append('<span style=" background: #d45b5b; border-radius: 3px; margin-left: 8px; color: white; width: 30px; text-align:center; display: inline-block; line-height: 1; font-size: 11px; padding: 2px 0px 1px 0;">'+nieprzeczytane+'</span>');
+
+
+
+            if(lastSeeShoutId.split('-')[1] < ($(param).attr('id').split('-')[1])){
+                if($(param).is(".room-3")){
+                    //nieprzeczytane3++;
+                    //$('li[data-original-title="Pokój związany z targiem"] a span').remove();
+                    //$('li[data-original-title="Pokój związany z targiem"] a').append('<span style=" background: #97adab; border-radius: 3px; padding: 3px 8px; margin-left: 5px; color: white; width: 30px; height: 20px; text-align:center; display: inline-block">'+nieprzeczytane3+'</span>');
+                } else if($(param).is(".room-2")){
+                    //nieprzeczytane2++;
+                    //$('li[data-original-title="Pokój do dyskusji ogólnych"] a span').remove();
+                    //$('li[data-original-title="Pokój do dyskusji ogólnych"] a').append('<span style=" background: #97adab; border-radius: 3px; padding: 3px 8px; margin-left: 5px; color: white; width: 30px; height: 20px; text-align:center; display: inline-block">'+nieprzeczytane+'</span>');
+                } else {
+                    nieprzeczytane++;
+                    $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a span').remove();
+                    $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a').append('<span style=" background: #d45b5b; border-radius: 3px; margin-left: 8px; color: white; width: 30px; text-align:center; display: inline-block; line-height: 1; font-size: 11px; padding: 2px 0px 1px 0;">'+nieprzeczytane+'</span>');
+                }
+            }
         });
 
     }
