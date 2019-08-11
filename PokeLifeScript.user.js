@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.36.3
+// @version      3.36.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -280,6 +280,10 @@ function reloadMain(selector, url, callback, callback2){
             callback2.call(THAT, url);
         }
         $(""+selector).html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"").replace("http://api.jquery.com/scripts/events.js", "https://gra.pokelife.pl/js/zegar.js"));
+
+        if(url.indexOf("napraw") != -1){
+            $("html, body").animate({ scrollTop: 0 }, "fast");
+        }
         $.get('inc/stan.php', function(data) {
             $("#sidebar").html(data);
             window.afterReloadMainFunctions.forEach(function(item) {
