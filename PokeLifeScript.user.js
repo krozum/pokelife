@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.36.4
+// @version      3.37
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -129,6 +129,10 @@ $.getJSON("https://bra1ns.pl/pokelife/api/get_user.php?login=" + $('#wyloguj').p
             config.useOnlyInNight = false;
             updateConfig(config);
         }
+        if(config.useFontanna == undefined){
+            config.useFontanna = false;
+            updateConfig(config);
+        }
         if(config.pok20 == undefined){
             config.pok20 = 0;
             config.pok40 = 0;
@@ -146,6 +150,7 @@ $.getJSON("https://bra1ns.pl/pokelife/api/get_user.php?login=" + $('#wyloguj').p
         config.pokeballIconsIndex = 8;
         config.locationIconsIndex = 0;
         config.useOnlyInNight = false;
+        config.useFontanna = false;
         config.lastVersion = GM_info.script.version;
         config.set1 = new Object();
         config.set1[1] = "none";
@@ -992,8 +997,9 @@ function initPokeLifeScript(){
                 $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" '+(config.useCzerwoneNapoje == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj czerwonych napoi gdy zabraknie PA</label></td> </tr>');
                 $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieNapoje" name="autoUseNiebieskieNapoje" value="1" '+(config.useNiebieskieNapoje == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj niebieskich napoi gdy zabraknie PA</label></td> </tr>');
                 $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/niebieskie_jagody.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieJagody" name="autoUseNiebieskieJagody" value="1" '+(config.useNiebieskieJagody == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj niebieskich jagód gdy zabraknie PA</label></td> </tr>');
+                $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/stow/18_5.png"></td><td><input type="checkbox" id="autoUseFontanna" name="autoUseFontanna" value="1" '+(config.useFontanna == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj fontanny gdy zabraknie PA</label></td> </tr>');
                 $('#settingsAutoGo table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" '+(config.useOnlyInNight == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
-                $('#settingsAutoGo').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Niebieskie napoje</b> -> <b>Czerwone napoje</b></p>');
+                $('#settingsAutoGo').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Fontanna</b> -> <b>Niebieskie Jagody</b> -> <b>Niebieskie napoje</b> -> <b>Czerwone napoje</b></p>');
                 $('#settingsAutoGo').append('<div id="exp_mod_settings"></div>');
                 $('#exp_mod_settings').append('<hr><p style=" margin: 0 0 5px; ">Pokemony 1-20</p><select data-order-id="20" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
                 $('#exp_mod_settings').append('<p style=" margin: 0 0 5px; ">Pokemony 21-40</p><select data-order-id="40" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
@@ -1042,6 +1048,12 @@ function initPokeLifeScript(){
         $(document).on("click", "#autoUseNiebieskieNapoje", function(){
             var isChecked = $('#autoUseNiebieskieNapoje').prop('checked');
             config.useNiebieskieNapoje = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#autoUseFontanna", function(){
+            var isChecked = $('#autoUseFontanna').prop('checked');
+            config.useFontanna = isChecked;
             updateConfig(config);
         });
 
@@ -1100,7 +1112,17 @@ function initPokeLifeScript(){
             if(array.length > 0){
                 console.log("PokeLifeScript: próbuje przywrócic PA");
                 $.get(array.pop(), function( data ) {
-                    if(data.indexOf("jagód i niemal natychmiast czujesz przypływ energii") != -1){
+                    if(data.indexOf("Po kilku chwilach od napicia się z Orzeźwiającej Fontanny czujesz przypływ sił.") != -1){
+                        console.log("PokeLifeScript: przywrócono PA");
+                        $.get('inc/stan.php', function(data) {
+                            $("#sidebar").html(data);
+                            if(autoGoBefore){
+                                autoGo = true;
+                                $('#goAutoButton').html('STOP');
+                                click();
+                            }
+                        });
+                    } else if(data.indexOf("jagód i niemal natychmiast czujesz przypływ energii") != -1){
                         console.log("PokeLifeScript: przywrócono PA");
                         $.get('inc/stan.php', function(data) {
                             $("#sidebar").html(data);
@@ -1146,6 +1168,9 @@ function initPokeLifeScript(){
             $('#goAutoButton').html('AutoGO');
 
             var array = [];
+            if(config.useFontanna == true){
+                array.push("gra/stowarzyszenie.php?p=2&fontanna_wypij");
+            }
             if(config.useCzerwoneNapoje == true){
                 array.push("gra/plecak.php?uzyj&rodzaj_przedmiotu=duzy_napoj_energetyczny&ilosc=1&tylko_komunikat");
             }
