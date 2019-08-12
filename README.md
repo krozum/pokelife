@@ -32,6 +32,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.37 (2019-08-12)
+* Dodanie opcji automatycznego przywracana PA za pomoocą fontanny
+
 3.36.1 (2019-08-10)
 * Dodanie widgetu Stowarzyszenia
 * Dodanie pokemona dnia Stowarzyszenia
