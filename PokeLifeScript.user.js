@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.38.2
+// @version      3.38.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
