@@ -32,6 +32,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.38 (2019-08-17)
+* Dodanie tutoriala przy pierwszym uruchomieniu skryptu
+
 3.37 (2019-08-12)
 * Dodanie opcji automatycznego przywracana PA za pomoocą fontanny
 
