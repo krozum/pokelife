@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.37.2
+// @version      3.38
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -141,8 +141,13 @@ $.getJSON("https://bra1ns.pl/pokelife/api/get_user.php?login=" + $('#wyloguj').p
             config.pok100 = 0;
             updateConfig(config);
         }
+        if(config.skipTutorial == undefined){
+            config.skipTutorial = false;
+            updateConfig(config);
+        }
     } else {
         config.skinStyle = 3;
+        config.skipTutorial = false;
         config.useNiebieskieJagody = false;
         config.useNiebieskieNapoje = false;
         config.useCzerwoneNapoje = false;
@@ -991,11 +996,11 @@ function initPokeLifeScript(){
             if($('#settingsAutoGo').length > 0){
                 $('#settingsAutoGo').remove();
             } else {
-                $('body').append('<div id="settingsAutoGo" style="padding: 10px; position:fixed;top: 60px;right: 69px;width: 400px;background: white;opacity: 1;border: 3px dashed #ffed14;z-index: 999;"></div>');
+                $('body').append('<div id="settingsAutoGo" style="padding: 10px; position:fixed;top: 60px;right: 69px;width: 440px;background: white;opacity: 1;border: 3px dashed #ffed14;z-index: 999;"></div>');
                 $('#settingsAutoGo').append('<table> <tr> <th></th> <th></th> <th></th> </tr></table>');
-                $('#settingsAutoGo table').append('<col width="60"><col width="20"><col width="300">');
-                $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" '+(config.useCzerwoneNapoje == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj czerwonych napoi gdy zabraknie PA</label></td> </tr>');
-                $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieNapoje" name="autoUseNiebieskieNapoje" value="1" '+(config.useNiebieskieNapoje == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj niebieskich napoi gdy zabraknie PA</label></td> </tr>');
+                $('#settingsAutoGo table').append('<col width="60"><col width="20"><col width="340">');
+                $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" '+(config.useCzerwoneNapoje == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj czerwonych napojów gdy zabraknie PA</label></td> </tr>');
+                $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieNapoje" name="autoUseNiebieskieNapoje" value="1" '+(config.useNiebieskieNapoje == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj niebieskich napojów gdy zabraknie PA</label></td> </tr>');
                 $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/niebieskie_jagody.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieJagody" name="autoUseNiebieskieJagody" value="1" '+(config.useNiebieskieJagody == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj niebieskich jagód gdy zabraknie PA</label></td> </tr>');
                 $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/stow/18_5.png"></td><td><input type="checkbox" id="autoUseFontanna" name="autoUseFontanna" value="1" '+(config.useFontanna == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj fontanny gdy zabraknie PA</label></td> </tr>');
                 $('#settingsAutoGo table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" '+(config.useOnlyInNight == true ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
@@ -3764,27 +3769,39 @@ function initPokeLifeScript(){
     //
     // **********************
     function initTutorial(){
-        var slides = [];
+
         var now = 0;
-        slides[0] = '<h4 style=" line-height: 23px; ">Witaj, <br>jestem Profesor Oak i oprowadze cie po wszystkich funkcjach dodatku <b>PokeLifeScript</b></h4>';
-        slides[1] = '<h4 style=" line-height: 23px; ">Witaj, <br>jestem Profesor Oak i oprowadze cie po wszystkich funkcjach dodatku <b>PokeLifeScript</b></h4>';
+        var slides = [];
+        function show(){
+            now = 0;
+            slides = [];
+            slides[0] = '<h4 style=" line-height: 23px; ">Witamy w Team Rocket, </h4><h5> cieszymy sie ze zdecydowałes sie dołączyć do tego zacnego grona. <br><br>Oprowadzimy cię po wszystkich dodatkowych funkcjach które będziesz posiadał dzięki <b>PokeLifeScript</b><br><br>W razie problemów z dodatkiem lub sugestii dotyczących nowych funkcjonalności zapraszamy do naszej siedziby pod adresem: <br><a style=" color: #337ab7 !important; " href="https://github.com/krozum/pokelife/issues">https://github.com/krozum/pokelife/issues</a></h5>';
+            slides[1] = '<h5 style=" line-height: 23px; ">W lewym górnym rogu masz wybór pokemona, dziczy i balli których AutoGo będzie uzywał do automatycznego klikania w dzicz.<br><img style="max-width: 100%" src="https://i.imgur.com/heZSnvB.png"/><br><br>Możesz wybrać z kilku rodzajów balli jak i łączonych konfiguracji gdzie w zależności który ball będzie najlepszy na danego pokemona taki zostanie użyty.<br><img src="https://i.imgur.com/4vaqXRr.png"/><br><br>Wybierają koło zębate jako pokemona możesz zdefiniować aby był używany różny pokemon w zależności od poziomu przeciwnika. Oby skonfigurować tą opcje wybierz koło zębate w prawym górnym rogu.<br><img style="max-width: 100%" src="https://i.imgur.com/chPrxcr.png"/><img style="max-width: 100%" src="https://i.imgur.com/67e5fHL.png"></h5>';
+            slides[2] = '<h5 style=" line-height: 23px; ">W prawym górnym rogu są przyciski do uruchamiania AutoGo oraz zmiany jednym kliknięciem przedmiotów trzymanych przez poki, zestawu poków w drużynie oraz dodatkowych opcji AutoGo jak automatyczne odnawianie PA za pomocą napojów, jagód, fontanny, jak i wspomniana wcześniej konfiguracja wyboru poków w dziczy. Dodatkowo na przycisku spacji została zbindowana opcja pojedynczego kliknięcia AutoGo.<br><img src="https://i.imgur.com/ot6g7A5.png"/><br><br>Po kliknięciu AutoGo przycisk zamieni sie na przycisk do zatrzymania AutoGo a skrypt sam będzie klikał w wybraną dzicz, wybierał poka zgodnie z opcjami, leczył sie jagodami lub za yeny, i rzucał wybrane pokeballe. Gdy spotka Shiny lub niezłapanego zatrzyma sie aby użytkownik sam mógł podjąć wybór jakiego poka chce użyć i jakiego pokeballa rzucić.<br><br>Przyciski do zmiany poków lub przedmiotów pozwalają zdefiniować do 3 zestawów które jednym kliknięciem zostaną podmienione z aktualnie używanymi.<br><img src="https://i.imgur.com/tLkL4h9.png"></h5>';
+            slides[3] = '<h5 style=" line-height: 23px; ">W lewym dolnym rogu są przyciski do zmiany stylu graficznego strony, szybkiego sklepu gdzie można jednym kliknięciem kupić najczęściej używane przedmioty oraz szybkiej aktywności gdzie można zacząć prace lub trening bez opuszczania danego widoku.<br><img style="max-width: 100%" src="https://i.imgur.com/Ww6GNZC.png"/><br><br>Wraz ze skryptem poprawiliśmy widok niektórych elementów strony, przebudowaliśmy widoki zakładki plecak jak i dodaliśmy 4 nowe style graficzne.<br><br>Po kliknięciu ikonki szybkiego sklepu wyskoczy box gdzie są pokazane aktualne najtańsze ceny na rynku wraz z przyciskiem do kupna wraz z podaną ilością przedmiotów które kupujesz.<br><img style="max-width: 100%" src="https://i.imgur.com/ZqUrJiF.png"></h5>';
+            slides[4] = '<h5 style=" line-height: 23px; ">Prawy dolny róg zawiera informacje o aktualnej wersji skryptu jak i dwóch przycisków do automatycznego wbijania dwóch osiągnięć. <br><img style="max-width: 100%" src="https://i.imgur.com/dLPjtEo.png"><br><br><b>Szkoleniowiec</b> - skrypt weźmie poki z przechowalni i podniesie im trening do 7 punktów statystyki w każdą, dzięki czemu niskim kosztem można nabić to osiągnięcie a yeny włożone w trening odzyskać w hodowli.<br><br><b>Jeszcze dokładke?</b> - podobnie jak wyżej, skrypt weźmie poki z przechowalni i tym razem nakarmi je dostępnymi pokeprzysmakami.</h5>';
+            slides[5] = '<h5 style=" line-height: 23px; ">Nowe widgety jak i dodatkowe informacje pojawiły sie rownież na sidebarze:<br><br>* Pokemony Dnia z hodowli i stowarzyszenia widoczne od razu po wejśćiu. Po kliknięciu w obrazek od razu przenosi do sprzedaży tych pokemonów w hodowli<br>* Widget Shiny który pokazuje ostatnie 3 pokemony Shiny spotkane przez użytkowników skryptu.<br>* Aktualne zadania wraz z ich postępem<br>* Informacje dotyczące stowarzyszenia</h5>';
+            slides[6] = '<h5 style=" line-height: 23px; ">Oprócz wymienionych wczesniej opcji zostało dodane mnóstwo pomniejszych usprawnień które można znaleźć w różnych miejscach: <br><br>* automatyczne wypełnianie ilości na zakładce Wymiany<br>*  informacja o ilości nieprzeczytanych wiadomości od ostatniego logowania<br>* przypomnienie o braku aktywnej pracy przy opuszczaniu strony<br>* podgląd aktualnych cen przy wystawianiu przedmiotów na rynku<br><br>i wiele inych. Więcej informacji o aktualnych zmianach i dodatkach można znalezc w changelogu który jest dostępny po kliknięciu w numer wersji skryptu.<br><br>Miłego klikania ;)</h5>';
 
-        $('body').append('<div id="disabledBox2" style="width: 100%;height: 100%;background: black;position: fixed;top: 0;opacity: 0.65;z-index: 99998;"></div>');
-        $("body").append('<div id="tutorial" style="width: 45%; z-index: 99999; margin: 0 auto; top: 20%; left: 0; right: 0;position: absolute;"></div>');
-        $('#tutorial').append('<div class="panel panel-primary"><div class="panel-heading">Tutorial</div><div class="panel-body"><div class="col-sm-4"> <img src="https://cdn.bulbagarden.net/upload/thumb/3/3e/Lets_Go_Pikachu_Eevee_Professor_Oak.png/180px-Lets_Go_Pikachu_Eevee_Professor_Oak.png" class="img-responsive center-block"> </div><div class="col-sm-8" id="slides"> </div></div><div class="panel-footer"><p id="tutorial_page" style=" text-align: right; "></p><button id="tutorial_zamknij">Zamknij tutorial</button><button id="tutorial_nastepny" style="float: right;margin-left: 10px;">Nastepny</button><button style="float: right;margin-left: 10px;" id="tutorial_poprzedni">Poprzedni</button></div></div>');
-        $('#slides').html(slides[now]);
-        if(slides[now+1] == undefined){
-            $('#tutorial_nastepny').hide();
-        }
-        if(slides[now-1] == undefined){
-            $('#tutorial_poprzedni').hide();
-        }
-        $('#tutorial_page').html((now+1) + '/' + (slides.length));
 
-        $('#tutorial_nastepny').on('click', function(){
+            $('body').append('<div id="disabledBox2" style="width: 100%;height: 100%;background: black;position: fixed;top: 0;opacity: 0.65;z-index: 99998;"></div>');
+            $("body").append('<div id="tutorial" style="width: 45%; z-index: 99999; margin: 0 auto; top: 13%; left: 0; right: 0;position: absolute;"></div>');
+            $('#tutorial').append('<div class="panel panel-primary"><div class="panel-heading">Tutorial</div><div class="panel-body"><div class="col-sm-5"> <img src="https://cdn.bulbagarden.net/upload/thumb/4/47/HeartGold_SoulSilver_Team_Rocket_Grunt.png/612px-HeartGold_SoulSilver_Team_Rocket_Grunt.png" class="img-responsive center-block"> </div><div class="col-sm-7" id="slides"> </div></div><div class="panel-footer"><p id="tutorial_page" style=" text-align: right; "></p><button class="btn btn-danger"  id="tutorial_zamknij">Zamknij tutorial</button><button id="tutorial_nastepny" class="btn" style="float: right;margin-left: 10px;">Nastepny</button><button style="float: right;margin-left: 10px;" id="tutorial_poprzedni"  class="btn">Poprzedni</button></div></div>');
+            $('#slides').html(slides[now]);
+            if(slides[now+1] == undefined){
+                $('#tutorial_nastepny').hide();
+            }
+            if(slides[now-1] == undefined){
+                $('#tutorial_poprzedni').hide();
+            }
+            $('#tutorial_page').html((now+1) + '/' + (slides.length));
+        }
+        if(!config.skipTutorial){
+            show();
+        }
+
+        $(document).on('click', '#tutorial_nastepny', function(){
             now++;
-            console.log(now);
-            console.log(slides[now-1]);
             $('#slides').html(slides[now]);
             if(slides[now+1] == undefined){
                 $('#tutorial_nastepny').hide();
@@ -3799,7 +3816,7 @@ function initPokeLifeScript(){
             $('#tutorial_page').html((now+1) + '/' + (slides.length));
         });
 
-        $('#tutorial_poprzedni').on('click', function(){
+        $(document).on('click', '#tutorial_poprzedni', function(){
             now--;
             $('#slides').html(slides[now]);
             if(slides[now+1] == undefined){
@@ -3815,9 +3832,14 @@ function initPokeLifeScript(){
             $('#tutorial_page').html((now+1) + '/' + (slides.length));
         });
 
-
+        $(document).on('click', '#tutorial_zamknij', function(){
+            $('#disabledBox2').remove();
+            $('#tutorial').remove();
+            config.skipTutorial = true;
+            updateConfig(config);
+        });
 
     }
-    //initTutorial();
+    initTutorial();
 
 }
