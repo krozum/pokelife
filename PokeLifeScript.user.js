@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.37.1
+// @version      3.37.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -3755,5 +3755,69 @@ function initPokeLifeScript(){
 
     }
     initPoprawkiDoCzatu();
+
+
+    // **********************
+    //
+    // initTutorial
+    // Funkcja wprowadzajaca tutorial do dodatku
+    //
+    // **********************
+    function initTutorial(){
+        var slides = [];
+        var now = 0;
+        slides[0] = '<h4 style=" line-height: 23px; ">Witaj, <br>jestem Profesor Oak i oprowadze cie po wszystkich funkcjach dodatku <b>PokeLifeScript</b></h4>';
+        slides[1] = '<h4 style=" line-height: 23px; ">Witaj, <br>jestem Profesor Oak i oprowadze cie po wszystkich funkcjach dodatku <b>PokeLifeScript</b></h4>';
+
+        $('body').append('<div id="disabledBox2" style="width: 100%;height: 100%;background: black;position: fixed;top: 0;opacity: 0.65;z-index: 99998;"></div>');
+        $("body").append('<div id="tutorial" style="width: 45%; z-index: 99999; margin: 0 auto; top: 20%; left: 0; right: 0;position: absolute;"></div>');
+        $('#tutorial').append('<div class="panel panel-primary"><div class="panel-heading">Tutorial</div><div class="panel-body"><div class="col-sm-4"> <img src="https://cdn.bulbagarden.net/upload/thumb/3/3e/Lets_Go_Pikachu_Eevee_Professor_Oak.png/180px-Lets_Go_Pikachu_Eevee_Professor_Oak.png" class="img-responsive center-block"> </div><div class="col-sm-8" id="slides"> </div></div><div class="panel-footer"><p id="tutorial_page" style=" text-align: right; "></p><button id="tutorial_zamknij">Zamknij tutorial</button><button id="tutorial_nastepny" style="float: right;margin-left: 10px;">Nastepny</button><button style="float: right;margin-left: 10px;" id="tutorial_poprzedni">Poprzedni</button></div></div>');
+        $('#slides').html(slides[now]);
+        if(slides[now+1] == undefined){
+            $('#tutorial_nastepny').hide();
+        }
+        if(slides[now-1] == undefined){
+            $('#tutorial_poprzedni').hide();
+        }
+        $('#tutorial_page').html((now+1) + '/' + (slides.length));
+
+        $('#tutorial_nastepny').on('click', function(){
+            now++;
+            console.log(now);
+            console.log(slides[now-1]);
+            $('#slides').html(slides[now]);
+            if(slides[now+1] == undefined){
+                $('#tutorial_nastepny').hide();
+            } else {
+                $('#tutorial_nastepny').show();
+            }
+            if(slides[now-1] == undefined){
+                $('#tutorial_poprzedni').hide();
+            } else {
+                $('#tutorial_poprzedni').show();
+            }
+            $('#tutorial_page').html((now+1) + '/' + (slides.length));
+        });
+
+        $('#tutorial_poprzedni').on('click', function(){
+            now--;
+            $('#slides').html(slides[now]);
+            if(slides[now+1] == undefined){
+                $('#tutorial_nastepny').hide();
+            } else {
+                $('#tutorial_nastepny').show();
+            }
+            if(slides[now-1] == undefined){
+                $('#tutorial_poprzedni').hide();
+            } else {
+                $('#tutorial_poprzedni').show();
+            }
+            $('#tutorial_page').html((now+1) + '/' + (slides.length));
+        });
+
+
+
+    }
+    //initTutorial();
 
 }
