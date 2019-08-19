@@ -32,6 +32,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+3.39 (2019-08-19)
+* Poprawki do leczenia z fontanny
+* Dodanie informacji dlaczego bot sie zatrzymał
+
 3.38 (2019-08-17)
 * Dodanie tutoriala przy pierwszym uruchomieniu skryptu
 
