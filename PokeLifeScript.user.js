@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.38.3
+// @version      3.38.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1173,9 +1173,6 @@ function initPokeLifeScript(){
             $('#goAutoButton').html('AutoGO');
 
             var array = [];
-            if(config.useFontanna == true){
-                array.push("gra/stowarzyszenie.php?p=2&fontanna_wypij");
-            }
             if(config.useCzerwoneNapoje == true){
                 array.push("gra/plecak.php?uzyj&rodzaj_przedmiotu=duzy_napoj_energetyczny&ilosc=1&tylko_komunikat");
             }
@@ -1184,6 +1181,9 @@ function initPokeLifeScript(){
             }
             if(config.useNiebieskieJagody == true){
                 array.push("gra/plecak.php?uzyj&rodzaj_przedmiotu=niebieskie_jagody&tylko_komunikat&ulecz_wszystkie&zjedz_max");
+            }
+            if(config.useFontanna == true){
+                array.push("gra/stowarzyszenie.php?p=2&fontanna_wypij");
             }
             if(config.useOnlyInNight == true){
                 var d = new Date();
