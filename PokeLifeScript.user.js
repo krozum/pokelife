@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.38.4
+// @version      3.39
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -912,6 +912,7 @@ function initPokeLifeScript(){
             $('body').append('<div id="goButton" style="opacity: 0.3;border-radius: 4px;position: fixed; cursor: pointer; top: 5px; right: 10px; font-size: 36px; text-align: center; width: 100px; height: 48px; line-height: 48px; background: ' + $('.panel-heading').css('background-color') + '; z-index: 9999">GO</div>');
             $('body').append('<div id="goAutoButton" style="border-radius: 4px;position: fixed; cursor: pointer; top: 5px; right: 122px; font-size: 36px; text-align: center; width: 140px; height: 48px; line-height: 48px; background: ' + $('.panel-heading').css('background-color') + '; z-index: 9999">AutoGO</div>');
             $('body').append('<div id="goSettingsAutoGo" style="position: fixed;cursor: pointer;top: 20px;right: 275px;font-size: 20px;text-align: center;width: 25px;height: 25px;line-height: 25px;z-index: 9999;"><span style="color: ' + $('.panel-heading').css('background-color') + ';" class="glyphicon glyphicon-cog" aria-hidden="true"></span></div>');
+            $('body').append('<div id="goStopReason" style=" position: fixed;display: none; cursor: pointer; top: 12px; right: 271px; z-index: 99999; background: #d9534f; padding: 7px; border: 1px solid #a94442; border-radius: 3px; ">Brak odpowiedniego pokeballa</div>');
         }
         initGoButton();
 
@@ -978,8 +979,16 @@ function initPokeLifeScript(){
                             var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
                             $('button[href="' + url + '"]').trigger('click');
                         } else if ($("form[action='dzicz.php?zlap']").length == 1) {
-                            console.log('PokeLifeScript: rzucam pokeballa');
-                            $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokeball.getSelectedValue().call() + '"]').trigger('click');
+                            var button = $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokeball.getSelectedValue().call() + '"]');
+                            if(button.length > 0){
+                                console.log('PokeLifeScript: rzucam pokeballa');
+                                $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokeball.getSelectedValue().call() + '"]').trigger('click');
+                            } else {
+                                autoGo = false;
+                                $('#goAutoButton').html('AutoGO');
+                                $("#goStopReason").html("Brak odpowiedniego pokeballa").show();
+                                console.log('PokeLifeScript: brak odpowiedniego balla');
+                            }
                         } else if ($("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call()+ "']").length == 1) {
                             console.log('PokeLifeScript: rzucam 1 swarmballa');
                             $("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call()+ "']").submit();
@@ -991,6 +1000,10 @@ function initPokeLifeScript(){
                 }
             }
         }
+
+        $(document).on("click", "#goStopReason", function(){
+            $(this).hide();
+        })
 
         $(document).on("click", "#goSettingsAutoGo", function(){
             if($('#settingsAutoGo').length > 0){
