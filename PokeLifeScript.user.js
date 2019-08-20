@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.39
+// @version      3.39.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1360,7 +1360,9 @@ function initPokeLifeScript(){
         refreshZadaniaWidget();
 
         onReloadSidebar(function(){
-            this.find(".panel-heading:contains('Drużyna')").parent().after(zadaniaWidget);
+            if(zadaniaWidget.length > 340){
+                this.find(".panel-heading:contains('Drużyna')").parent().after(zadaniaWidget);
+            }
         })
 
         $(document).on("click", "#refreshZadaniaWidget", function (event) {
@@ -1385,6 +1387,9 @@ function initPokeLifeScript(){
         }).done(function (response) {
             hodowlaPokemonDniaImage = $(response).find('#hodowla-glowne img').attr('src');
             hodowlaPokemonDniaStowarzyszenieImage = $(response).find('#hodowla-glowne img:nth(1)').attr('src');
+            if($(response).find('.panel-heading:contains("Pokemon dnia Stowa")').length == 0){
+                hodowlaPokemonDniaStowarzyszenieImage = undefined;
+            }
         });
 
         onReloadSidebar(function(){
@@ -3646,49 +3651,55 @@ function initPokeLifeScript(){
                 type: 'POST',
                 url: "gra/stowarzyszenie.php"
             }).done(function (response) {
-                var html = '<div id="stowarzyszenieWidget" class="panel panel-primary"><div class="panel-heading">Stowarzyszenie<div class="navbar-right"><span id="refreshStowarzyszeniaWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
-                var stats = $(response).find('#stow-budowa div.row.text-center');
-                if(stats != undefined && stats.length > 0){
-                    let yenn = $(stats[0]).find('div.col-xs-7')[0].innerText
-                    .replace("Yen:","")
-                    .replace("¥","")
-                    .trim();
+                if($(response).find('.alert-info:contains("Nie należysz do żadnego Stowarzyszenia. Jeśli nie chcesz dołaczyć do innego Stowarzyszenia, zawsze możesz założyć własne")').length == 0){
+                    var html = '<div id="stowarzyszenieWidget" class="panel panel-primary"><div class="panel-heading">Stowarzyszenie<div class="navbar-right"><span id="refreshStowarzyszeniaWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
+                    var stats = $(response).find('#stow-budowa div.row.text-center');
+                    if(stats != undefined && stats.length > 0){
+                        let yenn = $(stats[0]).find('div.col-xs-7')[0].innerText
+                        .replace("Yen:","")
+                        .replace("¥","")
+                        .trim();
 
-                    let mats = $(stats[0]).find('div.col-xs-5')[0].innerText
-                    .replace("Materiały:","")
-                    .trim();
-                    html = html + '<tr><td style="background: white !important"><div style="text-align:center">'+ yenn +'<img src="images/yen.png" class="visible-lg-inline" style="width: 26px;margin-right:10px;margin-left:5px">  <img src="images/pokesklep/materialy_budowlane.jpg" class="visible-lg-inline" style="width: 26px;"> '+mats+' </div></tr></td>';
-                }
-
-                var activeBuild =$(response).find('div[href="stowarzyszenie.php?p=3&anuluj_budowe"] .col-xs-8')
-                if(activeBuild != undefined && activeBuild.length > 0){
-                    html = html + '<tr><td>'+$(activeBuild[0]).find('h3')[0].innerText + '</tr></td>';
-                    let text = $(activeBuild[0]).find('p')[0].innerText;
-                    html = html + '<tr><td>'+text+ '</tr></td>';
-                    html = html + '<tr><td>'+$(activeBuild[0]).find('div')[0].innerHTML + '</tr></td>';
-                    console.log(activeBuild);
-                } else {
-                    if($(response).find('.btn-akcja[href="stowarzyszenie.php?p=3&zakoncz_budowe"]').length > 0){
-                        html = html + '<tr><td class="btn-akcja" href="stowarzyszenie.php?p=3&zakoncz_budowe"> Budynek ukończony. Kliknij aby zakończyć</tr></td>';
-                    } else {
-                        html = html + '<tr><td> Brak budynków w budowie</tr></td>';
+                        let mats = $(stats[0]).find('div.col-xs-5')[0].innerText
+                        .replace("Materiały:","")
+                        .trim();
+                        html = html + '<tr><td style="background: white !important"><div style="text-align:center">'+ yenn +'<img src="images/yen.png" class="visible-lg-inline" style="width: 26px;margin-right:10px;margin-left:5px">  <img src="images/pokesklep/materialy_budowlane.jpg" class="visible-lg-inline" style="width: 26px;"> '+mats+' </div></tr></td>';
                     }
-                }
 
-                if($(response).find('button:contains("Nakarmiłeś już dzisiaj Pokemony")').length > 0){
-                    html = html + '<tr><td>Nakarmiłeś już dzisiaj Pokemony</tr></td>';
+                    var activeBuild =$(response).find('div[href="stowarzyszenie.php?p=3&anuluj_budowe"] .col-xs-8')
+                    if(activeBuild != undefined && activeBuild.length > 0){
+                        html = html + '<tr><td>'+$(activeBuild[0]).find('h3')[0].innerText + '</tr></td>';
+                        let text = $(activeBuild[0]).find('p')[0].innerText;
+                        html = html + '<tr><td>'+text+ '</tr></td>';
+                        html = html + '<tr><td>'+$(activeBuild[0]).find('div')[0].innerHTML + '</tr></td>';
+                        console.log(activeBuild);
+                    } else {
+                        if($(response).find('.btn-akcja[href="stowarzyszenie.php?p=3&zakoncz_budowe"]').length > 0){
+                            html = html + '<tr><td class="btn-akcja" href="stowarzyszenie.php?p=3&zakoncz_budowe"> Budynek ukończony. Kliknij aby zakończyć</tr></td>';
+                        } else {
+                            html = html + '<tr><td> Brak budynków w budowie</tr></td>';
+                        }
+                    }
+
+                    if($(response).find('button:contains("Nakarmiłeś już dzisiaj Pokemony")').length > 0){
+                        html = html + '<tr><td>Nakarmiłeś już dzisiaj Pokemony</tr></td>';
+                    } else {
+                        html = html + '<tr><td style="text-align: center">'+$(response).find('button:contains("Nakarm")').parent().html()+'</tr></td>';
+                    }
+                    html = html + '</tbody></table></div>';
+                    stowarzyszenieWidget = html;
                 } else {
-                    html = html + '<tr><td style="text-align: center">'+$(response).find('button:contains("Nakarm")').parent().html()+'</tr></td>';
+                    stowarzyszenieWidget = undefined;
                 }
-                html = html + '</tbody></table></div>';
-                stowarzyszenieWidget = html;
                 $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
             })
         }
         refreshStowarzyszeniaWidget();
 
         onReloadSidebar(function(){
-            this.find(".panel-heading:contains('Drużyna')").parent().after(stowarzyszenieWidget);
+            if(stowarzyszenieWidget != undefined){
+                this.find(".panel-heading:contains('Drużyna')").parent().after(stowarzyszenieWidget);
+            }
         })
 
         $(document).on("click", "#refreshStowarzyszeniaWidget", function (event) {
