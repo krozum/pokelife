@@ -1,7 +1,6 @@
-    
 // ==UserScript==
 // @name         FightSimulator
-// @version      0.1.1
+// @version      0.1.2
 // @description  Dodatek do gry Pokelife - symulator walki
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/FightSimulator.user.js
@@ -24,90 +23,257 @@ console.log("min: " + dmg);
 dmg =  ((((poziom_pokemona * 0.4 * krytyczny_cios) + 2) * punkty_ataku_pokemona * stała_ataku / 50 / punkty_obrony_pokemona ) + 2) * modyfikator * stab * (losowa_liczba / 255) * 1.5 * 5;
 console.log("random: " +dmg);
 
-dmg =  ((((poziom_pokemona * 0.4 * krytyczny_cios) + 2) * punkty_ataku_pokemona * stała_ataku / 50 / punkty_obrony_pokemona ) + 2) * modyfikator * stab * (255 / 255) * 1.5 * 5;
-console.log("max: " +dmg);
+var celnosc = (punkty_szybkosci_pokemon / punkty_szybkosci_przeciwnika);
 
 
-var pokemon_1 = new Object();
-pokemon_1.id = 3;
-pokemon_1.atak = 583;
-pokemon_1.sp_atak = 1928;
-pokemon_1.obrona = 1570;
-pokemon_1.sp_obrona = 1213;
-pokemon_1.szybkosc = 581;
-pokemon_1.zycie = 7335;
-pokemon_1.ataki =  [];
-pokemon_1.ataki[1] = "Leech Seed";
-pokemon_1.ataki[2] = "Sludge Bomb";
-pokemon_1.ataki[3] = "Giga Drain";
-pokemon_1.ataki[4] = "Synthesis";
-pokemon_1.odpornosci =  [];
-pokemon_1.odpornosci[1] = 1;
-pokemon_1.odpornosci[2] = 2;
-pokemon_1.odpornosci[3] = 0.5;
-pokemon_1.odpornosci[4] = 0.3;
-pokemon_1.odpornosci[5] = 0.5;
-pokemon_1.odpornosci[6] = 2;
-pokemon_1.odpornosci[7] = 2;
-pokemon_1.odpornosci[8] = 1;
-pokemon_1.odpornosci[9] = 1;
-pokemon_1.odpornosci[10] = 0.5;
-pokemon_1.odpornosci[11] = 1;
-pokemon_1.odpornosci[12] = 1;
-pokemon_1.odpornosci[13] = 1;
-pokemon_1.odpornosci[14] = 2;
-pokemon_1.odpornosci[15] = 1;
-pokemon_1.odpornosci[16] = 1;
-pokemon_1.odpornosci[17] = 1;
-pokemon_1.odpornosci[18] = 0.5;
+var Pokemon = function(id, poziom_pokemona, nazwa, atak, sp_atak, obrona, sp_obrona, szybkosc, zycie, atak1, atak2, atak3, atak4){
+
+    var _id;
+    var _poziom_pokemona;
+    var _nazwa;
+    var _atak;
+    var _sp_atak;
+    var _obrona;
+    var _sp_obrona;
+    var _szybkosc;
+    var _zycie;
+    var _aktualny_atak = 1;
+    var _atak1;
+    var _atak2;
+    var _atak3;
+    var _atak4;
+    var _is_damaged_by_lech_seed = 0;
+    var _max_hp_in_fight = 0;
+
+    var root = this;
+
+    this.construct = function(id, poziom_pokemona, nazwa, atak, sp_atak, obrona, sp_obrona, szybkosc, zycie, atak1, atak2, atak3, atak4){
+        _id = id;
+        _poziom_pokemona = poziom_pokemona;
+        _nazwa = nazwa;
+        _atak = atak;
+        _sp_atak = sp_atak;
+        _obrona = obrona;
+        _sp_obrona = sp_obrona;
+        _szybkosc = szybkosc;
+        _zycie = zycie;
+        _atak1 = atak1;
+        _atak2 = atak2;
+        _atak3 = atak3;
+        _atak4 = atak4;
+    };
+
+    this.atak = function(przeciwnik){
+        var atak_name;
+        if(_aktualny_atak == 1){
+            atak_name = _atak1;
+        }
+        if(_aktualny_atak == 2){
+            atak_name = _atak2;
+        }
+        if(_aktualny_atak == 3){
+            atak_name = atak3;
+        }
+        if(_aktualny_atak == 4){
+            atak_name = atak4;
+        }
 
 
-var pokemon_2 = new Object();
-pokemon_2.id = 3;
-pokemon_2.atak = 583;
-pokemon_2.sp_atak = 1928;
-pokemon_2.obrona = 1570;
-pokemon_2.sp_obrona = 1213;
-pokemon_2.szybkosc = 581;
-pokemon_2.zycie = 7335;
-pokemon_2.ataki =  [];
-pokemon_2.ataki[1] = "Leech Seed";
-pokemon_2.ataki[2] = "Sludge Bomb";
-pokemon_2.ataki[3] = "Giga Drain";
-pokemon_2.ataki[4] = "Synthesis";
-pokemon_2.odpornosci =  [];
-pokemon_2.odpornosci[1] = 1;
-pokemon_1.odpornosci[2] = 2;
-pokemon_2.odpornosci[3] = 0.5;
-pokemon_2.odpornosci[4] = 0.3;
-pokemon_2.odpornosci[5] = 0.5;
-pokemon_2.odpornosci[6] = 2;
-pokemon_2.odpornosci[7] = 2;
-pokemon_2.odpornosci[8] = 1;
-pokemon_2.odpornosci[9] = 1;
-pokemon_2.odpornosci[10] = 0.5;
-pokemon_2.odpornosci[11] = 1;
-pokemon_2.odpornosci[12] = 1;
-pokemon_2.odpornosci[13] = 1;
-pokemon_2.odpornosci[14] = 2;
-pokemon_2.odpornosci[15] = 1;
-pokemon_2.odpornosci[16] = 1;
-pokemon_2.odpornosci[17] = 1;
-pokemon_2.odpornosci[18] = 0.5;
+        switch(atak_name){
+            case "Leech Seed":
+                useLeechSeed(root, przeciwnik);
+                break;
+            case "Sludge Bomb":
+                useSludgeBomb(root, przeciwnik);
+                break;
+            default:
+                console.log('Not working yet');
+                break;
+        }
 
-let pokemonyAtakujace = [];
-pokemonyAtakujace.push(pokemon_1);
+        _aktualny_atak++;
+        if(_aktualny_atak > 4){
+            _aktualny_atak = 1;
+        }
+    };
 
-let pokemonyBroniace = [];
-pokemonyAtakujace.push(pokemon_2);
+    this.print = function(){
+        console.log("---------Pokemon Stats----------");
+        console.log("ID: " + _id);
+        console.log("Nazwa: " + _nazwa);
+        console.log("Poziom: " + _poziom_pokemona);
+        console.log("Atak: " + _atak);
+        console.log("Sp Atak: " + _sp_atak);
+        console.log("Obrona: " + _obrona);
+        console.log("Sp Obrona: " + _sp_obrona);
+        console.log("Szybkosc: " + _szybkosc);
+        console.log("Zycie: " + _zycie);
+        console.log("Atak 1: " + _atak1);
+        console.log("Atak 2: " + _atak2);
+        console.log("Atak 3: " + _atak3);
+        console.log("Atak 4: " + _atak4);
+    };
+
+    this.getId = function(){
+        return _id;
+    }
+
+    this.getPoziom = function(){
+        return _poziom_pokemona;
+    }
+
+    this.getNazwa = function(){
+        return _nazwa;
+    }
+
+    this.getAtak = function(){
+        return _atak;
+    }
+
+    this.getSpAtak = function(){
+        return _sp_atak;
+    }
+
+    this.getObrona = function(){
+        return _obrona;
+    }
+
+    this.getSpObrona = function(){
+        return _sp_obrona;
+    }
+
+    this.getSzybkosc = function(){
+        return _szybkosc;
+    }
+
+    this.setZycie = function(zycie){
+        if(_zycie !== 0){
+            _zycie = zycie;
+        }
+    };
+
+    this.getZycie = function(){
+        return _zycie;
+    }
+
+    this.setMaxHpInFight= function(max_hp_in_fight){
+        _max_hp_in_fight = max_hp_in_fight;
+    };
+
+    this.getMaxHpInFight = function(){
+        return _max_hp_in_fight;
+    }
+
+    this.setIsDamagedByLeechSeed = function(is_damaged_by_lech_seed){
+        _is_damaged_by_lech_seed = is_damaged_by_lech_seed;
+    };
+
+    this.getIsDamagedByLeechSeed = function(){
+        return _is_damaged_by_lech_seed;
+    }
+
+    this.construct(id, poziom_pokemona, nazwa, atak, sp_atak, obrona, sp_obrona, szybkosc, zycie, atak1, atak2, atak3, atak4);
+};
 
 
-function walka(pokemonyAtakujace, pokemonyBroniace){
-    var pokemon_1 = pokemonyAtakujace.shift();
-    var pokemon_2 = pokemonyAtakujace.shift();
 
-    console.log(pokemon_1);
-    console.log(pokemon_2);
+var pok = new Pokemon(3, 100, "Venek 1", 600, 600, 600, 600, 600, 600, "Leech Seed", "Leech Seed", "Leech Seed", "Leech Seed");
+var pok2 = new Pokemon(4, 100, "Venek 2", 600, 600, 600, 600, 600, 600, "Sludge Bomb", "Sludge Bomb", "Sludge Bomb", "Sludge Bomb");
+
+
+
+
+function useLeechSeed(pokemon1, pokemon2){
+    pokemon2.setIsDamagedByLeechSeed(true);
+    console.log(pokemon1.getNazwa() + " uzywa leech seed. Nasiona przyklejają sie");
 }
 
-walka(pokemonyAtakujace, pokemonyBroniace);
+
+function useSludgeBomb(pokemon1, pokemon2){
+    var moc = 90;
+    var modyfikator = 1;
+    var stab = 1;
+    var krytyczny_cios = 1;
+    var losowa_liczba = Math.floor((Math.random() * 50) + 205);
+
+    var damage = ((((pokemon1.getPoziom() * 0.4 * krytyczny_cios) + 2) * pokemon1.getSpAtak() * moc / 50 / pokemon2.getSpObrona()) + 2) * modyfikator * stab * (losowa_liczba / 255) * 5;
+    if(damage > pokemon2.getZycie()){
+        damage = pokemon2.getZycie();
+    }
+    damage = damage.toFixed(0);
+    pokemon2.setZycie(pokemon2.getZycie() - damage);
+    console.log(pokemon1.getNazwa() + " uzywam sludge bomb. Zadaje " + damage + " obrazen");
+}
+
+
+
+function runda(pokemon1, pokemon2){
+    pokemon1.setMaxHpInFight(pokemon1.getZycie());
+    pokemon2.setMaxHpInFight(pokemon2.getZycie());
+
+    for(var i = 1; i<= 50; i++){
+        console.log("///////////////////*********** TURA " + i + " ***********/////////////////////");
+        pokemon1.print();
+        pokemon2.print();
+        tura();
+        if(pokemon1.getZycie() == 0){
+            console.log("************************");
+            console.log("**                    **");
+            console.log("**  Pokemon 1 wygrał  **");
+            console.log("**                    **");
+            console.log("************************");
+            return;
+        }
+        if(pokemon2.getZycie() == 0){
+            console.log("************************");
+            console.log("**                    **");
+            console.log("**  Pokemon 2 wygrał  **");
+            console.log("**                    **");
+            console.log("************************");
+            return;
+        }
+    }
+    console.log("************************");
+    console.log("**                    **");
+    console.log("**       Remis        **");
+    console.log("**                    **");
+    console.log("************************");
+    return;
+
+    function tura(){
+        console.log("-------------");
+        if(pokemon1.getSzybkosc() >= pokemon2.getSzybkosc()){
+            pokemon1.atak(pokemon2);
+            pokemon2.atak(pokemon1);
+        } else {
+            pokemon2.atak(pokemon1);
+            pokemon1.atak(pokemon2);
+        }
+        if(pokemon1.getIsDamagedByLeechSeed()){
+            var dmg1 = pokemon1.getZycie() * 4/100;
+            dmg1 = Number(dmg1.toFixed(0));
+            console.log("Nasiona: "+ dmg1 + " obrazen");
+            pokemon1.setZycie(pokemon1.getZycie() - dmg1);
+            if(pokemon2.getZycie() + dmg1 > pokemon2.getMaxHpInFight()){
+                pokemon2.setZycie(pokemon2.getMaxHpInFight());
+            } else {
+                pokemon2.setZycie(pokemon2.getZycie() + dmg1);
+            }
+        }
+        if(pokemon2.getIsDamagedByLeechSeed()){
+            var dmg2 = pokemon2.getZycie() * 4/100;
+            dmg2 = Number(dmg2.toFixed(0));
+            console.log("Nasiona: "+ dmg2 + " obrazen");
+            pokemon2.setZycie(pokemon2.getZycie() - dmg2);
+            if(pokemon1.getZycie() + dmg2 > pokemon1.getMaxHpInFight()){
+                pokemon1.setZycie(pokemon1.getMaxHpInFight());
+            } else {
+                pokemon1.setZycie(pokemon1.getZycie() + dmg2);
+            }
+        }
+    }
+}
+
+runda(pok, pok2);
+
+
