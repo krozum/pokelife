@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      4.0.1
+// @version      4.0.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -676,9 +676,9 @@ function initPokeLifeScript(){
                         refreshZakonczenieLataWidget();
                     }
                 }
-//                 if(this.find(".panel-body ").lenght > 0){
-//                     AutoGo.przerwij();
-//                 }
+                if(this.find('.panel-body button[href*="zdarzenie"]').length > 0){
+                    AutoGoSettings.przerwij();
+                }
             })
         }
     }
