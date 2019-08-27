@@ -1,27 +1,27 @@
 // ==UserScript==
 // @name         FightSimulator
-// @version      0.1.3
+// @version      0.1.4
 // @description  Dodatek do gry Pokelife - symulator walki
-// @match        https://gra.pokelife.pl/*
+// @match        https://gra.pokelife.pl/index.php
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/FightSimulator.user.js
 // @updateURL    https://github.com/krozum/pokelife/raw/master/FightSimulator.user.js
 // ==/UserScript==
 
-let poziom_pokemona = 100;
-let krytyczny_cios = 1;
-let punkty_ataku_pokemona = 2610;
-let stała_ataku = 60;
-let punkty_obrony_pokemona = 928;
-let modyfikator = 1;
-let stab = 1.3;
-let losowa_liczba = Math.floor((Math.random() * 50) + 205);
+// let poziom_pokemona = 100;
+// let krytyczny_cios = 1;
+// let punkty_ataku_pokemona = 2610;
+// let stała_ataku = 60;
+// let punkty_obrony_pokemona = 928;
+// let modyfikator = 1;
+// let stab = 1.3;
+// let losowa_liczba = Math.floor((Math.random() * 50) + 205);
 
 
-var dmg =  ((((poziom_pokemona * 0.4 * krytyczny_cios) + 2) * punkty_ataku_pokemona * stała_ataku / 50 / punkty_obrony_pokemona ) + 2) * modyfikator * stab * (205 / 255) * 1.5 * 5;
-console.log("min: " + dmg);
+// var dmg =  ((((poziom_pokemona * 0.4 * krytyczny_cios) + 2) * punkty_ataku_pokemona * stała_ataku / 50 / punkty_obrony_pokemona ) + 2) * modyfikator * stab * (205 / 255) * 1.5 * 5;
+// console.log("min: " + dmg);
 
-dmg =  ((((poziom_pokemona * 0.4 * krytyczny_cios) + 2) * punkty_ataku_pokemona * stała_ataku / 50 / punkty_obrony_pokemona ) + 2) * modyfikator * stab * (losowa_liczba / 255) * 1.5 * 5;
-console.log("random: " +dmg);
+// dmg =  ((((poziom_pokemona * 0.4 * krytyczny_cios) + 2) * punkty_ataku_pokemona * stała_ataku / 50 / punkty_obrony_pokemona ) + 2) * modyfikator * stab * (losowa_liczba / 255) * 1.5 * 5;
+// console.log("random: " +dmg);
 
 
 var Pokemon = function(id, poziom_pokemona, nazwa, atak, sp_atak, obrona, sp_obrona, szybkosc, zycie, atak1, atak2, atak3, atak4){
@@ -61,7 +61,7 @@ var Pokemon = function(id, poziom_pokemona, nazwa, atak, sp_atak, obrona, sp_obr
         _atak4 = atak4;
     };
 
-    this.atak = function(przeciwnik){
+    this.nextAtack = function(){
         var atak_name;
         if(_aktualny_atak == 1){
             atak_name = _atak1;
@@ -76,33 +76,29 @@ var Pokemon = function(id, poziom_pokemona, nazwa, atak, sp_atak, obrona, sp_obr
             atak_name = atak4;
         }
 
+        var atak;
 
         switch(atak_name){
             case "Leech Seed":
-                useLeechSeed(root, przeciwnik);
+                atak = getLeechSeed();
                 break;
             case "Sludge Bomb":
-                useSludgeBomb(root, przeciwnik);
-                break;
-            case "Giga Drain":
-                useGigaDrain(root, przeciwnik);
-                break;
-            case "Synthesis":
-                useSynthesis(root, przeciwnik);
+                atak = getSludgeBomb();
                 break;
             default:
-                console.log('Not working yet');
+                console.log('Not working yet: ' + atak_name);
+                atak = getStruggle();
                 break;
         }
+        return atak;
+    };
 
-        _aktualny_atak++;
-        if(_aktualny_atak > 4){
-            _aktualny_atak = 1;
-        }
+    this.useAtack = function(przeciwnik){
+        this.nextAtack().use(root, przeciwnik);
     };
 
     this.print = function(){
-        console.log("---------Pokemon Stats----------");
+        console.log("----------Pokemon Stats----------");
         console.log("ID: " + _id);
         console.log("Nazwa: " + _nazwa);
         console.log("Poziom: " + _poziom_pokemona);
@@ -178,52 +174,157 @@ var Pokemon = function(id, poziom_pokemona, nazwa, atak, sp_atak, obrona, sp_obr
         return _is_damaged_by_lech_seed;
     }
 
+
+    this.setAtackToNext = function(){
+        _aktualny_atak++;
+        if(_aktualny_atak > 4){
+            _aktualny_atak = 1;
+        }
+    };
+
     this.construct(id, poziom_pokemona, nazwa, atak, sp_atak, obrona, sp_obrona, szybkosc, zycie, atak1, atak2, atak3, atak4);
 };
 
+var Atak = function(nazwa, moc, celnosc, typ, kategoria, kontakt, priorytet, action){
+    var _nazwa = "";
+    var _moc = 50;
+    var _celnosc = 100;
+    var _typ = "-";
+    var _kategoria = "Fizyczny";
+    var _kontakt = "Tak";
+    var _priorytet = 0;
+    var _action;
 
+    var root = this;
 
-var pok = new Pokemon(3, 100, "Venek 1", 600, 1600, 600, 600, 600, 4600, "Leech Seed", "Sludge Bomb", "Giga Drain", "Synthesis");
-var pok2 = new Pokemon(4, 100, "Venek 2", 600, 1600, 600, 600, 601, 4600, "Leech Seed", "Sludge Bomb", "Giga Drain", "Synthesis");
-
-
-
-
-function useLeechSeed(pokemon1, pokemon2){
-    var moc = 0;
-    var celnosc = 90;
-    var typ = "Statusowy";
-
-    if(sprawdzCzyTrafil(celnosc, pokemon1.getSzybkosc(), pokemon2.getSzybkosc())){
-        pokemon2.setIsDamagedByLeechSeed(true);
-        console.log(pokemon1.getNazwa() + " używa ataku Leech Seed, nasiona przyklejają się do przeciwnika.");
-    } else {
-        console.log(pokemon1.getNazwa() + " używa ataku Leech Seed, jednak pudłuje");
+    this.getNazwa = function(){
+        return _nazwa;
     }
+
+    this.getMoc = function(){
+        return _moc;
+    }
+
+    this.getCelnosc = function(){
+        return _celnosc;
+    }
+
+    this.getTyp = function(){
+        return _typ;
+    }
+
+    this.getKategoria = function(){
+        return _kategoria;
+    }
+
+    this.getKontakt = function(){
+        return _kontakt;
+    }
+
+    this.getPriorytet = function(){
+        return _priorytet;
+    }
+
+    this.getAction = function(){
+        return _action;
+    }
+
+
+    this.use = function(pokemon1, pokemon2){
+        if(sprawdzCzyTrafil(_celnosc, pokemon1.getSzybkosc(), pokemon2.getSzybkosc(), root.getKategoria())){
+            root.getAction().call(this, pokemon1, pokemon2);
+        } else {
+            console.log(pokemon1.getNazwa() + " używa ataku " + root.getNazwa() + ", jednak pudłuje. ");
+            pokemon1.setAtackToNext();
+        }
+    }
+
+    this.print = function(){
+        console.log("----------Atak Stats----------");
+        console.log("Nazwa: " + root.getNazwa());
+        console.log("Moc: " + root.getMoc());
+        console.log("Celność: " + root.getCelnosc());
+        console.log("Typ: " + root.getTyp());
+        console.log("Kategoria: " + root.getKategoria());
+        console.log("Kontakt: " + root.getKontakt());
+        console.log("Priorytet: " + root.getPriorytet());
+    };
+
+    this.construct = function(nazwa, moc, celnosc, typ, kategoria, kontakt, priorytet, action){
+        _nazwa = nazwa;
+        _moc = moc;
+        _celnosc = celnosc;
+        _typ = typ;
+        _kategoria = kategoria;
+        _kontakt = kontakt;
+        _priorytet = priorytet;
+        _action = action;
+    };
+
+    this.construct(nazwa, moc, celnosc, typ, kategoria, kontakt, priorytet, action);
 }
 
+///////////////////////////////////////////
+//
+//     ATAKI
+//
+///////////////////////////////////////////
 
-function useSludgeBomb(pokemon1, pokemon2){
-    var moc = 90;
-    var celnosc = 100;
-    var typ = "Specjalny";
+function getStruggle(){
+    var atak = new Atak("Struggle", 50, 100, "brak", "Statusowy", false, 0, function(pokemon1, pokemon2){
+        var stab = 1;
+        var modyfikator = 1;
+        var krytyczny_cios = 1;
+        var losowa_liczba = Math.floor((Math.random() * 50) + 205);
 
-    var stab = 1;
-    var modyfikator = 1;
-    var krytyczny_cios = 1;
-    var losowa_liczba = Math.floor((Math.random() * 50) + 205);
-
-    if(sprawdzCzyTrafil(celnosc, pokemon1.getSzybkosc(), pokemon2.getSzybkosc()), typ){
-        var damage = ((((pokemon1.getPoziom() * 0.4 * krytyczny_cios) + 2) * pokemon1.getSpAtak() * moc / 50 / pokemon2.getSpObrona()) + 2) * modyfikator * stab * (losowa_liczba / 255) * 5;
+        var damage = ((((pokemon1.getPoziom() * 0.4 * krytyczny_cios) + 2) * pokemon1.getSpAtak() * this.getMoc() / 50 / pokemon2.getSpObrona()) + 2) * modyfikator * stab * (losowa_liczba / 255) * 5;
         if(damage > pokemon2.getZycie()){
             damage = pokemon2.getZycie();
         }
         damage = damage.toFixed(0);
         pokemon2.setZycie(Number(pokemon2.getZycie()) - damage);
-        console.log(pokemon1.getNazwa() + " używa ataku Sludge Bomb i zadaje " + damage + " obrażeń przeciwnikowi.");
-    } else {
-        console.log(pokemon1.getNazwa() + " używa ataku Sludge Bomb, jednak pudłuje. ");
-    }
+        pokemon1.setZycie(Number(pokemon1.getZycie()) - (damage * 0.25).toFixed());
+
+        console.log(pokemon1.getNazwa() + " używa ataku " + this.getNazwa() + " i zadaje " + damage + " obrażeń przeciwnikowi.");
+        pokemon1.setAtackToNext();
+    });
+    return atak;
+}
+
+
+function getLeechSeed(){
+    var atak = new Atak("Leech Seed", 0, 100, "Trawiasty", "Statusowy", false, 0, function(pokemon1, pokemon2){
+        pokemon2.setIsDamagedByLeechSeed(true);
+        console.log(pokemon1.getNazwa() + " używa ataku " + this.getNazwa() + ", nasiona przyklejają się do przeciwnika.");
+        pokemon1.setAtackToNext();
+    });
+    return atak;
+}
+
+function getSludgeBomb(){
+    var atak = new Atak("Sludge Bomb", 90, 100, "Trujący", "Specjalny", false, 0, function(pokemon1, pokemon2){
+        var odporosci = getOdpornosci(pokemon2.getId());
+        var stab = 1;
+        var modyfikator = odporosci[this.getTyp()]
+        var krytyczny_cios = 1;
+        var losowa_liczba = Math.floor((Math.random() * 50) + 205);
+
+        var damage = ((((pokemon1.getPoziom() * 0.4 * krytyczny_cios) + 2) * pokemon1.getSpAtak() * this.getMoc() / 50 / pokemon2.getSpObrona()) + 2) * modyfikator * stab * (losowa_liczba / 255) * 5;
+        if(damage > pokemon2.getZycie()){
+            damage = pokemon2.getZycie();
+        }
+        damage = damage.toFixed(0);
+        pokemon2.setZycie(Number(pokemon2.getZycie()) - damage);
+        if(modyfikator > 1){
+            console.log(pokemon1.getNazwa() + " używa ataku " + this.getNazwa() + " i zadaje " + damage + " obrażeń przeciwnikowi. Ten ruch jest superefektywny.");
+        } else if (modyfikator < 1){
+            console.log(pokemon1.getNazwa() + " używa ataku " + this.getNazwa() + " i zadaje " + damage + " obrażeń przeciwnikowi. Ten ruch jest nie superefektywny.");
+        } else {
+            console.log(pokemon1.getNazwa() + " używa ataku " + this.getNazwa() + " i zadaje " + damage + " obrażeń przeciwnikowi.");
+        }
+        pokemon1.setAtackToNext();
+    });
+    return atak;
 }
 
 
@@ -255,6 +356,7 @@ function useGigaDrain(pokemon1, pokemon2){
     } else {
         console.log(pokemon1.getNazwa() + " używa ataku Giga Drain, jednak pudłuje. ");
     }
+    pokemon1.setAtackToNext();
 }
 
 
@@ -279,65 +381,110 @@ function useSynthesis(pokemon1, pokemon2){
     } else {
         console.log(pokemon1.getNazwa() + " używa ataku Synthesis, jednak pudłuje. ");
     }
+    pokemon1.setAtackToNext();
 }
 
 
-
+///////////////////////////////////////////
+//
+//     WALKA
+//
+///////////////////////////////////////////
 
 function runda(pokemon1, pokemon2){
     pokemon1.setMaxHpInFight(pokemon1.getZycie());
     pokemon2.setMaxHpInFight(pokemon2.getZycie());
 
     for(var i = 1; i<= 50; i++){
+        console.log("");
         console.log("///////////////////*********** TURA " + i + " ***********/////////////////////");
+        console.log("");
         pokemon1.print();
+        console.log("");
         pokemon2.print();
         tura();
         if(pokemon1.getZycie() == 0){
-            console.log("************************");
-            console.log("**                    **");
-            console.log("**  Pokemon 2 wygrał  **");
-            console.log("**                    **");
-            console.log("************************");
+            console.log("");
+            console.log("");
+            console.log("////////////////////////////////////////////");
+            console.log("//                                        //");
+            console.log("//            Pokemon 2 wygrał            //");
+            console.log("//                                        //");
+            console.log("////////////////////////////////////////////");
+            console.log("");
+            console.log("");
             return;
         }
         if(pokemon2.getZycie() == 0){
-            console.log("************************");
-            console.log("**                    **");
-            console.log("**  Pokemon 1 wygrał  **");
-            console.log("**                    **");
-            console.log("************************");
+            console.log("");
+            console.log("");
+            console.log("////////////////////////////////////////////");
+            console.log("//                                        //");
+            console.log("//            Pokemon 1 wygrał            //");
+            console.log("//                                        //");
+            console.log("////////////////////////////////////////////");
+            console.log("");
+            console.log("");
             return;
         }
     }
-    console.log("************************");
-    console.log("**                    **");
-    console.log("**       Remis        **");
-    console.log("**                    **");
-    console.log("************************");
+    console.log("");
+    console.log("");
+    console.log("////////////////////////////////////////////");
+    console.log("//                                        //");
+    console.log("//                  Remis                 //");
+    console.log("//                                        //");
+    console.log("////////////////////////////////////////////");
+    console.log("");
+    console.log("");
     return;
 
     function tura(){
-        console.log("-------------");
-        if(pokemon1.getSzybkosc() >= pokemon2.getSzybkosc()){
-            pokemon1.atak(pokemon2);
+        console.log("");
+        console.log("---------------------------------------");
+        console.log("");
+
+        if(pokemon1.nextAtack().getPriorytet() > pokemon2.nextAtack().getPriorytet()){
+            pokemon1.useAtack(pokemon2);
             if(pokemon1.getZycie() == 0 || pokemon2.getZycie() == 0){
                 return;
             }
-            pokemon2.atak(pokemon1);
+            pokemon2.useAtack(pokemon1);
+            if(pokemon1.getZycie() == 0 || pokemon2.getZycie() == 0){
+                return;
+            }
+        } else if(pokemon2.nextAtack().getPriorytet() > pokemon1.nextAtack().getPriorytet()){
+            pokemon2.useAtack(pokemon1);
+            if(pokemon1.getZycie() == 0 || pokemon2.getZycie() == 0){
+                return;
+            }
+            pokemon1.useAtack(pokemon2);
             if(pokemon1.getZycie() == 0 || pokemon2.getZycie() == 0){
                 return;
             }
         } else {
-            pokemon2.atak(pokemon1);
-            if(pokemon1.getZycie() == 0 || pokemon2.getZycie() == 0){
-                return;
-            }
-            pokemon1.atak(pokemon2);
-            if(pokemon1.getZycie() == 0 || pokemon2.getZycie() == 0){
-                return;
+            if(pokemon1.getSzybkosc() >= pokemon2.getSzybkosc()){
+                pokemon1.useAtack(pokemon2);
+                if(pokemon1.getZycie() == 0 || pokemon2.getZycie() == 0){
+                    return;
+                }
+                pokemon2.useAtack(pokemon1);
+                if(pokemon1.getZycie() == 0 || pokemon2.getZycie() == 0){
+                    return;
+                }
+            } else {
+                pokemon2.useAtack(pokemon1);
+                if(pokemon1.getZycie() == 0 || pokemon2.getZycie() == 0){
+                    return;
+                }
+                pokemon1.useAtack(pokemon2);
+                if(pokemon1.getZycie() == 0 || pokemon2.getZycie() == 0){
+                    return;
+                }
             }
         }
+
+
         if(pokemon1.getIsDamagedByLeechSeed()){
             var dmg1 = pokemon1.getZycie() * 4/100;
             dmg1 = Number(dmg1.toFixed(0));
@@ -369,6 +516,12 @@ function runda(pokemon1, pokemon2){
     }
 }
 
+
+///////////////////////////////////////////
+//
+//     sprawdzCzyTrafil
+//
+///////////////////////////////////////////
 
 function sprawdzCzyTrafil(celnosc, szybkosc1, szybkosc2, typ){
     var zmienna = szybkosc1/szybkosc2;
@@ -411,6 +564,69 @@ function sprawdzCzyTrafil(celnosc, szybkosc1, szybkosc2, typ){
     }
 }
 
-runda(pok, pok2);
 
+///////////////////////////////////////////
+//
+//     dane dotyczace odpornosci
+//
+///////////////////////////////////////////
+
+function getOdpornosci(id){
+    var array = [];
+    switch(id){
+        case 3:
+            array["Normalny"] = 1;
+            array["Ognisty"] = 2;
+            array["Wodny"] = 0.5;
+            array["Trawiasty"] = 0.25;
+            array["Elektryczny"] = 0.5;
+            array["Powietrzny"] = 2;
+            array["Psychiczny"] = 2;
+            array["Trujący"] = 1;
+            array["Duch"] = 1;
+            array["Walczący"] = 0.5;
+            array["Stalowy"] = 1;
+            array["Ziemny"] = 1;
+            array["Kamienny"] = 1;
+            array["Lodowy"] = 2;
+            array["Mroczny"] = 1;
+            array["Robaczy"] = 1;
+            array["Smok"] = 1;
+            array["Wróżka"] = 0.5;
+            break;
+        default:
+            array["Normalny"] = 1;
+            array["Ognisty"] = 1;
+            array["Wodny"] = 1;
+            array["Trawiasty"] = 1;
+            array["Elektryczny"] = 1;
+            array["Powietrzny"] = 1;
+            array["Psychiczny"] = 1;
+            array["Trujący"] = 1;
+            array["Duch"] = 1;
+            array["Walczący"] = 1;
+            array["Stalowy"] = 1;
+            array["Ziemny"] = 1;
+            array["Kamienny"] = 1;
+            array["Lodowy"] = 1;
+            array["Mroczny"] = 1;
+            array["Robaczy"] = 1;
+            array["Smok"] = 1;
+            array["Wróżka"] = 1;
+            break;
+    }
+    return array;
+}
+
+
+///////////////////////////////////////////
+//
+//     inne
+//
+///////////////////////////////////////////
+
+var pok = new Pokemon(3, 100, "Venek 1", 600, 1600, 600, 600, 600, 4600, "Leech Seed", "Sludge Bomb", "Giga Drain", "Synthesis");
+var pok2 = new Pokemon(4, 100, "Venek 2", 600, 1600, 600, 600, 601, 4600, "Leech Seed", "Sludge Bomb", "Giga Drain", "Synthesis");
+
+runda(pok, pok2);
 
