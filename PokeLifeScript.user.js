@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      4.0.4
+// @version      4.0.5
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -20,7 +20,6 @@
 //
 //     initOtworzWNowymOknie
 //     initSkins
-//     initEventZakonczenieLata
 //     initAutoGo
 //     initAutouzupelnianiePol
 //     initShinyWidget
@@ -51,6 +50,7 @@
 //     initStowarzyszeniaWidget
 //     initPoprawkiDoCzatu
 //     initTutorial
+//     initEventZakonczenieLata
 
 
 
@@ -628,58 +628,6 @@ function initPokeLifeScript(){
         });
     }
     initSkins();
-
-
-
-    // **********************
-    //
-    // initEventZakonczenieLata
-    // Funkcja dodająca obłsługe eventu zakonczenia lata
-    //
-    // **********************
-    function initEventZakonczenieLata(){
-        var d = new Date();
-        if((d.getDate() >= 26 && d.getMonth() == 7) || (d.getDate() <= 9 && d.getMonth() == 8)){
-            var zakonczenieLataWidget;
-
-            function refreshZakonczenieLataWidget(){
-                $.ajax({
-                    type: 'POST',
-                    url: "gra/statystyki.php"
-                }).done(function (response) {
-                    var html = '<div class="panel panel-primary"><div class="panel-heading">Zakonczenie Lata<div class="navbar-right"><span id="refreshZakonczenieLataWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
-                    var text = $(response).find('#statystyki .statystyki-wyglad:nth(1)').html();
-                    html = html + '<p style=" margin: 5px 0; text-align: center; font-size: 19px; ">Znalezionych dzisiaj Muszli: ' + text + '</p>';
-                    html = html + '</tbody></table></div>';
-                    zakonczenieLataWidget = html;
-                });
-            }
-            refreshZakonczenieLataWidget();
-
-            onReloadSidebar(function(){
-                this.find(".panel-heading:contains('Drużyna')").parent().before(zakonczenieLataWidget);
-            })
-
-
-            $(document).on("click", "#refreshZakonczenieLataWidget", function (event) {
-                refreshZakonczenieLataWidget();
-                $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
-            });
-
-            onReloadMain(function(){
-                if(this.find(".panel-body > p.alert-success").length > 0){
-                    if(this.find(".panel-body > p.alert-success:contains('Nieskazitelna Muszla')").length > 0){
-                        refreshZakonczenieLataWidget();
-                    }
-                }
-                if(this.find('.panel-body button[href*="zdarzenie"]').length > 0){
-                    AutoGoSettings.przerwij();
-                }
-            })
-        }
-    }
-    initEventZakonczenieLata();
-
 
 
     // **********************
@@ -3918,6 +3866,68 @@ function initPokeLifeScript(){
 
     }
     initTutorial();
+
+
+
+    // **********************
+    //
+    // initEventZakonczenieLata
+    // Funkcja dodająca obłsługe eventu zakonczenia lata
+    //
+    // **********************
+    function initEventZakonczenieLata(){
+        var d = new Date();
+        if((d.getDate() >= 26 && d.getMonth() == 7) || (d.getDate() <= 9 && d.getMonth() == 8)){
+            var zakonczenieLataWidget;
+
+            function refreshZakonczenieLataWidget(){
+                $.ajax({
+                    type: 'POST',
+                    url: "gra/statystyki.php"
+                }).done(function (response) {
+                    var html = '<div class="panel panel-primary"><div class="panel-heading">Zakonczenie Lata<div class="navbar-right"><span id="refreshZakonczenieLataWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
+                    var text = $(response).find('#statystyki .statystyki-wyglad:nth(1)').html();
+                    html = html + '<p style=" margin: 5px 0; text-align: center; font-size: 19px; ">Znalezionych dzisiaj Muszli: ' + text + '</p>';
+                    html = html + '</tbody></table></div>';
+                    zakonczenieLataWidget = html;
+                });
+            }
+            refreshZakonczenieLataWidget();
+
+            onReloadSidebar(function(){
+                this.find(".panel-heading:contains('Drużyna')").parent().before(zakonczenieLataWidget);
+            })
+
+
+            $(document).on("click", "#refreshZakonczenieLataWidget", function (event) {
+                refreshZakonczenieLataWidget();
+                $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+            });
+
+            onReloadMain(function(){
+                if(this.find(".panel-body > p.alert-success").length > 0){
+                    if(this.find(".panel-body > p.alert-success:contains('Nieskazitelna Muszla')").length > 0){
+                        refreshZakonczenieLataWidget();
+                    }
+                }
+                if(this.find('.panel-body button[href*="zdarzenie"]').length > 0){
+                    AutoGoSettings.przerwij();
+                    if(this.find('.panel-body button:contains("Podaruj starszemu mężczyźnie 1.000 Yen")').length > 0){
+                        reloadMain("#glowne_okno", 'gra/dzicz.php?zdarzenie=0&miejsce=z_kurort_plaza', function(){
+                            $('#goAutoButton').trigger('click');
+                        });
+                    } else if(this.find('.panel-body button:contains("Środkowy")').length > 0){
+                        reloadMain("#glowne_okno", 'gra/dzicz.php?zdarzenie=1&miejsce=z_kurort_plaza', function(){
+                            $('#goAutoButton').trigger('click');
+                        });
+                    }
+
+                }
+            })
+        }
+    }
+    initEventZakonczenieLata();
+
 
 }
 
