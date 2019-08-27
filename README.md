@@ -32,6 +32,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+4.0.5 (2019-08-27)
+* Dodanie obsługi eventu
+* W wyborach eventowych autoGo wybiera dać 1000Yenów starcowi i Środkowy
+
 3.39.1 (2019-08-20)
 * Poprawki do wyświetlania na niskich levelach
 
