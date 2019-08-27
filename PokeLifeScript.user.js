@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      3.39.1
+// @version      4.0.0
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -18,37 +18,39 @@
 
 // Wszystkie funkcje od góry:
 //
-// 1.  initOtworzWNowymOknie
-// 2.  initSkins
-// 3.  initAutoGo
-// 4.  initAutouzupelnianiePol
-// 5.  initShinyWidget
-// 6.  initZadaniaWidget
-// 7.  initPlecakTMView
-// 8.  initStatystykiLink
-// 9.  initVersionInfo
-// 10. initLogger
-// 11. initSzybkieKlikanieWLinkiPromocyjne
-// 12. initRozbudowanyOpisDziczy
-// 13. initWielkanocWidget // TODO: poprawić dodawanie nowe dziczy z jajkiem
-// 14. initPoprawaWygladuPokow
-// 15. initSzybkiSklep
-// 16. initWyszukiwarkaOsiagniec
-// 17. initKomunikat
-// 18. initPlecakTrzymaneView
-// 19. initWbijanieSzkoleniowca
-// 20. initWystawView
-// 21. initWbijanieJeszczeDokladke
-// 22. initEventWyspaUnikatow
-// 23. initZamianaPrzedmiotow
-// 24. initPodgladPokowWLidze
-// 25. initSzybkaWalkaWLidze
-// 26. initPrzypomnienieOPracy
-// 27. initSzybkaAktywnosc
-// 28. initZamianaPokemonow
-// 29. initDbclickToHide
-// 29. initStowarzyszeniaWidget
-// 30. initPoprawkiDoCzatu
+//     initOtworzWNowymOknie
+//     initSkins
+//     initEventZakonczenieLata
+//     initAutoGo
+//     initAutouzupelnianiePol
+//     initShinyWidget
+//     initZadaniaWidget
+//     initPlecakTMView
+//     initStatystykiLink
+//     initVersionInfo
+//     initLogger
+//     initSzybkieKlikanieWLinkiPromocyjne
+//     initRozbudowanyOpisDziczy
+//     initWielkanocWidget // TODO: poprawić dodawanie nowe dziczy z jajkiem
+//     initPoprawaWygladuPokow
+//     initSzybkiSklep
+//     initWyszukiwarkaOsiagniec
+//     initKomunikat
+//     initPlecakTrzymaneView
+//     initWbijanieSzkoleniowca
+//     initWystawView
+//     initWbijanieJeszczeDokladke
+//     initEventWyspaUnikatow
+//     initZamianaPrzedmiotow
+//     initPodgladPokowWLidze
+//     initSzybkaWalkaWLidze
+//     initPrzypomnienieOPracy
+//     initSzybkaAktywnosc
+//     initZamianaPokemonow
+//     initDbclickToHide
+//     initStowarzyszeniaWidget
+//     initPoprawkiDoCzatu
+//     initTutorial
 
 
 
@@ -626,6 +628,58 @@ function initPokeLifeScript(){
         });
     }
     initSkins();
+
+
+
+    // **********************
+    //
+    // initEventZakonczenieLata
+    // Funkcja dodająca obłsługe eventu zakonczenia lata
+    //
+    // **********************
+    function initEventZakonczenieLata(){
+        var d = new Date();
+        if((d.getDate() >= 26 && d.getMonth() == 7) || (d.getDate() <= 9 && d.getMonth() == 8)){
+            var zakonczenieLataWidget;
+
+            function refreshZakonczenieLataWidget(){
+                $.ajax({
+                    type: 'POST',
+                    url: "gra/statystyki.php"
+                }).done(function (response) {
+                    var html = '<div class="panel panel-primary"><div class="panel-heading">Zakonczenie Lata<div class="navbar-right"><span id="refreshZakonczenieLataWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
+                    var text = $(response).find('#statystyki .statystyki-wyglad:nth(1)').html();
+                    html = html + '<p style=" margin: 5px 0; text-align: center; font-size: 19px; ">Znalezionych dzisiaj Muszli: ' + text + '</p>';
+                    html = html + '</tbody></table></div>';
+                    zakonczenieLataWidget = html;
+                });
+            }
+            refreshZakonczenieLataWidget();
+
+            onReloadSidebar(function(){
+                this.find(".panel-heading:contains('Drużyna')").parent().before(zakonczenieLataWidget);
+            })
+
+
+            $(document).on("click", "#refreshZakonczenieLataWidget", function (event) {
+                refreshZakonczenieLataWidget();
+                $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+            });
+
+            $('#pasek_skrotow  li a[data-original-title*="Szybka Wyprawa"]:last').parent().after('<li><a href="index.php?url=gra/dzicz.php?poluj&amp;miejsce=z_kurort_plaza" data-toggle="tooltip" data-placement="top" title="" data-original-title="Szybka Wyprawa: Nadmorski Kurort"><img src="images/dzicz/z_kurort_plaza.jpg"></a></li>');
+            $('#pasek_skrotow  li a[data-original-title*="Szybka Wyprawa"]:last').parent().after('<li><a href="index.php?url=gra/dzicz.php?poluj&amp;miejsce=z_kurort_klify" data-toggle="tooltip" data-placement="top" title="" data-original-title="Szybka Wyprawa: Strome Klify"><img src="images/dzicz/z_kurort_klify.jpg"></a></li>');
+
+
+            onReloadMain(function(){
+                if(this.find(".panel-body > p.alert-success").length > 0){
+                    if(this.find(".panel-body > p.alert-success:contains('Nieskazitelna Muszla')").length > 0){
+                        refreshZakonczenieLataWidget();
+                    }
+                }
+            })
+        }
+    }
+    initEventZakonczenieLata();
 
 
 
@@ -1360,7 +1414,7 @@ function initPokeLifeScript(){
         refreshZadaniaWidget();
 
         onReloadSidebar(function(){
-            if(zadaniaWidget.length > 340){
+            if(zadaniaWidget != undefined && zadaniaWidget.length > 340){
                 this.find(".panel-heading:contains('Drużyna')").parent().after(zadaniaWidget);
             }
         })
