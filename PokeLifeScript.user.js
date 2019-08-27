@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      4.0.2
+// @version      4.0.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -665,10 +665,6 @@ function initPokeLifeScript(){
                 refreshZakonczenieLataWidget();
                 $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
             });
-
-            $('#pasek_skrotow  li a[data-original-title*="Szybka Wyprawa"]:last').parent().after('<li><a href="index.php?url=gra/dzicz.php?poluj&amp;miejsce=z_kurort_plaza" data-toggle="tooltip" data-placement="top" title="" data-original-title="Szybka Wyprawa: Nadmorski Kurort"><img src="images/dzicz/z_kurort_plaza.jpg"></a></li>');
-            $('#pasek_skrotow  li a[data-original-title*="Szybka Wyprawa"]:last').parent().after('<li><a href="index.php?url=gra/dzicz.php?poluj&amp;miejsce=z_kurort_klify" data-toggle="tooltip" data-placement="top" title="" data-original-title="Szybka Wyprawa: Strome Klify"><img src="images/dzicz/z_kurort_klify.jpg"></a></li>');
-
 
             onReloadMain(function(){
                 if(this.find(".panel-body > p.alert-success").length > 0){
@@ -3924,4 +3920,3 @@ function initPokeLifeScript(){
     initTutorial();
 
 }
-
