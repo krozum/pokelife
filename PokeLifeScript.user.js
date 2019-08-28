@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      4.0.5
+// @version      4.0.6
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -3910,7 +3910,7 @@ function initPokeLifeScript(){
                         refreshZakonczenieLataWidget();
                     }
                 }
-                if(this.find('.panel-body button[href*="zdarzenie"]').length > 0){
+                if(this.find('.panel-body button[href*="zdarzenie"]').length > 0 && $('#goAutoButton').html() == "STOP"){
                     AutoGoSettings.przerwij();
                     if(this.find('.panel-body button:contains("Podaruj starszemu mężczyźnie 1.000 Yen")').length > 0){
                         reloadMain("#glowne_okno", 'gra/dzicz.php?zdarzenie=0&miejsce=z_kurort_plaza', function(){
