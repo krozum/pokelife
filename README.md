@@ -32,6 +32,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+4.0.7 (2019-09-02)
+* Poprawki do czasu, podswietla na kolorowo nieprzeczytane wiadomosci
+* Poprawki do eventu
+
 4.0.5 (2019-08-27)
 * Dodanie obsługi eventu
 * W wyborach eventowych autoGo wybiera dać 1000Yenów starcowi i Środkowy
