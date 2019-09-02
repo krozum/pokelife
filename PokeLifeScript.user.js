@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      4.0.7
+// @version      4.0.8
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -729,7 +729,7 @@ function initPokeLifeScript(){
                 {
                     'iconFilePath': "images/pokesklep/greatballe.jpg",
                     'iconValue': function(){
-                        return '&zlap_pokemona=greatballe';
+                        return '&zlap_pokemona=greatballee';
                     }
                 },
                 {
@@ -769,7 +769,7 @@ function initPokeLifeScript(){
                         if (pokeLvlNumber < 15) {
                             return '&zlap_pokemona=nestballe';
                         } else {
-                            return '&zlap_pokemona=greatballe';
+                            return '&zlap_pokemona=greatballee';
                         }
                     }
                 },
@@ -785,7 +785,7 @@ function initPokeLifeScript(){
                         if (pokeLvlNumber < 15) {
                             return '&zlap_pokemona=nestballe';
                         } else {
-                            return '&zlap_pokemona=greatballe';
+                            return '&zlap_pokemona=greatballee';
                         }
                     }
                 },
@@ -804,7 +804,7 @@ function initPokeLifeScript(){
                             if (pokeLvlNumber > 5 && pokeLvlNumber < 15) {
                                 return '&zlap_pokemona=nestballe';
                             } else {
-                                return '&zlap_pokemona=greatballe';
+                                return '&zlap_pokemona=greatballee';
                             }
                         }
                     }
@@ -824,7 +824,7 @@ function initPokeLifeScript(){
                             if (pokeLvlNumber >= 5 && pokeLvlNumber < 15) {
                                 return '&zlap_pokemona=nestballe';
                             } else {
-                                return '&zlap_pokemona=greatballe';
+                                return '&zlap_pokemona=greatballee';
                             }
                         }
                     }
