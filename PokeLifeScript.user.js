@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      4.0.6
+// @version      4.0.7
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -8,7 +8,7 @@
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @require      https://bug7a.github.io/iconselect.js/sample/lib/control/iconselect.js
-// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=4
+// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=5
 // @resource     customCSS_style_1  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_1.css?ver=1
 // @resource     customCSS_style_2  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_2.css?ver=1
 // @resource     customCSS_style_3  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_3.css?ver=1
@@ -3740,6 +3740,8 @@ function initPokeLifeScript(){
             $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a').append('<span style=" background: #d45b5b; border-radius: 3px; margin-left: 8px; color: white; width: 30px; text-align:center; display: inline-block; line-height: 1; font-size: 11px; padding: 2px 0px 1px 0;">'+nieprzeczytane+'</span>');
 
 
+            $('li.nieprzeczytane').removeClass('nieprzeczytane');
+
             lastSeeShoutId = $('#shout_list li:last').attr('id');
 
             if(lastSeeShoutId != 0 && lastSeeShoutId !== "0" && lastSeeShoutId !== "undefined" && lastSeeShoutId !== undefined){
@@ -3764,8 +3766,6 @@ function initPokeLifeScript(){
             $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a span').remove();
             $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a').append('<span style=" background: #d45b5b; border-radius: 3px; margin-left: 8px; color: white; width: 30px; text-align:center; display: inline-block; line-height: 1; font-size: 11px; padding: 2px 0px 1px 0;">'+nieprzeczytane+'</span>');
 
-
-
             if(lastSeeShoutId.split('-')[1] < ($(param).attr('id').split('-')[1])){
                 if($(param).is(".room-3")){
                     //nieprzeczytane3++;
@@ -3776,10 +3776,12 @@ function initPokeLifeScript(){
                     //$('li[data-original-title="Pokój do dyskusji ogólnych"] a span').remove();
                     //$('li[data-original-title="Pokój do dyskusji ogólnych"] a').append('<span style=" background: #97adab; border-radius: 3px; padding: 3px 8px; margin-left: 5px; color: white; width: 30px; height: 20px; text-align:center; display: inline-block">'+nieprzeczytane+'</span>');
                 } else {
+                    $('#'+ $(param).attr('id')).addClass('nieprzeczytane');
                     nieprzeczytane++;
                     $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a span').remove();
                     $('li[data-original-title="Pokój widoczny wyłącznie przez członków twojego stowarzyszenia"] a').append('<span style=" background: #d45b5b; border-radius: 3px; margin-left: 8px; color: white; width: 30px; text-align:center; display: inline-block; line-height: 1; font-size: 11px; padding: 2px 0px 1px 0;">'+nieprzeczytane+'</span>');
                 }
+
             }
         });
 
