@@ -259,3 +259,7 @@ a {
 #stowarzyszenieWidget .progress-bar{
     padding: unset!important;
 }
+
+#shouts ul li.nieprzeczytane {
+    background-color: rgba(255, 193, 7, 0.32);
+}
