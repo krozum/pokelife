@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript
-// @version      4.0.8
+// @version      4.0.9
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1481,7 +1481,8 @@ function initPokeLifeScript(){
 
     // **********************
     //
-    // initLogger
+    // 
+    
     // Funkcja dodająca logowanie tego co wyświetla sie na ekranie
     // eventTypeId:
     // 1 - pusta wyprawa
@@ -1615,7 +1616,7 @@ function initPokeLifeScript(){
             }
         })
     }
-    initLogger();
+    //initLogger();
 
 
 
