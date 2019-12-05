@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.0
+// @version      5.0.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -28,6 +28,8 @@ var previousPageContent = null;
 var pokemonData;
 var region;
 var lastSeeShoutId;
+var timeoutMin = 200;
+var timeoutMax = 400;
 
 
 // **********************
@@ -421,19 +423,37 @@ function initPokeLifeScript(){
         initLocationIcon();
 
 
-        function click() {
+        function click(poLeczeniu) {
+            if(poLeczeniu != true){
+                poLeczeniu = false;
+            }
             var canRun = true;
 
             if(blocked){
+                console.log('blocked');
                 canRun = false;
             } else {
                 blocked = true;
-                setTimeout(function(){ blocked = false }, 500);
+                setTimeout(function(){ blocked = false }, timeoutMin);
             }
 
             $('.stan-pokemon div.progress:first-of-type .progress-bar').each(function (index) {
                 var now = $(this).attr("aria-valuenow");
                 if (Number(now) < Number(1)) {
+                    if(!poLeczeniu){
+                        $.get( 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat', function( data ) {
+                            $.get( 'inc/stan.php', function( data ) {
+                                $( "#sidebar" ).html( data );
+                                $('.btn-wybor_pokemona').attr("disabled", false);
+                                $('.btn-wybor_pokemona .progress-bar').css("width", "100%");
+                                $('.btn-wybor_pokemona .progress-bar span').html("100% PŻ");
+                                setTimeout(function(){
+                                    click(true)
+                                }, (timeoutMax - timeoutMin) + timeoutMin);
+                            });
+                        });
+                    }
+                    console.log('zycie');
                     canRun = false;
                 }
             });
@@ -478,10 +498,6 @@ function initPokeLifeScript(){
                         $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
                     }
                 }
-            } else {
-                console.log("nie mozna");
-                autoGo = false;
-                $('#goAutoButton').html('AutoGO');
             }
         }
 
@@ -537,11 +553,25 @@ function initPokeLifeScript(){
 
         afterReloadMain(function(){
             if (autoGo) {
-                setTimeout(function(){ click() }, Math.floor(Math.random() * 1000) + 500);
+                setTimeout(function(){ click() }, (timeoutMax - timeoutMin) + timeoutMin);
             }
         })
     }
     initAutoGo();
+    
+    
+    // **********************
+    //
+    // initVersionInfo
+    // Funkcja dodająca numer wersji na dole strony
+    //
+    // **********************
+    function initVersionInfo(){
+        $('body').append('<div id="newVersionInfo" style="border-radius: 4px; position: fixed; cursor: pointer; bottom: 10px; right: 20px; font-size: 19px; text-align: center; width: auto; height: 30px; line-height: 35px; z-index: 9998; text-align: right;"><a style="color: yellow !important;text-decoration:none;" target="_blank" href="https://github.com/krozum/pokelife#user-content-changelog">' + (GM_info.script.version == config.lastVersion ? "" : "New Version! ") + 'v' + GM_info.script.version + '</a></div>');
+        config.lastVersion = GM_info.script.version;
+        updateConfig(config);
+    };
+    initVersionInfo();
 }
 initPokeLifeScript();
 
