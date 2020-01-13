@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.0.3
+// @version      5.0.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -73,7 +73,8 @@ function reloadMain(selector, url, callback, callback2){
         if(callback2 != undefined && callback2 != null){
             callback2.call(THAT, url);
         }
-        $(""+selector).html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"").replace("http://api.jquery.com/scripts/events.js", "https://gra.pokelife.pl/js/zegar.js"));
+        var html2 = THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>',"").replace("http://api.jquery.com/scripts/events.js", "https://gra.pokelife.pl/js/zegar.js").replace("$(\"#glowne_okno\").load('gra/stowarzyszenie.php?p=2&id_budynku='++'&pozycja_x='+$( \"#buduj\" ).position().left/16+'&pozycja_y='+$( \"#buduj\" ).position().top/16+'&nic');", "");
+        $(""+selector).html(html2);
 
         if(url.indexOf("napraw") != -1){
             $("html, body").animate({ scrollTop: 0 }, "fast");
@@ -198,6 +199,88 @@ $(document).on("click", ".btn-akcja", function(event) {
 });
 
 
+$(document).on("click", ".btn-edycja-nazwy-grupy", function(event) {
+	$("#panel_grupa_id_"+$(this).attr('data-grupa-id')).html('<form action="druzyna.php?p=2&zmien_nazwe_grupy='+$(this).attr('data-grupa-id')+'" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="'+ $(this).attr('data-obecna-nazwa')+'"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>');
+});
+
+$(document).on("click", ".nauka-ataku", function(event) {
+	event.preventDefault();
+
+	$("html, body").animate({ scrollTop: 0 }, "slow");
+
+	var naucz_zamiast = $("input[name=nauczZamiast-"+$(this).attr("data-pokemon-id")+"]:checked").val();
+
+	//$("#glowne_okno").html('Wczytywanie...');
+	if ($(this).attr("data-tm-zapomniany")) {
+		$.get( 'gra/sala.php?zabezpieczone_id='+$(this).attr('zabezpieczone-id')+'&p='+$(this).attr("data-pokemon-id")+'&tm_zapomniany='+$(this).attr("data-tm-zapomniany")+'&naucz_zamiast='+naucz_zamiast+'&zrodlo='+$(this).attr('data-zrodlo'), function( data ) { $( "#glowne_okno" ).html( data ); });
+	} else if ($(this).attr("data-tm")) {
+		$.get( 'gra/sala.php?zabezpieczone_id='+$(this).attr('zabezpieczone-id')+'&p='+$(this).attr("data-pokemon-id")+'&tm='+$(this).attr("data-tm")+'&naucz_zamiast='+naucz_zamiast+'&zrodlo='+$(this).attr('data-zrodlo'), function( data ) { $( "#glowne_okno" ).html( data ); });
+	} else {
+		$.get( 'gra/sala.php?zabezpieczone_id='+$(this).attr('zabezpieczone-id')+'&p='+$(this).attr("data-pokemon-id")+'&nauka_ataku='+$(this).attr('data-nazwa-ataku')+'&naucz_zamiast='+naucz_zamiast+'&zrodlo='+$(this).attr('data-zrodlo'), function( data ) { $( "#glowne_okno" ).html( data ); });
+	}
+});
+
+
+$(document).on("change", ".select-submit", function(e) {
+	e.preventDefault();
+	$("html, body").animate({ scrollTop: 0 }, "slow");
+
+	//Obejście modali
+		$('body').removeClass('modal-open');
+		$('body').css({"padding-right":"0px"});
+		$('.modal-backdrop').remove();
+
+    var postData = $(this).closest('form').serializeArray();
+
+	$("html, body").animate({ scrollTop: 0 }, "fast");
+
+	$.ajax({
+		type : 'GET',
+		url : 'gra/'+$(this).closest('form').attr('action'),
+		data: {
+			postData : postData
+		},
+		success:function (data) {
+			$( "#glowne_okno" ).html( data );
+		}
+	});
+});
+
+$(document).on("click", "#zatwierdz_reprezentacje", function(e) {
+	$("html, body").animate({ scrollTop: 0 }, "slow");
+
+	//Obejście modali
+		$('body').removeClass('modal-open');
+		$('body').css({"padding-right":"0px"});
+		$('.modal-backdrop').remove();
+
+    var postData = $(this).closest('form').serializeArray();
+
+	$("html, body").animate({ scrollTop: 0 }, "fast");
+	$.ajax({
+		type : 'GET',
+		url : 'gra/'+$(this).closest('form').attr('action'),
+		data: {
+			postData : postData
+		},
+		success:function (data) {
+			$( "#glowne_okno" ).html( data );
+		}
+	});
+
+	e.preventDefault();
+});
+
+$(document).on("click", ".collapse_toggle_icon", function(e) {
+	if($( ".collapse_toggle_icon" ).hasClass( "glyphicon-chevron-down" )) {
+		$( ".collapse_toggle_icon").removeClass( "glyphicon-chevron-down" ).addClass( "glyphicon-chevron-up" );
+	} else {
+		$( ".collapse_toggle_icon").removeClass( "glyphicon-chevron-up" ).addClass( "glyphicon-chevron-down" );
+	}
+});
+
+
+
 // **********************
 //
 // initPokeLifeScript
@@ -276,6 +359,7 @@ function initPokeLifeScript(){
 
         window.localStorage.useCzerwoneNapoje == undefined ? window.localStorage.useCzerwoneNapoje = false : "";
         window.localStorage.useNiebieskieNapoje == undefined ? window.localStorage.useNiebieskieNapoje = false : "";
+        window.localStorage.useZieloneNapoje == undefined ? window.localStorage.useZieloneNapoje = false : "";
         window.localStorage.useNiebieskieJagody == undefined ? window.localStorage.useNiebieskieJagody = false : "";
         window.localStorage.useFontanna == undefined ? window.localStorage.useFontanna = false : "";
         window.localStorage.useOnlyInNight == undefined ? window.localStorage.useOnlyInNight = false : "";
@@ -384,6 +468,33 @@ function initPokeLifeScript(){
                     'iconFilePath': "images/pokesklep/lureballe.jpg",
                     'iconValue': function(){
                         return '&zlap_pokemona=lureballe';
+                    }
+                },
+                {
+                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb1.jpg",
+                    'iconValue': function(){
+                        let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                        if (pokeLvlNumber < 15) {
+                            return '&zlap_pokemona=nestballe';
+                        } else {
+                            return '&zlap_pokemona=greatballee';
+                        }
+                    }
+                },
+                {
+                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb2.png",
+                    'iconValue': function(){
+                        var d = new Date();
+                        var h = d.getHours();
+                        if (h >= 22 || h < 6) {
+                            return '&zlap_pokemona=nightballe';
+                        }
+                        let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                        if (pokeLvlNumber < 15) {
+                            return '&zlap_pokemona=nestballe';
+                        } else {
+                            return '&zlap_pokemona=greatballee';
+                        }
                     }
                 }
 
@@ -520,12 +631,12 @@ function initPokeLifeScript(){
                 $('body').append('<div id="settingsAutoGo" style="padding: 10px; position:fixed;top: 60px;right: 69px;width: 440px;background: white;opacity: 1;border: 3px dashed #ffed14;z-index: 999;"></div>');
                 $('#settingsAutoGo').append('<table> <tr> <th></th> <th></th> <th></th> </tr></table>');
                 $('#settingsAutoGo table').append('<col width="60"><col width="20"><col width="340">');
-                $('#settingsAutoGo table').append('<tr style="opacity: 0.2"><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input disabled type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" '+(window.localStorage.useCzerwoneNapoje == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj czerwonych napojów gdy zabraknie PA</label></td> </tr>');
-                $('#settingsAutoGo table').append('<tr style="opacity: 0.2"><td><img style="width: 40px;" src="images/pokesklep/napoj_energetyczny.jpg"></td><td><input disabled type="checkbox" id="autoUseNiebieskieNapoje" name="autoUseNiebieskieNapoje" value="1" '+(window.localStorage.useNiebieskieNapoje == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj niebieskich napojów gdy zabraknie PA</label></td> </tr>');
+                $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" '+(window.localStorage.useCzerwoneNapoje == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj czerwonych napojów gdy zabraknie PA</label></td> </tr>');
+                $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieNapoje" name="autoUseNiebieskieNapoje" value="1" '+(window.localStorage.useNiebieskieNapoje == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj niebieskich napojów gdy zabraknie PA</label></td> </tr>');
+                $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/zielony_napoj.jpg"></td><td><input type="checkbox" id="autoUseZieloneNapoje" name="autoUseZieloneNapoje" value="1" '+(window.localStorage.useZieloneNapoje == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj zielonych napojów gdy zabraknie PA</label></td> </tr>');
                 $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/niebieskie_jagody.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieJagody" name="autoUseNiebieskieJagody" value="1" '+(window.localStorage.useNiebieskieJagody == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj niebieskich jagód gdy zabraknie PA</label></td> </tr>');
-                $('#settingsAutoGo table').append('<tr style="opacity: 0.2"><td><img style="width: 40px;" src="images/stow/18_5.png"></td><td><input type="checkbox" disabled id="autoUseFontanna" name="autoUseFontanna" value="1" '+(window.localStorage.useFontanna == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj fontanny gdy zabraknie PA</label></td> </tr>');
                 $('#settingsAutoGo table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" '+(window.localStorage.useOnlyInNight == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
-                $('#settingsAutoGo').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Fontanna</b> -> <b>Niebieskie Jagody</b> -> <b>Niebieskie napoje</b> -> <b>Czerwone napoje</b></p>');
+                $('#settingsAutoGo').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Zielone napoje</b> -> <b>Niebieskie napoje</b> -> <b>Czerwone napoje</b></p>');
             }
         });
 
@@ -539,9 +650,9 @@ function initPokeLifeScript(){
             window.localStorage.useNiebieskieNapoje = isChecked;
         });
 
-        $(document).on("click", "#autoUseFontanna", function(){
-            var isChecked = $('#autoUseFontanna').prop('checked');
-            window.localStorage.useFontanna = isChecked;
+        $(document).on("click", "#autoUseZieloneNapoje", function(){
+            var isChecked = $('#autoUseZieloneNapoje').prop('checked');
+            window.localStorage.useZieloneNapoje = isChecked;
         });
 
         $(document).on("click", "#autoUseCzerwoneNapoje", function(){
@@ -620,6 +731,7 @@ function initPokeLifeScript(){
                                                     reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=3&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=niebieskie_jagody&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=" + ile, function(){
                                                         autoGo = true;
                                                         $('#goAutoButton').html('STOP');
+                                                        console.log('Przywrócono PA');
                                                         setTimeout(function(){
                                                             click();
                                                         }, 2000);
@@ -638,23 +750,89 @@ function initPokeLifeScript(){
                             });
                         }
                         break;
-                    case "useFontanna":
-                        console.log('Próbuje przywrócić PA za pomocą fontanny');
-                        if($("a[href='gra/stowarzyszenie.php']").length > 0){
-                            reloadMain("#glowne_okno", "gra/stowarzyszenie.php", function(){
-                                        console.log('aaaa');
+                    case "useZieloneNapoje":
+                        console.log('Próbuje przywrócić PA za pomocą zielonych napojów');
+                        if($("a[href='gra/statystyki.php']").length > 0){
+                            reloadMain("#glowne_okno", "gra/statystyki.php", function(){
                                 setTimeout(function(){
-                                    if($('button[href="stowarzyszenie.php?p=2&fontanna_wypij"]:contains("Napij się z fontanny")').length > 0){
-                                        reloadMain("#glowne_okno", "gra/stowarzyszenie.php?p=2&fontanna_wypij", function(){
-                                            autoGo = true;
-                                            $('#goAutoButton').html('STOP');
-                                            setTimeout(function(){
-                                                click();
-                                            }, 2000);
-                                        });
+                                    if($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[0].trim() != $("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[1].trim()){
+                                        if($("a[href='gra/plecak.php']").length > 0){
+                                            reloadMain("#glowne_okno", "gra/plecak.php", function(){
+                                                if($('.thumbnail-plecak[data-target="#plecak-1"] h5').length > 0){
+                                                    reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=zielony_napoj&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=1", function(){
+                                                        autoGo = true;
+                                                        $('#goAutoButton').html('STOP');
+                                                        console.log('Przywrócono PA');
+                                                        setTimeout(function(){
+                                                            click();
+                                                        }, 2000);
+                                                    });
+                                                } else {
+                                                    console.log('Brak napojów');
+                                                    probujWznowicAutoGo(array, autoGoBefore);
+                                                }
+                                            })
+                                        }
                                     } else {
-                                        console.log('Wykorzystałeś już dzisiaj fontanne');
+                                        console.log('Wykorzystałeś limit napojów na dzisiaj');
                                         probujWznowicAutoGo(array, autoGoBefore);
+                                    }
+                                }, 2000);
+                            });
+                        }
+                        break;
+                    case "useNiebieskieNapoje":
+                        console.log('Próbuje przywrócić PA za pomocą niebieskich napojów');
+                        if($("a[href='gra/statystyki.php']").length > 0){
+                            reloadMain("#glowne_okno", "gra/statystyki.php", function(){
+                                setTimeout(function(){
+                                    if($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[0].trim() != $("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[1].trim()){
+                                        if($("a[href='gra/plecak.php']").length > 0){
+                                            reloadMain("#glowne_okno", "gra/plecak.php", function(){
+                                                if($('.thumbnail-plecak[data-target="#plecak-4"] h5').length > 0){
+                                                    reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=napoj_energetyczny&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=1", function(){
+                                                        autoGo = true;
+                                                        $('#goAutoButton').html('STOP');
+                                                        console.log('Przywrócono PA');
+                                                        setTimeout(function(){
+                                                            click();
+                                                        }, 2000);
+                                                    });
+                                                } else {
+                                                    console.log('Brak napojów');
+                                                    probujWznowicAutoGo(array, autoGoBefore);
+                                                }
+                                            })
+                                        }
+                                    } else {
+                                        console.log('Wykorzystałeś limit napojów na dzisiaj');
+                                        probujWznowicAutoGo(array, autoGoBefore);
+                                    }
+                                }, 2000);
+                            });
+                        }
+                        break;
+                    case "useCzerwoneNapoje":
+                        console.log('Próbuje przywrócić PA za pomocą czerwonych napojów');
+                        if($("a[href='gra/statystyki.php']").length > 0){
+                            reloadMain("#glowne_okno", "gra/statystyki.php", function(){
+                                setTimeout(function(){
+                                    if($("a[href='gra/plecak.php']").length > 0){
+                                        reloadMain("#glowne_okno", "gra/plecak.php", function(){
+                                            if($('.thumbnail-plecak[data-target="#plecak-5"] h5').length > 0){
+                                                reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=duzy_napoj_energetyczny&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=1", function(){
+                                                    autoGo = true;
+                                                    $('#goAutoButton').html('STOP');
+                                                    console.log('Przywrócono PA');
+                                                    setTimeout(function(){
+                                                        click();
+                                                    }, 2000);
+                                                });
+                                            } else {
+                                                console.log('Brak napojów');
+                                                probujWznowicAutoGo(array, autoGoBefore);
+                                            }
+                                        })
                                     }
                                 }, 2000);
                             });
@@ -680,11 +858,11 @@ function initPokeLifeScript(){
             if(window.localStorage.useNiebieskieNapoje == "true" || window.localStorage.useNiebieskieNapoje == true){
                 array.push("useNiebieskieNapoje");
             }
+            if(window.localStorage.useZieloneNapoje == "true" || window.localStorage.useZieloneNapoje == true){
+                array.push("useZieloneNapoje");
+            }
             if(window.localStorage.useNiebieskieJagody == "true" || window.localStorage.useNiebieskieJagody == true){
                 array.push("useNiebieskieJagody");
-            }
-            if(window.localStorage.useFontanna == "true" || window.localStorage.useFontanna == true){
-                array.push("useFontanna");
             }
             console.log(array);
             if(window.localStorage.useOnlyInNight == "true" || window.localStorage.useOnlyInNight == true){
@@ -708,6 +886,7 @@ function initPokeLifeScript(){
     initAutoGo();
 
 
+
     // **********************
     //
     // initVersionInfo
@@ -718,6 +897,41 @@ function initPokeLifeScript(){
         $('body').append('<div id="newVersionInfo" style="border-radius: 4px; position: fixed; cursor: pointer; bottom: 10px; right: 20px; font-size: 19px; text-align: center; width: auto; height: 30px; line-height: 35px; z-index: 9998; text-align: right;"><a style="color: yellow !important;text-decoration:none;" target="_blank" href="https://github.com/krozum/pokelife#user-content-changelog">' + 'v' + GM_info.script.version + '</a></div>');
     };
     initVersionInfo();
+
+
+
+    // **********************
+    //
+    // initAutouzupelnianiePol
+    // Funkcja dodająca logowanie tego co wyświetla sie na ekranie
+    //
+    // **********************
+    function initAutouzupelnianiePol(){
+
+        $(document).on("click", "#plecak-jagody .thumbnail-plecak, .thumbnail-plecak[data-target='#plecak-11'], .thumbnail-plecak[data-target='#plecak-14'], .thumbnail-plecak[data-target='#plecak-15'], .thumbnail-plecak[data-target='#plecak-8'], .thumbnail-plecak[data-target='#plecak-7'], .thumbnail-plecak[data-target='#plecak-19'], .thumbnail-plecak[data-target='#plecak-16']", function (event) {
+            var id = $(this).data("target");
+            var ilosc = $(this).find("h5").html().split(" ")[0];
+            $(id+' input[name="ilosc"]').val(ilosc);
+        });
+
+        onReloadMain(function(){
+            if (this.find('.panel-heading').html() === "Centrum wymiany Punktów Zasług") {
+                var dostepne = Number(this.find('.panel-body big').html().split(" ")[0]);
+                var cena_zakupu = Number(this.find('#target0').parent().find("b").html().split("¥")[0].replace(/\./g, ''));
+                var ilosc_yenow = Number($('a[href="http://pokelife.pl/pokedex/index.php?title=Pieniądze"]').parent().html().split("</a>")[1].split("<a")[0].replace(/\./g, ''));
+
+                var ile_moge_kupic = Number((ilosc_yenow / cena_zakupu).toFixed());
+
+                if (ile_moge_kupic > dostepne) {
+                    ile_moge_kupic = dostepne;
+                }
+
+                console.log('PokeLifeScript: dostępnych PZ do kupienia: ' + ile_moge_kupic);
+                this.find('#target0').attr("value", ile_moge_kupic);
+            }
+        })
+    }
+    initAutouzupelnianiePol();
 }
 initPokeLifeScript();
 
