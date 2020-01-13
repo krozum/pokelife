@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.0.4
+// @version      5.0.5
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -30,6 +30,19 @@ var region;
 var lastSeeShoutId;
 var timeoutMin = 200;
 var timeoutMax = 300;
+
+
+// **********************
+//
+// funkcja do zapisu do bra1ns.pl
+//
+// **********************
+function requestBra1nsPL(url, callback){
+    $.ajax(url)
+        .done(data => callback == null ? "" : callback(data))
+        .fail((xhr, status) => console.log('error:', status));
+}
+requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_user.php?bot_version=" + GM_info.script.version + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim(), null);
 
 
 // **********************
@@ -587,6 +600,7 @@ function initPokeLifeScript(){
                         console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
                         autoGo = false;
                         $('#goAutoButton').html('AutoGO');
+                        requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now(), null);
                     } else if ($('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
                         if($('#setPokeball .selected-box .selected-icon img').attr('src') == "images/pokesklep/safariballe.jpg"){
                             console.log('PokeLifeScript: spotkany niezłapany pokemona');
@@ -932,6 +946,81 @@ function initPokeLifeScript(){
         })
     }
     initAutouzupelnianiePol();
+
+
+
+    // **********************
+    //
+    // initShinyWidget
+    // Funkcja pokazująca ostatnie 3 złapane shiny na rynku
+    //
+    // **********************
+
+    function initShinyWidget(){
+        var shinyWidget;
+
+        function refreshShinyWidget(){
+            var api = "https://bra1ns.pl/pokelife/api/get_shiny.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim();
+            $.getJSON(api, {
+                format: "json"
+            }).done(function (data) {
+                var html = '<div class="panel panel-primary"><div class="panel-heading">Ostatnio spotkane shiny<div class="navbar-right"><span id="refreshShinyWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody><tr>';
+                $.each(data.list, function (key, value) {
+                    var wystepowanie = "";
+                    if(pokemonData != undefined){
+                        if(pokemonData['kanto'][value['pokemon_id']] != undefined){
+                            wystepowanie =  "Kanto, " + pokemonData['kanto'][value['pokemon_id']].wystepowanie;
+                        } else if (pokemonData['johto'][value['pokemon_id']] != undefined){
+                            wystepowanie =  "Johto, " + pokemonData['johto'][value['pokemon_id']].wystepowanie;
+                        } else if (pokemonData['hoenn'][value['pokemon_id']] != undefined){
+                            wystepowanie =  "Hoenn, " + pokemonData['hoenn'][value['pokemon_id']].wystepowanie;
+                        } else if (pokemonData['sinnoh'][value['pokemon_id']] != undefined){
+                            wystepowanie =  "Sinnoh, " + pokemonData['sinnoh'][value['pokemon_id']].wystepowanie;
+                        } else if (pokemonData['unova'][value['pokemon_id']] != undefined){
+                            wystepowanie =  "Unova, " + pokemonData['unova'][value['pokemon_id']].wystepowanie;
+                        }
+                    }
+                    html = html + "<td data-toggle='tooltip' data-placement='top' title='' data-original-title='Spotkany : "+value['creation_date']+", "+wystepowanie+"' style='text-align: center;'><img src='pokemony/srednie/s" + value['pokemon_id'] + ".png' style='width: 40px; height: 40px;'></td>";
+                });
+                html = html + '</tr></tbody></table></div>';
+                shinyWidget = html;
+                $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+            });
+        }
+        refreshShinyWidget();
+
+        onReloadSidebar(function(){
+            this.find(".panel-heading:contains('Drużyna')").parent().before(shinyWidget);
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+
+        $(document).on("click", "#refreshShinyWidget", function (event) {
+            refreshShinyWidget();
+            $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+        });
+    }
+    initShinyWidget();
 }
-initPokeLifeScript();
+
+
+$.getJSON("https://raw.githubusercontent.com/krozum/pokelife/master/pokemon.json", {
+    format: "json"
+}).done(function (data) {
+    pokemonData = data;
+    if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=las"]').length > 0){
+        region = 'kanto';
+    } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=puszcza"]').length > 0){
+        region = 'johto';
+    } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=opuszczona_elektrownia"]').length > 0){
+        region = 'hoenn';
+    } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=koronny_szczyt"]').length > 0){
+        region = 'sinnoh';
+    } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=ranczo"]').length > 0){
+        region = 'unova';
+    } else if($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=francuski_labirynt"]').length > 0){
+        region = 'kalos';
+    }
+    console.log("Wykryty region: " + region);
+    initPokeLifeScript();
+})
 
