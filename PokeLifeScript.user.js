@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.0.5
+// @version      5.0.6
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -212,28 +212,74 @@ $(document).on("click", ".btn-akcja", function(event) {
 });
 
 
+$(document).off("click", ".btn-edycja-nazwy-grupy");
 $(document).on("click", ".btn-edycja-nazwy-grupy", function(event) {
 	$("#panel_grupa_id_"+$(this).attr('data-grupa-id')).html('<form action="druzyna.php?p=2&zmien_nazwe_grupy='+$(this).attr('data-grupa-id')+'" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="'+ $(this).attr('data-obecna-nazwa')+'"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>');
 });
 
+$(document).off("click", ".nauka-ataku");
 $(document).on("click", ".nauka-ataku", function(event) {
 	event.preventDefault();
 
-	$("html, body").animate({ scrollTop: 0 }, "slow");
+    $("html, body").animate({ scrollTop: 0 }, "slow");
 
-	var naucz_zamiast = $("input[name=nauczZamiast-"+$(this).attr("data-pokemon-id")+"]:checked").val();
+    var naucz_zamiast = $("input[name=nauczZamiast-"+$(this).attr("data-pokemon-id")+"]:checked").val();
 
-	//$("#glowne_okno").html('Wczytywanie...');
-	if ($(this).attr("data-tm-zapomniany")) {
-		$.get( 'gra/sala.php?zabezpieczone_id='+$(this).attr('zabezpieczone-id')+'&p='+$(this).attr("data-pokemon-id")+'&tm_zapomniany='+$(this).attr("data-tm-zapomniany")+'&naucz_zamiast='+naucz_zamiast+'&zrodlo='+$(this).attr('data-zrodlo'), function( data ) { $( "#glowne_okno" ).html( data ); });
-	} else if ($(this).attr("data-tm")) {
-		$.get( 'gra/sala.php?zabezpieczone_id='+$(this).attr('zabezpieczone-id')+'&p='+$(this).attr("data-pokemon-id")+'&tm='+$(this).attr("data-tm")+'&naucz_zamiast='+naucz_zamiast+'&zrodlo='+$(this).attr('data-zrodlo'), function( data ) { $( "#glowne_okno" ).html( data ); });
-	} else {
-		$.get( 'gra/sala.php?zabezpieczone_id='+$(this).attr('zabezpieczone-id')+'&p='+$(this).attr("data-pokemon-id")+'&nauka_ataku='+$(this).attr('data-nazwa-ataku')+'&naucz_zamiast='+naucz_zamiast+'&zrodlo='+$(this).attr('data-zrodlo'), function( data ) { $( "#glowne_okno" ).html( data ); });
+    //$("#glowne_okno").html('Wczytywanie...');
+    if ($(this).attr("data-tm-zapomniany")) {
+        reloadMain("#glowne_okno", 'gra/sala.php?zabezpieczone_id='+$(this).attr('zabezpieczone-id')+'&p='+$(this).attr("data-pokemon-id")+'&tm_zapomniany='+$(this).attr("data-tm-zapomniany")+'&naucz_zamiast='+naucz_zamiast+'&zrodlo='+$(this).attr('data-zrodlo'));
+    } else if ($(this).attr("data-tm")) {
+        reloadMain("#glowne_okno", 'gra/sala.php?zabezpieczone_id='+$(this).attr('zabezpieczone-id')+'&p='+$(this).attr("data-pokemon-id")+'&tm='+$(this).attr("data-tm")+'&naucz_zamiast='+naucz_zamiast+'&zrodlo='+$(this).attr('data-zrodlo'));
+    } else {
+        reloadMain("#glowne_okno", 'gra/sala.php?zabezpieczone_id='+$(this).attr('zabezpieczone-id')+'&p='+$(this).attr("data-pokemon-id")+'&nauka_ataku='+$(this).attr('data-nazwa-ataku')+'&naucz_zamiast='+naucz_zamiast+'&zrodlo='+$(this).attr('data-zrodlo'));
+    }
+});
+
+
+$(document).off('submit', 'form');
+$(document).on('submit', 'form', function(e) {
+	if (!$(this).attr("form-normal-submit")) {
+
+		e.preventDefault();
+
+		$("html, body").animate({ scrollTop: 0 }, "fast");
+
+		//Obejście modali
+		if($('body').hasClass('modal-open') && $(this).attr("dont-close-modal") != 1) {
+			$('body').removeClass('modal-open');
+			$('body').css({"padding-right":"0px"});
+			$('.modal-backdrop').remove();
+        } else {
+            $(".modal").animate({ scrollTop: 0 }, "fast");
+        }
+
+        var postData = $(this).serializeArray();
+
+        if ($(this).attr("form-target")) {
+            //$($(this).attr('form-target')).html(loadingbar);
+            //$($(this).attr('form-target')).load('gra/'+$(this).attr('action'),  postData );
+
+
+            reloadMainPOST($(this).attr('form-target'), 'gra/'+$(this).attr('action'), postData);
+		} else {
+			$("html, body").animate({ scrollTop: 0 }, "fast");
+			//$("#glowne_okno").html(loadingbar);
+			//$("#glowne_okno").load('gra/'+$(this).attr('action'),  postData );
+
+			//$.post( 'gra/'+$(this).attr('action') , postData , function( data ) {
+			//	alert( "Data Loaded: " + postData );
+			//	$( "#glowne_okno" ).html( data );
+			//});
+
+            reloadMainPOST("#glowne_okno", 'gra/'+$(this).attr('action'), postData);
+		}
+		var submit = $(this).closest("form").find(":submit");
+		submit.attr("disabled", "disabled");
 	}
 });
 
 
+$(document).off("change", ".select-submit");
 $(document).on("change", ".select-submit", function(e) {
 	e.preventDefault();
 	$("html, body").animate({ scrollTop: 0 }, "slow");
@@ -247,18 +293,10 @@ $(document).on("change", ".select-submit", function(e) {
 
 	$("html, body").animate({ scrollTop: 0 }, "fast");
 
-	$.ajax({
-		type : 'GET',
-		url : 'gra/'+$(this).closest('form').attr('action'),
-		data: {
-			postData : postData
-		},
-		success:function (data) {
-			$( "#glowne_okno" ).html( data );
-		}
-	});
+    reloadMainPOST("#glowne_okno", 'gra/'+$(this).closest('form').attr('action'), postData);
 });
 
+$(document).off("click", "#zatwierdz_reprezentacje");
 $(document).on("click", "#zatwierdz_reprezentacje", function(e) {
 	$("html, body").animate({ scrollTop: 0 }, "slow");
 
@@ -268,22 +306,15 @@ $(document).on("click", "#zatwierdz_reprezentacje", function(e) {
 		$('.modal-backdrop').remove();
 
     var postData = $(this).closest('form').serializeArray();
-
 	$("html, body").animate({ scrollTop: 0 }, "fast");
-	$.ajax({
-		type : 'GET',
-		url : 'gra/'+$(this).closest('form').attr('action'),
-		data: {
-			postData : postData
-		},
-		success:function (data) {
-			$( "#glowne_okno" ).html( data );
-		}
-	});
+
+
+    reloadMainPOST("#glowne_okno", 'gra/'+$(this).closest('form').attr('action'), postData);
 
 	e.preventDefault();
 });
 
+$(document).off("click", ".collapse_toggle_icon");
 $(document).on("click", ".collapse_toggle_icon", function(e) {
 	if($( ".collapse_toggle_icon" ).hasClass( "glyphicon-chevron-down" )) {
 		$( ".collapse_toggle_icon").removeClass( "glyphicon-chevron-down" ).addClass( "glyphicon-chevron-up" );
@@ -914,6 +945,8 @@ function initPokeLifeScript(){
 
 
 
+
+
     // **********************
     //
     // initAutouzupelnianiePol
@@ -946,6 +979,7 @@ function initPokeLifeScript(){
         })
     }
     initAutouzupelnianiePol();
+
 
 
 
@@ -1000,6 +1034,221 @@ function initPokeLifeScript(){
         });
     }
     initShinyWidget();
+
+
+
+
+    // **********************
+    //
+    // initPlecakTMView
+    // Funkcja dodająca nowy widok do zakładki z TM w plecaku
+    //
+    // **********************
+
+    function initPlecakTMView(){
+        var tmData;
+
+        var api = "https://raw.githubusercontent.com/krozum/pokelife/master/tm.json";
+        $.getJSON(api, {
+            format: "json"
+        }).done(function (data) {
+            tmData = data;
+        });
+
+        onReloadMain(function(){
+            if(this.find('.panel-heading').html() === "Plecak"){
+                this.find('#plecak-tm > .row > div.col-xs-4').each(function (index, val) {
+                    var id = $(this).find('h3').html().split(" ")[1];
+                    $(this).find("br").remove();
+                    if (tmData["tm"][id - 1]["category_id"] == 1) {
+                        $(this).children().css("background-color", "#f9856e");
+                    }
+                    if (tmData["tm"][id - 1]["category_id"] == 2) {
+                        $(this).children().css("background-color", "#4d98b0");
+                    }
+                    if (tmData["tm"][id - 1]["category_id"] == 3) {
+                        $(this).children().css("background-color", "#bdbcbb");
+                    }
+                    $(this).children().prepend('<br><img src="https://pokelife.pl/images/typy/' + tmData["tm"][id - 1]["type_id"] + '.png" style="width: 40px;">');
+                });
+            }
+        })
+    }
+    initPlecakTMView();
+
+
+
+
+    // **********************
+    //
+    // initPlecakTrzymaneView
+    // Funkcja zmieniająca wygląd plecaka
+    //
+    // **********************
+    function initPlecakTrzymaneView(){
+        onReloadMain(function(){
+            if(this.find('.panel-heading').html() === "Plecak"){
+                var DATA = this;
+                var arrayUzywane = [];
+                var arrayJajka = [];
+                var arrayMega = [];
+                var arrayInne = [];
+                var arrayInne2 = [];
+                var arrayInne3 = [];
+                var arrayInne4 = [];
+                var arrayInne5 = [];
+                var arrayModal = [];
+                $.each(this.find('#plecak-trzymane > .row > div'), function (index, item) {
+                    if($(item).find(".modal-dialog").length > 0){
+                        arrayModal.push(item)
+                    } else if($(item).find(".caption .text-center:contains('Używa: ')").length > 0){
+                        arrayUzywane.push($(item));
+                    } else if($(item).find("img[src='images/przedmioty/100x100/lucky_egg.png']").length > 0){
+                        arrayJajka.push($(item));
+                    } else if($(item).find(".caption:contains('ite V')").length > 0){
+                        arrayMega.push($(item));
+                    } else if($(item).find(".caption:contains('ite X V')").length > 0){
+                        arrayMega.push($(item));
+                    } else if($(item).find(".caption:contains('ite Y V')").length > 0){
+                        arrayMega.push($(item));
+                    } else if($(item).find(".caption:contains(' V')").length > 0){
+                        arrayInne5.push($(item));
+                    } else if($(item).find(".caption:contains(' IV')").length > 0){
+                        arrayInne4.push($(item));
+                    } else if($(item).find(".caption strong:contains(' III')").length > 0){
+                        arrayInne3.push($(item));
+                    } else if($(item).find(".caption strong:contains(' II')").length > 0){
+                        arrayInne2.push($(item));
+                    } else {
+                        arrayInne.push($(item));
+                    }
+                    item.remove();
+                })
+
+                if(arrayUzywane.length > 0){
+                    var html = "<div class='row'><div class='col-xs-12'><h3 style='text-align: center;'>Używane</h3>";
+                    $.each(arrayUzywane, function (index, item) {
+                        html = html + '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" style="margin: 0; padding: 0;">' + item.html() + '</div>';
+                    })
+                    html = html + "</div></div>"
+                    this.find('#plecak-trzymane > .row').append(html);
+                }
+
+                if(arrayJajka.length > 0){
+                    html = "<div class='row'><div class='col-xs-12'><h3 style='text-align: center;'>Szczęśliwe jajko</h3>";
+                    $.each(arrayJajka, function (index, item) {
+                        html = html + '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" style="margin: 0; padding: 0;">' + item.html() + '</div>';
+                    })
+                    html = html + "</div></div>"
+                    this.find('#plecak-trzymane > .row').append(html);
+                }
+
+                if(arrayMega.length > 0){
+                    html = "<div class='row'><div class='col-xs-12'><h3 style='text-align: center;'>Mega kamienie</h3>";
+                    $.each(arrayMega, function (index, item) {
+                        html = html + '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" style="margin: 0; padding: 0;">' + item.html() + '</div>';
+                    })
+                    html = html + "</div></div>"
+                    this.find('#plecak-trzymane >.row').append(html);
+                }
+
+                if(arrayInne5.length > 0){
+                    html = "<div class='row'><div class='col-xs-12'><h3 style='text-align: center;'>Inne V</h3>";
+                    $.each(arrayInne5, function (index, item) {
+                        html = html + '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" style="margin: 0; padding: 0;">' + item.html() + '</div>';
+                    })
+                    html = html + "</div></div>"
+                    this.find('#plecak-trzymane > .row').append(html);
+                }
+
+                if(arrayInne4.length > 0){
+                    html = "<div class='row'><div class='col-xs-12'><h3 style='text-align: center;'>Inne IV</h3>";
+                    $.each(arrayInne4, function (index, item) {
+                        html = html + '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" style="margin: 0; padding: 0;">' + item.html() + '</div>';
+                    })
+                    html = html + "</div></div>"
+                    this.find('#plecak-trzymane > .row').append(html);
+                }
+
+                if(arrayInne3.length > 0){
+                    html = "<div class='row'><div class='col-xs-12'><h3 style='text-align: center;'>Inne III</h3>";
+                    $.each(arrayInne3, function (index, item) {
+                        html = html + '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" style="margin: 0; padding: 0;">' + item.html() + '</div>';
+                    })
+                    html = html + "</div></div>"
+                    this.find('#plecak-trzymane > .row').append(html);
+                }
+
+                if(arrayInne2.length > 0){
+                    html = "<div class='row'><div class='col-xs-12'><h3 style='text-align: center;'>Inne II</h3>";
+                    $.each(arrayInne2, function (index, item) {
+                        html = html + '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" style="margin: 0; padding: 0;">' + item.html() + '</div>';
+                    })
+                    html = html + "</div></div>"
+                    this.find('#plecak-trzymane > .row').append(html);
+                }
+
+                if(arrayInne.length > 0){
+                    html = "<div class='row'><div class='col-xs-12'><h3 style='text-align: center;'>Inne</h3>";
+                    $.each(arrayInne, function (index, item) {
+                        html = html + '<div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" style="margin: 0; padding: 0;">' + item.html() + '</div>';
+                    })
+                    html = html + "</div></div>"
+                    this.find('#plecak-trzymane > .row').append(html);
+                }
+
+                var THAT = this;
+                $.each(arrayModal, function (index, item) {
+                    $(item).appendTo(THAT.find('#plecak-trzymane > .row'));
+                })
+            }
+        })
+    }
+    initPlecakTrzymaneView();
+
+
+
+
+    // **********************
+    //
+    // initSzybkieKlikanieWLinkiPromocyjne
+    // Funkcja dodająca szybkie klikanie w linki promocyjne
+    //
+    // **********************
+    function initSzybkieKlikanieWLinkiPromocyjne(){
+
+        function clickInLink(number, id) {
+            if (number < 6) {
+                var w = window.open("", "myWindow", "width=200,height=100");
+                w.location.href = 'http://pokelife.pl/index.php?k=' + number + '&g=' + id;
+                $(w).load(setTimeout(function () {
+                    w.close();
+                    $('#klikniecie-' + number).html('TAK');
+                    console.log('PokeLifeScript: klikam link ' + number);
+                    setTimeout(function () { clickInLink(number + 1, id); }, 300);
+                }, 300));
+            } else {
+                setTimeout(function () {
+                    $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+                }, 100);
+            }
+        }
+
+        onReloadMain(function(){
+            var DATA = this;
+            if (DATA.find('.panel-heading').html() === "Promuj stronę") {
+                var html = '<div class="col-xs-12" style=" text-align: center; "><button id="clickAllLinks" style=" background-color: ' + $('.panel-heading').css('background-color') + '; border: 1px solid ' + $('.panel-heading').css('background-color') + '; border-radius: 5px; padding: 2px 20px; line-height: 20px; height: 30px; ">Wyklikaj wszystkie</button></div>';
+                DATA.find('.panel-body>div:first-of-type').append(html);
+            }
+        })
+
+        $(document).on("click", "#clickAllLinks", function (event) {
+            var id = $('#klikniecie-1').parent().find("a").attr("onclick").split(",")[1].split(")")[0];
+            setTimeout(function () { clickInLink(1, id); }, 200);
+        });
+    }
+    initSzybkieKlikanieWLinkiPromocyjne();
+
 }
 
 
