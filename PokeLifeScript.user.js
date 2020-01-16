@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.0.7
+// @version      5.0.8
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -8,6 +8,7 @@
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
 // @require      https://bug7a.github.io/iconselect.js/sample/lib/control/iconselect.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.5.0/js/md5.min.js
 // @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=5
 // @resource     customCSS_style_1  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_1.css?ver=1
 // @resource     customCSS_style_2  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_2.css?ver=1
@@ -67,6 +68,36 @@ function afterReloadMain(fn) {
 
 function getPreviousPageContent() {
     return previousPageContent;
+}
+
+
+// **********************
+//
+// loggery
+//
+// **********************
+function updateEvent(text, eventTypeId, dzicz){
+    if(dzicz != null){
+        requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId + "&dzicz=" + dzicz + "&time="+Date.now(), function(response){
+            console.log("updateEvent: "+eventTypeId+" => "+ text);
+        })
+    } else {
+        requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text="+text + "&event_type_id=" + eventTypeId + "&time="+Date.now(), function(response){
+            console.log("updateEvent: "+eventTypeId+" => "+ text);
+        })
+    }
+}
+
+function updateStats(name, value){
+    requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name="+name + "&value=" + value + "&time="+Date.now(), function(response){
+        console.log("UpdateStats: "+name+" => "+ value);
+    })
+}
+
+function updateStatsDoswiadczenie(json){
+    requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json="+json + "&time="+Date.now(), function(response){
+        console.log("updateStatsDoswiadczenie: " + json);
+    })
 }
 
 
@@ -141,6 +172,10 @@ jQuery.fn.html = function() {
     var THAT = this;
     if(this.selector == "#sidebar"){
         var pa_after = this.find('.progress-bar:contains("PA")').attr("aria-valuenow");
+
+        if(Number(pa_after) < Number(pa_before)){
+            updateStats("wyklikanych_pa", Number(pa_before)-Number(pa_after));
+        }
         pa_before = pa_after;
 
         if(typeof window.onReloadSidebarFunctions != undefined){
@@ -181,9 +216,14 @@ $(document).on("click", "nav a", function(event) {
     }
 });
 
+var zarobek;
 $(document).off("click", ".btn-akcja");
 $(document).on("click", ".btn-akcja", function(event) {
     var url = $(this).attr('href');
+    if($('#hodowla-glowne b').length > 1){
+        zarobek = $('#hodowla-glowne b:nth(1)').html().split("¥")[0].replace('.', '').replace('.', '').replace('.', '');
+    }
+
     event.preventDefault();
     if(this.id != 'back_button') {
 
@@ -208,18 +248,22 @@ $(document).on("click", ".btn-akcja", function(event) {
 
     $(this).attr("disabled", "disabled");
 
+    if(url.startsWith("hodowla.php?sprzedaj_wszystkie=")){
+        updateStats("zarobki_z_hodowli", zarobek);
+    }
+
     reloadMain("#glowne_okno", 'gra/'+$(this).attr('href'));
 });
 
 
 $(document).off("click", ".btn-edycja-nazwy-grupy");
 $(document).on("click", ".btn-edycja-nazwy-grupy", function(event) {
-	$("#panel_grupa_id_"+$(this).attr('data-grupa-id')).html('<form action="druzyna.php?p=2&zmien_nazwe_grupy='+$(this).attr('data-grupa-id')+'" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="'+ $(this).attr('data-obecna-nazwa')+'"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>');
+    $("#panel_grupa_id_"+$(this).attr('data-grupa-id')).html('<form action="druzyna.php?p=2&zmien_nazwe_grupy='+$(this).attr('data-grupa-id')+'" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="'+ $(this).attr('data-obecna-nazwa')+'"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>');
 });
 
 $(document).off("click", ".nauka-ataku");
 $(document).on("click", ".nauka-ataku", function(event) {
-	event.preventDefault();
+    event.preventDefault();
 
     $("html, body").animate({ scrollTop: 0 }, "slow");
 
@@ -238,17 +282,17 @@ $(document).on("click", ".nauka-ataku", function(event) {
 
 $(document).off('submit', 'form');
 $(document).on('submit', 'form', function(e) {
-	if (!$(this).attr("form-normal-submit")) {
+    if (!$(this).attr("form-normal-submit")) {
 
-		e.preventDefault();
+        e.preventDefault();
 
-		$("html, body").animate({ scrollTop: 0 }, "fast");
+        $("html, body").animate({ scrollTop: 0 }, "fast");
 
-		//Obejście modali
-		if($('body').hasClass('modal-open') && $(this).attr("dont-close-modal") != 1) {
-			$('body').removeClass('modal-open');
-			$('body').css({"padding-right":"0px"});
-			$('.modal-backdrop').remove();
+        //Obejście modali
+        if($('body').hasClass('modal-open') && $(this).attr("dont-close-modal") != 1) {
+            $('body').removeClass('modal-open');
+            $('body').css({"padding-right":"0px"});
+            $('.modal-backdrop').remove();
         } else {
             $(".modal").animate({ scrollTop: 0 }, "fast");
         }
@@ -261,66 +305,66 @@ $(document).on('submit', 'form', function(e) {
 
 
             reloadMainPOST($(this).attr('form-target'), 'gra/'+$(this).attr('action'), postData);
-		} else {
-			$("html, body").animate({ scrollTop: 0 }, "fast");
-			//$("#glowne_okno").html(loadingbar);
-			//$("#glowne_okno").load('gra/'+$(this).attr('action'),  postData );
+        } else {
+            $("html, body").animate({ scrollTop: 0 }, "fast");
+            //$("#glowne_okno").html(loadingbar);
+            //$("#glowne_okno").load('gra/'+$(this).attr('action'),  postData );
 
-			//$.post( 'gra/'+$(this).attr('action') , postData , function( data ) {
-			//	alert( "Data Loaded: " + postData );
-			//	$( "#glowne_okno" ).html( data );
-			//});
+            //$.post( 'gra/'+$(this).attr('action') , postData , function( data ) {
+            //	alert( "Data Loaded: " + postData );
+            //	$( "#glowne_okno" ).html( data );
+            //});
 
             reloadMainPOST("#glowne_okno", 'gra/'+$(this).attr('action'), postData);
-		}
-		var submit = $(this).closest("form").find(":submit");
-		submit.attr("disabled", "disabled");
-	}
+        }
+        var submit = $(this).closest("form").find(":submit");
+        submit.attr("disabled", "disabled");
+    }
 });
 
 
 $(document).off("change", ".select-submit");
 $(document).on("change", ".select-submit", function(e) {
-	e.preventDefault();
-	$("html, body").animate({ scrollTop: 0 }, "slow");
+    e.preventDefault();
+    $("html, body").animate({ scrollTop: 0 }, "slow");
 
-	//Obejście modali
-		$('body').removeClass('modal-open');
-		$('body').css({"padding-right":"0px"});
-		$('.modal-backdrop').remove();
+    //Obejście modali
+    $('body').removeClass('modal-open');
+    $('body').css({"padding-right":"0px"});
+    $('.modal-backdrop').remove();
 
     var postData = $(this).closest('form').serializeArray();
 
-	$("html, body").animate({ scrollTop: 0 }, "fast");
+    $("html, body").animate({ scrollTop: 0 }, "fast");
 
     reloadMainPOST("#glowne_okno", 'gra/'+$(this).closest('form').attr('action'), postData);
 });
 
 $(document).off("click", "#zatwierdz_reprezentacje");
 $(document).on("click", "#zatwierdz_reprezentacje", function(e) {
-	$("html, body").animate({ scrollTop: 0 }, "slow");
+    $("html, body").animate({ scrollTop: 0 }, "slow");
 
-	//Obejście modali
-		$('body').removeClass('modal-open');
-		$('body').css({"padding-right":"0px"});
-		$('.modal-backdrop').remove();
+    //Obejście modali
+    $('body').removeClass('modal-open');
+    $('body').css({"padding-right":"0px"});
+    $('.modal-backdrop').remove();
 
     var postData = $(this).closest('form').serializeArray();
-	$("html, body").animate({ scrollTop: 0 }, "fast");
+    $("html, body").animate({ scrollTop: 0 }, "fast");
 
 
     reloadMainPOST("#glowne_okno", 'gra/'+$(this).closest('form').attr('action'), postData);
 
-	e.preventDefault();
+    e.preventDefault();
 });
 
 $(document).off("click", ".collapse_toggle_icon");
 $(document).on("click", ".collapse_toggle_icon", function(e) {
-	if($( ".collapse_toggle_icon" ).hasClass( "glyphicon-chevron-down" )) {
-		$( ".collapse_toggle_icon").removeClass( "glyphicon-chevron-down" ).addClass( "glyphicon-chevron-up" );
-	} else {
-		$( ".collapse_toggle_icon").removeClass( "glyphicon-chevron-up" ).addClass( "glyphicon-chevron-down" );
-	}
+    if($( ".collapse_toggle_icon" ).hasClass( "glyphicon-chevron-down" )) {
+        $( ".collapse_toggle_icon").removeClass( "glyphicon-chevron-down" ).addClass( "glyphicon-chevron-up" );
+    } else {
+        $( ".collapse_toggle_icon").removeClass( "glyphicon-chevron-up" ).addClass( "glyphicon-chevron-down" );
+    }
 });
 
 
@@ -609,18 +653,25 @@ function initPokeLifeScript(){
                 if (Number(now) < Number(1)) {
                     if(!poLeczeniu){
                         $.get( 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat', function( data ) {
-                            $.get( 'inc/stan.php', function( data ) {
-                                $( "#sidebar" ).html( data );
-                                $('.btn-wybor_pokemona').attr("disabled", false);
-                                $('.btn-wybor_pokemona .progress-bar').css("width", "100%");
-                                $('.btn-wybor_pokemona .progress-bar span').html("100% PŻ");
-                                setTimeout(function(){
-                                    click(true)
-                                }, (timeoutMax - timeoutMin) + timeoutMin);
-                            });
+                            if($(data).find(".alert-success").length > 0){
+                                console.log('PokeLifeScript: wyleczono');
+                                if($(data).find(".alert-success strong").length > 0){
+                                    var koszt = $(data).find(".alert-success strong").html().split(" ¥")[0];
+                                    updateStats("koszty_leczenia", koszt.replace(/\./g, ''));
+                                }
+
+                                $.get( 'inc/stan.php', function( data ) {
+                                    $( "#sidebar" ).html( data );
+                                    $('.btn-wybor_pokemona').attr("disabled", false);
+                                    $('.btn-wybor_pokemona .progress-bar').css("width", "100%");
+                                    $('.btn-wybor_pokemona .progress-bar span').html("100% PŻ");
+                                    setTimeout(function(){
+                                        click(true)
+                                    }, (timeoutMax - timeoutMin) + timeoutMin);
+                                });
+                            }
                         });
                     }
-                    console.log('zycie');
                     canRun = false;
                 }
             });
@@ -1255,7 +1306,163 @@ function initPokeLifeScript(){
     }
     initSzybkieKlikanieWLinkiPromocyjne();
 
+
+
+
+    // **********************
+    //
+    // initStatystykiLink
+    // Funkcja dodająca link do statystyk
+    //
+    // **********************
+    function initStatystykiLink(){
+        $('body').append('<a id="PokeLifeScriptStats" style="color: #333333 !important;text-decoration:none;" target="_blank" href="https://bra1ns.pl/pokelife/stats/"><div class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;top: 15px;left: 220px;font-size: 19px;text-align: center;width: 100px;height: 30px;line-height: 35px;z-index: 9998;text-align: center;line-height: 30px;color: #333333;">Statystyki</div></a>');
+        $("#PokeLifeScriptStats").attr("href", "https://bra1ns.pl/pokelife/stats/?login="+md5($('#wyloguj').parent().parent().html().split("<div")[0].trim()));
+    }
+    initStatystykiLink();
+
+
+
+
+    // **********************
+    //
+    // initLogger
+    // Funkcja dodająca logowanie tego co wyświetla sie na ekranie
+    // eventTypeId:
+    // 1 - pusta wyprawa
+    // 2 - walka z trenerem wygrana
+    // 3 - walka z trenerem przegrana
+    // 4 - spotkany pokemon
+    // 5 - walka wygrana
+    // 6 - walka przegrana
+    // 7 - pokemon złapany
+    // 8 - pokemon niezłapany
+    // 9 - zebrane jagody
+    // 10 - event w dziczy
+    // **********************
+    function initLogger(){
+        var aktualnyPokemonDzicz;
+        onReloadMain(function(url){
+            var dzicz = null;
+            if(url != null && url.indexOf('miejsce=') != -1){
+                dzicz = url.split('miejsce=')[1].split('&')[0];
+            }
+            var DATA = this;
+
+            if(url == "gra/aktywnosc.php?p=praca&przerwij"){
+                if(DATA.find("p.alert-success:contains('Otrzymujesz wynagrodzenie w wysokości')").length > 0){
+                    var yeny = DATA.find("p.alert-success b").html().split(' ')[0].replace(/\./g, '');
+                    updateStats("zarobek_z_pracy", yeny);
+                }
+            }
+
+
+            if(DATA.find("p.alert-info:contains('Niestety, tym razem nie spotkało cię nic interesującego.')").length > 0){
+                console.log('PokeLifeScript: pusta wyprawa');
+                updateEvent("Niestety, tym razem nie spotkało cię nic interesującego", 1, dzicz);
+            } else if(DATA.find("p.alert-success:contains('pojedynek')").length > 0){
+                console.log('PokeLifeScript: walka z trenerem');
+                updateStats("walki_z_trenerami", 1);
+                var pd = 0;
+                var json = "";
+                if(DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia'))").length > 2){
+                    $.each(DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(2) b").html().split("PD<br>"), function(key, value){
+                        if(value != ""){
+                            pd = pd + Number(value.split("+")[1]);
+                            json = json + '"'+ value.split("+")[0].trim() + '":"' + Number(value.split("+")[1]) + '",';
+                        }
+                    });
+                    pd = pd.toFixed(2);
+                    updateStats("zarobki_z_trenerow", DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split(" ¥")[0]);
+                    updateStats("zdobyte_doswiadczenie", pd);
+                    updateEvent("Na twojej drodze staje inny trener pokemon, który wyzywa Cię na pojedynek. Wygrywasz <b>" + DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split(" ¥")[0] + "</b> ¥. Zdobyte doświadczenie: <b>" + pd + "</b>", 2, dzicz);
+                    updateStatsDoswiadczenie("{"+json.substring(0, json.length - 1)+"}");
+                } else {
+                    $.each(DATA.find(".alert-success:not(:contains('Moc odznaki odrzutowca sprawia')):nth(1) b").html().split("PD<br>"), function(key, value){
+                        if(value != ""){
+                            pd = pd + Number(value.split("+")[1]);
+                            json = json + '"'+ value.split("+")[0].trim() + '":"' + Number(value.split("+")[1]) + '",';
+                        }
+                    });
+                    pd.toFixed(2);
+                    updateStats("zdobyte_doswiadczenie", pd);
+                    updateEvent("Na twojej drodze staje inny trener pokemon, który wyzywa Cię na pojedynek ale niestety go przegrywasz. Zdobyte doświadczenie: <b>" + pd + "</b>", 3, dzicz);
+                    updateStatsDoswiadczenie("{"+json.substring(0, json.length - 1)+"}");
+                }
+            } else if(DATA.find(".dzikipokemon-background-normalny").length > 0){
+                console.log('PokeLifeScript: spotkany pokemon');
+                updateEvent("Spotkany pokemon <b>" + DATA.find('.panel-primary i').html() + "</b>", 4, dzicz);
+                aktualnyPokemonDzicz = DATA.find('.panel-primary i').html();
+            } else if(DATA.find("h2:contains('Złap Pokemona')").length > 0){
+                console.log('PokeLifeScript: pokemon pokonany');
+                updateStats("wygranych_walk_w_dziczy", 1);
+                updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0]);
+                updateStatsDoswiadczenie('{"'+ DATA.find('.panel-body b b').html() + '":"' + DATA.find('p.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0] + '"}');
+                updateEvent("Wygrałeś walke z <b>"+aktualnyPokemonDzicz+"</b>. Zdobyłeś <b>" + DATA.find('p.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0] + "</b> punktów doświadczenia", 5, dzicz);
+            } else if(DATA.find("h2:contains('Pokemon Ucieka')").length > 0){
+                console.log('PokeLifeScript: pokemon pokonany ale ucieka');
+                updateStats("wygranych_walk_w_dziczy", 1);
+                updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0]);
+                updateStatsDoswiadczenie('{"'+ DATA.find('.panel-body b b').html() + '":"' + DATA.find('p.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0] + '"}');
+                updateEvent("Wygrałeś walke z <b>"+aktualnyPokemonDzicz+"</b>. Zdobyłeś <b>" + DATA.find('p.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0] + "</b> punktów doświadczenia", 5, dzicz);
+            } else if(DATA.find(".panel-body > p.alert-success:contains('Udało Ci się złapać')").length > 0){
+                console.log('PokeLifeScript: pokemon złapany');
+                updateEvent("Udało ci sie złapać <b>"+ aktualnyPokemonDzicz + "</b>.", 7, dzicz);
+                updateStats("zlapanych_pokemonow", 1);
+                if(DATA.find('p.alert-success:nth(1):contains("nie masz już miejsca")').length > 0){
+                    var zarobek  = DATA.find('p.alert-success:nth(1):contains("nie masz już miejsca") strong').html().split(" ")[0].replace(/\./g, '');
+                    updateStats("zarobki_z_hodowli", zarobek);
+                }
+            } else if(DATA.find(".panel-body > p.alert-danger:contains('uwolnił')").length > 0){
+                console.log('PokeLifeScript: pokemon sie uwolnił');
+                updateStats("niezlapanych_pokemonow", 1);
+                updateEvent("<b>"+ aktualnyPokemonDzicz + "</b> się uwolnił.", 8, dzicz);
+            } else if(DATA.find(".panel-body > p.alert-success").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa'){
+                console.log('PokeLifeScript: event w dziczy');
+                if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html() != undefined && DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html().indexOf("Jagód") != -1) {
+                    if(DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b').html() == "Czerwonych Jagód"){
+                        updateStats("zebrane_czerwone_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
+                    } else if(DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b').html() == "Niebieskich Jagód"){
+                        updateStats("zebrane_niebieskie_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
+                    } else if(DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b').html() == "Fioletowych Jagód"){
+                        updateStats("zebrane_fioletowe_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
+                    } else if(DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b').html() == "Żółtych Jagód"){
+                        updateStats("zebrane_zolte_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
+                    } else if(DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b').html() == "Białych Jagód"){
+                        updateStats("zebrane_biale_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
+                    } else if(DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html() == "Czerwonych Jagód"){
+                        updateStats("zebrane_czerwone_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(0)').html());
+                    } else if(DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html() == "Niebieskich Jagód"){
+                        updateStats("zebrane_niebieskie_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(0)').html());
+                    } else if(DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html() == "Fioletowych Jagód"){
+                        updateStats("zebrane_fioletowe_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(0)').html());
+                    } else if(DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html() == "Żółtych Jagód"){
+                        updateStats("zebrane_zolte_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(0)').html());
+                    } else if(DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html() == "Białych Jagód"){
+                        updateStats("zebrane_biale_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(0)').html());
+                    } else if(DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html().indexOf("Jagód") != -1){
+                        updateStats("zebrane_inne_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(0)').html());
+                    } else {
+                        updateStats("zebrane_inne_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
+                    }
+                    updateEvent(DATA.find('.panel-body > p.alert-success').html(), 9, dzicz);
+                } else if(DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
+                    updateEvent(DATA.find('.panel-body > p.alert-success').html(), 10, dzicz);
+                }
+            } else if(DATA.find(".panel-body > p.alert-info").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa'){
+                console.log('PokeLifeScript: event w dziczy');
+                updateEvent(DATA.find('.panel-body > p.alert-info').html(), 10, dzicz);
+            } else if(DATA.find(".panel-body > p.alert-warning").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa'){
+                console.log('PokeLifeScript: event w dziczy');
+                updateEvent(DATA.find('.panel-body > p.alert-warning').html(), 10, dzicz);
+            }
+        })
+    }
+    initLogger();
+
 }
+
+
 
 
 $.getJSON("https://raw.githubusercontent.com/krozum/pokelife/master/pokemon.json", {
