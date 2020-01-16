@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.0.6
+// @version      5.0.7
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -631,6 +631,7 @@ function initPokeLifeScript(){
                         console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
                         autoGo = false;
                         $('#goAutoButton').html('AutoGO');
+                        $('#refreshShinyWidget').trigger('click');
                         requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now(), null);
                     } else if ($('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
                         if($('#setPokeball .selected-box .selected-icon img').attr('src') == "images/pokesklep/safariballe.jpg"){
@@ -1001,20 +1002,26 @@ function initPokeLifeScript(){
                 var html = '<div class="panel panel-primary"><div class="panel-heading">Ostatnio spotkane shiny<div class="navbar-right"><span id="refreshShinyWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody><tr>';
                 $.each(data.list, function (key, value) {
                     var wystepowanie = "";
+                    var nazwa = "";
                     if(pokemonData != undefined){
                         if(pokemonData['kanto'][value['pokemon_id']] != undefined){
                             wystepowanie =  "Kanto, " + pokemonData['kanto'][value['pokemon_id']].wystepowanie;
+                            nazwa = pokemonData['kanto'][value['pokemon_id']].name;
                         } else if (pokemonData['johto'][value['pokemon_id']] != undefined){
                             wystepowanie =  "Johto, " + pokemonData['johto'][value['pokemon_id']].wystepowanie;
+                            nazwa = pokemonData['johto'][value['pokemon_id']].name;
                         } else if (pokemonData['hoenn'][value['pokemon_id']] != undefined){
                             wystepowanie =  "Hoenn, " + pokemonData['hoenn'][value['pokemon_id']].wystepowanie;
+                            nazwa = pokemonData['sinnoh'][value['pokemon_id']].name;
                         } else if (pokemonData['sinnoh'][value['pokemon_id']] != undefined){
                             wystepowanie =  "Sinnoh, " + pokemonData['sinnoh'][value['pokemon_id']].wystepowanie;
+                            nazwa = pokemonData['sinnoh'][value['pokemon_id']].name;
                         } else if (pokemonData['unova'][value['pokemon_id']] != undefined){
                             wystepowanie =  "Unova, " + pokemonData['unova'][value['pokemon_id']].wystepowanie;
+                            nazwa = pokemonData['unova'][value['pokemon_id']].name;
                         }
                     }
-                    html = html + "<td data-toggle='tooltip' data-placement='top' title='' data-original-title='Spotkany : "+value['creation_date']+", "+wystepowanie+"' style='text-align: center;'><img src='pokemony/srednie/s" + value['pokemon_id'] + ".png' style='width: 40px; height: 40px;'></td>";
+                    html = html + "<td data-toggle='tooltip' data-placement='top' title='' data-original-title='Spotkany : "+value['creation_date']+"' style='text-align: center;'><a target='_blank' href='https://pokelife.pl/pokedex/index.php?title=" + nazwa + "'><img src='pokemony/srednie/s" + value['pokemon_id'] + ".png' style='width: 40px; height: 40px;'></a></td>";
                 });
                 html = html + '</tr></tbody></table></div>';
                 shinyWidget = html;
@@ -1030,7 +1037,6 @@ function initPokeLifeScript(){
 
         $(document).on("click", "#refreshShinyWidget", function (event) {
             refreshShinyWidget();
-            $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
         });
     }
     initShinyWidget();
