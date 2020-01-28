@@ -35,3 +35,6 @@ Changelog
 * Przywrócenie statystyk
 * Przywrócenie widgetu shiny
 * Zmiana odnawiania limitów napojów: bot teraz odnawia do -1 od max, czyli np 11/12 tak aby zostawić ostatni limit na fontanne.
+
+5.1.1 (2020-01-28)
+* Przywrócenie wbijania szkoleniowca, dodano timeouty po 1s,gdyby było uciążliwe będą korygowane. 100 pokemonów powinno wbijać około 15m. Przycisk znajduje sie w zakładce Pokemony -> Przechowalnia
