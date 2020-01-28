@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.1.1
+// @version      5.1.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -852,7 +852,7 @@ function initPokeLifeScript(){
                         if($("a[href='gra/statystyki.php']").length > 0){
                             reloadMain("#glowne_okno", "gra/statystyki.php", function(){
                                 setTimeout(function(){
-                                    if(Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[0].trim()) != (Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[1].trim()) - 1)){
+                                    if(Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[0].trim()) < (Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[1].trim()) - 1)){
                                         if($("a[href='gra/plecak.php']").length > 0){
                                             reloadMain("#glowne_okno", "gra/plecak.php", function(){
                                                 if($('.thumbnail-plecak[data-target="#plecak-1"] h5').length > 0){
@@ -883,7 +883,7 @@ function initPokeLifeScript(){
                         if($("a[href='gra/statystyki.php']").length > 0){
                             reloadMain("#glowne_okno", "gra/statystyki.php", function(){
                                 setTimeout(function(){
-                                    if(Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[0].trim()) != (Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[1].trim()) - 1)){
+                                    if(Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[0].trim()) < (Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[1].trim()) - 1)){
                                         if($("a[href='gra/plecak.php']").length > 0){
                                             reloadMain("#glowne_okno", "gra/plecak.php", function(){
                                                 if($('.thumbnail-plecak[data-target="#plecak-4"] h5').length > 0){
