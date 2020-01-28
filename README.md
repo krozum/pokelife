@@ -29,7 +29,8 @@ Changelog
 5.0.4 (2020-01-13)
 * Dodanie nowych bali
 * Poprawki do niedziałjących funkcji
-* Dodanie wznawiania PA za pomocą jagód i napojów 
+* Dodanie wznawiania PA za pomocą jagód i napojów
+
 5.1 (2020-01-28)
 * Przywrócenie statystyk
 * Przywrócenie widgetu shiny
