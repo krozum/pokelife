@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.1
+// @version      5.1.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1459,6 +1459,108 @@ function initPokeLifeScript(){
         })
     }
     initLogger();
+
+
+
+
+
+
+    // **********************
+    //
+    // initWbijanieSzkoleniowca
+    // Funkcja automatycznie przechodząca po przechowalni i zwiększaniu treningów do miniumum 7 w każdą statystyke
+    //
+    // **********************
+    function initWbijanieSzkoleniowca(){
+        var array = [];
+        var affected = 0;
+        var price = 0;
+        var max = 0;
+        var now = 0;
+
+        //$('#pasek_skrotow > .navbar-nav').append('<li><a id="skrot_szkoleniowiec" href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Wbijaj osiągnięcie szkoleniowca"><div class="pseudo-btn"><img src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/3b79fd270c90c0dfd90763fcf1b54346-trofeo-de-campe--n-estrella-by-vexels.png"></div></a></li>');
+
+        onReloadMain(function(){
+            array = [];
+            if(this.find('.panel-heading').html() === "Pokemony"){
+                this.find('#pokemony-przechowalnia select[name="kolejnosc"]').parent().prepend('<button class="plugin-button" id="wbijajSzkoleniowca" style="padding: 5px 10px; border-radius: 3px; margin-bottom: 15px">Wbijaj szkoleniowca</button><br>');
+                $.each(this.find('#pokemony-przechowalnia .btn-podgladpoka'), function (index, item) {
+                    if(Number($(item).parent().data('poziom')) >= 5){
+                        array.push($(item).data('id-pokemona'));
+                    }
+                })
+            }
+        })
+
+
+        $(document).on('click', '#skrot_szkoleniowiec', function(){
+            reloadMain("#glowne_okno", 'gra/druzyna.php?p=3', function(){
+                $('#wbijajSzkoleniowca').trigger('click');
+            });
+        });
+
+        $(document).on('click', '#wbijajSzkoleniowca', function(){
+            max = array.length;
+            now = 0;
+            wbijajSzkoleniowca(array);
+        });
+
+        function trenuj(array, callback){
+            if(array.length > 0){
+                setTimeout(function(){
+                    reloadMain("#glowne_okno", "gra/"+array.pop(), function(){
+                        price = Number(price) + Number($('.alert-success b:nth(1)').html().split(" ¥")[0].replace(/\./g, ''));
+                        trenuj(array, callback);
+                    })
+                }, 1000);
+            } else {
+                callback.call();
+            }
+        }
+
+        function wbijajSzkoleniowca(array){
+            if(array.length > 0){
+                if($('#szkoleniowiec_progress').length < 1){
+                    $('body').append('<div id="szkoleniowiec_progress" class="" style="position: fixed;bottom: 60px;width: 500px;height: auto;z-index: 999;margin: 0 auto;left: 0;right: 0;background-color: inherit;border: none;"><div class="progress" style="margin:0;box-shadow: none;border-radius: 0; border: 1px solid black"><div class="progress-bar progress-bar-danger" role="progressbar" style="border-radius: 0; width: '+Number((((max-array.length)*100)/max)).toFixed(0)+'%;"> <span>'+Number((((max-array.length)*100)/max)).toFixed(0)+'%</span></div></div></div>');
+                } else {
+                    $('#szkoleniowiec_progress .progress-bar').css('width', Number((((max-array.length)*100)/max)).toFixed(0)+'%');
+                    $('#szkoleniowiec_progress .progress-bar span').html(Number((((max-array.length)*100)/max)).toFixed(0)+'%');
+                }
+                var id = array.pop();
+                now++;
+
+                setTimeout(function(){
+                    reloadMain("#glowne_okno", "gra/sala.php?p="+id+"&zrodlo=rezerwa", function(){
+                        var treningi = [];
+                        var i;
+                        for(var j = 1; j <=6; j++){
+                            var count = Number($('.sala_atrybuty_tabelka .row:nth('+j+') > div:nth(2)').html());
+                            var ile = 0;
+                            if(j != 6){
+                                ile = 7 - count;
+                            } else {
+                                ile = 35 - count;
+                                ile = ile / 5;
+                            }
+                            if(ile > 0){
+                                affected = affected + ile;
+                                treningi.push($('.sala_atrybuty_tabelka .row:nth('+j+') > div:nth(3) > form').attr('action')+"&postData%5B0%5D%5Bname%5D=ilosc&postData%5B0%5D%5Bvalue%5D=" + ile);
+                            }
+                        }
+                        trenuj(treningi, function(){wbijajSzkoleniowca(array)});
+                    })
+                }, 1000);
+            } else {
+                $('#szkoleniowiec_progress').remove();
+                reloadMain("#glowne_okno", 'gra/druzyna.php?p=3', function(){
+                    $('#pokemony-przechowalnia select[name="kolejnosc"]').parent().prepend('<p class="alert alert-success text-center">Wykonano <b>'+affected+'</b> treningów o łącznej wartości <b>'+price+' ¥</b></p>');
+                    price = 0;
+                    affected = 0;
+                });
+            }
+        }
+    }
+    initWbijanieSzkoleniowca();
 
 }
 
