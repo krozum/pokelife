@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.1.2
+// @version      5.1.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -795,11 +795,13 @@ function initPokeLifeScript(){
                 if(this.find(".panel-body > p.alert-danger").length > 0){
                     console.log(this.find('.panel-body > p.alert-danger').html());
                     if(this.find(".panel-body > p.alert-danger:contains('Posiadasz za mało punktów akcji')").length > 0){
-                        przerwijAutoGoZPowoduBrakuPA();
+                        przerwijAutoGoZPowoduBrakuPA(true);
                     } else if(this.find(".panel-body > p.alert-danger:contains('Nie masz wystarczającej ilości Punktów Akcji')").length > 0){
-                        przerwijAutoGoZPowoduBrakuPA();
+                        przerwijAutoGoZPowoduBrakuPA(true);
                     } else if(this.find('.panel-body > p.alert-danger').html() == "Nie masz wystarczającej ilośći Punktów Akcji."){
-                        przerwijAutoGoZPowoduBrakuPA();
+                        przerwijAutoGoZPowoduBrakuPA(true);
+                    } else if(this.find('.panel-body > p.alert-danger').html() == "Baterie w twojej latarce się wyczerpały, kup nowe."){
+                        przerwijAutoGoZPowoduBrakuPA(false);
                     }
                 }
             }
@@ -942,34 +944,36 @@ function initPokeLifeScript(){
         }
 
 
-        function przerwijAutoGoZPowoduBrakuPA(){
+        function przerwijAutoGoZPowoduBrakuPA(wznawiaj){
             var autoGoBefore = autoGo;
             console.log('PokeLifeScript: brak PA, przerywam AutoGo');
             autoGo = false;
             $('#goAutoButton').html('AutoGO');
 
-            var array = [];
-            if(window.localStorage.useCzerwoneNapoje == "true" || window.localStorage.useCzerwoneNapoje == true){
-                array.push("useCzerwoneNapoje");
-            }
-            if(window.localStorage.useNiebieskieNapoje == "true" || window.localStorage.useNiebieskieNapoje == true){
-                array.push("useNiebieskieNapoje");
-            }
-            if(window.localStorage.useZieloneNapoje == "true" || window.localStorage.useZieloneNapoje == true){
-                array.push("useZieloneNapoje");
-            }
-            if(window.localStorage.useNiebieskieJagody == "true" || window.localStorage.useNiebieskieJagody == true){
-                array.push("useNiebieskieJagody");
-            }
-            console.log(array);
-            if(window.localStorage.useOnlyInNight == "true" || window.localStorage.useOnlyInNight == true){
-                var d = new Date();
-                var h = d.getHours();
-                if (h >= 22 || h < 6) {
+            if(wznawiaj){
+                var array = [];
+                if(window.localStorage.useCzerwoneNapoje == "true" || window.localStorage.useCzerwoneNapoje == true){
+                    array.push("useCzerwoneNapoje");
+                }
+                if(window.localStorage.useNiebieskieNapoje == "true" || window.localStorage.useNiebieskieNapoje == true){
+                    array.push("useNiebieskieNapoje");
+                }
+                if(window.localStorage.useZieloneNapoje == "true" || window.localStorage.useZieloneNapoje == true){
+                    array.push("useZieloneNapoje");
+                }
+                if(window.localStorage.useNiebieskieJagody == "true" || window.localStorage.useNiebieskieJagody == true){
+                    array.push("useNiebieskieJagody");
+                }
+                console.log(array);
+                if(window.localStorage.useOnlyInNight == "true" || window.localStorage.useOnlyInNight == true){
+                    var d = new Date();
+                    var h = d.getHours();
+                    if (h >= 22 || h < 6) {
+                        probujWznowicAutoGo(array, autoGoBefore);
+                    }
+                } else {
                     probujWznowicAutoGo(array, autoGoBefore);
                 }
-            } else {
-                probujWznowicAutoGo(array, autoGoBefore);
             }
         }
 
