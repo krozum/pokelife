@@ -38,3 +38,6 @@ Changelog
 
 5.1.1 (2020-01-28)
 * Przywrócenie wbijania szkoleniowca, dodano timeouty po 1s,gdyby było uciążliwe będą korygowane. 100 pokemonów powinno wbijać około 15m. Przycisk znajduje sie w zakładce Pokemony -> Przechowalnia
+
+5.1.3 (2020-02-01)
+* Poprawka do autoGo, gdy baterie w dziczy sie wyczerpały
