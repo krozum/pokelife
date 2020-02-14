@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.2
+// @version      5.2.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1581,7 +1581,7 @@ function initPokeLifeScript(){
 
         $('#chat-inner > ul').append('<li role="presentation" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokój widoczny wyłącznie dla użytkowników bota"><a href="#room-99999" aria-controls="room-99999" role="tab" data-toggle="tab" class="showRoomBot" data-room="99999" aria-expanded="true">Bot</a></li>');
         $('#shout_list').after('<ol style="list-style: none; display: none; margin: 0; padding: 0" id="bot_list"></ol>');
-        $('#shoutbox-panel-footer').after('<div style="display: none;background: none;" id="shoutbox-bot-panel-footer" class="panel-footer input-group"><p style="width: 100%;padding: 5px;padding-left: 0px;margin: 0;color: #bbbbbb;position: absolute;z-index: 999;bottom: 55px;">Czat jest anonimowy, będziesz podpisany fałszywym nickiem</p><input id="shout_bot_message" type="text" class="form-control" placeholder="Wiadomość" name="message"> <span class="input-group-btn"> <button id="shout_bot_button" class="btn btn-primary" type="button">Wyślij</button> </span> </div>');
+        $('#shoutbox-panel-footer').after('<div style="display: none;background: none;" id="shoutbox-bot-panel-footer" class="panel-footer input-group"><input id="shout_bot_message" type="text" class="form-control" placeholder="Wiadomość" name="message"> <span class="input-group-btn"> <button id="shout_bot_button" class="btn btn-primary" type="button">Wyślij</button> </span> </div>');
 
 
         $("a[href='#room-99999']").click(function(){
@@ -1593,15 +1593,19 @@ function initPokeLifeScript(){
             $('#shout_list').hide();
             $('#shoutbox-panel-footer').hide();
             $('#bot_list').show();
+            $('#shout_refresher').hide();
             $('#shoutbox-bot-panel-footer').show();
         });
 
         $('.showRoom').click(function(){
             $('#bot_list').hide();
+            $('#shout_refresher').show();
             $('#shoutbox-bot-panel-footer').hide();
             $('#shout_list').show();
             $('#shoutbox-panel-footer').show();
         });
+
+        var interval;
 
         $(document).on('click', '#zaloguj_chat', function(e) {
             var url = 'https://bra1ns.pl/pokelife/api/get_czat.php?czat_id='+window.localStorage.max_chat_id;
@@ -1616,20 +1620,22 @@ function initPokeLifeScript(){
                     });
                 }
 
-                setInterval(function(){
-                    var url = 'https://bra1ns.pl/pokelife/api/get_czat.php?czat_id='+window.localStorage.max_chat_id;
-                    $.getJSON(url, {
-                        format: "json"
-                    }).done(function (data) {
-                        if(data['list'] != undefined){
-                            var messages = data['list'].reverse();
-                            $.each(messages, function (key, value) {
-                                $("#bot_list").append('<li style="padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
-                                window.localStorage.max_chat_id = value["czat_id"];
-                            });
-                        }
-                    });
-                }, 2500);
+                if(interval == undefined){
+                    interval = setInterval(function(){
+                        var url = 'https://bra1ns.pl/pokelife/api/get_czat.php?czat_id='+window.localStorage.max_chat_id;
+                        $.getJSON(url, {
+                            format: "json"
+                        }).done(function (data) {
+                            if(data['list'] != undefined){
+                                var messages = data['list'].reverse();
+                                $.each(messages, function (key, value) {
+                                    $("#bot_list").append('<li style="padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
+                                    window.localStorage.max_chat_id = value["czat_id"];
+                                });
+                            }
+                        });
+                    }, 2500);
+                }
             })
         })
 
