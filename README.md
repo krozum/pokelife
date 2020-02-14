@@ -41,3 +41,6 @@ Changelog
 
 5.1.3 (2020-02-01)
 * Poprawka do autoGo, gdy baterie w dziczy sie wyczerpały
+
+5.2 (2020-02-14)
+* Dodanie czatu dla użytkowników bota
