@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.1.3
+// @version      5.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1565,6 +1565,105 @@ function initPokeLifeScript(){
         }
     }
     initWbijanieSzkoleniowca();
+
+
+
+
+
+    // **********************
+    //
+    // initChat
+    // Funkcja automatycznie przechodząca po przechowalni i zwiększaniu treningów do miniumum 7 w każdą statystyke
+    //
+    // **********************
+    function initChat(){
+        window.localStorage.max_chat_id = 0;
+
+        $('#chat-inner > ul').append('<li role="presentation" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokój widoczny wyłącznie dla użytkowników bota"><a href="#room-99999" aria-controls="room-99999" role="tab" data-toggle="tab" class="showRoomBot" data-room="99999" aria-expanded="true">Bot</a></li>');
+        $('#shout_list').after('<ol style="list-style: none; display: none; margin: 0; padding: 0" id="bot_list"></ol>');
+        $('#shoutbox-panel-footer').after('<div style="display: none;background: none;" id="shoutbox-bot-panel-footer" class="panel-footer input-group"><p style="width: 100%;padding: 5px;padding-left: 0px;margin: 0;color: #bbbbbb;position: absolute;z-index: 999;bottom: 55px;">Czat jest anonimowy, będziesz podpisany fałszywym nickiem</p><input id="shout_bot_message" type="text" class="form-control" placeholder="Wiadomość" name="message"> <span class="input-group-btn"> <button id="shout_bot_button" class="btn btn-primary" type="button">Wyślij</button> </span> </div>');
+
+
+        $("a[href='#room-99999']").click(function(){
+            $('#bot-chat-counter').css("display", "none");
+            $('#bot-chat-counter').html(0);
+        });
+
+        $('.showRoomBot').click(function(){
+            $('#shout_list').hide();
+            $('#shoutbox-panel-footer').hide();
+            $('#bot_list').show();
+            $('#shoutbox-bot-panel-footer').show();
+        });
+
+        $('.showRoom').click(function(){
+            $('#bot_list').hide();
+            $('#shoutbox-bot-panel-footer').hide();
+            $('#shout_list').show();
+            $('#shoutbox-panel-footer').show();
+        });
+
+        $(document).on('click', '#zaloguj_chat', function(e) {
+            var url = 'https://bra1ns.pl/pokelife/api/get_czat.php?czat_id='+window.localStorage.max_chat_id;
+            $.getJSON(url, {
+                format: "json"
+            }).done(function (data) {
+                if(data['list'] != undefined){
+                    var messages = data['list'].reverse();
+                    $.each(messages, function (key, value) {
+                        $("#bot_list").append('<li style="padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
+                        window.localStorage.max_chat_id = value["czat_id"];
+                    });
+                }
+
+                setInterval(function(){
+                    var url = 'https://bra1ns.pl/pokelife/api/get_czat.php?czat_id='+window.localStorage.max_chat_id;
+                    $.getJSON(url, {
+                        format: "json"
+                    }).done(function (data) {
+                        if(data['list'] != undefined){
+                            var messages = data['list'].reverse();
+                            $.each(messages, function (key, value) {
+                                $("#bot_list").append('<li style="padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
+                                window.localStorage.max_chat_id = value["czat_id"];
+                            });
+                        }
+                    });
+                }, 2500);
+            })
+        })
+
+        function wyslij() {
+            var msg = $("#shout_bot_message").val();
+            var value =  $("#shout_button").val();
+            if(msg.length > 255) {
+                alert("Wiadomość za długa o " + (msg.length - 255));
+            } else {
+                $("#shout_button").val('Wysyłanie...');
+
+                var url = 'https://bra1ns.pl/pokelife/api/update_czat.php';
+                $.getJSON(url, {
+                    format: "json",
+                    message: msg,
+                    login: $('#wyloguj').parent().parent().html().split("<div")[0].trim()
+                }).done(function (data) {
+                    $("#shout_bot_button").val(value);
+                    $("#shout_bot_message").val('');
+                });
+            }
+        }
+
+        $('#shout_bot_message').keypress(function(event) {
+            if (event.keyCode == 13) {
+                wyslij();
+            }
+        });
+
+        $("#shout_bot_button").click(function() {
+            wyslij();
+        });
+    }
+    initChat();
 
 }
 
