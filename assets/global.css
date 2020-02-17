@@ -263,3 +263,10 @@ a {
 #shouts ul li.nieprzeczytane {
     background-color: rgba(255, 193, 7, 0.32);
 }
+
+.shout_post_name2 {
+    color: #A00;
+    font-size: 15px;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-weight: bold;
+}
