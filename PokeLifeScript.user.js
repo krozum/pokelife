@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.2.1
+// @version      5.2.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -9,7 +9,7 @@
 // @grant        GM_getResourceText
 // @require      https://bug7a.github.io/iconselect.js/sample/lib/control/iconselect.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.5.0/js/md5.min.js
-// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=5
+// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=6
 // @resource     customCSS_style_1  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_1.css?ver=1
 // @resource     customCSS_style_2  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_2.css?ver=1
 // @resource     customCSS_style_3  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_3.css?ver=1
@@ -582,6 +582,78 @@ function initPokeLifeScript(){
                             return '&zlap_pokemona=nestballe';
                         } else {
                             return '&zlap_pokemona=greatballee';
+                        }
+                    }
+                },
+                {
+                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb3.jpg",
+                    'iconValue': function() {
+                        let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                        if (pokeLvlNumber <= 5) {
+                            return '&zlap_pokemona=uzyj_swarmballe';
+                        } else {
+                            var d = new Date();
+                            var h = d.getHours();
+                            if (h >= 22 || h < 6) {
+                                return '&zlap_pokemona=nightballe';
+                            }
+                            if (pokeLvlNumber > 5 && pokeLvlNumber < 15) {
+                                return '&zlap_pokemona=nestballe';
+                            } else {
+                                return '&zlap_pokemona=greatballee';
+                            }
+                        }
+                    }
+                },
+                {
+                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb4.jpg",
+                    'iconValue': function() {
+                        if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc1.png"]').length > 0) {
+                            return '&zlap_pokemona=levelballe';
+                        } else {
+                            var d = new Date();
+                            var h = d.getHours();
+                            if (h >= 22 || h < 6) {
+                                return '&zlap_pokemona=nightballe';
+                            }
+                            let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                            if (pokeLvlNumber >= 5 && pokeLvlNumber < 15) {
+                                return '&zlap_pokemona=nestballe';
+                            } else {
+                                return '&zlap_pokemona=greatballee';
+                            }
+                        }
+                    }
+                },
+                {
+                    'iconFilePath': "images/pokesklep/safariballe.jpg",
+                    'iconValue': function(){
+                        if(Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1){
+                            if($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0){
+                                return '&zlap_pokemona=safariballe';
+                            } else {
+                                $('button:contains("Pomiń i szukaj dalej")').click();
+                                return "";
+                            }
+                        } else {
+                            $('button:contains("Pomiń i szukaj dalej")').click();
+                            return "";
+                        }
+                    }
+                },
+                {
+                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb6.jpg",
+                    'iconValue': function(){
+                        if(Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1){
+                            if($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0){
+                                return "";
+                            } else {
+                                $('button:contains("Pomiń i szukaj dalej")').click();
+                                return "";
+                            }
+                        } else {
+                            $('button:contains("Pomiń i szukaj dalej")').click();
+                            return "";
                         }
                     }
                 }
@@ -1615,7 +1687,11 @@ function initPokeLifeScript(){
                 if(data['list'] != undefined){
                     var messages = data['list'].reverse();
                     $.each(messages, function (key, value) {
-                        $("#bot_list").append('<li style="padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
+                        if(value['false_login'] == "bot"){
+                            $("#bot_list").append('<li style="text-align: center;border: 1px solid #85c9ea;background: #a9ddf7;border-radius: 3px;padding-top: 3px;padding-bottom: 3px;color: #31708f;font-size: 18px;font-family: Arial;"><span>'+value["message"]+'</span></li>');
+                        } else {
+                            $("#bot_list").append('<li style="padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
+                        }
                         window.localStorage.max_chat_id = value["czat_id"];
                     });
                 }
@@ -1629,7 +1705,11 @@ function initPokeLifeScript(){
                             if(data['list'] != undefined){
                                 var messages = data['list'].reverse();
                                 $.each(messages, function (key, value) {
-                                    $("#bot_list").append('<li style="padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
+                                    if(value['false_login'] == "bot"){
+                                        $("#bot_list").append('<li style="text-align: center;border: 1px solid #85c9ea;background: #a9ddf7;border-radius: 3px;padding-top: 3px;padding-bottom: 3px;color: #31708f;font-size: 18px;font-family: Arial;"><span>'+value["message"]+'</span></li>');
+                                    } else {
+                                        $("#bot_list").append('<li style="padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
+                                    }
                                     window.localStorage.max_chat_id = value["czat_id"];
                                 });
                             }
