@@ -50,5 +50,5 @@ Changelog
 * Dodanie nowych balli
   * safariball - rzuca w niezłapane safariballa, pomija pozostałe
   * safariball stop - zatrzymuje przy niezłapanym, pomija pozostałe
-  * levelballe - rzuca w je w trusnosc I 
-  * swarmballe - rzuca je w poki ponizej 5 poziomu, po jednym ballu
+  * levelballe - rzuca je w poki z trudność I 
+  * swarmballe - rzuca je w poki poniżej 5 poziomu, po jednym ballu
