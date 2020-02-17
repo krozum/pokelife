@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.2.2
+// @version      5.2.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1750,6 +1750,39 @@ function initPokeLifeScript(){
         });
     }
     initChat();
+
+
+
+
+
+    // **********************
+    //
+    // initPokemonGracza
+    // Funkcja zapisuje pokemony gracza w lizde
+    //
+    // **********************
+    function initPokemonGracza(){
+        onReloadMain(function(){
+            var THAT = this;
+            if(this.find('.panel-heading').html() === "Liga - pojedynek"){
+                $.each(this.find('.pokazpoka[data-ignoruj-ukrycie="1"]'), function (index, item) {
+                    var pokemon_id = $(item).data('id-pokemona');
+                    var nazwa = $(item).val();
+                    var gracz_id = THAT.find('input[name="walcz"]').val();
+                    var login = THAT.find('big:nth(1)').html();
+                    var url = 'https://bra1ns.pl/pokelife/api/update_pokemon_gracza.php';
+                    $.getJSON(url, {
+                        pokemon_id: pokemon_id,
+                        gracz_id: gracz_id,
+                        login: login,
+                        nazwa: nazwa,
+                    }).done(function (data) {
+                    });
+                })
+            }
+        })
+    }
+    initPokemonGracza();
 
 }
 
