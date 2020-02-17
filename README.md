@@ -44,3 +44,11 @@ Changelog
 
 5.2 (2020-02-14)
 * Dodanie czatu dla użytkowników bota
+
+5.2.2 (2020-02-17)
+* Poprawki do czatu
+* Dodanie nowych balli
+  * safariball - rzuca w niezłapane safariballa, pomija pozostałe
+  * safariball stop - zatrzymuje przy niezłapanym, pomija pozostałe
+  * levelballe - rzuca w je w trusnosc I 
+  * swarmballe - rzuca je w poki ponizej 5 poziomu, po jednym ballu
