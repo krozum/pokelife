@@ -1690,7 +1690,7 @@ function initPokeLifeScript(){
                         if(value['false_login'] == "bot"){
                             $("#bot_list").append('<li style="text-align: center;border: 1px solid #85c9ea;background: #a9ddf7;border-radius: 3px;padding-top: 3px;padding-bottom: 3px;color: #31708f;font-size: 18px;font-family: Arial;"><span>'+value["message"]+'</span></li>');
                         } else {
-                            $("#bot_list").append('<li style="padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
+                            $("#bot_list").append('<li style="padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name2">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
                         }
                         window.localStorage.max_chat_id = value["czat_id"];
                     });
@@ -1708,7 +1708,7 @@ function initPokeLifeScript(){
                                     if(value['false_login'] == "bot"){
                                         $("#bot_list").append('<li style="text-align: center;border: 1px solid #85c9ea;background: #a9ddf7;border-radius: 3px;padding-top: 3px;padding-bottom: 3px;color: #31708f;font-size: 18px;font-family: Arial;"><span>'+value["message"]+'</span></li>');
                                     } else {
-                                        $("#bot_list").append('<li style="padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
+                                        $("#bot_list").append('<li style="padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name2">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
                                     }
                                     window.localStorage.max_chat_id = value["czat_id"];
                                 });
