@@ -52,3 +52,8 @@ Changelog
   * safariball stop - zatrzymuje przy niezłapanym, pomija pozostałe
   * levelballe - rzuca je w poki z trudność I 
   * swarmballe - rzuca je w poki poniżej 5 poziomu, po jednym ballu
+  
+5.2.4 (2020-02-18)
+* Dodanie widgetów zadań i pokemonow dnia
+* Poprawki do zliczania przegranych walk
+* Poprawki do czatu
