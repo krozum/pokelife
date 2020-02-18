@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.2.3
+// @version      5.2.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1492,7 +1492,11 @@ function initPokeLifeScript(){
             } else if(DATA.find(".panel-body > p.alert-danger:contains('uwolnił')").length > 0){
                 console.log('PokeLifeScript: pokemon sie uwolnił');
                 updateStats("niezlapanych_pokemonow", 1);
-                updateEvent("<b>"+ aktualnyPokemonDzicz + "</b> się uwolnił.", 8, dzicz);
+                updateEvent("<b>"+ aktualnyPokemonDzicz + " się uwolnił.", 8, dzicz);
+            } else if(DATA.find(".panel-body > p.alert-danger:contains('Przegrana')").length > 0){
+                console.log('PokeLifeScript: przegrana walka');
+                updateStats("przegranych_walk_w_dziczy", 1);
+                updateEvent("Przegrana walka z <b>" + aktualnyPokemonDzicz + "</b>. Musisz uciekać. ", 6, dzicz);
             } else if(DATA.find(".panel-body > p.alert-success").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa'){
                 console.log('PokeLifeScript: event w dziczy');
                 if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html() != undefined && DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html().indexOf("Jagód") != -1) {
@@ -1688,9 +1692,9 @@ function initPokeLifeScript(){
                     var messages = data['list'].reverse();
                     $.each(messages, function (key, value) {
                         if(value['false_login'] == "bot"){
-                            $("#bot_list").append('<li style="text-align: center;border: 1px solid #85c9ea;background: #a9ddf7;border-radius: 3px;padding-top: 3px;padding-bottom: 3px;color: #31708f;font-size: 18px;font-family: Arial;"><span>'+value["message"]+'</span></li>');
+                            $("#bot_list").append('<li style="word-break: break-word;text-align: center;border-bottom: 2px dashed #aa1c00;padding-top: 3px;padding-bottom: 3px;color: #aa1c00;font-size: 18px;font-family: Arial;"><span>'+value["message"]+'</span></li>');
                         } else {
-                            $("#bot_list").append('<li style="padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name2">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
+                            $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name2">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
                         }
                         window.localStorage.max_chat_id = value["czat_id"];
                     });
@@ -1706,9 +1710,9 @@ function initPokeLifeScript(){
                                 var messages = data['list'].reverse();
                                 $.each(messages, function (key, value) {
                                     if(value['false_login'] == "bot"){
-                                        $("#bot_list").append('<li style="text-align: center;border: 1px solid #85c9ea;background: #a9ddf7;border-radius: 3px;padding-top: 3px;padding-bottom: 3px;color: #31708f;font-size: 18px;font-family: Arial;"><span>'+value["message"]+'</span></li>');
+                                        $("#bot_list").append('<li style="word-break: break-word;text-align: center;border-bottom: 2px dashed #aa1c00;padding-top: 3px;padding-bottom: 3px;color: #aa1c00;font-size: 18px;font-family: Arial;"><span>'+value["message"]+'</span></li>');
                                     } else {
-                                        $("#bot_list").append('<li style="padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name2">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
+                                        $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px;"><span class="shout_post_date">('+value["creation_date"].split(" ")[1]+') </span><span class="shout_post_name2">'+value["false_login"]+'</span>: '+value["message"]+'</li>');
                                     }
                                     window.localStorage.max_chat_id = value["czat_id"];
                                 });
@@ -1783,6 +1787,112 @@ function initPokeLifeScript(){
         })
     }
     initPokemonGracza();
+
+
+
+    // **********************
+    //
+    // initZadaniaWidget
+    // Funkcja pokazująca aktualne zadania w sidebar
+    //
+    // **********************
+
+    function initZadaniaWidget(){
+        var zadaniaWidget;
+
+        function refreshZadaniaWidget(){
+            $.ajax({
+                type: 'POST',
+                url: "gra/zadania.php"
+            }).done(function (response) {
+                var html = '<div class="panel panel-primary"><div class="panel-heading">Zadania<div class="navbar-right"><span id="refreshZadaniaWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
+                $.each($(response).find('#zadania_codzienne .panel-primary .panel-heading'), function(key, value){
+                    if($(value).html().split("<div")[0] !== "brak zadania"){
+                        html = html + '<tr><td>'+$(value).html().split("<div")[0];
+                    }
+                    if($(value).parent().find(".text-center").html() != undefined){
+                        $.each($(value).parent().find(".text-center p"), function(key2, value2){
+                            html = html + " - " + $(value2).html().trim();
+                        })
+                    }
+                    html = html +'</tr></td>';
+                });
+                html = html + '</tbody></table></div>';
+                zadaniaWidget = html;
+                $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+            })
+        }
+        refreshZadaniaWidget();
+
+        onReloadSidebar(function(){
+            if(zadaniaWidget != undefined && zadaniaWidget.length > 340){
+                this.find(".panel-heading:contains('Drużyna')").parent().after(zadaniaWidget);
+            }
+        })
+
+        onReloadMain(function(){
+            var THAT = this;
+            if(this.find('.panel-heading').html() === "Zadania"){
+                var html = '<div class="panel panel-primary"><div class="panel-heading">Zadania<div class="navbar-right"><span id="refreshZadaniaWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
+                $.each(THAT.find('#zadania_codzienne .panel-primary .panel-heading'), function(key, value){
+                    if($(value).html().split("<div")[0] !== "brak zadania"){
+                        html = html + '<tr><td>'+$(value).html().split("<div")[0];
+                    }
+                    if($(value).parent().find(".text-center").html() != undefined){
+                        $.each($(value).parent().find(".text-center p"), function(key2, value2){
+                            html = html + " - " + $(value2).html().trim();
+                        })
+                    }
+                    html = html +'</tr></td>';
+                });
+                html = html + '</tbody></table></div>';
+                zadaniaWidget = html;
+            }
+        })
+
+        $(document).on("click", "#refreshZadaniaWidget", function (event) {
+            refreshZadaniaWidget();
+            $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+        });
+    }
+    initZadaniaWidget();
+
+
+
+    // **********************
+    //
+    // initPokemonDniaWidget
+    // Funkcja dodająca pokemona dnia do sidebaru
+    //
+    // **********************
+    function initPokemonDniaWidget(){
+        var hodowlaPokemonDniaImage;
+        var hodowlaPokemonDniaStowarzyszenieImage;
+        $.ajax({
+            type: 'POST',
+            url: "gra/hodowla.php"
+        }).done(function (response) {
+            hodowlaPokemonDniaImage = $(response).find('#hodowla-glowne img').attr('src');
+            hodowlaPokemonDniaStowarzyszenieImage = $(response).find('#hodowla-glowne img:nth(1)').attr('src');
+            if($(response).find('.panel-heading:contains("Pokemon dnia Stowa")').length == 0){
+                hodowlaPokemonDniaStowarzyszenieImage = undefined;
+            }
+        });
+
+        onReloadSidebar(function(){
+            if(hodowlaPokemonDniaStowarzyszenieImage != undefined){
+                this.find('button[href="raport.php"]').parent().prepend('<img class="btn-akcja" href="hodowla.php?wszystkie&pokemon_dnia" src="https://gra.pokelife.pl/'+hodowlaPokemonDniaStowarzyszenieImage+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokemon Dnia Stowarzyszenia" style="cursor: pointer; width: 50px;margin-left: 10px; float: left; ">');
+                this.find('button[href="raport.php"]').parent().css('margin-top', '10px').css('padding-right','10px');
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+            if(hodowlaPokemonDniaImage != undefined){
+                this.find('button[href="raport.php"]').parent().prepend('<img class="btn-akcja" href="hodowla.php?wszystkie&pokemon_dnia_stow"" src="https://gra.pokelife.pl/'+hodowlaPokemonDniaImage+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokemon Dnia" style="cursor: pointer; width: 50px;margin-left: 10px; float: left; ">');
+                this.find('button[href="raport.php"]').parent().css('margin-top', '10px').css('padding-right','10px');
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+        })
+    }
+    initPokemonDniaWidget();
 
 }
 
