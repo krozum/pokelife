@@ -63,3 +63,6 @@ Changelog
 
 5.2.6 (2020-02-19)
 * Dodano przypomnienie o braku aktywności gdy uzytkownik opuszcza strone a nie ma ustawionej pracy lub treningu
+
+5.2.7 (2020-02-19)
+* Optymalizacje do widgetów aby nie wykonywały requestów po odswiezeniu strony
