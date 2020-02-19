@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.2.6
+// @version      5.2.7
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1889,6 +1889,8 @@ function initPokeLifeScript(){
     // **********************
 
     function initZadaniaWidget(){
+        var d = new Date();
+        var today = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
         var zadaniaWidget;
 
         function refreshZadaniaWidget(){
@@ -1896,7 +1898,7 @@ function initPokeLifeScript(){
                 type: 'POST',
                 url: "gra/zadania.php"
             }).done(function (response) {
-                var html = '<div class="panel panel-primary"><div class="panel-heading">Zadania<div class="navbar-right"><span id="refreshZadaniaWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
+                var html = '<div class="panel panel-primary"><div data-time="'+today+'" class="panel-heading">Zadania<div class="navbar-right"><span id="refreshZadaniaWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
                 $.each($(response).find('#zadania_codzienne .panel-primary .panel-heading'), function(key, value){
                     if($(value).html().split("<div")[0] !== "brak zadania"){
                         html = html + '<tr><td>'+$(value).html().split("<div")[0];
@@ -1910,10 +1912,13 @@ function initPokeLifeScript(){
                 });
                 html = html + '</tbody></table></div>';
                 zadaniaWidget = html;
+                window.localStorage.zadaniaWidget = html;
                 $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
             })
         }
-        refreshZadaniaWidget();
+        if(window.localStorage.zadaniaWidget == undefined || !window.localStorage.zadaniaWidget.includes(today)){
+            refreshZadaniaWidget();
+        }
 
         onReloadSidebar(function(){
             if(zadaniaWidget != undefined && zadaniaWidget.length > 340){
@@ -1957,21 +1962,36 @@ function initPokeLifeScript(){
     //
     // **********************
     function initPokemonDniaWidget(){
+        var d = new Date();
+        var today = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
         var hodowlaPokemonDniaImage;
         var hodowlaPokemonDniaStowarzyszenieImage;
-        $.ajax({
-            type: 'POST',
-            url: "gra/hodowla.php"
-        }).done(function (response) {
-            hodowlaPokemonDniaImage = $(response).find('#hodowla-glowne img').attr('src');
-            hodowlaPokemonDniaStowarzyszenieImage = $(response).find('#hodowla-glowne img:nth(1)').attr('src');
-            if($(response).find('.panel-heading:contains("Pokemon dnia Stowa")').length == 0){
-                hodowlaPokemonDniaStowarzyszenieImage = undefined;
-            }
-        });
+
+        if(window.localStorage.hodowlaPokemonDniaImage == undefined){
+            window.localStorage.hodowlaPokemonDniaImage = "";
+            window.localStorage.hodowlaPokemonDniaStowarzyszenieImage = "";
+        }
+
+        if(!window.localStorage.hodowlaPokemonDniaImage.includes(today)){
+            $.ajax({
+                type: 'POST',
+                url: "gra/hodowla.php"
+            }).done(function (response) {
+                hodowlaPokemonDniaImage = $(response).find('#hodowla-glowne img').attr('src');
+                window.localStorage.hodowlaPokemonDniaImage = today + "" + hodowlaPokemonDniaImage;
+                hodowlaPokemonDniaStowarzyszenieImage = $(response).find('#hodowla-glowne img:nth(1)').attr('src');
+                if($(response).find('.panel-heading:contains("Pokemon dnia Stowa")').length == 0){
+                    hodowlaPokemonDniaStowarzyszenieImage = undefined;
+                }
+                window.localStorage.hodowlaPokemonDniaStowarzyszenieImage = today + "" + hodowlaPokemonDniaStowarzyszenieImage;
+            });
+        } else {
+            hodowlaPokemonDniaImage = window.localStorage.hodowlaPokemonDniaImage.replace(today, "");
+            hodowlaPokemonDniaStowarzyszenieImage = window.localStorage.hodowlaPokemonDniaStowarzyszenieImage.replace(today, "");
+        }
 
         onReloadSidebar(function(){
-            if(hodowlaPokemonDniaStowarzyszenieImage != undefined){
+            if(hodowlaPokemonDniaStowarzyszenieImage != undefined || hodowlaPokemonDniaStowarzyszenieImage != "undefined"){
                 this.find('button[href="raport.php"]').parent().prepend('<img class="btn-akcja" href="hodowla.php?wszystkie&pokemon_dnia" src="https://gra.pokelife.pl/'+hodowlaPokemonDniaStowarzyszenieImage+'" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokemon Dnia Stowarzyszenia" style="cursor: pointer; width: 50px;margin-left: 10px; float: left; ">');
                 this.find('button[href="raport.php"]').parent().css('margin-top', '10px').css('padding-right','10px');
                 $('[data-toggle="tooltip"]').tooltip();
