@@ -60,3 +60,6 @@ Changelog
 
 5.2.5 (2020-02-19)
 * Dodanie informacji dlaczego autoGo sie zatrzymało (shiny, niezłapany, brak balli, brak PA)
+
+5.2.6 (2020-02-19)
+* Dodano przypomnienie o braku aktywności gdy uzytkownik opuszcza strone a nie ma ustawionej pracy lub treningu
