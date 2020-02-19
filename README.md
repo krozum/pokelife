@@ -57,3 +57,6 @@ Changelog
 * Dodanie widgetów zadań i pokemonow dnia
 * Poprawki do zliczania przegranych walk
 * Poprawki do czatu
+
+5.2.5 (2020-02-19)
+* Dodanie informacji dlaczego autoGo sie zatrzymało (shiny, niezłapany, brak balli, brak PA)
