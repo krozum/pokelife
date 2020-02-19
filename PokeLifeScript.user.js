@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.2.5
+// @version      5.2.6
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1984,6 +1984,41 @@ function initPokeLifeScript(){
         })
     }
     initPokemonDniaWidget();
+
+
+
+    // **********************
+    //
+    // initPrzypomnienieOPracy()
+    // Funkcja dodająca przypomnienie o pracy po wyjściu poza obszar strony
+    //
+    function initPrzypomnienieOPracy(){
+        $('body').append('<div id="jobAlertBox" style="position: fixed; width: 100%; height: 100%; background: linear-gradient(rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%); z-index: 99999; top: 0px; display: none;"><h1 style="text-align: center;color: #dadada;font-size: 90px;vertical-align: middle;">Brak aktywności</h1></div>');
+
+        var addEvent = function(obj, evt, fn) {
+            if (obj.addEventListener) {
+                obj.addEventListener(evt, fn, false);
+            }
+            else if (obj.attachEvent) {
+                obj.attachEvent("on" + evt, fn);
+            }
+        };
+
+        addEvent(document, "mouseout", function(event) {
+            event = event ? event : window.event;
+            var d = new Date();
+            var h = d.getHours();
+            var from = event.relatedTarget || event.toElement;
+            if ( (!from || from.nodeName == "HTML") && event.clientY <= 10 && $('.alert-info a[href="aktywnosc.php"]').length == 0) {
+                $("#jobAlertBox").css('display', 'block');
+            }
+        });
+
+        addEvent(document, "mouseover", function(event) {
+            $('#jobAlertBox').css('display', "none");
+        });
+    }
+    initPrzypomnienieOPracy();
 
 }
 
