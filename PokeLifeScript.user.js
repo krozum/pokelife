@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.2.4
+// @version      5.2.5
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -444,6 +444,7 @@ function initPokeLifeScript(){
     function initAutoGo(){
         var blocked = false;
         var autoGo;
+        var autoGoWznawianie;
 
         window.localStorage.useCzerwoneNapoje == undefined ? window.localStorage.useCzerwoneNapoje = false : "";
         window.localStorage.useNiebieskieNapoje == undefined ? window.localStorage.useNiebieskieNapoje = false : "";
@@ -456,6 +457,7 @@ function initPokeLifeScript(){
             $('body').append('<div id="goSettingsAutoGo" style="position: fixed;cursor: pointer;top: 20px;right: 275px;font-size: 20px;text-align: center;width: 25px;height: 25px;line-height: 25px;z-index: 9999;"><span style="color: ' + $('.panel-heading').css('background-color') + ';" class="glyphicon glyphicon-cog" aria-hidden="true"></span></div>');
             $('body').append('<div id="goButton" style="opacity: 0.3;border-radius: 4px;position: fixed; cursor: pointer; top: 5px; right: 10px; font-size: 36px; text-align: center; width: 100px; height: 48px; line-height: 48px; background: ' + $('.panel-heading').css('background-color') + '; z-index: 9999">GO</div>');
             $('body').append('<div id="goAutoButton" style="border-radius: 4px;position: fixed; cursor: pointer; top: 5px; right: 122px; font-size: 36px; text-align: center; width: 140px; height: 48px; line-height: 48px; background: ' + $('.panel-heading').css('background-color') + '; z-index: 9999">AutoGO</div>');
+            $('body').append('<div id="goStopReason" style="position: fixed;display: none; cursor: pointer; top: 12px; right: 271px; z-index: 99999; background: #ffd34e; padding: 7px; border: 1px solid #bba76a; border-radius: 3px; ">Brak odpowiedniego pokeballa</div>');
         }
         initGoButton();
 
@@ -738,7 +740,9 @@ function initPokeLifeScript(){
                                     $('.btn-wybor_pokemona .progress-bar').css("width", "100%");
                                     $('.btn-wybor_pokemona .progress-bar span').html("100% PŻ");
                                     setTimeout(function(){
-                                        click(true)
+                                        if(autoGo){
+                                            click(true)
+                                        }
                                     }, (timeoutMax - timeoutMin) + timeoutMin);
                                 });
                             }
@@ -754,6 +758,7 @@ function initPokeLifeScript(){
                         console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
                         autoGo = false;
                         $('#goAutoButton').html('AutoGO');
+                        $("#goStopReason").html("Spotkany shiny pokemon").show();
                         $('#refreshShinyWidget').trigger('click');
                         requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now(), null);
                     } else if ($('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
@@ -766,6 +771,7 @@ function initPokeLifeScript(){
                             console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
                             autoGo = false;
                             $('#goAutoButton').html('AutoGO');
+                            $("#goStopReason").html("Spotkany niezłapany pokemona").show();
                         }
                     } else if ($('.dzikipokemon-background-normalny').length == 1) {
                         console.log('PokeLifeScript: atakuje pokemona');
@@ -842,9 +848,11 @@ function initPokeLifeScript(){
         $(document).on("click", '#goAutoButton', function () {
             if (autoGo) {
                 autoGo = false;
+                autoGoWznawianie = false;
                 $('#goAutoButton').html('AutoGO');
             } else {
                 autoGo = true;
+                autoGoWznawianie = false;
                 $('#goAutoButton').html('STOP');
                 click();
             }
@@ -863,7 +871,7 @@ function initPokeLifeScript(){
         });
 
         onReloadMain(function(){
-            if (autoGo) {
+            if (autoGo && !autoGoWznawianie) {
                 if(this.find(".panel-body > p.alert-danger").length > 0){
                     console.log(this.find('.panel-body > p.alert-danger').html());
                     if(this.find(".panel-body > p.alert-danger:contains('Posiadasz za mało punktów akcji')").length > 0){
@@ -874,6 +882,7 @@ function initPokeLifeScript(){
                         przerwijAutoGoZPowoduBrakuPA(true);
                     } else if(this.find('.panel-body > p.alert-danger').html() == "Baterie w twojej latarce się wyczerpały, kup nowe."){
                         przerwijAutoGoZPowoduBrakuPA(false);
+                        $("#goStopReason").html("Brak baterii").show();
                     }
                 }
             }
@@ -881,146 +890,212 @@ function initPokeLifeScript(){
 
 
         function probujWznowicAutoGo(array, autoGoBefore){
-            if(array.length > 0 && autoGoBefore){
-                var text = array.pop();
-                switch(text){
-                    case "useNiebieskieJagody":
-                        console.log('Próbuje przywrócić PA za pomocą niebieskich jagód');
-                        if($("a[href='gra/statystyki.php']").length > 0){
-                            reloadMain("#glowne_okno", "gra/statystyki.php", function(){
-                                setTimeout(function(){
-                                    if($("#statystyki b:contains('Niebieskie Jagody:')").parent().next().html().split('/')[0].trim() != $("#statystyki b:contains('Niebieskie Jagody:')").parent().next().html().split('/')[1].trim()){
-                                        if($("a[href='gra/plecak.php']").length > 0){
-                                            reloadMain("#glowne_okno", "gra/plecak.php", function(){
-                                                if($('.thumbnail-plecak[data-target="#plecak-48"] h5').length > 0){
-                                                    var ile = $('.thumbnail-plecak[data-target="#plecak-48"] h5').html().split(' x Niebieskie')[0];
+            if(autoGoBefore) {
+                if(array.length > 0){
+                    var text = array.pop();
+                    switch(text){
+                        case "useNiebieskieJagody":
+                            console.log('Próbuje przywrócić PA za pomocą niebieskich jagód');
+                            if($("a[href='gra/statystyki.php']").length > 0 && autoGo){
+                                reloadMain("#glowne_okno", "gra/statystyki.php", function(){
+                                    setTimeout(function(){
+                                        if($("#statystyki b:contains('Niebieskie Jagody:')").parent().next().html().split('/')[0].trim() != $("#statystyki b:contains('Niebieskie Jagody:')").parent().next().html().split('/')[1].trim()){
+                                            if($("a[href='gra/plecak.php']").length > 0 && autoGo){
+                                                reloadMain("#glowne_okno", "gra/plecak.php", function(){
+                                                    if($('.thumbnail-plecak[data-target="#plecak-48"] h5').length > 0){
+                                                        var ile = $('.thumbnail-plecak[data-target="#plecak-48"] h5').html().split(' x Niebieskie')[0];
 
-                                                    if(ile > 40){
-                                                        ile = 40;
+                                                        if(ile > 40){
+                                                            ile = 40;
+                                                        }
+                                                        setTimeout(function(){
+                                                            if(autoGo){
+                                                                reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=3&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=niebieskie_jagody&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=" + ile, function(){
+                                                                    $('#goAutoButton').html('STOP');
+                                                                    console.log('Przywrócono PA');
+                                                                    setTimeout(function(){
+                                                                        if(autoGo){
+                                                                            autoGoWznawianie = false;
+                                                                            click();
+                                                                        }
+                                                                    }, 2000);
+                                                                });
+                                                            }
+                                                        }, 2000);
+                                                    } else {
+                                                        console.log('Brak jagód');
+                                                        setTimeout(function(){
+                                                            if(autoGo){
+                                                                probujWznowicAutoGo(array, autoGoBefore);
+                                                            }
+                                                        }, 2000);
                                                     }
-
-                                                    reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=3&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=niebieskie_jagody&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=" + ile, function(){
-                                                        autoGo = true;
-                                                        $('#goAutoButton').html('STOP');
-                                                        console.log('Przywrócono PA');
-                                                        setTimeout(function(){
-                                                            click();
-                                                        }, 2000);
-                                                    });
-                                                } else {
-                                                    console.log('Brak jagód');
-                                                    probujWznowicAutoGo(array, autoGoBefore);
-                                                }
-                                            })
-                                        }
-                                    } else {
-                                        console.log('Wykorzystałeś limit niebieskich jagód na dzisiaj');
-                                        probujWznowicAutoGo(array, autoGoBefore);
-                                    }
-                                }, 2000);
-                            });
-                        }
-                        break;
-                    case "useZieloneNapoje":
-                        console.log('Próbuje przywrócić PA za pomocą zielonych napojów');
-                        if($("a[href='gra/statystyki.php']").length > 0){
-                            reloadMain("#glowne_okno", "gra/statystyki.php", function(){
-                                setTimeout(function(){
-                                    if(Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[0].trim()) < (Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[1].trim()) - 1)){
-                                        if($("a[href='gra/plecak.php']").length > 0){
-                                            reloadMain("#glowne_okno", "gra/plecak.php", function(){
-                                                if($('.thumbnail-plecak[data-target="#plecak-1"] h5').length > 0){
-                                                    reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=zielony_napoj&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=1", function(){
-                                                        autoGo = true;
-                                                        $('#goAutoButton').html('STOP');
-                                                        console.log('Przywrócono PA');
-                                                        setTimeout(function(){
-                                                            click();
-                                                        }, 2000);
-                                                    });
-                                                } else {
-                                                    console.log('Brak napojów');
-                                                    probujWznowicAutoGo(array, autoGoBefore);
-                                                }
-                                            })
-                                        }
-                                    } else {
-                                        console.log('Wykorzystałeś limit napojów na dzisiaj');
-                                        probujWznowicAutoGo(array, autoGoBefore);
-                                    }
-                                }, 2000);
-                            });
-                        }
-                        break;
-                    case "useNiebieskieNapoje":
-                        console.log('Próbuje przywrócić PA za pomocą niebieskich napojów');
-                        if($("a[href='gra/statystyki.php']").length > 0){
-                            reloadMain("#glowne_okno", "gra/statystyki.php", function(){
-                                setTimeout(function(){
-                                    if(Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[0].trim()) < (Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[1].trim()) - 1)){
-                                        if($("a[href='gra/plecak.php']").length > 0){
-                                            reloadMain("#glowne_okno", "gra/plecak.php", function(){
-                                                if($('.thumbnail-plecak[data-target="#plecak-4"] h5').length > 0){
-                                                    reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=napoj_energetyczny&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=1", function(){
-                                                        autoGo = true;
-                                                        $('#goAutoButton').html('STOP');
-                                                        console.log('Przywrócono PA');
-                                                        setTimeout(function(){
-                                                            click();
-                                                        }, 2000);
-                                                    });
-                                                } else {
-                                                    console.log('Brak napojów');
-                                                    probujWznowicAutoGo(array, autoGoBefore);
-                                                }
-                                            })
-                                        }
-                                    } else {
-                                        console.log('Wykorzystałeś limit napojów na dzisiaj');
-                                        probujWznowicAutoGo(array, autoGoBefore);
-                                    }
-                                }, 2000);
-                            });
-                        }
-                        break;
-                    case "useCzerwoneNapoje":
-                        console.log('Próbuje przywrócić PA za pomocą czerwonych napojów');
-                        if($("a[href='gra/statystyki.php']").length > 0){
-                            reloadMain("#glowne_okno", "gra/statystyki.php", function(){
-                                setTimeout(function(){
-                                    if($("a[href='gra/plecak.php']").length > 0){
-                                        reloadMain("#glowne_okno", "gra/plecak.php", function(){
-                                            if($('.thumbnail-plecak[data-target="#plecak-5"] h5').length > 0){
-                                                reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=duzy_napoj_energetyczny&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=1", function(){
-                                                    autoGo = true;
-                                                    $('#goAutoButton').html('STOP');
-                                                    console.log('Przywrócono PA');
-                                                    setTimeout(function(){
-                                                        click();
-                                                    }, 2000);
-                                                });
-                                            } else {
-                                                console.log('Brak napojów');
-                                                probujWznowicAutoGo(array, autoGoBefore);
+                                                })
                                             }
-                                        })
-                                    }
-                                }, 2000);
-                            });
-                        }
-                        break;
-                    default:
-                        // code block
+                                        } else {
+                                            console.log('Wykorzystałeś limit niebieskich jagód na dzisiaj');
+                                            setTimeout(function(){
+                                                if(autoGo){
+                                                    probujWznowicAutoGo(array, autoGoBefore);
+                                                }
+                                            }, 2000);
+                                        }
+                                    }, 2000);
+                                });
+                            }
+                            break;
+                        case "useZieloneNapoje":
+                            console.log('Próbuje przywrócić PA za pomocą zielonych napojów');
+                            if($("a[href='gra/statystyki.php']").length > 0 && autoGo){
+                                reloadMain("#glowne_okno", "gra/statystyki.php", function(){
+                                    setTimeout(function(){
+                                        if(Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[0].trim()) < (Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[1].trim()) - 1)){
+                                            if($("a[href='gra/plecak.php']").length > 0 && autoGo){
+                                                reloadMain("#glowne_okno", "gra/plecak.php", function(){
+                                                    if($('.thumbnail-plecak[data-target="#plecak-1"] h5').length > 0){
+                                                        setTimeout(function(){
+                                                            if(autoGo){
+                                                                reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=zielony_napoj&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=1", function(){
+                                                                    $('#goAutoButton').html('STOP');
+                                                                    console.log('Przywrócono PA');
+                                                                    setTimeout(function(){
+                                                                        if(autoGo){
+                                                                            autoGoWznawianie = false;
+                                                                            click();
+                                                                        }
+                                                                    }, 2000);
+                                                                });
+                                                            }
+                                                        }, 2000);
+                                                    } else {
+                                                        console.log('Brak napojów');
+                                                        setTimeout(function(){
+                                                            if(autoGo){
+                                                                probujWznowicAutoGo(array, autoGoBefore);
+                                                            }
+                                                        }, 2000);
+                                                    }
+                                                })
+                                            }
+                                        } else {
+                                            console.log('Wykorzystałeś limit napojów na dzisiaj');
+                                            setTimeout(function(){
+                                                if(autoGo){
+                                                    probujWznowicAutoGo(array, autoGoBefore);
+                                                }
+                                            }, 2000);
+                                        }
+                                    }, 2000);
+                                });
+                            }
+                            break;
+                        case "useNiebieskieNapoje":
+                            console.log('Próbuje przywrócić PA za pomocą niebieskich napojów');
+                            if($("a[href='gra/statystyki.php']").length > 0 && autoGo){
+                                reloadMain("#glowne_okno", "gra/statystyki.php", function(){
+                                    setTimeout(function(){
+                                        if(Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[0].trim()) < (Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[1].trim()) - 1)){
+                                            if($("a[href='gra/plecak.php']").length > 0 && autoGo){
+                                                reloadMain("#glowne_okno", "gra/plecak.php", function(){
+                                                    if($('.thumbnail-plecak[data-target="#plecak-4"] h5').length > 0){
+                                                        setTimeout(function(){
+                                                            if(autoGo){
+                                                                reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=napoj_energetyczny&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=1", function(){
+                                                                    $('#goAutoButton').html('STOP');
+                                                                    console.log('Przywrócono PA');
+                                                                    setTimeout(function(){
+                                                                        if(autoGo){
+                                                                            autoGoWznawianie = false;
+                                                                            click();
+                                                                        }
+                                                                    }, 2000);
+                                                                });
+                                                            }
+                                                        }, 2000);
+                                                    } else {
+                                                        console.log('Brak napojów');
+                                                        setTimeout(function(){
+                                                            if(autoGo){
+                                                                probujWznowicAutoGo(array, autoGoBefore);
+                                                            }
+                                                        }, 2000);
+                                                    }
+                                                })
+                                            }
+                                        } else {
+                                            console.log('Wykorzystałeś limit napojów na dzisiaj');
+                                            setTimeout(function(){
+                                                if(autoGo){
+                                                    probujWznowicAutoGo(array, autoGoBefore);
+                                                }
+                                            }, 2000);
+                                        }
+                                    }, 2000);
+                                });
+                            }
+                            break;
+                        case "useCzerwoneNapoje":
+                            console.log('Próbuje przywrócić PA za pomocą czerwonych napojów');
+                            if($("a[href='gra/statystyki.php']").length > 0 && autoGo){
+                                reloadMain("#glowne_okno", "gra/statystyki.php", function(){
+                                    setTimeout(function(){
+                                        if($("a[href='gra/plecak.php']").length > 0 && autoGo){
+                                            reloadMain("#glowne_okno", "gra/plecak.php", function(){
+                                                if($('.thumbnail-plecak[data-target="#plecak-5"] h5').length > 0){
+                                                    setTimeout(function(){
+                                                        if(autoGo){
+                                                            reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=duzy_napoj_energetyczny&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=1", function(){
+                                                                $('#goAutoButton').html('STOP');
+                                                                console.log('Przywrócono PA');
+                                                                setTimeout(function(){
+                                                                    if(autoGo){
+                                                                        autoGoWznawianie = false;
+                                                                        click();
+                                                                    }
+                                                                }, 2000);
+                                                            });
+
+                                                        }
+                                                    }, 2000);
+                                                } else {
+                                                    console.log('Brak napojów');
+                                                    setTimeout(function(){
+                                                        if(autoGo){
+                                                            probujWznowicAutoGo(array, autoGoBefore);
+                                                        }
+                                                    }, 2000);
+                                                }
+                                            })
+                                        }
+                                    }, 2000);
+                                });
+                            }
+                            break;
+                        default:
+                            // code block
+                    }
+                } else {
+                    autoGoWznawianie = false;
+                    autoGo = false;
+                    $('#goAutoButton').html('AutoGO');
+                    $("#goStopReason").html("Brak PA").show();
                 }
+            } else {
+                autoGoWznawianie = false;
+                autoGo = false;
+                $('#goAutoButton').html('AutoGO');
             }
         }
+
+        $(document).on("click", "#goStopReason", function(){
+            $(this).hide();
+        })
 
 
         function przerwijAutoGoZPowoduBrakuPA(wznawiaj){
             var autoGoBefore = autoGo;
-            console.log('PokeLifeScript: brak PA, przerywam AutoGo');
-            autoGo = false;
-            $('#goAutoButton').html('AutoGO');
+            autoGoWznawianie = true;
+            console.log('PokeLifeScript: brak PA, próbuje wznowić');
 
             if(wznawiaj){
                 var array = [];
@@ -1036,23 +1111,39 @@ function initPokeLifeScript(){
                 if(window.localStorage.useNiebieskieJagody == "true" || window.localStorage.useNiebieskieJagody == true){
                     array.push("useNiebieskieJagody");
                 }
-                console.log(array);
                 if(window.localStorage.useOnlyInNight == "true" || window.localStorage.useOnlyInNight == true){
                     var d = new Date();
                     var h = d.getHours();
                     if (h >= 22 || h < 6) {
-                        probujWznowicAutoGo(array, autoGoBefore);
+                        setTimeout(function(){
+                            probujWznowicAutoGo(array, autoGoBefore);
+                        }, 2000);
+                    } else {
+                        autoGoWznawianie = false;
+                        autoGo = false;
+                        $('#goAutoButton').html('AutoGO');
+                        $("#goStopReason").html("Brak PA").show();
                     }
                 } else {
-                    probujWznowicAutoGo(array, autoGoBefore);
+                    setTimeout(function(){
+                        probujWznowicAutoGo(array, autoGoBefore);
+                    }, 2000);
                 }
+            } else {
+                autoGoWznawianie = false;
+                autoGo = false;
+                $('#goAutoButton').html('AutoGO');
             }
         }
 
 
         afterReloadMain(function(){
-            if (autoGo) {
-                setTimeout(function(){ click() }, (timeoutMax - timeoutMin) + timeoutMin);
+            if (autoGo && !autoGoWznawianie) {
+                setTimeout(function(){
+                    if(autoGo){
+                        click();
+                    }
+                }, (timeoutMax - timeoutMin) + timeoutMin);
             }
         })
     }
