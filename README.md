@@ -66,3 +66,6 @@ Changelog
 
 5.2.7 (2020-02-19)
 * Optymalizacje do widgetów aby nie wykonywały requestów po odswiezeniu strony
+
+5.2.8 (2020-02-20)
+* Poprawka aby gdy jest wyłączony czat główny nie znikały przyciski do włączenia czatu bota
