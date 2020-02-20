@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.2.7
+// @version      5.2.8
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1230,7 +1230,7 @@ function initPokeLifeScript(){
                             nazwa = pokemonData['johto'][value['pokemon_id']].name;
                         } else if (pokemonData['hoenn'][value['pokemon_id']] != undefined){
                             wystepowanie =  "Hoenn, " + pokemonData['hoenn'][value['pokemon_id']].wystepowanie;
-                            nazwa = pokemonData['sinnoh'][value['pokemon_id']].name;
+                            nazwa = pokemonData['hoenn'][value['pokemon_id']].name;
                         } else if (pokemonData['sinnoh'][value['pokemon_id']] != undefined){
                             wystepowanie =  "Sinnoh, " + pokemonData['sinnoh'][value['pokemon_id']].wystepowanie;
                             nazwa = pokemonData['sinnoh'][value['pokemon_id']].name;
@@ -1762,6 +1762,12 @@ function initPokeLifeScript(){
             $('#bot_list').show();
             $('#shout_refresher').hide();
             $('#shoutbox-bot-panel-footer').show();
+
+
+
+            if($('#shout_refresher:contains("tymczasowo wyłączony")').length > 0 && $('#bot_list li').length == 0){
+                $('#shouts').append("<button style='text-align: center; margin: 0 auto; display: block; margin-top: 20px;' class='btn btn-primary' id='zaloguj_czat_bot'>Zaloguj</button>");
+            }
         });
 
         $('.showRoom').click(function(){
@@ -1769,12 +1775,13 @@ function initPokeLifeScript(){
             $('#shout_refresher').show();
             $('#shoutbox-bot-panel-footer').hide();
             $('#shout_list').show();
+            $('#zaloguj_czat_bot').remove();
             $('#shoutbox-panel-footer').show();
         });
 
         var interval;
 
-        $(document).on('click', '#zaloguj_chat', function(e) {
+        $(document).on('click', '#zaloguj_chat,#zaloguj_czat_bot', function(e) {
             var url = 'https://bra1ns.pl/pokelife/api/get_czat.php?czat_id='+window.localStorage.max_chat_id;
             $.getJSON(url, {
                 format: "json"
