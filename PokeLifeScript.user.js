@@ -1782,6 +1782,7 @@ function initPokeLifeScript(){
         var interval;
 
         $(document).on('click', '#zaloguj_chat,#zaloguj_czat_bot', function(e) {
+            $('#zaloguj_czat_bot').remove();
             var url = 'https://bra1ns.pl/pokelife/api/get_czat.php?czat_id='+window.localStorage.max_chat_id;
             $.getJSON(url, {
                 format: "json"
