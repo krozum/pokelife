@@ -69,3 +69,7 @@ Changelog
 
 5.2.8 (2020-02-20)
 * Poprawka aby gdy jest wyłączony czat główny nie znikały przyciski do włączenia czatu bota
+
+5.2.9 (2020-02-21)
+* Dodanie dynamicznego wybierania poków na podstawie lvl
+* Dodanie opcji czy zatrzymywać gdy spotkasz niezłapane
