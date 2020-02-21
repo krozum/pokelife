@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.3.1
+// @version      5.3.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -736,35 +736,41 @@ function initPokeLifeScript(){
                 setTimeout(function(){ blocked = false }, timeoutMin);
             }
 
-                $('.stan-pokemon div.progress:first-of-type .progress-bar').each(function (index) {
-                    var now = $(this).attr("aria-valuenow");
-                    if (Number(now) < Number(1)) {
-                        if(!poLeczeniu){
-                            $.get( 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat', function( data ) {
-                                if($(data).find(".alert-success").length > 0){
-                                    console.log('PokeLifeScript: wyleczono');
-                                    if($(data).find(".alert-success strong").length > 0){
-                                        var koszt = $(data).find(".alert-success strong").html().split(" ¥")[0];
-                                        updateStats("koszty_leczenia", koszt.replace(/\./g, ''));
-                                    }
+            var minHealth = 100;
 
-                                    $.get( 'inc/stan.php', function( data ) {
-                                        $( "#sidebar" ).html( data );
-                                        $('.btn-wybor_pokemona').attr("disabled", false);
-                                        $('.btn-wybor_pokemona .progress-bar').css("width", "100%");
-                                        $('.btn-wybor_pokemona .progress-bar span').html("100% PŻ");
-                                        setTimeout(function(){
-                                            if(autoGo){
-                                                click(true)
-                                            }
-                                        }, 1000);
-                                    });
-                                }
+            $('.stan-pokemon div.progress:first-of-type .progress-bar').each(function (index) {
+                var now = $(this).attr("aria-valuenow");
+                if (minHealth > Number(now)) {
+                    minHealth = now;
+                }
+            });
+
+            if (Number(minHealth) < Number(20)) {
+                if(!poLeczeniu){
+                    $.get( 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat', function( data ) {
+                        if($(data).find(".alert-success").length > 0){
+                            console.log('PokeLifeScript: wyleczono');
+                            if($(data).find(".alert-success strong").length > 0){
+                                var koszt = $(data).find(".alert-success strong").html().split(" ¥")[0];
+                                updateStats("koszty_leczenia", koszt.replace(/\./g, ''));
+                            }
+
+                            $.get( 'inc/stan.php', function( data ) {
+                                $( "#sidebar" ).html( data );
+                                $('.btn-wybor_pokemona').attr("disabled", false);
+                                $('.btn-wybor_pokemona .progress-bar').css("width", "100%");
+                                $('.btn-wybor_pokemona .progress-bar span').html("100% PŻ");
+                                setTimeout(function(){
+                                    if(autoGo){
+                                        click(true)
+                                    }
+                                }, 1000);
                             });
                         }
-                        canRun = false;
-                    }
-                });
+                    });
+                }
+                canRun = false;
+            }
 
             if (canRun) {
                 if($('#glowne_okno .panel-heading').length > 0){
