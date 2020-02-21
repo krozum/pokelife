@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.2.8
+// @version      5.2.9
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
 // @updateURL    https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
 // @grant        GM_addStyle
 // @grant        GM_getResourceText
+// @grant        GM_notification
 // @require      https://bug7a.github.io/iconselect.js/sample/lib/control/iconselect.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.5.0/js/md5.min.js
 // @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=6
@@ -453,6 +454,16 @@ function initPokeLifeScript(){
         window.localStorage.useFontanna == undefined ? window.localStorage.useFontanna = false : "";
         window.localStorage.useOnlyInNight == undefined ? window.localStorage.useOnlyInNight = false : "";
 
+
+        window.localStorage.pok20 == undefined ? window.localStorage.pok20 = 0 : "";
+        window.localStorage.pok40 == undefined ? window.localStorage.pok40 = 0 : "";
+        window.localStorage.pok60 == undefined ? window.localStorage.pok60 = 0 : "";
+        window.localStorage.pok80 == undefined ? window.localStorage.pok80 = 0 : "";
+        window.localStorage.pok100 == undefined ? window.localStorage.pok100 = 0 : "";
+
+
+        window.localStorage.zatrzymujNiezlapane == undefined ? window.localStorage.zatrzymujNiezlapane = true : "";
+
         function initGoButton(){
             $('body').append('<div id="goSettingsAutoGo" style="position: fixed;cursor: pointer;top: 20px;right: 275px;font-size: 20px;text-align: center;width: 25px;height: 25px;line-height: 25px;z-index: 9999;"><span style="color: ' + $('.panel-heading').css('background-color') + ';" class="glyphicon glyphicon-cog" aria-hidden="true"></span></div>');
             $('body').append('<div id="goButton" style="opacity: 0.3;border-radius: 4px;position: fixed; cursor: pointer; top: 5px; right: 10px; font-size: 36px; text-align: center; width: 100px; height: 48px; line-height: 48px; background: ' + $('.panel-heading').css('background-color') + '; z-index: 9999">GO</div>');
@@ -490,6 +501,25 @@ function initPokeLifeScript(){
                         }
                     });
                     i = i + 1;
+                }
+            });
+
+            selectPokemon.push({
+                'iconFilePath': 'https://cdn0.iconfinder.com/data/icons/seo-smart-pack/128/grey_new_seo-05-512.png',
+                'iconValue': function(){
+                    if(Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 20){
+                        return "&wybierz_pokemona=" + window.localStorage.pok20;
+                    }
+                    if(Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 40){
+                        return "&wybierz_pokemona=" + window.localStorage.pok40;
+                    }
+                    if(Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 60){
+                        return "&wybierz_pokemona=" + window.localStorage.pok60;
+                    }
+                    if(Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 80){
+                        return "&wybierz_pokemona=" + window.localStorage.pok80;
+                    }
+                    return "&wybierz_pokemona=" + window.localStorage.pok100;
                 }
             });
 
@@ -722,35 +752,35 @@ function initPokeLifeScript(){
                 setTimeout(function(){ blocked = false }, timeoutMin);
             }
 
-            $('.stan-pokemon div.progress:first-of-type .progress-bar').each(function (index) {
-                var now = $(this).attr("aria-valuenow");
-                if (Number(now) < Number(1)) {
-                    if(!poLeczeniu){
-                        $.get( 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat', function( data ) {
-                            if($(data).find(".alert-success").length > 0){
-                                console.log('PokeLifeScript: wyleczono');
-                                if($(data).find(".alert-success strong").length > 0){
-                                    var koszt = $(data).find(".alert-success strong").html().split(" ¥")[0];
-                                    updateStats("koszty_leczenia", koszt.replace(/\./g, ''));
-                                }
+                $('.stan-pokemon div.progress:first-of-type .progress-bar').each(function (index) {
+                    var now = $(this).attr("aria-valuenow");
+                    if (Number(now) < Number(1)) {
+                        if(!poLeczeniu){
+                            $.get( 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat', function( data ) {
+                                if($(data).find(".alert-success").length > 0){
+                                    console.log('PokeLifeScript: wyleczono');
+                                    if($(data).find(".alert-success strong").length > 0){
+                                        var koszt = $(data).find(".alert-success strong").html().split(" ¥")[0];
+                                        updateStats("koszty_leczenia", koszt.replace(/\./g, ''));
+                                    }
 
-                                $.get( 'inc/stan.php', function( data ) {
-                                    $( "#sidebar" ).html( data );
-                                    $('.btn-wybor_pokemona').attr("disabled", false);
-                                    $('.btn-wybor_pokemona .progress-bar').css("width", "100%");
-                                    $('.btn-wybor_pokemona .progress-bar span').html("100% PŻ");
-                                    setTimeout(function(){
-                                        if(autoGo){
-                                            click(true)
-                                        }
-                                    }, (timeoutMax - timeoutMin) + timeoutMin);
-                                });
-                            }
-                        });
+                                    $.get( 'inc/stan.php', function( data ) {
+                                        $( "#sidebar" ).html( data );
+                                        $('.btn-wybor_pokemona').attr("disabled", false);
+                                        $('.btn-wybor_pokemona .progress-bar').css("width", "100%");
+                                        $('.btn-wybor_pokemona .progress-bar span').html("100% PŻ");
+                                        setTimeout(function(){
+                                            if(autoGo){
+                                                click(true)
+                                            }
+                                        }, timeoutMax);
+                                    });
+                                }
+                            });
+                        }
+                        canRun = false;
                     }
-                    canRun = false;
-                }
-            });
+                });
 
             if (canRun) {
                 if($('#glowne_okno .panel-heading').length > 0){
@@ -768,10 +798,16 @@ function initPokeLifeScript(){
                             var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
                             $('button[href="' + url + '"]').trigger('click');
                         } else {
-                            console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
-                            autoGo = false;
-                            $('#goAutoButton').html('AutoGO');
-                            $("#goStopReason").html("Spotkany niezłapany pokemona").show();
+                            if(window.localStorage.zatrzymujNiezlapane == false || window.localStorage.zatrzymujNiezlapane == "false"){
+                                console.log('PokeLifeScript: spotkany niezłapany pokemona, atakuje pokemona');
+                                var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
+                                $('button[href="' + url + '"]').trigger('click');
+                            } else {
+                                console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
+                                autoGo = false;
+                                $('#goAutoButton').html('AutoGO');
+                                $("#goStopReason").html("Spotkany niezłapany pokemona").show();
+                            }
                         }
                     } else if ($('.dzikipokemon-background-normalny').length == 1) {
                         console.log('PokeLifeScript: atakuje pokemona');
@@ -812,7 +848,50 @@ function initPokeLifeScript(){
                 $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/niebieskie_jagody.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieJagody" name="autoUseNiebieskieJagody" value="1" '+(window.localStorage.useNiebieskieJagody == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj niebieskich jagód gdy zabraknie PA</label></td> </tr>');
                 $('#settingsAutoGo table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" '+(window.localStorage.useOnlyInNight == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
                 $('#settingsAutoGo').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Zielone napoje</b> -> <b>Niebieskie napoje</b> -> <b>Czerwone napoje</b></p>');
+
+                $('#settingsAutoGo').append('<table> <tbody><tr><td><input type="checkbox" id="zatrzymujNiezlapane" name="zatrzymujNiezlapane" value="1" '+(window.localStorage.zatrzymujNiezlapane == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;    margin-left: 5px; ">Zatrzymuj gdy spotkasz niezłapane pokemony</label></td> </tr></tbody></table>');
+
+                $('#settingsAutoGo').append('<div id="exp_mod_settings"></div>');
+                $('#exp_mod_settings').append('<hr><p style=" margin: 0 0 5px; ">Pokemony 1-20</p><select data-order-id="20" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
+                $('#exp_mod_settings').append('<p style=" margin: 0 0 5px; ">Pokemony 21-40</p><select data-order-id="40" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
+                $('#exp_mod_settings').append('<p style=" margin: 0 0 5px; ">Pokemony 41-60</p><select data-order-id="60" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
+                $('#exp_mod_settings').append('<p style=" margin: 0 0 5px; ">Pokemony 61-80</p><select data-order-id="80" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
+                $('#exp_mod_settings').append('<p style=" margin: 0 0 5px; ">Pokemony 81-100</p><select data-order-id="100" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
+
+                $.each($('#sidebar .stan-pokemon:odd()'), function (index, item) {
+                    $('.list_of_poks_in_team').append('<option value="'+index+'">'+$(item).find('b').html()+'</option>');
+                })
+
+                $('.list_of_poks_in_team[data-order-id="20"] option[value="'+window.localStorage.pok20+'"]').prop("selected", true);
+                $('.list_of_poks_in_team[data-order-id="40"] option[value="'+window.localStorage.pok40+'"]').prop("selected", true);
+                $('.list_of_poks_in_team[data-order-id="60"] option[value="'+window.localStorage.pok60+'"]').prop("selected", true);
+                $('.list_of_poks_in_team[data-order-id="80"] option[value="'+window.localStorage.pok80+'"]').prop("selected", true);
+                $('.list_of_poks_in_team[data-order-id="100"] option[value="'+window.localStorage.pok100+'"]').prop("selected", true);
             }
+        });
+
+        $(document).on("change", ".list_of_poks_in_team", function(event){
+            var orderId = $(this).data('order-id');
+            if(orderId == 20){
+                window.localStorage.pok20 = Number($(this).val());
+            }
+            if(orderId == 40){
+                window.localStorage.pok40 = Number($(this).val());
+            }
+            if(orderId == 60){
+                window.localStorage.pok60 = Number($(this).val());
+            }
+            if(orderId == 80){
+                window.localStorage.pok80 = Number($(this).val());
+            }
+            if(orderId == 100){
+                window.localStorage.pok100 = Number($(this).val());
+            }
+        });
+
+        $(document).on("click", "#zatrzymujNiezlapane", function(event){
+            var isChecked = $('#zatrzymujNiezlapane').prop('checked');
+            window.localStorage.zatrzymujNiezlapane = isChecked;
         });
 
         $(document).on("click", "#autoUseNiebieskieJagody", function(event){
@@ -1143,7 +1222,7 @@ function initPokeLifeScript(){
                     if(autoGo){
                         click();
                     }
-                }, (timeoutMax - timeoutMin) + timeoutMin);
+                }, timeoutMax);
             }
         })
     }
@@ -2049,7 +2128,6 @@ function initPokeLifeScript(){
     initPrzypomnienieOPracy();
 
 }
-
 
 
 
