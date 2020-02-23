@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.3.4
+// @version      5.3.5
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -30,8 +30,8 @@ var previousPageContent = null;
 var pokemonData;
 var region;
 var lastSeeShoutId;
-var timeoutMin = 200;
-var timeoutMax = 300;
+var timeoutMin = 300;
+var timeoutMax = 400;
 
 
 // **********************
@@ -443,6 +443,16 @@ function initPokeLifeScript(){
     //
     // **********************
     function initAutoGo(){
+
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        };
+
+        var clickDelay = getRandomInt(timeoutMin, timeoutMax);
+        var minToHeal = getRandomInt(20, 50);
+
         var blocked = false;
         var autoGo;
         var autoGoWznawianie;
@@ -721,7 +731,6 @@ function initPokeLifeScript(){
         }
         initLocationIcon();
 
-
         function click(poLeczeniu) {
             if(poLeczeniu != true){
                 poLeczeniu = false;
@@ -733,19 +742,19 @@ function initPokeLifeScript(){
                 canRun = false;
             } else {
                 blocked = true;
-                setTimeout(function(){ blocked = false }, timeoutMin);
+                setTimeout(function(){ blocked = false }, clickDelay);
             }
 
             var minHealth = 100;
 
-            $('.stan-pokemon div.progress:first-of-type .progress-bar').each(function (index) {
-                var now = $(this).attr("aria-valuenow");
-                if (minHealth > Number(now)) {
-                    minHealth = now;
-                }
-            });
+                $('.stan-pokemon div.progress:first-of-type .progress-bar').each(function (index) {
+                    var now = $(this).attr("style").replace( /^\D+/g, '').replace('%', '').replace(';', '');
+                    if (minHealth > Number(now)) {
+                        minHealth = Number(now);
+                    }
+                });
 
-            if (Number(minHealth) < Number(20)) {
+            if (Number(minHealth) < Number(minToHeal)) {
                 if(!poLeczeniu){
                     $.get( 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat', function( data ) {
                         if($(data).find(".alert-success").length > 0){
@@ -764,7 +773,7 @@ function initPokeLifeScript(){
                                     if(autoGo){
                                         click(true)
                                     }
-                                }, timeoutMax);
+                                }, clickDelay);
                             });
                         }
                     });
@@ -1208,7 +1217,8 @@ function initPokeLifeScript(){
                     if(autoGo){
                         click();
                     }
-                }, timeoutMax);
+                }, clickDelay);
+                clickDelay = getRandomInt(timeoutMin, timeoutMax);
             }
         })
     }
