@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.3.3
+// @version      5.3.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1862,6 +1862,7 @@ function initPokeLifeScript(){
                         }
                         window.localStorage.max_chat_id = value["czat_id"];
                     });
+                    $('#shouts').animate({scrollTop: $('#shouts').prop("scrollHeight")}, 500);
                 }
 
                 if(interval == undefined){
@@ -1880,6 +1881,7 @@ function initPokeLifeScript(){
                                     }
                                     window.localStorage.max_chat_id = value["czat_id"];
                                 });
+                                $('#shouts').animate({scrollTop: $('#shouts').prop("scrollHeight")}, 500);
                             }
                         });
                     }, 2500);
