@@ -30,8 +30,8 @@ var previousPageContent = null;
 var pokemonData;
 var region;
 var lastSeeShoutId;
-var timeoutMin = 250;
-var timeoutMax = 350;
+var timeoutMin = 300;
+var timeoutMax = 400;
 
 
 // **********************
