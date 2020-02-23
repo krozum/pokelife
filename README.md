@@ -82,3 +82,6 @@ Changelog
 
 5.3.5 (2020-02-23)
 * Dodanie leczenia ponizej 20-50%
+
+5.3.6 (2020-02-23)
+* Poprawka do jagod
