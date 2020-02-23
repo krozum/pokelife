@@ -79,3 +79,6 @@ Changelog
 * Poprawka do podwójnego klikania w hodowle
 * Poprawka do safariballi
 * Dodanie autoscrollowania do czatu
+
+5.3.5 (2020-02-23)
+* Dodanie leczenia ponizej 20-50%
