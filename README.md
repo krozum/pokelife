@@ -73,3 +73,9 @@ Changelog
 5.2.9 (2020-02-21)
 * Dodanie dynamicznego wybierania poków na podstawie lvl
 * Dodanie opcji czy zatrzymywać gdy spotkasz niezłapane
+
+5.3.4 (2020-02-23)
+* Poprawka do lecznia
+* Poprawka do podwójnego klikania w hodowle
+* Poprawka do safariballi
+* Dodanie autoscrollowania do czatu
