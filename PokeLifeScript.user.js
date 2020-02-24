@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.3.9
+// @version      5.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1062,7 +1062,9 @@ function initPokeLifeScript(){
                             if($("a[href='gra/statystyki.php']").length > 0 && autoGo){
                                 reloadMain("#glowne_okno", "gra/statystyki.php", function(){
                                     setTimeout(function(){
-                                        if(Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[0].trim()) < (Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[1].trim()) - 1)){
+                                        var ileJuzWypitych = Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[0].trim());
+                                        var ileMozna = (Number($("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html().split('/')[1].trim()) - 1);
+                                        if(ileJuzWypitych < ileMozna){
                                             if($("a[href='gra/plecak.php']").length > 0 && autoGo){
                                                 reloadMain("#glowne_okno", "gra/plecak.php", function(){
                                                     if($('.thumbnail-plecak[data-target="#plecak-1"] h5').length > 0){
@@ -1072,8 +1074,14 @@ function initPokeLifeScript(){
                                                                 var ile = Math.floor($('#sidebar .progress-bar:contains(" PA")').attr('aria-valuemax') / 100);
                                                                 var iloscNapojow = Number($('.thumbnail-plecak[data-target="#plecak-1"] h5').html().split(' x ')[0]);
 
+                                                                var maxDoLimitow = ileMozna - ileJuzWypitych;
+
                                                                 if(ile > iloscNapojow){
                                                                     ile = iloscNapojow;
+                                                                }
+
+                                                                if(ile > maxDoLimitow){
+                                                                    ile = maxDoLimitow;
                                                                 }
 
                                                                 reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=zielony_napoj&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D="+ile, function(){
