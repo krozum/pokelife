@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.3.6
+// @version      5.3.7
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -478,7 +478,7 @@ function initPokeLifeScript(){
             $('body').append('<div id="goSettingsAutoGo" style="position: fixed;cursor: pointer;top: 20px;right: 275px;font-size: 20px;text-align: center;width: 25px;height: 25px;line-height: 25px;z-index: 9999;"><span style="color: ' + $('.panel-heading').css('background-color') + ';" class="glyphicon glyphicon-cog" aria-hidden="true"></span></div>');
             $('body').append('<div id="goButton" style="opacity: 0.3;border-radius: 4px;position: fixed; cursor: pointer; top: 5px; right: 10px; font-size: 36px; text-align: center; width: 100px; height: 48px; line-height: 48px; background: ' + $('.panel-heading').css('background-color') + '; z-index: 9999">GO</div>');
             $('body').append('<div id="goAutoButton" style="border-radius: 4px;position: fixed; cursor: pointer; top: 5px; right: 122px; font-size: 36px; text-align: center; width: 140px; height: 48px; line-height: 48px; background: ' + $('.panel-heading').css('background-color') + '; z-index: 9999">AutoGO</div>');
-            $('body').append('<div id="goStopReason" style="position: fixed;display: none; cursor: pointer; top: 12px; right: 271px; z-index: 99999; background: #ffd34e; padding: 7px; border: 1px solid #bba76a; border-radius: 3px; ">Brak odpowiedniego pokeballa</div>');
+            $('body').append('<div id="goStopReason" style="position: fixed; cursor: pointer; top: 12px; right: 271px; z-index: 99999; background: rgb(231, 201, 216); padding: 7px; border: 1px solid rgb(225, 187, 206); border-radius: 3px; display: none;"></div>');
         }
         initGoButton();
 
@@ -747,12 +747,12 @@ function initPokeLifeScript(){
 
             var minHealth = 100;
 
-                $('.stan-pokemon div.progress:first-of-type .progress-bar').each(function (index) {
-                    var now = $(this).attr("style").replace( /^\D+/g, '').replace('%', '').replace(';', '');
-                    if (minHealth > Number(now)) {
-                        minHealth = Number(now);
-                    }
-                });
+            $('.stan-pokemon div.progress:first-of-type .progress-bar').each(function (index) {
+                var now = $(this).attr("style").replace( /^\D+/g, '').replace('%', '').replace(';', '');
+                if (minHealth > Number(now)) {
+                    minHealth = Number(now);
+                }
+            });
 
             if (Number(minHealth) < Number(minToHeal)) {
                 if(!poLeczeniu){
@@ -795,7 +795,13 @@ function initPokeLifeScript(){
                             console.log('PokeLifeScript: spotkany niezłapany pokemona');
                             console.log('PokeLifeScript: atakuje pokemona');
                             var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
-                            $('button[href="' + url + '"]').trigger('click');
+                            if($('button[href="' + url + '"]').length == 0){
+                                autoGo = false;
+                                $('#goAutoButton').html('AutoGO');
+                                $("#goStopReason").html("Dzicz została zmieniona").show();
+                            } else {
+                                $('button[href="' + url + '"]').trigger('click');
+                            }
                         } else {
                             console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
                             autoGo = false;
@@ -805,7 +811,13 @@ function initPokeLifeScript(){
                     } else if ($('.dzikipokemon-background-normalny').length == 1) {
                         console.log('PokeLifeScript: atakuje pokemona');
                         var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
-                        $('button[href="' + url + '"]').trigger('click');
+                        if($('button[href="' + url + '"]').length == 0){
+                            autoGo = false;
+                            $('#goAutoButton').html('AutoGO');
+                            $("#goStopReason").html("Dzicz została zmieniona").show();
+                        } else {
+                            $('button[href="' + url + '"]').trigger('click');
+                        }
                     } else if ($("form[action='dzicz.php?zlap']").length == 1) {
                         if(AutoGoSettings.iconPokeball.getSelectedValue().call() !== ""){
                             var button = $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokeball.getSelectedValue().call() + '"]');
@@ -1029,7 +1041,15 @@ function initPokeLifeScript(){
                                                     if($('.thumbnail-plecak[data-target="#plecak-1"] h5').length > 0){
                                                         setTimeout(function(){
                                                             if(autoGo){
-                                                                reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=zielony_napoj&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=1", function(){
+                                                                var maxPA = $('#sidebar .progress-bar:contains(" PA")').attr('aria-valuemax');
+                                                                var ile = Math.floor($('#sidebar .progress-bar:contains(" PA")').attr('aria-valuemax') / 100);
+                                                                var iloscNapojow = Number($('.thumbnail-plecak[data-target="#plecak-1"] h5').html().split(' x ')[0]);
+
+                                                                if(ile > iloscNapojow){
+                                                                    ile = iloscNapojow;
+                                                                }
+
+                                                                reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=zielony_napoj&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D="+ile, function(){
                                                                     $('#goAutoButton').html('STOP');
                                                                     console.log('Przywrócono PA');
                                                                     setTimeout(function(){
@@ -2003,10 +2023,12 @@ function initPokeLifeScript(){
         }
         if(window.localStorage.zadaniaWidget == undefined || !window.localStorage.zadaniaWidget.includes(today)){
             refreshZadaniaWidget();
+        } else {
+            zadaniaWidget = window.localStorage.zadaniaWidget;
         }
 
         onReloadSidebar(function(){
-            if(zadaniaWidget != undefined && zadaniaWidget.length > 340){
+            if(zadaniaWidget != undefined && zadaniaWidget.length > 140){
                 this.find(".panel-heading:contains('Drużyna')").parent().after(zadaniaWidget);
             }
         })
