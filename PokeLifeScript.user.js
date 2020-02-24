@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.4.1
+// @version      5.4.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -26,6 +26,7 @@
 
 var config = new Object();
 var AutoGoSettings = new Object();
+var autoGo;
 var previousPageContent = null;
 var pokemonData;
 var region;
@@ -197,6 +198,13 @@ $(document).on('click', '#zaloguj_chat', function(e) {
 $(document).off("click", "nav a");
 $(document).on("click", "nav a:not('.btn-akcja')", function(event) {
     if($(this).attr('href').charAt(0)!='#' && !$(this).hasClass( "link" )) {
+
+        if (event.originalEvent !== undefined && autoGo == true) {
+            autoGo = false;
+            $('#goAutoButton').html('AutoGO');
+            $("#goStopReason").html("Kliknięto w menu").show();
+        }
+
         event.preventDefault();
 
         var new_buffer = $(this).attr('href');
@@ -223,6 +231,12 @@ $(document).on("click", ".btn-akcja", function(event) {
     var url = $(this).attr('href');
     if($('#hodowla-glowne b').length > 1){
         zarobek = $('#hodowla-glowne b:nth(1)').html().split("¥")[0].replace('.', '').replace('.', '').replace('.', '');
+    }
+
+    if (event.originalEvent !== undefined && autoGo == true) {
+        autoGo = false;
+        $('#goAutoButton').html('AutoGO');
+        $("#goStopReason").html("Kliknięto w menu").show();
     }
 
     event.preventDefault();
@@ -454,7 +468,6 @@ function initPokeLifeScript(){
         var minToHeal = getRandomInt(20, 50);
 
         var blocked = false;
-        var autoGo;
         var autoGoWznawianie;
 
         window.localStorage.useCzerwoneNapoje == undefined ? window.localStorage.useCzerwoneNapoje = false : "";
@@ -1031,17 +1044,17 @@ function initPokeLifeScript(){
                                                                             autoGoWznawianie = false;
                                                                             click();
                                                                         }
-                                                                    }, 2000);
+                                                                    }, 1000);
                                                                 });
                                                             }
-                                                        }, 2000);
+                                                        }, 1000);
                                                     } else {
                                                         console.log('Brak jagód');
                                                         window.setTimeout(function(){
                                                             if(autoGo){
                                                                 probujWznowicAutoGo(array, autoGoBefore);
                                                             }
-                                                        }, 2000);
+                                                        }, 1000);
                                                     }
                                                 })
                                             }
@@ -1051,9 +1064,9 @@ function initPokeLifeScript(){
                                                 if(autoGo){
                                                     probujWznowicAutoGo(array, autoGoBefore);
                                                 }
-                                            }, 2000);
+                                            }, 1000);
                                         }
-                                    }, 2000);
+                                    }, 1000);
                                 });
                             }
                             break;
@@ -1092,17 +1105,17 @@ function initPokeLifeScript(){
                                                                             autoGoWznawianie = false;
                                                                             click();
                                                                         }
-                                                                    }, 2000);
+                                                                    }, 1000);
                                                                 });
                                                             }
-                                                        }, 2000);
+                                                        }, 1000);
                                                     } else {
                                                         console.log('Brak napojów');
                                                         window.setTimeout(function(){
                                                             if(autoGo){
                                                                 probujWznowicAutoGo(array, autoGoBefore);
                                                             }
-                                                        }, 2000);
+                                                        }, 1000);
                                                     }
                                                 })
                                             }
@@ -1112,9 +1125,9 @@ function initPokeLifeScript(){
                                                 if(autoGo){
                                                     probujWznowicAutoGo(array, autoGoBefore);
                                                 }
-                                            }, 2000);
+                                            }, 1000);
                                         }
-                                    }, 2000);
+                                    }, 1000);
                                 });
                             }
                             break;
@@ -1137,17 +1150,17 @@ function initPokeLifeScript(){
                                                                             autoGoWznawianie = false;
                                                                             click();
                                                                         }
-                                                                    }, 2000);
+                                                                    }, 1000);
                                                                 });
                                                             }
-                                                        }, 2000);
+                                                        }, 1000);
                                                     } else {
                                                         console.log('Brak napojów');
                                                         window.setTimeout(function(){
                                                             if(autoGo){
                                                                 probujWznowicAutoGo(array, autoGoBefore);
                                                             }
-                                                        }, 2000);
+                                                        }, 1000);
                                                     }
                                                 })
                                             }
@@ -1157,9 +1170,9 @@ function initPokeLifeScript(){
                                                 if(autoGo){
                                                     probujWznowicAutoGo(array, autoGoBefore);
                                                 }
-                                            }, 2000);
+                                            }, 1000);
                                         }
-                                    }, 2000);
+                                    }, 1000);
                                 });
                             }
                             break;
@@ -1181,22 +1194,22 @@ function initPokeLifeScript(){
                                                                         autoGoWznawianie = false;
                                                                         click();
                                                                     }
-                                                                }, 2000);
+                                                                }, 1000);
                                                             });
 
                                                         }
-                                                    }, 2000);
+                                                    }, 1000);
                                                 } else {
                                                     console.log('Brak napojów');
                                                     window.setTimeout(function(){
                                                         if(autoGo){
                                                             probujWznowicAutoGo(array, autoGoBefore);
                                                         }
-                                                    }, 2000);
+                                                    }, 1000);
                                                 }
                                             })
                                         }
-                                    }, 2000);
+                                    }, 1000);
                                 });
                             }
                             break;
@@ -1246,7 +1259,7 @@ function initPokeLifeScript(){
                     if (h >= 22 || h < 6) {
                         window.setTimeout(function(){
                             probujWznowicAutoGo(array, autoGoBefore);
-                        }, 2000);
+                        }, 1000);
                     } else {
                         autoGoWznawianie = false;
                         autoGo = false;
@@ -1256,7 +1269,7 @@ function initPokeLifeScript(){
                 } else {
                     window.setTimeout(function(){
                         probujWznowicAutoGo(array, autoGoBefore);
-                    }, 2000);
+                    }, 1000);
                 }
             } else {
                 autoGoWznawianie = false;
