@@ -81,7 +81,13 @@ Changelog
 * Dodanie autoscrollowania do czatu
 
 5.3.5 (2020-02-23)
-* Dodanie leczenia ponizej 20-50%
+* Zmiana leczenia, od teraz leczy gdy spadnie poniżej 20-50% a nie do zera
 
 5.3.6 (2020-02-23)
-* Poprawka do jagod
+* Poprawka do niebieskich jagód
+
+5.3.9 (2020-02-24)
+* Dodanie leczenia za pomocą czerwonych jagód
+* Zmiana UX w panelu ustawień
+* Dodanie nowego powodu zatrzymania - zmiana dziczy w trakcie AutoGo
+* Poprawka do widgetu zadań, nie wyświetlał sie poprawnie gdy był pobierany z localStorage
