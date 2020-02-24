@@ -461,6 +461,7 @@ function initPokeLifeScript(){
         window.localStorage.useNiebieskieNapoje == undefined ? window.localStorage.useNiebieskieNapoje = false : "";
         window.localStorage.useZieloneNapoje == undefined ? window.localStorage.useZieloneNapoje = false : "";
         window.localStorage.useNiebieskieJagody == undefined ? window.localStorage.useNiebieskieJagody = false : "";
+        window.localStorage.useCzerwoneJagody == undefined ? window.localStorage.useCzerwoneJagody = false : "";
         window.localStorage.useFontanna == undefined ? window.localStorage.useFontanna = false : "";
         window.localStorage.useOnlyInNight == undefined ? window.localStorage.useOnlyInNight = false : "";
 
@@ -756,9 +757,26 @@ function initPokeLifeScript(){
 
             if (Number(minHealth) < Number(minToHeal)) {
                 if(!poLeczeniu){
-                    $.get( 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat', function( data ) {
-                        if($(data).find(".alert-success").length > 0){
+
+                    var healOption = 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat'
+
+                    if (localStorage.getItem("useCzerwoneJagody") == "true" ) {
+                        healOption = 'gra/plecak.php?uzyj&rodzaj_przedmiotu=czerwone_jagody&tylko_komunikat&ulecz_wszystkie&zjedz_max'
+                    }
+
+                    $.get( healOption, function( data ) {
+
+                        if ($(data).hasClass("alert-danger")) {
+                            console.log('Brak czerwonych jagód');
+                            $("#goStopReason").html("Brak czerwonych jagód").show();
+                            localStorage.removeItem("useCzerwoneJagody");
+                            click(poLeczeniu);
+                        };
+
+                        if($(data).find(".alert-success").length > 0 || $(data).hasClass("alert-success") ){
+
                             console.log('PokeLifeScript: wyleczono');
+
                             if($(data).find(".alert-success strong").length > 0){
                                 var koszt = $(data).find(".alert-success strong").html().split(" ¥")[0];
                                 updateStats("koszty_leczenia", koszt.replace(/\./g, ''));
@@ -854,9 +872,13 @@ function initPokeLifeScript(){
                 $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/zielony_napoj.jpg"></td><td><input type="checkbox" id="autoUseZieloneNapoje" name="autoUseZieloneNapoje" value="1" '+(window.localStorage.useZieloneNapoje == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj zielonych napojów gdy zabraknie PA</label></td> </tr>');
                 $('#settingsAutoGo table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/niebieskie_jagody.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieJagody" name="autoUseNiebieskieJagody" value="1" '+(window.localStorage.useNiebieskieJagody == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj niebieskich jagód gdy zabraknie PA</label></td> </tr>');
                 $('#settingsAutoGo table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" '+(window.localStorage.useOnlyInNight == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
+
                 $('#settingsAutoGo').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Zielone napoje</b> -> <b>Niebieskie napoje</b> -> <b>Czerwone napoje</b></p>');
 
-                $('#settingsAutoGo').append('<table> <tbody><tr><td><input type="checkbox" id="zatrzymujNiezlapane" name="zatrzymujNiezlapane" value="1" '+(window.localStorage.zatrzymujNiezlapane == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;    margin-left: 5px; ">Zatrzymuj gdy spotkasz niezłapane pokemony</label></td> </tr></tbody></table>');
+                $('#settingsAutoGo').append('<table> <tr> <th></th> <th></th> <th></th> </tr></table>');
+                $('#settingsAutoGo table:last-of-type').append('<col width="60"><col width="20"><col width="340">');
+                $('#settingsAutoGo table:last-of-type').append('<tr><td><img style="width: 40px;" src="images/pokesklep/czerwone_jagody.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneJagody" name="autoUseCzerwoneJagody" value="1" '+(window.localStorage.useCzerwoneJagody == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Uzywaj czerwonych jagód do leczenia</label></td> </tr>');
+                $('#settingsAutoGo table:last-of-type').append('<tr><td></td><td><input type="checkbox" id="zatrzymujNiezlapane" name="zatrzymujNiezlapane" value="1" '+(window.localStorage.zatrzymujNiezlapane == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Zatrzymuj gdy spotkasz niezłapane pokemony</label></td> </tr></tbody></table>');
 
                 $('#settingsAutoGo').append('<div id="exp_mod_settings"></div>');
                 $('#exp_mod_settings').append('<hr><p style=" margin: 0 0 5px; ">Pokemony 1-20</p><select data-order-id="20" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
@@ -904,6 +926,11 @@ function initPokeLifeScript(){
         $(document).on("click", "#autoUseNiebieskieJagody", function(event){
             var isChecked = $('#autoUseNiebieskieJagody').prop('checked');
             window.localStorage.useNiebieskieJagody = isChecked;
+        });
+
+        $(document).on("click", "#autoUseCzerwoneJagody", function(event){
+            var isChecked = $('#autoUseCzerwoneJagody').prop('checked');
+            window.localStorage.useCzerwoneJagody = isChecked;
         });
 
         $(document).on("click", "#autoUseNiebieskieNapoje", function(){
