@@ -92,5 +92,12 @@ Changelog
 * Dodanie nowego powodu zatrzymania - zmiana dziczy w trakcie AutoGo
 * Poprawka do widgetu zadań, nie wyświetlał sie poprawnie gdy był pobierany z localStorage
 * Poprawka do zielonych napojów - od teraz uzywa po tyle ile może wypić a nie po 1
+
 5.4 (2020-02-24)
 * Poprawka do zielonych napojów aby nie przekraczał limitów
+
+5.4.4 (2020-02-25)
+* Dodanie informacji o zatrzymaniu do title strony
+* Przepiasnie setTimeout na webworkery, nie powinno zwalniac po przełączniu strony
+* Poprawka do safariballi, powinno zgłosić gdy sie uzywa ich poza dzicza weekendową
+
