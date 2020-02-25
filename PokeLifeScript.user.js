@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.4.3
+// @version      5.4.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -203,6 +203,7 @@ $(document).on("click", "nav a:not('.btn-akcja')", function(event) {
             autoGo = false;
             $('#goAutoButton').html('AutoGO');
             $("#goStopReason").html("Kliknięto w menu").show();
+            document.title = "Kliknięto w menu";
         }
 
         event.preventDefault();
@@ -226,6 +227,12 @@ $(document).on("click", "nav a:not('.btn-akcja')", function(event) {
 });
 
 var zarobek;
+
+$(document).on("click", function(event) {
+    document.title = "PokeLife - Gra Pokemon Online";
+})
+
+
 $(document).off("click", ".btn-akcja");
 $(document).on("click", ".btn-akcja", function(event) {
     var url = $(this).attr('href');
@@ -237,6 +244,7 @@ $(document).on("click", ".btn-akcja", function(event) {
         autoGo = false;
         $('#goAutoButton').html('AutoGO');
         $("#goStopReason").html("Kliknięto w menu").show();
+        document.title = "Kliknięto w menu";
     }
 
     event.preventDefault();
@@ -700,6 +708,7 @@ function initPokeLifeScript(){
                             autoGo = false;
                             $('#goAutoButton').html('AutoGO');
                             $("#goStopReason").html("Brak odpowiedniego pokeballa").show();
+                            document.title = "Brak odpowiedniego pokeballa";
                         }
                     }
                 }
@@ -787,9 +796,12 @@ function initPokeLifeScript(){
 
                         if ($(data).hasClass("alert-danger")) {
                             console.log('Brak czerwonych jagód');
-                            $("#goStopReason").html("Brak czerwonych jagód").show();
                             localStorage.removeItem("useCzerwoneJagody");
-                            click(poLeczeniu);
+                            window.setTimeout(function(){
+                                if(autoGo){
+                                    click(poLeczeniu)
+                                }
+                            }, clickDelay);
                         };
 
                         if($(data).find(".alert-success").length > 0 || $(data).hasClass("alert-success") ){
@@ -825,6 +837,7 @@ function initPokeLifeScript(){
                         autoGo = false;
                         $('#goAutoButton').html('AutoGO');
                         $("#goStopReason").html("Spotkany shiny pokemon").show();
+                        document.title = "Spotkany shiny pokemon";
                         $('#refreshShinyWidget').trigger('click');
                         requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now(), null);
                     } else if ($('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
@@ -836,6 +849,7 @@ function initPokeLifeScript(){
                                 autoGo = false;
                                 $('#goAutoButton').html('AutoGO');
                                 $("#goStopReason").html("Dzicz została zmieniona").show();
+                                document.title = "Dzicz została zmieniona";
                             } else {
                                 $('button[href="' + url + '"]').trigger('click');
                             }
@@ -844,6 +858,7 @@ function initPokeLifeScript(){
                             autoGo = false;
                             $('#goAutoButton').html('AutoGO');
                             $("#goStopReason").html("Spotkany niezłapany pokemona").show();
+                            document.title = "Spotkany niezłapany pokemona";
                         }
                     } else if ($('.dzikipokemon-background-normalny').length == 1) {
                         console.log('PokeLifeScript: atakuje pokemona');
@@ -852,6 +867,7 @@ function initPokeLifeScript(){
                             autoGo = false;
                             $('#goAutoButton').html('AutoGO');
                             $("#goStopReason").html("Dzicz została zmieniona").show();
+                            document.title = "Dzicz została zmienion";
                         } else {
                             $('button[href="' + url + '"]').trigger('click');
                         }
@@ -865,6 +881,7 @@ function initPokeLifeScript(){
                                 autoGo = false;
                                 $('#goAutoButton').html('AutoGO');
                                 $("#goStopReason").html("Brak odpowiedniego pokeballa").show();
+                                document.title = "Brak odpowiedniego pokeballa";
                                 console.log('PokeLifeScript: brak odpowiedniego balla');
                             }
                         }
@@ -1015,6 +1032,7 @@ function initPokeLifeScript(){
                     } else if(this.find('.panel-body > p.alert-danger').html() == "Baterie w twojej latarce się wyczerpały, kup nowe."){
                         przerwijAutoGoZPowoduBrakuPA(false);
                         $("#goStopReason").html("Brak baterii").show();
+                        document.title = "Brak baterii";
                     }
                 }
             }
@@ -1227,6 +1245,7 @@ function initPokeLifeScript(){
                     autoGo = false;
                     $('#goAutoButton').html('AutoGO');
                     $("#goStopReason").html("Brak PA").show();
+                    document.title = "Brak PA";
                 }
             } else {
                 autoGoWznawianie = false;
@@ -1271,6 +1290,7 @@ function initPokeLifeScript(){
                         autoGo = false;
                         $('#goAutoButton').html('AutoGO');
                         $("#goStopReason").html("Brak PA").show();
+                        document.title = "Brak PA";
                     }
                 } else {
                     window.setTimeout(function(){
