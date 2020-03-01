@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.4.4
+// @version      5.5
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -2220,6 +2220,81 @@ function initPokeLifeScript(){
         });
     }
     initPrzypomnienieOPracy();
+
+
+
+
+    // **********************
+    //
+    // initWystawView()
+    // Funkcja automatycznie przechodząca po przechowalni i zwiększaniu treningów do miniumum 7 w każdą statystyke
+    //
+    // **********************
+    function initWystawView(){
+        onReloadMain(function(){
+            var DATA = this;
+            if(this.find('.panel-heading').html() === "Targ - Wystaw Przedmioty"){
+                $(DATA).find("#targ_wysprz-zwykle input[value='Wystaw']").after('<input type="button" style="width: 25%;margin-left: 3%;" class="check-price form-control btn btn-primary" value="?">');
+                $(DATA).find("#targ_wysprz-zwykle input[value='Wystaw']").css("width", "70%");
+            }
+        })
+
+        $(document).off("click", "#targ_wysprz-zwykle .check-price");
+        $(document).on("click", "#targ_wysprz-zwykle .check-price", function(){
+            $('#marketTable').remove();
+            $('body').append("<div id='marketTable' style='z-index: 999; width: 260px; height: 400px; position: fixed; right: 0; background: white; bottom: 60px;border: 2px dashed; overflow: scroll; overflow-x:hidden'></div>")
+
+            var przedmiot = $(this).parent().parent().find("input[name='nazwa']").val();
+            var THAT = $(this).parent().parent();
+            THAT.find('input[name="ilosc"]').val(THAT.parent().find("div").html().split('</b> - ')[1].split(' sztuk')[0]);
+
+            $.ajax({
+                type: 'POST',
+                url: "gra/targ_prz.php"
+            }).done(function (response) {
+                window.setTimeout(function(){
+                    $.ajax({
+                        type: 'POST',
+                        url: "gra/targ_prz.php?szukaj&przedmiot="+przedmiot+"&zakladka=0&value587",
+                    }).done(function (response) {
+                        $.ajax({
+                            type: 'POST',
+                            url: "gra/targ_prz.php?oferty_strona&&przedmiot="+przedmiot+"&value587&strona=1",
+                        }).done(function (response) {
+                            if(response.indexOf("Brak ofert.") < 0){
+                                var max = 1;
+                                if($($(response).find("form span")[2]).html() != "-----"){
+                                    var price = Number($($(response).find("form span")[2]).html().split("&nbsp;")[0].replace(/\./g, '')) * max;
+                                    THAT.find('input[name="cena_yeny"]').val(price-1);
+                                } else {
+                                    THAT.find('input[name="cena_yeny"]').val("brak");
+                                }
+                            } else {
+                                THAT.find('input[name="cena_yeny"]').val("brak");
+                            }
+
+                            $(response).find("form[action='targ_prz.php?szukaj&przedmiot="+przedmiot+"']").each(function (index, val) {
+                                var img =$($(this).find("span")[0]);
+                                var price = $($(this).find("span")[2]);
+                                var pricePZ= $($(this).find("span")[3]);
+                                if(price.html() !== "-----"){
+                                    var html = '<div style="display: table;width: 100%;height: 30px;padding: 5px;"><div style="display: table-cell;width: 70px;">'+img.html()+'</div><div style="display: table-cell;text-align: left;width: 100px;">'+price.html()+'</div><div style="display: table-cell;text-align: left;width: 70px;">'+pricePZ.html()+'</div></div>';
+                                    $('#marketTable').append(html);
+                                }
+                            });
+                        })
+                    })
+                }, 500);
+            })
+        });
+
+        $('body').off('click', ':not(#marketTable, #marketTable *)');
+        $('body').on('click', ':not(#marketTable, #marketTable *)', function () {
+            $('#marketTable').empty().remove()
+        });
+
+    }
+    initWystawView();
 
 }
 
