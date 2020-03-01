@@ -101,3 +101,5 @@ Changelog
 * Przepiasnie setTimeout na webworkery, nie powinno zwalniac po przełączniu strony
 * Poprawka do safariballi, powinno zgłosić gdy sie uzywa ich poza dzicza weekendową
 
+5.5 (2020-03-01)
+* Dodanie wyszukiwania ceny na zakładce wystaw
