@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.6
+// @version      5.6.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -2330,10 +2330,11 @@ function initPokeLifeScript() {
 
                             $(response).find("form[action='targ_prz.php?szukaj&przedmiot=" + przedmiot + "']").each(function(index, val) {
                                 var img = $($(this).find("span")[0]);
+                                var quantity = $($(this).find("span")[1]);
                                 var price = $($(this).find("span")[2]);
                                 var pricePZ = $($(this).find("span")[3]);
                                 if (price.html() !== "-----") {
-                                    var html = '<div style="display: table;width: 100%;height: 30px;padding: 5px;"><div style="display: table-cell;width: 70px;">' + img.html() + '</div><div style="display: table-cell;text-align: left;width: 100px;">' + price.html() + '</div><div style="display: table-cell;text-align: left;width: 70px;">' + pricePZ.html() + '</div></div>';
+                                    var html = '<div style="display: table;width: 100%;height: 30px;padding: 5px;"><div style="display: table-cell;width: 70px;">' + img.html() + '</div><div style="display: table-cell;text-align: left;width: 100px;">' + quantity.html() + '</div><div style="display: table-cell;text-align: left;width: 100px;">' + price.html() + '</div><div style="display: table-cell;text-align: left;width: 70px;">' + pricePZ.html() + '</div></div>';
                                     $('#marketTable').append(html);
                                 }
                             });
