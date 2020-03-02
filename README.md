@@ -103,3 +103,6 @@ Changelog
 
 5.5 (2020-03-01)
 * Dodanie wyszukiwania ceny na zakładce wystaw
+
+5.6 (2020-03-02)
+* Tabelka z podsumowaniem ofert wystawionych na targu dla zakładki Zwykłe
