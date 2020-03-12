@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.6.1
+// @version      5.7
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -583,139 +583,139 @@ function initPokeLifeScript() {
             });
 
             var selectPokeball = [{
-                    'iconFilePath': "images/pokesklep/pokeballe.jpg",
-                    'iconValue': function() {
-                        return '&zlap_pokemona=pokeballe';
-                    }
-                },
-                {
-                    'iconFilePath': "images/pokesklep/greatballe.jpg",
-                    'iconValue': function() {
-                        return '&zlap_pokemona=greatballee';
-                    }
-                },
-                {
-                    'iconFilePath': "images/pokesklep/nestballe.jpg",
-                    'iconValue': function() {
-                        return '&zlap_pokemona=nestballe';
-                    }
-                },
-                {
-                    'iconFilePath': "images/pokesklep/friendballe.jpg",
-                    'iconValue': function() {
-                        return '&zlap_pokemona=friendballe';
-                    }
-                },
-                {
-                    'iconFilePath': "images/pokesklep/nightballe.jpg",
-                    'iconValue': function() {
-                        return '&zlap_pokemona=nightballe';
-                    }
-                },
-                {
-                    'iconFilePath': "images/pokesklep/cherishballe.jpg",
-                    'iconValue': function() {
-                        return '&zlap_pokemona=cherishballe';
-                    }
-                },
-                {
-                    'iconFilePath': "images/pokesklep/lureballe.jpg",
-                    'iconValue': function() {
-                        return '&zlap_pokemona=lureballe';
-                    }
-                },
-                {
-                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb1.jpg",
-                    'iconValue': function() {
-                        let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                        if (pokeLvlNumber < 15) {
-                            return '&zlap_pokemona=nestballe';
-                        } else {
-                            return '&zlap_pokemona=greatballee';
-                        }
-                    }
-                },
-                {
-                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb2.png",
-                    'iconValue': function() {
-                        var d = new Date();
-                        var h = d.getHours();
-                        if (h >= 22 || h < 6) {
-                            return '&zlap_pokemona=nightballe';
-                        }
-                        let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                        if (pokeLvlNumber < 15) {
-                            return '&zlap_pokemona=nestballe';
-                        } else {
-                            return '&zlap_pokemona=greatballee';
-                        }
-                    }
-                },
-                {
-                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb3.jpg",
-                    'iconValue': function() {
-                        let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                        if (pokeLvlNumber <= 5) {
-                            return '&zlap_pokemona=uzyj_swarmballe';
-                        } else {
-                            var d = new Date();
-                            var h = d.getHours();
-                            if (h >= 22 || h < 6) {
-                                return '&zlap_pokemona=nightballe';
-                            }
-                            if (pokeLvlNumber > 5 && pokeLvlNumber < 15) {
-                                return '&zlap_pokemona=nestballe';
-                            } else {
-                                return '&zlap_pokemona=greatballee';
-                            }
-                        }
-                    }
-                },
-                {
-                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb4.jpg",
-                    'iconValue': function() {
-                        if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc1.png"]').length > 0) {
-                            return '&zlap_pokemona=levelballe';
-                        } else {
-                            var d = new Date();
-                            var h = d.getHours();
-                            if (h >= 22 || h < 6) {
-                                return '&zlap_pokemona=nightballe';
-                            }
-                            let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                            if (pokeLvlNumber >= 5 && pokeLvlNumber < 15) {
-                                return '&zlap_pokemona=nestballe';
-                            } else {
-                                return '&zlap_pokemona=greatballee';
-                            }
-                        }
-                    }
-                },
-                {
-                    'iconFilePath': "images/pokesklep/safariballe.jpg",
-                    'iconValue': function() {
-                        if ($('label[data-original-title="Safariball"]').length > 0) {
-                            if (Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1) {
-                                if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
-                                    return '&zlap_pokemona=safariballe';
-                                } else {
-                                    $('button:contains("Pomiń i szukaj dalej")').click();
-                                    return "";
-                                }
-                            } else {
-                                $('button:contains("Pomiń i szukaj dalej")').click();
-                                return "";
-                            }
-                        } else {
-                            autoGo = false;
-                            $('#goAutoButton').html('AutoGO');
-                            $("#goStopReason").html("Brak odpowiedniego pokeballa").show();
-                            document.title = "Brak odpowiedniego pokeballa";
-                        }
-                    }
+                'iconFilePath': "images/pokesklep/pokeballe.jpg",
+                'iconValue': function() {
+                    return '&zlap_pokemona=pokeballe';
                 }
+            },
+                                  {
+                                      'iconFilePath': "images/pokesklep/greatballe.jpg",
+                                      'iconValue': function() {
+                                          return '&zlap_pokemona=greatballee';
+                                      }
+                                  },
+                                  {
+                                      'iconFilePath': "images/pokesklep/nestballe.jpg",
+                                      'iconValue': function() {
+                                          return '&zlap_pokemona=nestballe';
+                                      }
+                                  },
+                                  {
+                                      'iconFilePath': "images/pokesklep/friendballe.jpg",
+                                      'iconValue': function() {
+                                          return '&zlap_pokemona=friendballe';
+                                      }
+                                  },
+                                  {
+                                      'iconFilePath': "images/pokesklep/nightballe.jpg",
+                                      'iconValue': function() {
+                                          return '&zlap_pokemona=nightballe';
+                                      }
+                                  },
+                                  {
+                                      'iconFilePath': "images/pokesklep/cherishballe.jpg",
+                                      'iconValue': function() {
+                                          return '&zlap_pokemona=cherishballe';
+                                      }
+                                  },
+                                  {
+                                      'iconFilePath': "images/pokesklep/lureballe.jpg",
+                                      'iconValue': function() {
+                                          return '&zlap_pokemona=lureballe';
+                                      }
+                                  },
+                                  {
+                                      'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb1.jpg",
+                                      'iconValue': function() {
+                                          let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                                          if (pokeLvlNumber < 15) {
+                                              return '&zlap_pokemona=nestballe';
+                                          } else {
+                                              return '&zlap_pokemona=greatballee';
+                                          }
+                                      }
+                                  },
+                                  {
+                                      'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb2.png",
+                                      'iconValue': function() {
+                                          var d = new Date();
+                                          var h = d.getHours();
+                                          if (h >= 22 || h < 6) {
+                                              return '&zlap_pokemona=nightballe';
+                                          }
+                                          let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                                          if (pokeLvlNumber < 15) {
+                                              return '&zlap_pokemona=nestballe';
+                                          } else {
+                                              return '&zlap_pokemona=greatballee';
+                                          }
+                                      }
+                                  },
+                                  {
+                                      'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb3.jpg",
+                                      'iconValue': function() {
+                                          let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                                          if (pokeLvlNumber <= 5) {
+                                              return '&zlap_pokemona=uzyj_swarmballe';
+                                          } else {
+                                              var d = new Date();
+                                              var h = d.getHours();
+                                              if (h >= 22 || h < 6) {
+                                                  return '&zlap_pokemona=nightballe';
+                                              }
+                                              if (pokeLvlNumber > 5 && pokeLvlNumber < 15) {
+                                                  return '&zlap_pokemona=nestballe';
+                                              } else {
+                                                  return '&zlap_pokemona=greatballee';
+                                              }
+                                          }
+                                      }
+                                  },
+                                  {
+                                      'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb4.jpg",
+                                      'iconValue': function() {
+                                          if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc1.png"]').length > 0) {
+                                              return '&zlap_pokemona=levelballe';
+                                          } else {
+                                              var d = new Date();
+                                              var h = d.getHours();
+                                              if (h >= 22 || h < 6) {
+                                                  return '&zlap_pokemona=nightballe';
+                                              }
+                                              let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                                              if (pokeLvlNumber >= 5 && pokeLvlNumber < 15) {
+                                                  return '&zlap_pokemona=nestballe';
+                                              } else {
+                                                  return '&zlap_pokemona=greatballee';
+                                              }
+                                          }
+                                      }
+                                  },
+                                  {
+                                      'iconFilePath': "images/pokesklep/safariballe.jpg",
+                                      'iconValue': function() {
+                                          if ($('label[data-original-title="Safariball"]').length > 0) {
+                                              if (Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1) {
+                                                  if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
+                                                      return '&zlap_pokemona=safariballe';
+                                                  } else {
+                                                      $('button:contains("Pomiń i szukaj dalej")').click();
+                                                      return "";
+                                                  }
+                                              } else {
+                                                  $('button:contains("Pomiń i szukaj dalej")').click();
+                                                  return "";
+                                              }
+                                          } else {
+                                              autoGo = false;
+                                              $('#goAutoButton').html('AutoGO');
+                                              $("#goStopReason").html("Brak odpowiedniego pokeballa").show();
+                                              document.title = "Brak odpowiedniego pokeballa";
+                                          }
+                                      }
+                                  }
 
-            ];
+                                 ];
 
             AutoGoSettings.iconPokeball.refresh(selectPokeball);
             AutoGoSettings.iconPokeball.setSelectedIndex(window.localStorage.pokeballIconsIndex);
@@ -2221,58 +2221,9 @@ function initPokeLifeScript() {
     }
     initPrzypomnienieOPracy();
 
-    function initSummary(DATA) {
-        var summaryCount = 0;
-        var summarYen = 0;
-        var summaryZas = 0;
 
-        var panel = $(DATA).find(".panel-primary")[0];
-        table = $(panel).find("tr");
-        $.each($(table), function(index, item) {
-            var itemToSell = $(item).find("td");
-            if (itemToSell.length > 5) {
-                let count = Number.parseInt(itemToSell[1].innerText);
-                let yenForEach = Number.parseInt(itemToSell[2].innerText);
-                let zasForEach = Number.parseInt(itemToSell[3].innerText);
-                if (isNaN(count))
-                    count = 0;
-                if (isNaN(yenForEach))
-                    yenForEach = 0;
-                if (isNaN(zasForEach))
-                    zasForEach = 0;
 
-                summaryCount = summaryCount + count;
-                summarYen = summarYen + (count * yenForEach);
-                summaryZas = summaryZas + (count * zasForEach);
-            }
 
-        });
-        $($(DATA).find(".panel .panel-primary")[0]).after(`<div class="panel panel-primary">
-        <div class="panel-heading">Podsumowanie</div>
-        <table class="table table-strippedd">
-            <tbody>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th>Ilość</th>
-                    <th>Cena ¥</th>
-                    <th>Cena §</th>
-                    <th></th>
-                    <th>&nbsp;</th>
-                </tr>
-                <tr>
-                    <td>
-                        <img src="images/yen.png" class="visible-lg-inline" style="width: 26px; margin: -6px 0px -6px 10px;">
-                    </td>
-                    <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(summaryCount) + `</td>
-                    <td id="summarYen">` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(summarYen) + `</td>
-                    <td id="summaryZas">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(summaryZas) + `</td>
-    
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>`)
-    }
     // **********************
     //
     // initWystawView()
@@ -2344,6 +2295,62 @@ function initPokeLifeScript() {
             })
         });
 
+
+        function initSummary(DATA) {
+            var summaryCount = 0;
+            var summarYen = 0;
+            var summaryZas = 0;
+
+            var panel = $(DATA).find(".panel-primary")[0];
+            var table = $(panel).find("tr");
+            $.each($(table), function(index, item) {
+                var itemToSell = $(item).find("td");
+                if (itemToSell.length > 5) {
+                    let count = Number.parseInt(itemToSell[1].innerText);
+                    let yenForEach = Number.parseInt(itemToSell[2].innerText);
+                    let zasForEach = Number.parseInt(itemToSell[3].innerText);
+                    if (isNaN(count))
+                        count = 0;
+                    if (isNaN(yenForEach))
+                        yenForEach = 0;
+                    if (isNaN(zasForEach))
+                        zasForEach = 0;
+
+                    summaryCount = summaryCount + count;
+                    summarYen = summarYen + (count * yenForEach);
+                    summaryZas = summaryZas + (count * zasForEach);
+                }
+
+            });
+            $($(DATA).find(".panel .panel-primary")[0]).after(`
+<div class="panel panel-primary">
+<div class="panel-heading">Podsumowanie</div>
+<table class="table table-strippedd">
+<tbody>
+<tr>
+<th>&nbsp;</th>
+<th>Ilość</th>
+<th>Cena ¥</th>
+<th>Cena §</th>
+<th></th>
+<th>&nbsp;</th>
+</tr>
+<tr>
+<td>
+<img src="images/yen.png" class="visible-lg-inline" style="width: 26px; margin: -6px 0px -6px 10px;">
+</td>
+<td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(summaryCount) + `</td>
+<td id="summarYen">` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(summarYen) + `</td>
+<td id="summaryZas">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(summaryZas) + `</td>
+
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>`
+                                                             )
+        }
+
         $('body').off('click', ':not(#marketTable, #marketTable *)');
         $('body').on('click', ':not(#marketTable, #marketTable *)', function() {
             $('#marketTable').empty().remove()
@@ -2351,6 +2358,112 @@ function initPokeLifeScript() {
 
     }
     initWystawView();
+
+
+
+
+    // **********************
+    //
+    // initRozbudowanyOpisDziczy
+    // Funkcja dodająca podgląd statystyk dotyczących dziczy
+    //
+    // **********************
+    function initRozbudowanyOpisDziczy(){
+        var d = new Date();
+        var today = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
+        var kolekcjaData = new Object()
+        var kolekcjaDnia;
+
+        if (window.localStorage.kolekcjaDnia == undefined) {
+            window.localStorage.kolekcjaDnia = "";
+        }
+
+        if (!window.localStorage.kolekcjaDnia.includes(today)) {
+            $.get('gra/kolekcja.php', function( data ) {
+                kolekcjaData.data = today;
+
+                kolekcjaData.kanto = new Object();
+                $(data).find('#kolekcja-1 div').each(function(index, value){
+                    kolekcjaData.kanto[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                })
+
+                kolekcjaData.johto = new Object();
+                $(data).find('#kolekcja-2 div').each(function(index, value){
+                    kolekcjaData.johto[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                })
+
+                kolekcjaData.hoenn = new Object();
+                $(data).find('#kolekcja-3 div').each(function(index, value){
+                    kolekcjaData.hoenn[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                })
+
+                kolekcjaData.sinnoh = new Object();
+                $(data).find('#kolekcja-4 div').each(function(index, value){
+                    kolekcjaData.sinnoh[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                })
+
+                kolekcjaData.unova = new Object();
+                $(data).find('#kolekcja-5 div').each(function(index, value){
+                    kolekcjaData.unova[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                })
+
+                kolekcjaData.kalos = new Object();
+                $(data).find('#kolekcja-6 div').each(function(index, value){
+                    kolekcjaData.kalos[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                })
+                window.localStorage.kolekcjaDnia = JSON.stringify(kolekcjaData);
+                initPasek();
+            })
+        } else {
+            kolekcjaData = JSON.parse(window.localStorage.kolekcjaDnia);
+            initPasek();
+        }
+
+
+
+
+        function initPasek(){
+            $.each($('#pasek_skrotow li'), function (index, item) {
+                if ($(item).find('a').attr('href').includes("gra/dzicz")) {
+                    var url = $(item).find('a').attr('href').split('miejsce=')[1];
+                    var name = $(item).find('a').data('original-title').split('Wyprawa: ')[1];
+
+                    $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce='+url+'"]', function(){
+                        console.log('aa');
+                        var html = '<div class="row" id="opis'+name.replace(/[ ]/g, '')+'" style="z-index: 999; width: 600px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">';
+                        var wszystkie = true;
+
+                        $.each(pokemonData[region], function(index, value) {
+                            if(name == 'laka'){
+                                name = 'Łąka';
+                            }
+                            if(name == 'wybrzeze'){
+                                name = 'Wybrzeże';
+                            }
+                            if(name == 'gory'){
+                                name = 'Góry';
+                            }
+                            if(value.wystepowanie == name && value.do_zlapania == 1 && kolekcjaData[region][value.id] == false){
+                                wszystkie = false;
+                                html = html + '<div class="col-xs-2" style="display: inline; float: left; padding: 0; margin-top: 5px; text-align: center;"><img style="margin-bottom: 5px; text-align: center; max-width: 80%;" src="https://gra.pokelife.pl/pokemony/niezdobyte/'+value.id+'.png"><p style="margin: 0; margin-top: 5px; margin-bottom: 5px">'+value.name+'</p></div>';
+                            }
+                        })
+                        if(wszystkie){
+                            html = html + "Udało ci się złapać wszystkie poki w tej dziczy";
+                        }
+                        html = html + '</div>';
+                        $('body').append(html);
+                    })
+
+
+                    $(document).on('mouseleave', 'a[href="gra/dzicz.php?poluj&miejsce='+url+'"]', function(){
+                        $('#opis'+name.replace(/[ ]/g, '')).remove();
+                    })
+                }
+            });
+        }
+    }
+    initRozbudowanyOpisDziczy();
 
 }
 
