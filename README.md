@@ -106,3 +106,7 @@ Changelog
 
 5.6 (2020-03-02)
 * Tabelka z podsumowaniem ofert wystawionych na targu dla zakładki Zwykłe
+
+5.7 (2020-03-12)
+* Dodanie rozbudowanych informacji o dziczach po najechaniu na dolny pasek
+* Zmiana z pokazywaniem złapanych shiny, zaokrągla do godzin :15 i :45 po
