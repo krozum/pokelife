@@ -110,3 +110,7 @@ Changelog
 5.7 (2020-03-12)
 * Dodanie rozbudowanych informacji o dziczach po najechaniu na dolny pasek
 * Zmiana z pokazywaniem złapanych shiny, zaokrągla do godzin :15 i :45 po
+
+5.7.2 (2020-03-27)
+* Porawki do niepoprawnego wyświelania widgetów przy multikontach
+* Dodanie obsługi eventowych napojów w AutoGo
