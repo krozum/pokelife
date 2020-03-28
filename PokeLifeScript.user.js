@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.7.2
+// @version      5.7.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -499,6 +499,7 @@ function initPokeLifeScript() {
 
 
         window.localStorage.zatrzymujNiezlapane == undefined ? window.localStorage.zatrzymujNiezlapane = true : "";
+        window.localStorage.lapSafariballemNiezlapane == undefined ? window.localStorage.lapSafariballemNiezlapane = false : "";
 
         function initGoButton() {
             $('body').append('<div id="goSettingsAutoGo" style="position: fixed;cursor: pointer;top: 20px;right: 275px;font-size: 20px;text-align: center;width: 25px;height: 25px;line-height: 25px;z-index: 9999;"><span style="color: ' + $('.panel-heading').css('background-color') + ';" class="glyphicon glyphicon-cog" aria-hidden="true"></span></div>');
@@ -684,7 +685,7 @@ function initPokeLifeScript() {
                                                   return '&zlap_pokemona=nightballe';
                                               }
                                               let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                              if (pokeLvlNumber >= 5 && pokeLvlNumber < 15) {
+                                              if (pokeLvlNumber < 15) {
                                                   return '&zlap_pokemona=nestballe';
                                               } else {
                                                   return '&zlap_pokemona=greatballee';
@@ -693,16 +694,41 @@ function initPokeLifeScript() {
                                       }
                                   },
                                   {
+                                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb5.jpg",
+                                    'iconValue': function() {
+                                        let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                                        if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc1.png"]').length > 0 && pokeLvlNumber <= 5) {
+                                            return '&zlap_pokemona=luxuryballe';
+                                        } else {
+                                            var d = new Date();
+                                            var h = d.getHours();
+                                            if (h >= 22 || h < 6) {
+                                                return '&zlap_pokemona=nightballe';
+                                            }
+                                            let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                                            if (pokeLvlNumber < 15) {
+                                                return '&zlap_pokemona=nestballe';
+                                            } else {
+                                                return '&zlap_pokemona=greatballee';
+                                            }
+                                        }
+                                    }
+                                },
+                                  {
                                       'iconFilePath': "images/pokesklep/safariballe.jpg",
                                       'iconValue': function() {
                                           if ($('label[data-original-title="Safariball"]').length > 0) {
                                               if (Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1) {
-                                                  if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
+                                                if (window.localStorage.lapSafariballemNiezlapane == true || window.localStorage.lapSafariballemNiezlapane == "true")
+                                                    if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
                                                       return '&zlap_pokemona=safariballe';
-                                                  } else {
+                                                    } else {
                                                       $('button:contains("Pomiń i szukaj dalej")').click();
                                                       return "";
-                                                  }
+                                                    }
+                                                else {
+                                                    return '&zlap_pokemona=safariballe';
+                                                }
                                               } else {
                                                   $('button:contains("Pomiń i szukaj dalej")').click();
                                                   return "";
@@ -923,6 +949,7 @@ function initPokeLifeScript() {
                 $('#settingsAutoGo .dziczSettings table').append('<col width="60"><col width="20"><col width="340">');
                 $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/czerwone_jagody.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneJagody" name="autoUseCzerwoneJagody" value="1" ' + (window.localStorage.useCzerwoneJagody == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych jagód do leczenia</label></td> </tr>');
                 $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="zatrzymujNiezlapane" name="zatrzymujNiezlapane" value="1" ' + (window.localStorage.zatrzymujNiezlapane == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Zatrzymuj gdy spotkasz niezłapane pokemony</label></td> </tr></tbody></table>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 30px;" src="images/pokesklep/safariballe.jpg"></td><td><input type="checkbox" id="lapSafariballemNiezlapane" name="lapSafariballemNiezlapane" value="1" ' + (window.localStorage.lapSafariballemNiezlapane == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Łap safariballem tylko niezłapane pokemony</label></td> </tr></tbody></table>');
                 $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" ' + (window.localStorage.useOnlyInNight == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
 
                 $('#settingsAutoGo').append('<div id="exp_mod_settings" class="row"><hr><div class="col-sm-6 first"></div><div class="col-sm-6 second"></div></div>');
@@ -966,6 +993,11 @@ function initPokeLifeScript() {
         $(document).on("click", "#zatrzymujNiezlapane", function(event) {
             var isChecked = $('#zatrzymujNiezlapane').prop('checked');
             window.localStorage.zatrzymujNiezlapane = isChecked;
+        });
+
+        $(document).on("click", "#lapSafariballemNiezlapane", function(event) {
+            var isChecked = $('#lapSafariballemNiezlapane').prop('checked');
+            window.localStorage.lapSafariballemNiezlapane = isChecked;
         });
 
         $(document).on("click", "#autoUseNiebieskieJagody", function(event) {
