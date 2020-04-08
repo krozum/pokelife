@@ -114,3 +114,6 @@ Changelog
 5.7.2 (2020-03-27)
 * Porawki do niepoprawnego wyświelania widgetów przy multikontach
 * Dodanie obsługi eventowych napojów w AutoGo
+
+5.8 (2020-04-07)
+* Dodanie obsługi eventu
