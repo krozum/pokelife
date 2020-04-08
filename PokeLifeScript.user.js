@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.8
+// @version      5.8.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -946,7 +946,10 @@ function initPokeLifeScript() {
 
             if (canRun) {
                 if ($('#glowne_okno .panel-heading').length > 0) {
-                    if ($('#glowne_okno').find('img[src="images/event/jajko1.png"]').length > 0 || $('#glowne_okno').find('img[src="images/event/jajko2.png"]').length > 0 || $('#glowne_okno').find('img[src="images/event/jajko3.png"]').length > 0) {
+                    if ($('#glowne_okno').find(".panel-heading:contains('Łapanie Jajka')").length > 0) {
+                        console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".");
+                        $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
+                    } else if ($('#glowne_okno').find('img[src="images/event/jajko1.png"]').length > 0 || $('#glowne_okno').find('img[src="images/event/jajko2.png"]').length > 0 || $('#glowne_okno').find('img[src="images/event/jajko3.png"]').length > 0) {
                         if (AutoGoSettings.iconPokeballJajko.getSelectedValue().call() !== "") {
                             if(AutoGoSettings.iconPokeballJajko.getSelectedValue().call() == "stop"){
                                 autoGo = false;
@@ -1886,7 +1889,7 @@ function initPokeLifeScript() {
             }
 
 
-            if (DATA.find('img[src="images/event/jajko1.png"]').length > 0 || DATA.find('img[src="images/event/jajko2.png"]').length > 0 || DATA.find('img[src="images/event/jajko3.png"]').length > 0) {
+            if (DATA.find(".panel-heading:contains('Łapanie Jajka')").length == 0 && (DATA.find('img[src="images/event/jajko1.png"]').length > 0 || DATA.find('img[src="images/event/jajko2.png"]').length > 0 || DATA.find('img[src="images/event/jajko3.png"]').length > 0)) {
                 console.log('PokeLifeScript: spotkano jajko');
             } else if (DATA.find("p.alert-info:contains('Niestety, tym razem nie spotkało cię nic interesującego.')").length > 0) {
                 console.log('PokeLifeScript: pusta wyprawa');
