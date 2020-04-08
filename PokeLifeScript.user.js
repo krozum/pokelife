@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.7.5
+// @version      5.8
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -694,41 +694,41 @@ function initPokeLifeScript() {
                                       }
                                   },
                                   {
-                                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb5.jpg",
-                                    'iconValue': function() {
-                                        let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                        if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc1.png"]').length > 0 && pokeLvlNumber <= 5) {
-                                            return '&zlap_pokemona=luxuryballe';
-                                        } else {
-                                            var d = new Date();
-                                            var h = d.getHours();
-                                            if (h >= 22 || h < 6) {
-                                                return '&zlap_pokemona=nightballe';
-                                            }
-                                            let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                            if (pokeLvlNumber < 15) {
-                                                return '&zlap_pokemona=nestballe';
-                                            } else {
-                                                return '&zlap_pokemona=greatballee';
-                                            }
-                                        }
-                                    }
-                                },
+                                      'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb5.jpg",
+                                      'iconValue': function() {
+                                          let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                                          if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc1.png"]').length > 0 && pokeLvlNumber <= 5) {
+                                              return '&zlap_pokemona=luxuryballe';
+                                          } else {
+                                              var d = new Date();
+                                              var h = d.getHours();
+                                              if (h >= 22 || h < 6) {
+                                                  return '&zlap_pokemona=nightballe';
+                                              }
+                                              let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                                              if (pokeLvlNumber < 15) {
+                                                  return '&zlap_pokemona=nestballe';
+                                              } else {
+                                                  return '&zlap_pokemona=greatballee';
+                                              }
+                                          }
+                                      }
+                                  },
                                   {
                                       'iconFilePath': "images/pokesklep/safariballe.jpg",
                                       'iconValue': function() {
                                           if ($('label[data-original-title="Safariball"]').length > 0) {
                                               if (Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1) {
-                                                if (window.localStorage.lapSafariballemNiezlapane == true || window.localStorage.lapSafariballemNiezlapane == "true")
-                                                    if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
+                                                  if (window.localStorage.lapSafariballemNiezlapane == true || window.localStorage.lapSafariballemNiezlapane == "true")
+                                                      if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
+                                                          return '&zlap_pokemona=safariballe';
+                                                      } else {
+                                                          $('button:contains("Pomiń i szukaj dalej")').click();
+                                                          return "";
+                                                      }
+                                                  else {
                                                       return '&zlap_pokemona=safariballe';
-                                                    } else {
-                                                      $('button:contains("Pomiń i szukaj dalej")').click();
-                                                      return "";
-                                                    }
-                                                else {
-                                                    return '&zlap_pokemona=safariballe';
-                                                }
+                                                  }
                                               } else {
                                                   $('button:contains("Pomiń i szukaj dalej")').click();
                                                   return "";
@@ -753,6 +753,91 @@ function initPokeLifeScript() {
         }
         initPokeballIcon();
 
+
+        function initPokeballJajkoIcon() {
+            $('body').append('<div id="setPokeballJajko" style="position: fixed; cursor: pointer; top: 0; left: 175px; z-index: 9999"></div>');
+
+            AutoGoSettings.iconPokeballJajko = new IconSelect("setPokeballJajko", {
+                'selectedIconWidth': 48,
+                'selectedIconHeight': 48,
+                'selectedBoxPadding': 1,
+                'iconsWidth': 48,
+                'iconsHeight': 48,
+                'boxIconSpace': 1,
+                'vectoralIconNumber': 1,
+                'horizontalIconNumber': 6
+            });
+
+            var selectPokeballJajko = [{
+                'iconFilePath': "images/pokesklep/pokeballe.jpg",
+                'iconValue': function() {
+                    return '&zlap_jajko=pokeballe';
+                }
+            },
+                                       {
+                                           'iconFilePath': "images/pokesklep/greatballe.jpg",
+                                           'iconValue': function() {
+                                               return '&zlap_jajko=greatballe';
+                                           }
+                                       },
+                                       {
+                                           'iconFilePath': "images/pokesklep/nestballe.jpg",
+                                           'iconValue': function() {
+                                               return '&zlap_jajko=nestballe';
+                                           }
+                                       },
+                                       {
+                                           'iconFilePath': "images/pokesklep/nightballe.jpg",
+                                           'iconValue': function() {
+                                               return '&zlap_jajko=nightballe';
+                                           }
+                                       },
+                                       {
+                                           'iconFilePath': "images/pokesklep/cherishballe.jpg",
+                                           'iconValue': function() {
+                                               return '&zlap_jajko=cherishballe';
+                                           }
+                                       },
+                                       {
+                                           'iconFilePath': "images/pokesklep/luxuryballe.jpg",
+                                           'iconValue': function() {
+                                               return '&zlap_jajko=luxuryballe';
+                                           }
+                                       },
+                                       {
+                                           'iconFilePath': "images/pokesklep/premierballe.jpg",
+                                           'iconValue': function() {
+                                               return '&zlap_jajko=premierballe';
+                                           }
+                                       },
+                                       {
+                                           'iconFilePath': "images/pokesklep/ultraballe.jpg",
+                                           'iconValue': function() {
+                                               return '&zlap_jajko=ultraballe';
+                                           }
+                                       },
+                                       {
+                                           'iconFilePath': "https://www.kindpng.com/picc/m/277-2774211_download-and-use-sign-stop-png-image-without.png",
+                                           'iconValue': function() {
+                                               return 'stop';
+                                           }
+                                       }
+
+                                      ];
+
+            AutoGoSettings.iconPokeballJajko.refresh(selectPokeballJajko);
+            AutoGoSettings.iconPokeballJajko.setSelectedIndex(window.localStorage.pokeballJajkoIconsIndex);
+
+            document.getElementById('setPokeballJajko').addEventListener('changed', function(e) {
+                window.localStorage.pokeballJajkoIconsIndex = AutoGoSettings.iconPokeballJajko.getSelectedIndex();
+            });
+        }
+
+        var d = new Date();
+        var today = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
+        if(d.getFullYear() == 2020 && d.getMonth() <= 3 && d.getDate() <= 19) {
+            initPokeballJajkoIcon();
+        }
 
         function initLocationIcon() {
             $('body').append('<div id="setLocation" style="position: fixed; cursor: pointer; top: 0; left: 117px; z-index: 9999"></div>');
@@ -861,7 +946,30 @@ function initPokeLifeScript() {
 
             if (canRun) {
                 if ($('#glowne_okno .panel-heading').length > 0) {
-                    if ($('.dzikipokemon-background-shiny').length > 0) {
+                    if ($('#glowne_okno').find('img[src="images/event/jajko1.png"]').length > 0 || $('#glowne_okno').find('img[src="images/event/jajko2.png"]').length > 0 || $('#glowne_okno').find('img[src="images/event/jajko3.png"]').length > 0) {
+                        if (AutoGoSettings.iconPokeballJajko.getSelectedValue().call() !== "") {
+                            if(AutoGoSettings.iconPokeballJajko.getSelectedValue().call() == "stop"){
+                                autoGo = false;
+                                $('#goAutoButton').html('AutoGO');
+                                $("#goStopReason").html("Spotkano jajko").show();
+                                document.title = "Spotkano jajko";
+                                console.log('PokeLifeScript: Spotkano jajko');
+                            } else {
+                                var button = $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokeballJajko.getSelectedValue().call() + '"]');
+                                console.log('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokeballJajko.getSelectedValue().call() + '"]');
+                                if (button.length > 0) {
+                                    console.log('PokeLifeScript: rzucam pokeballa');
+                                    $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokeballJajko.getSelectedValue().call() + '"]').trigger('click');
+                                } else {
+                                    autoGo = false;
+                                    $('#goAutoButton').html('AutoGO');
+                                    $("#goStopReason").html("Brak odpowiedniego pokeballa").show();
+                                    document.title = "Brak odpowiedniego pokeballa";
+                                    console.log('PokeLifeScript: brak odpowiedniego balla');
+                                }
+                            }
+                        }
+                    } else if ($('.dzikipokemon-background-shiny').length > 0) {
                         console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
                         autoGo = false;
                         $('#goAutoButton').html('AutoGO');
@@ -1737,7 +1845,7 @@ function initPokeLifeScript() {
     //
     // **********************
     function initStatystykiLink() {
-        $('body').append('<a id="PokeLifeScriptStats" style="color: #333333 !important;text-decoration:none;" target="_blank" href="https://bra1ns.pl/pokelife/stats/"><div class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;top: 15px;left: 220px;font-size: 19px;text-align: center;width: 100px;height: 30px;line-height: 35px;z-index: 9998;text-align: center;line-height: 30px;color: #333333;">Statystyki</div></a>');
+        $('body').append('<a id="PokeLifeScriptStats" style="color: #333333 !important;text-decoration:none;" target="_blank" href="https://bra1ns.pl/pokelife/stats/"><div class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;top: 15px;left: 260px;font-size: 19px;text-align: center;width: 100px;height: 30px;line-height: 35px;z-index: 9998;text-align: center;line-height: 30px;color: #333333;">Statystyki</div></a>');
         $("#PokeLifeScriptStats").attr("href", "https://bra1ns.pl/pokelife/stats/?login=" + md5($('#wyloguj').parent().parent().html().split("<div")[0].trim()));
     }
     initStatystykiLink();
@@ -1778,7 +1886,9 @@ function initPokeLifeScript() {
             }
 
 
-            if (DATA.find("p.alert-info:contains('Niestety, tym razem nie spotkało cię nic interesującego.')").length > 0) {
+            if (DATA.find('img[src="images/event/jajko1.png"]').length > 0 || DATA.find('img[src="images/event/jajko2.png"]').length > 0 || DATA.find('img[src="images/event/jajko3.png"]').length > 0) {
+                console.log('PokeLifeScript: spotkano jajko');
+            } else if (DATA.find("p.alert-info:contains('Niestety, tym razem nie spotkało cię nic interesującego.')").length > 0) {
                 console.log('PokeLifeScript: pusta wyprawa');
                 updateEvent("Niestety, tym razem nie spotkało cię nic interesującego", 1, dzicz);
             } else if (DATA.find("p.alert-success:contains('pojedynek')").length > 0) {
