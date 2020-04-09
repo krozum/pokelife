@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.8.1
+// @version      5.8.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1209,8 +1209,8 @@ function initPokeLifeScript() {
                                         if ($("#statystyki b:contains('Niebieskie Jagody:')").parent().next().html().split('/')[0].trim() != $("#statystyki b:contains('Niebieskie Jagody:')").parent().next().html().split('/')[1].trim()) {
                                             if ($("a[href='gra/plecak.php']").length > 0 && autoGo) {
                                                 reloadMain("#glowne_okno", "gra/plecak.php", function() {
-                                                    if ($('.thumbnail-plecak[data-target="#plecak-49"] h5').length > 0) {
-                                                        var ile = $('.thumbnail-plecak[data-target="#plecak-49"] h5').html().split(' x Niebieskie')[0];
+                                                    if ($('.thumbnail-plecak img[src="images/pokesklep/niebieskie_jagody.jpg"]').length > 0) {
+                                                        var ile = $('.thumbnail-plecak h5:contains("Niebieskie Jagody")').html().split(' x Niebieskie')[0];
 
                                                         if (ile > 40) {
                                                             ile = 40;
