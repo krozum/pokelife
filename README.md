@@ -117,3 +117,6 @@ Changelog
 
 5.8 (2020-04-07)
 * Dodanie obsługi eventu
+
+5.8.2 (2020-04-10)
+* Poprawka do niebieskich jagód
