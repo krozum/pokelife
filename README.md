@@ -120,3 +120,6 @@ Changelog
 
 5.8.2 (2020-04-10)
 * Poprawka do niebieskich jagód
+
+5.8.3 (2020-04-12)
+* Używanie eventowych NNE przed zwykłymi
