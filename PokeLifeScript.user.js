@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.8.3
+// @version      5.8.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1491,11 +1491,8 @@ function initPokeLifeScript() {
                 if (window.localStorage.useZieloneNapoje == "true" || window.localStorage.useZieloneNapoje == true) {
                     array.push("useZieloneNapoje");
                 }
-                var today = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
-                if(d.getFullYear() == 2020 && (d.getMonth() < 3 || d.getMonth() == 3 && d.getDate() <= 12)) {
-                    if (window.localStorage.useEventoweNapoje == "true" || window.localStorage.useEventoweNapoje == true) {
-                        array.push("useEventoweNapoje");
-                    }
+                if (window.localStorage.useEventoweNapoje == "true" || window.localStorage.useEventoweNapoje == true) {
+                    array.push("useEventoweNapoje");
                 }
                 if (window.localStorage.useNiebieskieJagody == "true" || window.localStorage.useNiebieskieJagody == true) {
                     array.push("useNiebieskieJagody");
