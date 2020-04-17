@@ -122,4 +122,7 @@ Changelog
 * Poprawka do niebieskich jagód
 
 5.8.3 (2020-04-12)
-* Używanie eventowych NNE przed zwykłymi
+* Poprawka do niebieskich jagód
+
+5.9 (2020-04-17)
+* Poprawki do wznawiania PA, były problemy przez dodanie nowego rodzaju napojów eventowych.
