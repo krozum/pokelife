@@ -126,3 +126,4 @@ Changelog
 
 5.9 (2020-04-17)
 * Poprawki do wznawiania PA, były problemy przez dodanie nowego rodzaju napojów eventowych.
+* Poprawki do pokemonów dnia
