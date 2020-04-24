@@ -127,3 +127,10 @@ Changelog
 5.9 (2020-04-17)
 * Poprawki do wznawiania PA, były problemy przez dodanie nowego rodzaju napojów eventowych.
 * Poprawki do pokemonów dnia
+
+5.9.2 (2020-04-24)
+* Wyczyszczenie kodu po evencie
+* Zamiana kolejności widgetów w sidebar
+* Zmiana kolejności wznawiania PA, najpierw będzie próbował Niebieskie napoje a dopier póżniej zielone
+* Dodanie podsumowania ile można zarobić z jagód na zakładce Wystaw
+* Drobne poprawki wizualne
