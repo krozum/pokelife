@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.9.2
+// @version      5.9.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -2750,6 +2750,28 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         }
     }
     initRozbudowanyOpisDziczy();
+
+
+
+    // **********************
+    //
+    // initSprawdzCzyMaszAktualnaWersjeBota
+    // Funkcja dodająca sprawdzenie aktualnej wersji bota na serwerze
+    //
+    // **********************
+    function initSprawdzCzyMaszAktualnaWersjeBota(){
+        https://bra1ns.pl/pokelife/api/get_bot_version.php
+
+        var url = 'https://bra1ns.pl/pokelife/api/get_bot_version.php';
+        $.getJSON(url, {
+            format: "json"
+        }).done(function(data) {
+            if(data != GM_info.script.version){
+                $('body').append('<div id="botVersionAlertBox" style="position: fixed;width: 100%;height: 100%;background: rgb(22, 27, 29);z-index: 99999;top: 0px;display: block;"><h1 style="text-align: center; color: #ffffff; vertical-align: middle; font-size: 44px; top: 35%; position: relative;">Nieaktualna wersja bota<br> kliknij <a target="_self" href="https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js?temp='+Math.random()+'"><span style="color: #88e0d5; text-decoration: underline; ">tutaj</span></a> aby zaktualizować. <br>Odśwież strone po aktualizacji</h1></div>');
+            }
+        })
+    }
+    initSprawdzCzyMaszAktualnaWersjeBota();
 
 }
 
