@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.9
+// @version      5.9.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -753,92 +753,6 @@ function initPokeLifeScript() {
         }
         initPokeballIcon();
 
-
-        function initPokeballJajkoIcon() {
-            $('body').append('<div id="setPokeballJajko" style="position: fixed; cursor: pointer; top: 0; left: 175px; z-index: 9999"></div>');
-
-            AutoGoSettings.iconPokeballJajko = new IconSelect("setPokeballJajko", {
-                'selectedIconWidth': 48,
-                'selectedIconHeight': 48,
-                'selectedBoxPadding': 1,
-                'iconsWidth': 48,
-                'iconsHeight': 48,
-                'boxIconSpace': 1,
-                'vectoralIconNumber': 1,
-                'horizontalIconNumber': 6
-            });
-
-            var selectPokeballJajko = [{
-                'iconFilePath': "images/pokesklep/pokeballe.jpg",
-                'iconValue': function() {
-                    return '&zlap_jajko=pokeballe';
-                }
-            },
-                                       {
-                                           'iconFilePath': "images/pokesklep/greatballe.jpg",
-                                           'iconValue': function() {
-                                               return '&zlap_jajko=greatballe';
-                                           }
-                                       },
-                                       {
-                                           'iconFilePath': "images/pokesklep/nestballe.jpg",
-                                           'iconValue': function() {
-                                               return '&zlap_jajko=nestballe';
-                                           }
-                                       },
-                                       {
-                                           'iconFilePath': "images/pokesklep/nightballe.jpg",
-                                           'iconValue': function() {
-                                               return '&zlap_jajko=nightballe';
-                                           }
-                                       },
-                                       {
-                                           'iconFilePath': "images/pokesklep/cherishballe.jpg",
-                                           'iconValue': function() {
-                                               return '&zlap_jajko=cherishballe';
-                                           }
-                                       },
-                                       {
-                                           'iconFilePath': "images/pokesklep/luxuryballe.jpg",
-                                           'iconValue': function() {
-                                               return '&zlap_jajko=luxuryballe';
-                                           }
-                                       },
-                                       {
-                                           'iconFilePath': "images/pokesklep/premierballe.jpg",
-                                           'iconValue': function() {
-                                               return '&zlap_jajko=premierballe';
-                                           }
-                                       },
-                                       {
-                                           'iconFilePath': "images/pokesklep/ultraballe.jpg",
-                                           'iconValue': function() {
-                                               return '&zlap_jajko=ultraballe';
-                                           }
-                                       },
-                                       {
-                                           'iconFilePath': "https://www.kindpng.com/picc/m/277-2774211_download-and-use-sign-stop-png-image-without.png",
-                                           'iconValue': function() {
-                                               return 'stop';
-                                           }
-                                       }
-
-                                      ];
-
-            AutoGoSettings.iconPokeballJajko.refresh(selectPokeballJajko);
-            AutoGoSettings.iconPokeballJajko.setSelectedIndex(window.localStorage.pokeballJajkoIconsIndex);
-
-            document.getElementById('setPokeballJajko').addEventListener('changed', function(e) {
-                window.localStorage.pokeballJajkoIconsIndex = AutoGoSettings.iconPokeballJajko.getSelectedIndex();
-            });
-        }
-
-        var d = new Date();
-        var today = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
-        if(d.getFullYear() == 2020 && d.getMonth() <= 3 && d.getDate() <= 19) {
-            initPokeballJajkoIcon();
-        }
-
         function initLocationIcon() {
             $('body').append('<div id="setLocation" style="position: fixed; cursor: pointer; top: 0; left: 117px; z-index: 9999"></div>');
 
@@ -949,29 +863,6 @@ function initPokeLifeScript() {
                     if ($('#glowne_okno').find(".panel-heading:contains('Łapanie Jajka')").length > 0) {
                         console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".");
                         $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
-                    } else if ($('#glowne_okno').find('img[src="images/event/jajko1.png"]').length > 0 || $('#glowne_okno').find('img[src="images/event/jajko2.png"]').length > 0 || $('#glowne_okno').find('img[src="images/event/jajko3.png"]').length > 0) {
-                        if (AutoGoSettings.iconPokeballJajko.getSelectedValue().call() !== "") {
-                            if(AutoGoSettings.iconPokeballJajko.getSelectedValue().call() == "stop"){
-                                autoGo = false;
-                                $('#goAutoButton').html('AutoGO');
-                                $("#goStopReason").html("Spotkano jajko").show();
-                                document.title = "Spotkano jajko";
-                                console.log('PokeLifeScript: Spotkano jajko');
-                            } else {
-                                var button = $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokeballJajko.getSelectedValue().call() + '"]');
-                                console.log('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokeballJajko.getSelectedValue().call() + '"]');
-                                if (button.length > 0) {
-                                    console.log('PokeLifeScript: rzucam pokeballa');
-                                    $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokeballJajko.getSelectedValue().call() + '"]').trigger('click');
-                                } else {
-                                    autoGo = false;
-                                    $('#goAutoButton').html('AutoGO');
-                                    $("#goStopReason").html("Brak odpowiedniego pokeballa").show();
-                                    document.title = "Brak odpowiedniego pokeballa";
-                                    console.log('PokeLifeScript: brak odpowiedniego balla');
-                                }
-                            }
-                        }
                     } else if ($('.dzikipokemon-background-shiny').length > 0) {
                         console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
                         autoGo = false;
@@ -1860,7 +1751,7 @@ function initPokeLifeScript() {
     //
     // **********************
     function initStatystykiLink() {
-        $('body').append('<a id="PokeLifeScriptStats" style="color: #333333 !important;text-decoration:none;" target="_blank" href="https://bra1ns.pl/pokelife/stats/"><div class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;top: 15px;left: 260px;font-size: 19px;text-align: center;width: 100px;height: 30px;line-height: 35px;z-index: 9998;text-align: center;line-height: 30px;color: #333333;">Statystyki</div></a>');
+        $('body').append('<a id="PokeLifeScriptStats" style="color: #333333 !important;text-decoration:none;" target="_blank" href="https://bra1ns.pl/pokelife/stats/"><div class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;top: 15px;left: 190px;font-size: 19px;text-align: center;width: 100px;height: 30px;line-height: 35px;z-index: 9998;text-align: center;line-height: 30px;color: #333333;">Statystyki</div></a>');
         $("#PokeLifeScriptStats").attr("href", "https://bra1ns.pl/pokelife/stats/?login=" + md5($('#wyloguj').parent().parent().html().split("<div")[0].trim()));
     }
     initStatystykiLink();
@@ -1903,6 +1794,7 @@ function initPokeLifeScript() {
 
             if (DATA.find(".panel-heading:contains('Łapanie Jajka')").length == 0 && (DATA.find('img[src="images/event/jajko1.png"]').length > 0 || DATA.find('img[src="images/event/jajko2.png"]').length > 0 || DATA.find('img[src="images/event/jajko3.png"]').length > 0)) {
                 console.log('PokeLifeScript: spotkano jajko');
+                updateEvent("Spotkano jajko", 10, dzicz);
             } else if (DATA.find("p.alert-info:contains('Niestety, tym razem nie spotkało cię nic interesującego.')").length > 0) {
                 console.log('PokeLifeScript: pusta wyprawa');
                 updateEvent("Niestety, tym razem nie spotkało cię nic interesującego", 1, dzicz);
@@ -2313,7 +2205,7 @@ function initPokeLifeScript() {
 
         onReloadSidebar(function() {
             if (zadaniaWidget != undefined && zadaniaWidget.length > 140) {
-                this.find(".panel-heading:contains('Drużyna')").parent().after(zadaniaWidget);
+                this.find(".panel-heading:contains('Drużyna')").parent().before(zadaniaWidget);
             }
         })
 
@@ -2536,9 +2428,14 @@ function initPokeLifeScript() {
                 }
 
             });
+
+            var sumaJagodyCount = 0;
+            var sumaJagodyYen = 0;
+            var sumaJagodyZas = 0;
+
             $($(DATA).find(".panel .panel-primary")[0]).after(`
 <div class="panel panel-primary">
-<div class="panel-heading">Podsumowanie</div>
+<div class="panel-heading">Podsumowanie wystawionych</div>
 <table class="table table-strippedd">
 <tbody>
 <tr>
@@ -2563,6 +2460,178 @@ function initPokeLifeScript() {
 </table>
 </div>`
                                                              )
+
+            $($(DATA).find(".panel .panel-primary")[1]).after(`
+<div class="panel panel-primary">
+<div class="panel-heading">Możliwy zarobek z jagód</div>
+<table class="table table-strippedd">
+<tbody id="JagodytoAppend">
+<tr>
+<th>&nbsp;</th>
+<th>Ilość</th>
+<th>Cena ¥</th>
+<th>Cena §</th>
+<th></th>
+<th>&nbsp;</th>
+</tr>` + (
+                $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').length > 0 ? `
+<tr class="classToSum"
+data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (5000 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-zas="` + (2 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
+">
+<td>
+<img src="images/pokesklep/fioletowe_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
+</td>
+<td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(5000 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(2 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td></td>
+</tr>
+` : ``) + (
+                $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').length > 0 ? `
+<tr class="classToSum"
+data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (17000 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-zas="` + (3 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
+">
+<td>
+<img src="images/pokesklep/niebieskie_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
+</td>
+<td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(17000 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(3 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td></td>
+</tr>
+` : ``) + (
+                $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').length > 0 ? `
+<tr class="classToSum"
+data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (10000 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-zas="` + (3 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
+">
+<td>
+<img src="images/pokesklep/zolte_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
+</td>
+<td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(10000 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(3 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td></td>
+</tr>
+` : ``) + (
+                $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').length > 0 ? `
+<tr class="classToSum"
+data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (48000 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
+">
+<td>
+<img src="images/pokesklep/zielone_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
+</td>
+<td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(48000 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(15 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td></td>
+</tr>
+` : ``) + (
+                $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').length > 0 ? `
+<tr class="classToSum"
+data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (56000 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
+">
+<td>
+<img src="images/pokesklep/pomaranczowe_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
+</td>
+<td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(56000 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(15 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td></td>
+</tr>
+` : ``) + (
+                $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').length > 0 ? `
+<tr class="classToSum"
+data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (48000 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
+">
+<td>
+<img src="images/pokesklep/purpurowe_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
+</td>
+<td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(48000 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(15 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td></td>
+</tr>
+` : ``) + (
+                $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').length > 0 ? `
+<tr class="classToSum"
+data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (53000 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
+">
+<td>
+<img src="images/pokesklep/rozowe_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
+</td>
+<td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(53000 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(15 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td></td>
+</tr>
+` : ``) + (
+                $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').length > 0 ? `
+<tr class="classToSum"
+data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (60000 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
+">
+<td>
+<img src="images/pokesklep/brazowe_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
+</td>
+<td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(60000 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(15 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td></td>
+</tr>
+` : ``) + (
+                $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').length > 0 ? `
+<tr class="classToSum"
+data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (1500 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
+">
+<td>
+<img src="images/pokesklep/biale_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
+</td>
+<td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(1500 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td></td>
+</tr>
+` : ``) + `
+</tbody>
+</table>
+</div>`
+                                                             )
+
+
+            $.each($(DATA.find('.classToSum')), function(index, item) {
+                sumaJagodyCount = sumaJagodyCount + (1 * $(item).data('count'));
+                sumaJagodyYen = sumaJagodyYen + (1 * $(item).data('yen'));
+                sumaJagodyZas = sumaJagodyZas + (1 * $(item).data('zas'));
+            });
+
+            $(DATA).find("#JagodytoAppend").append(`
+<tr>
+<td>
+<img src="images/yen.png" class="visible-lg-inline" style="width: 26px; margin: -6px 0px -6px 10px;">
+</td>
+<td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(sumaJagodyCount) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(sumaJagodyYen) + `</td>
+<td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(sumaJagodyZas) + `</td>
+
+<td></td>
+</tr>`);
         }
 
         $('body').off('click', ':not(#marketTable, #marketTable *)');
