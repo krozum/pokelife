@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.9.3
+// @version      5.9.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -33,19 +33,20 @@ var region;
 var lastSeeShoutId;
 var timeoutMin = 300;
 var timeoutMax = 400;
+var domain = "https://bra1ns.e-kei.pl/"
 
 
 // **********************
 //
-// funkcja do zapisu do bra1ns.pl
+// funkcja do zapisu do bazy
 //
 // **********************
-function requestBra1nsPL(url, callback) {
-    $.ajax(url)
+function requestDomain(url, callback) {
+    $.ajax(domain + url)
         .done(data => callback == null ? "" : callback(data))
         .fail((xhr, status) => console.log('error:', status));
 }
-requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_user.php?bot_version=" + GM_info.script.version + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&poziom=" + $('button[data-original-title="Poziom Trenera Pokemon"]').html(), null);
+requestDomain("pokelife/api/update_user.php?bot_version=" + GM_info.script.version + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&poziom=" + $('button[data-original-title="Poziom Trenera Pokemon"]').html(), null);
 
 
 // **********************
@@ -83,24 +84,24 @@ function getPreviousPageContent() {
 // **********************
 function updateEvent(text, eventTypeId, dzicz) {
     if (dzicz != null) {
-        requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text=" + text + "&event_type_id=" + eventTypeId + "&dzicz=" + dzicz + "&time=" + Date.now(), function(response) {
+        requestDomain("pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text=" + text + "&event_type_id=" + eventTypeId + "&dzicz=" + dzicz + "&time=" + Date.now(), function(response) {
             console.log("updateEvent: " + eventTypeId + " => " + text);
         })
     } else {
-        requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text=" + text + "&event_type_id=" + eventTypeId + "&time=" + Date.now(), function(response) {
+        requestDomain("pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text=" + text + "&event_type_id=" + eventTypeId + "&time=" + Date.now(), function(response) {
             console.log("updateEvent: " + eventTypeId + " => " + text);
         })
     }
 }
 
 function updateStats(name, value) {
-    requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name=" + name + "&value=" + value + "&time=" + Date.now(), function(response) {
+    requestDomain("pokelife/api/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name=" + name + "&value=" + value + "&time=" + Date.now(), function(response) {
         console.log("UpdateStats: " + name + " => " + value);
     })
 }
 
 function updateStatsDoswiadczenie(json) {
-    requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json=" + json + "&time=" + Date.now(), function(response) {
+    requestDomain("pokelife/api/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json=" + json + "&time=" + Date.now(), function(response) {
         console.log("updateStatsDoswiadczenie: " + json);
     })
 }
@@ -870,7 +871,7 @@ function initPokeLifeScript() {
                         $("#goStopReason").html("Spotkany shiny pokemon").show();
                         document.title = "Spotkany shiny pokemon";
                         $('#refreshShinyWidget').trigger('click');
-                        requestBra1nsPL("https://bra1ns.pl/pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time=" + Date.now(), null);
+                        requestDomain("pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time=" + Date.now(), null);
                     } else if ($('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
                         if (window.localStorage.zatrzymujNiezlapane == false || window.localStorage.zatrzymujNiezlapane == "false") {
                             console.log('PokeLifeScript: spotkany niezłapany pokemona');
@@ -1480,7 +1481,7 @@ function initPokeLifeScript() {
         var shinyWidget;
 
         function refreshShinyWidget() {
-            var api = "https://bra1ns.pl/pokelife/api/get_shiny.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim();
+            var api = domain + "pokelife/api/get_shiny.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim();
             $.getJSON(api, {
                 format: "json"
             }).done(function(data) {
@@ -1751,8 +1752,8 @@ function initPokeLifeScript() {
     //
     // **********************
     function initStatystykiLink() {
-        $('body').append('<a id="PokeLifeScriptStats" style="color: #333333 !important;text-decoration:none;" target="_blank" href="https://bra1ns.pl/pokelife/stats/"><div class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;top: 15px;left: 190px;font-size: 19px;text-align: center;width: 100px;height: 30px;line-height: 35px;z-index: 9998;text-align: center;line-height: 30px;color: #333333;">Statystyki</div></a>');
-        $("#PokeLifeScriptStats").attr("href", "https://bra1ns.pl/pokelife/stats/?login=" + md5($('#wyloguj').parent().parent().html().split("<div")[0].trim()));
+        $('body').append('<a id="PokeLifeScriptStats" style="color: #333333 !important;text-decoration:none;" target="_blank" href="' + domain + 'pokelife/stats/"><div class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;top: 15px;left: 190px;font-size: 19px;text-align: center;width: 100px;height: 30px;line-height: 35px;z-index: 9998;text-align: center;line-height: 30px;color: #333333;">Statystyki</div></a>');
+        $("#PokeLifeScriptStats").attr("href", domain + "pokelife/stats/?login=" + md5($('#wyloguj').parent().parent().html().split("<div")[0].trim()));
     }
     initStatystykiLink();
 
@@ -2054,7 +2055,7 @@ function initPokeLifeScript() {
 
         $(document).on('click', '#zaloguj_chat,#zaloguj_czat_bot', function(e) {
             $('#zaloguj_czat_bot').remove();
-            var url = 'https://bra1ns.pl/pokelife/api/get_czat.php?czat_id=' + window.localStorage.max_chat_id;
+            var url = domain + 'pokelife/api/get_czat.php?czat_id=' + window.localStorage.max_chat_id;
             $.getJSON(url, {
                 format: "json"
             }).done(function(data) {
@@ -2073,7 +2074,7 @@ function initPokeLifeScript() {
 
                 if (interval == undefined) {
                     interval = setInterval(function() {
-                        var url = 'https://bra1ns.pl/pokelife/api/get_czat.php?czat_id=' + window.localStorage.max_chat_id;
+                        var url = domain + 'pokelife/api/get_czat.php?czat_id=' + window.localStorage.max_chat_id;
                         $.getJSON(url, {
                             format: "json"
                         }).done(function(data) {
@@ -2103,7 +2104,7 @@ function initPokeLifeScript() {
             } else {
                 $("#shout_button").val('Wysyłanie...');
 
-                var url = 'https://bra1ns.pl/pokelife/api/update_czat.php';
+                var url = domain + 'pokelife/api/update_czat.php';
                 $.getJSON(url, {
                     format: "json",
                     message: msg,
@@ -2146,7 +2147,7 @@ function initPokeLifeScript() {
                     var nazwa = $(item).val();
                     var gracz_id = THAT.find('input[name="walcz"]').val();
                     var login = THAT.find('big:nth(1)').html();
-                    var url = 'https://bra1ns.pl/pokelife/api/update_pokemon_gracza.php';
+                    var url = domain + 'pokelife/api/update_pokemon_gracza.php';
                     $.getJSON(url, {
                         pokemon_id: pokemon_id,
                         gracz_id: gracz_id,
@@ -2760,9 +2761,8 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
     //
     // **********************
     function initSprawdzCzyMaszAktualnaWersjeBota(){
-        https://bra1ns.pl/pokelife/api/get_bot_version.php
 
-        var url = 'https://bra1ns.pl/pokelife/api/get_bot_version.php';
+        var url = domain + '/pokelife/api/get_bot_version.php';
         $.getJSON(url, {
             format: "json"
         }).done(function(data) {
