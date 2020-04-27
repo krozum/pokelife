@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.9.4
+// @version      5.9.5
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -33,7 +33,7 @@ var region;
 var lastSeeShoutId;
 var timeoutMin = 300;
 var timeoutMax = 400;
-var domain = "https://bra1ns.e-kei.pl/"
+var domain = "https://bra2ns.pl/"
 
 
 // **********************
@@ -47,6 +47,16 @@ function requestDomain(url, callback) {
         .fail((xhr, status) => console.log('error:', status));
 }
 requestDomain("pokelife/api/update_user.php?bot_version=" + GM_info.script.version + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&poziom=" + $('button[data-original-title="Poziom Trenera Pokemon"]').html(), null);
+
+
+
+function updateConfig(config, callback){
+    console.log("------------");
+    console.log(config);
+    console.log("------------");
+    requestDomain("pokelife/api/update_config.php?config=" + JSON.stringify(config) + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim(), callback != undefined ? function(){ callback.call()} : null);
+}
+
 
 
 // **********************
@@ -418,45 +428,41 @@ function initPokeLifeScript() {
         GM_addStyle(globalCSS);
 
         var newCSS;
-        if (window.localStorage.skinStyle == 2) {
+        if (config.skinStyle == 2) {
             newCSS = GM_getResourceText("customCSS_style_2");
             GM_addStyle(newCSS);
-        } else if (window.localStorage.skinStyle == 3) {
+        } else if (config.skinStyle == 3) {
             newCSS = GM_getResourceText("customCSS_style_3");
             GM_addStyle(newCSS);
-        } else if (window.localStorage.skinStyle == 4) {
+        } else if (config.skinStyle == 4) {
             newCSS = GM_getResourceText("customCSS_style_4");
             GM_addStyle(newCSS);
         } else {
-            window.localStorage.skinStyle = 1;
+            config.skinStyle = 1;
             newCSS = GM_getResourceText("customCSS_style_1");
             GM_addStyle(newCSS);
         }
 
         $('body').append('<div id="changeStyle" class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;bottom: 10px;left: 10px;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"></div>');
         $(document).on('click', '#changeStyle', function() {
-            console.log(window.localStorage.skinStyle);
-            switch (window.localStorage.skinStyle) {
+            console.log(config.skinStyle);
+            switch (config.skinStyle) {
                 case "1":
-                    window.localStorage.skinStyle = 2;
-                    location.reload()
+                    config.skinStyle = 2;
                     break;
                 case "2":
-                    window.localStorage.skinStyle = 3;
-                    location.reload()
+                    config.skinStyle = 3;
                     break;
                 case "3":
-                    window.localStorage.skinStyle = 4;
-                    location.reload()
+                    config.skinStyle = 4;
                     break;
                 case "4":
-                    window.localStorage.skinStyle = 1;
-                    location.reload()
+                    config.skinStyle = 1;
                     break;
                 default:
-                    window.localStorage.skinStyle = 1;
-                    location.reload()
+                    config.skinStyle = 1;
             }
+            updateConfig(config, function(){location.reload()});
         });
     }
     initSkins();
@@ -481,26 +487,6 @@ function initPokeLifeScript() {
 
         var blocked = false;
         var autoGoWznawianie;
-
-        window.localStorage.useCzerwoneNapoje == undefined ? window.localStorage.useCzerwoneNapoje = false : "";
-        window.localStorage.useNiebieskieNapoje == undefined ? window.localStorage.useNiebieskieNapoje = false : "";
-        window.localStorage.useZieloneNapoje == undefined ? window.localStorage.useZieloneNapoje = false : "";
-        window.localStorage.useNiebieskieJagody == undefined ? window.localStorage.useNiebieskieJagody = false : "";
-        window.localStorage.useCzerwoneJagody == undefined ? window.localStorage.useCzerwoneJagody = false : "";
-        window.localStorage.useFontanna == undefined ? window.localStorage.useFontanna = false : "";
-        window.localStorage.useOnlyInNight == undefined ? window.localStorage.useOnlyInNight = false : "";
-        window.localStorage.useEventoweNapoje == undefined ? window.localStorage.useEventoweNapoje = false : "";
-
-
-        window.localStorage.pok20 == undefined ? window.localStorage.pok20 = 0 : "";
-        window.localStorage.pok40 == undefined ? window.localStorage.pok40 = 0 : "";
-        window.localStorage.pok60 == undefined ? window.localStorage.pok60 = 0 : "";
-        window.localStorage.pok80 == undefined ? window.localStorage.pok80 = 0 : "";
-        window.localStorage.pok100 == undefined ? window.localStorage.pok100 = 0 : "";
-
-
-        window.localStorage.zatrzymujNiezlapane == undefined ? window.localStorage.zatrzymujNiezlapane = true : "";
-        window.localStorage.lapSafariballemNiezlapane == undefined ? window.localStorage.lapSafariballemNiezlapane = false : "";
 
         function initGoButton() {
             $('body').append('<div id="goSettingsAutoGo" style="position: fixed;cursor: pointer;top: 20px;right: 275px;font-size: 20px;text-align: center;width: 25px;height: 25px;line-height: 25px;z-index: 9999;"><span style="color: ' + $('.panel-heading').css('background-color') + ';" class="glyphicon glyphicon-cog" aria-hidden="true"></span></div>');
@@ -546,26 +532,27 @@ function initPokeLifeScript() {
                 'iconFilePath': 'https://cdn0.iconfinder.com/data/icons/seo-smart-pack/128/grey_new_seo-05-512.png',
                 'iconValue': function() {
                     if (Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 20) {
-                        return "&wybierz_pokemona=" + window.localStorage.pok20;
+                        return "&wybierz_pokemona=" + config.pok20;
                     }
                     if (Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 40) {
-                        return "&wybierz_pokemona=" + window.localStorage.pok40;
+                        return "&wybierz_pokemona=" + config.pok40;
                     }
                     if (Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 60) {
-                        return "&wybierz_pokemona=" + window.localStorage.pok60;
+                        return "&wybierz_pokemona=" + config.pok60;
                     }
                     if (Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 80) {
-                        return "&wybierz_pokemona=" + window.localStorage.pok80;
+                        return "&wybierz_pokemona=" + config.pok80;
                     }
-                    return "&wybierz_pokemona=" + window.localStorage.pok100;
+                    return "&wybierz_pokemona=" + config.pok100;
                 }
             });
 
             AutoGoSettings.iconPokemon.refresh(selectPokemon);
-            AutoGoSettings.iconPokemon.setSelectedIndex(window.localStorage.pokemonIconsIndex);
+            AutoGoSettings.iconPokemon.setSelectedIndex(config.pokemonIconsIndex);
 
             document.getElementById('setPokemon').addEventListener('changed', function(e) {
-                window.localStorage.pokemonIconsIndex = AutoGoSettings.iconPokemon.getSelectedIndex();
+                config.pokemonIconsIndex = AutoGoSettings.iconPokemon.getSelectedIndex();
+                updateConfig(config);
             });
         }
         initPokemonIcon();
@@ -720,7 +707,7 @@ function initPokeLifeScript() {
                                       'iconValue': function() {
                                           if ($('label[data-original-title="Safariball"]').length > 0) {
                                               if (Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1) {
-                                                  if (window.localStorage.lapSafariballemNiezlapane == true || window.localStorage.lapSafariballemNiezlapane == "true")
+                                                  if (config.lapSafariballemNiezlapane == true || config.lapSafariballemNiezlapane == "true")
                                                       if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
                                                           return '&zlap_pokemona=safariballe';
                                                       } else {
@@ -746,10 +733,11 @@ function initPokeLifeScript() {
                                  ];
 
             AutoGoSettings.iconPokeball.refresh(selectPokeball);
-            AutoGoSettings.iconPokeball.setSelectedIndex(window.localStorage.pokeballIconsIndex);
+            AutoGoSettings.iconPokeball.setSelectedIndex(config.pokeballIconsIndex);
 
             document.getElementById('setPokeball').addEventListener('changed', function(e) {
-                window.localStorage.pokeballIconsIndex = AutoGoSettings.iconPokeball.getSelectedIndex();
+                config.pokeballIconsIndex = AutoGoSettings.iconPokeball.getSelectedIndex();
+                updateConfig(config);
             });
         }
         initPokeballIcon();
@@ -781,10 +769,11 @@ function initPokeLifeScript() {
             });
 
             AutoGoSettings.iconLocation.refresh(icons);
-            AutoGoSettings.iconLocation.setSelectedIndex(window.localStorage.locationIconsIndex);
+            AutoGoSettings.iconLocation.setSelectedIndex(config.locationIconsIndex);
 
             document.getElementById('setLocation').addEventListener('changed', function(e) {
-                window.localStorage.locationIconsIndex = AutoGoSettings.iconLocation.getSelectedIndex();
+                config.locationIconsIndex = AutoGoSettings.iconLocation.getSelectedIndex();
+                updateConfig(config);
             });
         }
         initLocationIcon();
@@ -873,7 +862,7 @@ function initPokeLifeScript() {
                         $('#refreshShinyWidget').trigger('click');
                         requestDomain("pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time=" + Date.now(), null);
                     } else if ($('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
-                        if (window.localStorage.zatrzymujNiezlapane == false || window.localStorage.zatrzymujNiezlapane == "false") {
+                        if (config.zatrzymujNiezlapane == false || config.zatrzymujNiezlapane == "false") {
                             console.log('PokeLifeScript: spotkany niezłapany pokemona');
                             console.log('PokeLifeScript: atakuje pokemona');
                             var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
@@ -935,22 +924,23 @@ function initPokeLifeScript() {
                 $('body').append('<div id="settingsAutoGo" style="padding: 10px; position:fixed;top: 60px;right: 69px;width: 880px;background: white;opacity: 1;border: 3px dashed #ffed14;z-index: 999;"></div>');
                 $('#settingsAutoGo').append('<div class="row"><div class="col-sm-6 wznawianieSettings"><table> <tr> <th></th> <th></th> <th></th> </tr></table></div></div>');
                 $('#settingsAutoGo .wznawianieSettings table').append('<col width="60"><col width="20"><col width="340">');
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" ' + (window.localStorage.useCzerwoneNapoje == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych napojów gdy zabraknie PA</label></td> </tr>');
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieNapoje" name="autoUseNiebieskieNapoje" value="1" ' + (window.localStorage.useNiebieskieNapoje == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj niebieskich napojów gdy zabraknie PA <span style="font-size: 9px">(niebieskie eventowe + niebieskie)</span></label></td> </tr>');
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/zielony_napoj.jpg"></td><td><input type="checkbox" id="autoUseZieloneNapoje" name="autoUseZieloneNapoje" value="1" ' + (window.localStorage.useZieloneNapoje == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj zielonych napojów gdy zabraknie PA</label></td> </tr>');
+                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" ' + ((config.useCzerwoneNapoje == "true" || config.useCzerwoneNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych napojów gdy zabraknie PA</label></td> </tr>');
+                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/zielony_napoj.jpg"></td><td><input type="checkbox" id="autoUseZieloneNapoje" name="autoUseZieloneNapoje" value="1" ' + ((config.useZieloneNapoje == "true" || config.useZieloneNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj zielonych napojów gdy zabraknie PA</label></td> </tr>');
+                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieNapoje" name="autoUseNiebieskieNapoje" value="1" ' + ((config.useNiebieskieNapoje == "true" || config.useNiebieskieNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj niebieskich napojów gdy zabraknie PA <span style="font-size: 9px">(niebieskie eventowe + niebieskie)</span></label></td> </tr>');
 
-
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAMAAACahl6sAAAAHlBMVEX4+PgwMDBYwNCYmJiA6PjIyMho0OBYWFjQ+PhIsMBk4eMZAAACB0lEQVR4nO3d3Y6CMBCGYZfK3/3f8CYwHHxktmkXsVN93zNZSebRBFgEfTyIiIiIiIiIiD6rcS95ja2HqynNWz9ec+vhagISLSDR6hgyermb32R/bD3xH+mrnp3SnvOuySoDEi0g0eoRUrClXdwVl60xCmScvb1dbo1FsUBeHBAgN/U5kH2cWcuuEQWS5LVPBWtkD+OBXA4IkJsCEgZiO72SEx7Z0UXQ4nQQECA3BQTITR0Q6ThDkhvdju31YckO6F5IUkkJxF58eQQECBAgbSA5QY4FBAgQIEBeDzkd78rStG7ZshbXblyFHAuHrdX2kkCAAAESFWKtBrGn2PrRICbYdxWrfkJqAs3emBZn44EAAQLkH5ChOeRp5SDaSTBtAQECBMibINPumLqHDDZdAcQVTECAAAECpApis56O5hViIz+lyQsIECBAgBRCbOdwvvclI4gK2Wf1ITYeECBAgMSB2LZ1WJ2G/d7upQvIcR7I/ScDCBAgQKJCdC5btvQI0RYJCBAgQIAAAQIECJDvgQy5gAABAgTIBYieDpoqIFLDS8qBAAECpC+Iez9LPaT9DZVAgAAB0gnEsotQ1FMC0dsSG36dyAHx3pgSiH4BOBAgQIC8KftJgdOlgElyLxPUS7f9X1dpkH41dklBf3QLSLSAROtjIGN1YTa4RERERERERERERBS1XxA3rOR3FFuIAAAAAElFTkSuQmCC"></td><td><input type="checkbox" id="autoUseEventoweNapoje" name="autoUseEventoweNapoje" value="1" ' + (window.localStorage.useEventoweNapoje == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj eventowych napojów gdy zabraknie PA <span style="font-size: 9px">(te z przycisku w statystykach)</span></label></td> </tr>');
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/niebieskie_jagody.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieJagody" name="autoUseNiebieskieJagody" value="1" ' + (window.localStorage.useNiebieskieJagody == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj niebieskich jagód gdy zabraknie PA</label></td> </tr>');
+                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAMAAACahl6sAAAAHlBMVEX4+PgwMDBYwNCYmJiA6PjIyMho0OBYWFjQ+PhIsMBk4eMZAAACB0lEQVR4nO3d3Y6CMBCGYZfK3/3f8CYwHHxktmkXsVN93zNZSebRBFgEfTyIiIiIiIiIiD6rcS95ja2HqynNWz9ec+vhagISLSDR6hgyermb32R/bD3xH+mrnp3SnvOuySoDEi0g0eoRUrClXdwVl60xCmScvb1dbo1FsUBeHBAgN/U5kH2cWcuuEQWS5LVPBWtkD+OBXA4IkJsCEgZiO72SEx7Z0UXQ4nQQECA3BQTITR0Q6ThDkhvdju31YckO6F5IUkkJxF58eQQECBAgbSA5QY4FBAgQIEBeDzkd78rStG7ZshbXblyFHAuHrdX2kkCAAAESFWKtBrGn2PrRICbYdxWrfkJqAs3emBZn44EAAQLkH5ChOeRp5SDaSTBtAQECBMibINPumLqHDDZdAcQVTECAAAECpApis56O5hViIz+lyQsIECBAgBRCbOdwvvclI4gK2Wf1ITYeECBAgMSB2LZ1WJ2G/d7upQvIcR7I/ScDCBAgQKJCdC5btvQI0RYJCBAgQIAAAQIECJDvgQy5gAABAgTIBYieDpoqIFLDS8qBAAECpC+Iez9LPaT9DZVAgAAB0gnEsotQ1FMC0dsSG36dyAHx3pgSiH4BOBAgQIC8KftJgdOlgElyLxPUS7f9X1dpkH41dklBf3QLSLSAROtjIGN1YTa4RERERERERERERBS1XxA3rOR3FFuIAAAAAElFTkSuQmCC"></td><td><input type="checkbox" id="autoUseEventoweNapoje" name="autoUseEventoweNapoje" value="1" ' + ((config.useEventoweNapoje == "true" || config.useEventoweNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj eventowych napojów gdy zabraknie PA <span style="font-size: 9px">(te z przycisku w statystykach)</span></label></td> </tr>');
+                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/niebieskie_jagody.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieJagody" name="autoUseNiebieskieJagody" value="1" ' + ((config.useNiebieskieJagody == "true" || config.useNiebieskieJagody == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj niebieskich jagód gdy zabraknie PA</label></td> </tr>');
 
                 $('#settingsAutoGo .wznawianieSettings').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Eventowe napoje</b> -> <b>Niebieskie napoje</b> -> <b>Zielone napoje</b> -> <b>Czerwone napoje</b></p>');
 
                 $('#settingsAutoGo .row').append('<div class="col-sm-6 dziczSettings"><table> <tr> <th></th> <th></th> <th></th> </tr></table></div>');
                 $('#settingsAutoGo .dziczSettings table').append('<col width="60"><col width="20"><col width="340">');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/czerwone_jagody.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneJagody" name="autoUseCzerwoneJagody" value="1" ' + (window.localStorage.useCzerwoneJagody == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych jagód do leczenia</label></td> </tr>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="zatrzymujNiezlapane" name="zatrzymujNiezlapane" value="1" ' + (window.localStorage.zatrzymujNiezlapane == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Zatrzymuj gdy spotkasz niezłapane pokemony</label></td> </tr></tbody></table>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 30px;" src="images/pokesklep/safariballe.jpg"></td><td><input type="checkbox" id="lapSafariballemNiezlapane" name="lapSafariballemNiezlapane" value="1" ' + (window.localStorage.lapSafariballemNiezlapane == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Łap safariballem tylko niezłapane pokemony</label></td> </tr></tbody></table>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" ' + (window.localStorage.useOnlyInNight == "true" ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/czerwone_jagody.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneJagody" name="autoUseCzerwoneJagody" value="1" ' + ((config.useCzerwoneJagody == "true" || config.useCzerwoneJagody == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych jagód do leczenia</label></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="zatrzymujNiezlapane" name="zatrzymujNiezlapane" value="1" ' + ((config.zatrzymujNiezlapane == "true" || config.zatrzymujNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Zatrzymuj gdy spotkasz niezłapane pokemony</label></td> </tr></tbody></table>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 30px;" src="images/pokesklep/safariballe.jpg"></td><td><input type="checkbox" id="lapSafariballemNiezlapane" name="lapSafariballemNiezlapane" value="1" ' + ((config.lapSafariballemNiezlapane == "true" || config.lapSafariballemNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Łap safariballem tylko niezłapane pokemony</label></td> </tr></tbody></table>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" ' + ((config.useOnlyInNight == "true" || config.useOnlyInNight == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td></td><td><select id="switchWidgetOrder"><option value="1" ' + (config.kolejnoscWidgetow == 1 ? 'selected' : '') + '>Zadania - Drużyna</option><option value="2" ' + (config.kolejnoscWidgetow == 2 ? 'selected' : '') +  '>Drużyna - Zadania</option><select></td> </tr>');
+
 
                 $('#settingsAutoGo').append('<div id="exp_mod_settings" class="row"><hr><div class="col-sm-6 first"></div><div class="col-sm-6 second"></div></div>');
                 $('#exp_mod_settings .first').append('<p style=" margin: 0 0 5px; ">Pokemony 1-20</p><select data-order-id="20" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
@@ -963,76 +953,92 @@ function initPokeLifeScript() {
                     $('.list_of_poks_in_team').append('<option value="' + index + '">' + $(item).find('b').html() + '</option>');
                 })
 
-                $('.list_of_poks_in_team[data-order-id="20"] option[value="' + window.localStorage.pok20 + '"]').prop("selected", true);
-                $('.list_of_poks_in_team[data-order-id="40"] option[value="' + window.localStorage.pok40 + '"]').prop("selected", true);
-                $('.list_of_poks_in_team[data-order-id="60"] option[value="' + window.localStorage.pok60 + '"]').prop("selected", true);
-                $('.list_of_poks_in_team[data-order-id="80"] option[value="' + window.localStorage.pok80 + '"]').prop("selected", true);
-                $('.list_of_poks_in_team[data-order-id="100"] option[value="' + window.localStorage.pok100 + '"]').prop("selected", true);
+                $('.list_of_poks_in_team[data-order-id="20"] option[value="' + config.pok20 + '"]').prop("selected", true);
+                $('.list_of_poks_in_team[data-order-id="40"] option[value="' + config.pok40 + '"]').prop("selected", true);
+                $('.list_of_poks_in_team[data-order-id="60"] option[value="' + config.pok60 + '"]').prop("selected", true);
+                $('.list_of_poks_in_team[data-order-id="80"] option[value="' + config.pok80 + '"]').prop("selected", true);
+                $('.list_of_poks_in_team[data-order-id="100"] option[value="' + config.pok100 + '"]').prop("selected", true);
             }
         });
+
+        $(document).on("change", "#switchWidgetOrder", function(event) {
+            config.kolejnoscWidgetow = $(this).val();
+            updateConfig(config);
+            $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+        })
 
         $(document).on("change", ".list_of_poks_in_team", function(event) {
             var orderId = $(this).data('order-id');
             if (orderId == 20) {
-                window.localStorage.pok20 = Number($(this).val());
+                config.pok20 = Number($(this).val());
             }
             if (orderId == 40) {
-                window.localStorage.pok40 = Number($(this).val());
+                config.pok40 = Number($(this).val());
             }
             if (orderId == 60) {
-                window.localStorage.pok60 = Number($(this).val());
+                config.pok60 = Number($(this).val());
             }
             if (orderId == 80) {
-                window.localStorage.pok80 = Number($(this).val());
+                config.pok80 = Number($(this).val());
             }
             if (orderId == 100) {
-                window.localStorage.pok100 = Number($(this).val());
+                config.pok100 = Number($(this).val());
             }
+            updateConfig(config);
         });
 
         $(document).on("click", "#zatrzymujNiezlapane", function(event) {
             var isChecked = $('#zatrzymujNiezlapane').prop('checked');
-            window.localStorage.zatrzymujNiezlapane = isChecked;
+            config.zatrzymujNiezlapane = isChecked;
+            updateConfig(config);
         });
 
         $(document).on("click", "#lapSafariballemNiezlapane", function(event) {
             var isChecked = $('#lapSafariballemNiezlapane').prop('checked');
-            window.localStorage.lapSafariballemNiezlapane = isChecked;
+            config.lapSafariballemNiezlapane = isChecked;
+            updateConfig(config);
         });
 
         $(document).on("click", "#autoUseNiebieskieJagody", function(event) {
             var isChecked = $('#autoUseNiebieskieJagody').prop('checked');
-            window.localStorage.useNiebieskieJagody = isChecked;
+            config.useNiebieskieJagody = isChecked;
+            updateConfig(config);
         });
 
         $(document).on("click", "#autoUseCzerwoneJagody", function(event) {
             var isChecked = $('#autoUseCzerwoneJagody').prop('checked');
-            window.localStorage.useCzerwoneJagody = isChecked;
+            config.useCzerwoneJagody = isChecked;
+            updateConfig(config);
         });
 
         $(document).on("click", "#autoUseNiebieskieNapoje", function() {
             var isChecked = $('#autoUseNiebieskieNapoje').prop('checked');
-            window.localStorage.useNiebieskieNapoje = isChecked;
+            config.useNiebieskieNapoje = isChecked;
+            updateConfig(config);
         });
 
         $(document).on("click", "#autoUseZieloneNapoje", function() {
             var isChecked = $('#autoUseZieloneNapoje').prop('checked');
-            window.localStorage.useZieloneNapoje = isChecked;
+            config.useZieloneNapoje = isChecked;
+            updateConfig(config);
         });
 
         $(document).on("click", "#autoUseEventoweNapoje", function() {
             var isChecked = $('#autoUseEventoweNapoje').prop('checked');
-            window.localStorage.useEventoweNapoje = isChecked;
+            config.useEventoweNapoje = isChecked;
+            updateConfig(config);
         });
 
         $(document).on("click", "#autoUseCzerwoneNapoje", function() {
             var isChecked = $('#autoUseCzerwoneNapoje').prop('checked');
-            window.localStorage.useCzerwoneNapoje = isChecked;
+            config.useCzerwoneNapoje = isChecked;
+            updateConfig(config);
         });
 
         $(document).on("click", "#useOnlyInNight", function() {
             var isChecked = $('#useOnlyInNight').prop('checked');
-            window.localStorage.useOnlyInNight = isChecked;
+            config.useOnlyInNight = isChecked;
+            updateConfig(config);
         });
 
 
@@ -1363,22 +1369,22 @@ function initPokeLifeScript() {
 
             if (wznawiaj) {
                 var array = [];
-                if (window.localStorage.useCzerwoneNapoje == "true" || window.localStorage.useCzerwoneNapoje == true) {
+                if (config.useCzerwoneNapoje == "true" || config.useCzerwoneNapoje == true) {
                     array.push("useCzerwoneNapoje");
                 }
-                if (window.localStorage.useZieloneNapoje == "true" || window.localStorage.useZieloneNapoje == true) {
+                if (config.useZieloneNapoje == "true" || config.useZieloneNapoje == true) {
                     array.push("useZieloneNapoje");
                 }
-                if (window.localStorage.useNiebieskieNapoje == "true" || window.localStorage.useNiebieskieNapoje == true) {
+                if (config.useNiebieskieNapoje == "true" || config.useNiebieskieNapoje == true) {
                     array.push("useNiebieskieNapoje");
                 }
-                if (window.localStorage.useEventoweNapoje == "true" || window.localStorage.useEventoweNapoje == true) {
+                if (config.useEventoweNapoje == "true" || config.useEventoweNapoje == true) {
                     array.push("useEventoweNapoje");
                 }
-                if (window.localStorage.useNiebieskieJagody == "true" || window.localStorage.useNiebieskieJagody == true) {
+                if (config.useNiebieskieJagody == "true" || config.useNiebieskieJagody == true) {
                     array.push("useNiebieskieJagody");
                 }
-                if (window.localStorage.useOnlyInNight == "true" || window.localStorage.useOnlyInNight == true) {
+                if (config.useOnlyInNight == "true" || config.useOnlyInNight == true) {
                     var h = d.getHours();
                     if (h >= 22 || h < 6) {
                         window.setTimeout(function() {
@@ -2194,19 +2200,24 @@ function initPokeLifeScript() {
                 });
                 html = html + '</tbody></table></div>';
                 zadaniaWidget = html;
-                window.localStorage.zadaniaWidget = html;
+                config.zadaniaWidget = html;
+                updateConfig(config);
                 $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
             })
         }
-        if (window.localStorage.zadaniaWidget == undefined || !window.localStorage.zadaniaWidget.includes(today) || !window.localStorage.zadaniaWidget.includes(login)) {
+        if (config.zadaniaWidget == undefined || !config.zadaniaWidget.includes(today) || !config.zadaniaWidget.includes(login)) {
             refreshZadaniaWidget();
         } else {
-            zadaniaWidget = window.localStorage.zadaniaWidget;
+            zadaniaWidget = config.zadaniaWidget;
         }
 
         onReloadSidebar(function() {
             if (zadaniaWidget != undefined && zadaniaWidget.length > 140) {
-                this.find(".panel-heading:contains('Drużyna')").parent().before(zadaniaWidget);
+                if(config.kolejnoscWidgetow == 1){
+                    this.find(".panel-heading:contains('Drużyna')").parent().before(zadaniaWidget);
+                } else if(config.kolejnoscWidgetow == 2){
+                    this.find(".panel-heading:contains('Drużyna')").parent().after(zadaniaWidget);
+                }
             }
         })
 
@@ -2252,30 +2263,26 @@ function initPokeLifeScript() {
         var hodowlaPokemonDniaImage;
         var hodowlaPokemonDniaStowarzyszenieImage;
 
-        if (window.localStorage.hodowlaPokemonDniaImage == undefined) {
-            window.localStorage.hodowlaPokemonDniaImage = "";
-            window.localStorage.hodowlaPokemonDniaStowarzyszenieImage = "";
-        }
-
         var login = $('#wyloguj').parent().parent().html().split("<div")[0].trim();
 
-        if (!window.localStorage.hodowlaPokemonDniaImage.includes(today) || !window.localStorage.hodowlaPokemonDniaImage.includes(login)) {
+        if (!config.hodowlaPokemonDniaImage.includes(today) || !config.hodowlaPokemonDniaImage.includes(login)) {
             $.ajax({
                 type: 'POST',
                 url: "gra/hodowla.php"
             }).done(function(response) {
                 hodowlaPokemonDniaImage = $(response).find('#hodowla-glowne img').attr('src');
-                window.localStorage.hodowlaPokemonDniaImage = today + "" + login + hodowlaPokemonDniaImage;
+                config.hodowlaPokemonDniaImage = today + "" + login + hodowlaPokemonDniaImage;
                 hodowlaPokemonDniaStowarzyszenieImage = $(response).find('#hodowla-glowne img:nth(1)').attr('src');
                 if ($(response).find('.panel-heading:contains("Pokemon dnia Stowa")').length == 0) {
                     hodowlaPokemonDniaStowarzyszenieImage = undefined;
                 }
-                window.localStorage.hodowlaPokemonDniaStowarzyszenieImage = today + "" + login + hodowlaPokemonDniaStowarzyszenieImage;
+                config.hodowlaPokemonDniaStowarzyszenieImage = today + "" + login + hodowlaPokemonDniaStowarzyszenieImage;
+                updateConfig(config);
             });
         } else {
-            hodowlaPokemonDniaImage = window.localStorage.hodowlaPokemonDniaImage.replace(today, "");
+            hodowlaPokemonDniaImage = config.hodowlaPokemonDniaImage.replace(today, "");
             hodowlaPokemonDniaImage = hodowlaPokemonDniaImage.replace(login, "");
-            hodowlaPokemonDniaStowarzyszenieImage = window.localStorage.hodowlaPokemonDniaStowarzyszenieImage.replace(today, "");
+            hodowlaPokemonDniaStowarzyszenieImage = config.hodowlaPokemonDniaStowarzyszenieImage.replace(today, "");
             hodowlaPokemonDniaStowarzyszenieImage = hodowlaPokemonDniaStowarzyszenieImage.replace(login, "");
         }
 
@@ -2776,59 +2783,95 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
 }
 
 
-
-$.getJSON("https://raw.githubusercontent.com/krozum/pokelife/master/pokemon.json", {
+$.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now(), {
     format: "json"
-}).done(function(data) {
-    pokemonData = data;
-    if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=las"]').length > 0) {
-        region = 'kanto';
-    } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=puszcza"]').length > 0) {
-        region = 'johto';
-    } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=opuszczona_elektrownia"]').length > 0) {
-        region = 'hoenn';
-    } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=koronny_szczyt"]').length > 0) {
-        region = 'sinnoh';
-    } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=ranczo"]').length > 0) {
-        region = 'unova';
-    } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=francuski_labirynt"]').length > 0) {
-        region = 'kalos';
+}).done(function (data) {
+    console.log(data);
+
+    if(data.user != null && data.user.config != ""){
+        config = JSON.parse(data.user.config);
+    } else {
+        config.skinStyle = 3;
+        config.skipTutorial = false;
+        config.useNiebieskieJagody = false;
+        config.useNiebieskieNapoje = false;
+        config.useCzerwoneNapoje = false;
+        config.useZieloneNapoje = false;
+        config.useEventoweNapoje = true;
+        config.zatrzymujNiezlapane = true;
+        config.pokemonIconsIndex = 0;
+        config.pokeballIconsIndex = 8;
+        config.locationIconsIndex = 0;
+        config.useOnlyInNight = false;
+        config.useFontanna = false;
+        config.lapSafariballemNiezlapane = true;
+        config.hodowlaPokemonDniaImage = "";
+        config.zadaniaWidget = "";
+        config.hodowlaPokemonDniaStowarzyszenieImage = "";
+        config.pok20 = 0;
+        config.pok40 = 0;
+        config.pok60 = 0;
+        config.pok80 = 0;
+        config.pok100 = 0;
+        config.kolejnoscWidgetow = 1;
+        updateConfig(config);
     }
-    console.log("Wykryty region: " + region);
 
-    var blob = new Blob([
-        'var timers={};function fireTimeout(e){this.postMessage({id:e}),delete timers[e]}this.addEventListener("message",function(e){var t=e.data;switch(t.command){case"setTimeout":var i=parseInt(t.timeout||0,10),s=setTimeout(fireTimeout.bind(null,t.id),i);timers[t.id]=s;break;case"clearTimeout":(s=timers[t.id])&&clearTimeout(s),delete timers[t.id]}});'
-    ])
 
-    var timeoutId = 0;
-    var timeouts = {};
 
-    var worker = new Worker(window.URL.createObjectURL(blob));
+    $.getJSON("https://raw.githubusercontent.com/krozum/pokelife/master/pokemon.json", {
+        format: "json"
+    }).done(function(data) {
+        pokemonData = data;
+        if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=las"]').length > 0) {
+            region = 'kanto';
+        } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=puszcza"]').length > 0) {
+            region = 'johto';
+        } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=opuszczona_elektrownia"]').length > 0) {
+            region = 'hoenn';
+        } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=koronny_szczyt"]').length > 0) {
+            region = 'sinnoh';
+        } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=ranczo"]').length > 0) {
+            region = 'unova';
+        } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=francuski_labirynt"]').length > 0) {
+            region = 'kalos';
+        }
+        console.log("Wykryty region: " + region);
 
-    worker.addEventListener("message", function(evt) {
-        var data = evt.data,
-            id = data.id,
-            fn = timeouts[id].fn,
-            args = timeouts[id].args;
+        var blob = new Blob([
+            'var timers={};function fireTimeout(e){this.postMessage({id:e}),delete timers[e]}this.addEventListener("message",function(e){var t=e.data;switch(t.command){case"setTimeout":var i=parseInt(t.timeout||0,10),s=setTimeout(fireTimeout.bind(null,t.id),i);timers[t.id]=s;break;case"clearTimeout":(s=timers[t.id])&&clearTimeout(s),delete timers[t.id]}});'
+        ])
 
-        fn.apply(null, args);
-        delete timeouts[id];
-    });
+        var timeoutId = 0;
+        var timeouts = {};
 
-    window.setTimeout = function(fn, delay) {
-        var args = Array.prototype.slice.call(arguments, 2);
-        timeoutId += 1;
-        delay = delay || 0;
-        var id = timeoutId;
-        timeouts[id] = { fn: fn, args: args };
-        worker.postMessage({ command: "setTimeout", id: id, timeout: delay });
-        return id;
-    };
+        var worker = new Worker(window.URL.createObjectURL(blob));
 
-    window.clearTimeout = function(id) {
-        worker.postMessage({ command: "clearTimeout", id: id });
-        delete timeouts[id];
-    };
+        worker.addEventListener("message", function(evt) {
+            var data = evt.data,
+                id = data.id,
+                fn = timeouts[id].fn,
+                args = timeouts[id].args;
 
-    initPokeLifeScript();
-})
+            fn.apply(null, args);
+            delete timeouts[id];
+        });
+
+        window.setTimeout = function(fn, delay) {
+            var args = Array.prototype.slice.call(arguments, 2);
+            timeoutId += 1;
+            delay = delay || 0;
+            var id = timeoutId;
+            timeouts[id] = { fn: fn, args: args };
+            worker.postMessage({ command: "setTimeout", id: id, timeout: delay });
+            return id;
+        };
+
+        window.clearTimeout = function(id) {
+            worker.postMessage({ command: "clearTimeout", id: id });
+            delete timeouts[id];
+        };
+
+        initPokeLifeScript();
+    })
+});
