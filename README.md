@@ -135,3 +135,8 @@ Changelog
 * Dodanie podsumowania ile można zarobić z jagód na zakładce Wystaw
 * Drobne poprawki wizualne
 * Od teraz bot będzie na start informował o nowej wersji i wymuszał aktualizacje
+
+5.9.5 (2020-04-27)
+* Poprawki zwiazane z przeniesieniem hostingu
+* Przywrócenie zapisywania configu do bazy zamiast localstorage, teraz ustawienia powinny być przenoszone pomiędzy przeglądarkami
+* Dodanie zmiany kolejności widgetów
