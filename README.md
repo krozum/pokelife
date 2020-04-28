@@ -140,3 +140,7 @@ Changelog
 * Poprawki zwiazane z przeniesieniem hostingu
 * Przywrócenie zapisywania configu do bazy zamiast localstorage, teraz ustawienia powinny być przenoszone pomiędzy przeglądarkami
 * Dodanie zmiany kolejności widgetów
+
+5.9.6 (2020-04-28)
+* Dodanie możliwości oznaczania w czacie
+* Podświetla wiadomość w momencie w którym ktoś cie w niej oznaczył 
