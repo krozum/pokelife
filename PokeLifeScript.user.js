@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.9.7
+// @version      5.9.8
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -806,7 +806,7 @@ function initPokeLifeScript() {
 
                     var healOption = 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat'
 
-                    if (localStorage.getItem("useCzerwoneJagody") == "true") {
+                    if (config.useCzerwoneJagody == "true" || config.useCzerwoneJagody == true) {
                         healOption = 'gra/plecak.php?uzyj&rodzaj_przedmiotu=czerwone_jagody&tylko_komunikat&ulecz_wszystkie&zjedz_max'
                     }
 
@@ -814,7 +814,8 @@ function initPokeLifeScript() {
 
                         if ($(data).hasClass("alert-danger")) {
                             console.log('Brak czerwonych jagód');
-                            localStorage.removeItem("useCzerwoneJagody");
+                            config.useCzerwoneJagody = false;
+                            updateConfig(config);
                             window.setTimeout(function() {
                                 if (autoGo) {
                                     click(poLeczeniu)
