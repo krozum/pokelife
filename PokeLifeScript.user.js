@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.9.8
+// @version      5.10
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -446,17 +446,17 @@ function initPokeLifeScript() {
         $('body').append('<div id="changeStyle" class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;bottom: 10px;left: 10px;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"></div>');
         $(document).on('click', '#changeStyle', function() {
             console.log(config.skinStyle);
-            switch (config.skinStyle) {
-                case "1":
+            switch (Number(config.skinStyle)) {
+                case 1:
                     config.skinStyle = 2;
                     break;
-                case "2":
+                case 2:
                     config.skinStyle = 3;
                     break;
-                case "3":
+                case 3:
                     config.skinStyle = 4;
                     break;
-                case "4":
+                case 4:
                     config.skinStyle = 1;
                     break;
                 default:
@@ -556,6 +556,35 @@ function initPokeLifeScript() {
             });
         }
         initPokemonIcon();
+
+        $('#setPokemon-box-scroll .icon:last').on('click', function(){
+            $('body').append('<div id="settingsPokemonIcon" style="padding: 10px; position: fixed; top: 70px; left: 10px; width: 500px; background: white; opacity: 1; border: 7px solid #d6e9c6; z-index: 999;"></div>');
+            $('#settingsPokemonIcon').html("");
+            $('#settingsPokemonIcon').append('<div id="exp_mod_settings" class="row"><div class="col-sm-6 first"></div><div class="col-sm-6 second"></div></div>');
+            $('#exp_mod_settings .first').append('<p style=" margin: 0 0 5px; ">Pokemony 1-20</p><select data-order-id="20" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
+            $('#exp_mod_settings .second').append('<p style=" margin: 0 0 5px; ">Pokemony 21-40</p><select data-order-id="40" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
+            $('#exp_mod_settings .first').append('<p style=" margin: 0 0 5px; ">Pokemony 41-60</p><select data-order-id="60" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
+            $('#exp_mod_settings .second').append('<p style=" margin: 0 0 5px; ">Pokemony 61-80</p><select data-order-id="80" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
+            $('#exp_mod_settings .first').append('<p style=" margin: 0 0 5px; ">Pokemony 81-100</p><select data-order-id="100" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
+
+            $.each($('#sidebar .stan-pokemon:odd()'), function(index, item) {
+                $('.list_of_poks_in_team').append('<option value="' + index + '">' + $(item).find('b').html() + '</option>');
+            })
+
+            $('.list_of_poks_in_team[data-order-id="20"] option[value="' + config.pok20 + '"]').prop("selected", true);
+            $('.list_of_poks_in_team[data-order-id="40"] option[value="' + config.pok40 + '"]').prop("selected", true);
+            $('.list_of_poks_in_team[data-order-id="60"] option[value="' + config.pok60 + '"]').prop("selected", true);
+            $('.list_of_poks_in_team[data-order-id="80"] option[value="' + config.pok80 + '"]').prop("selected", true);
+            $('.list_of_poks_in_team[data-order-id="100"] option[value="' + config.pok100 + '"]').prop("selected", true);
+        });
+
+        $('html').click(function(e){
+            if (e.target.id == 'settingsPokemonIcon' || $(e.target).parents('#settingsPokemonIcon').length > 0) {
+                // clicked menu content or children
+            } else {
+                $('#settingsPokemonIcon').remove();
+            }
+        });
 
 
         function initPokeballIcon() {
@@ -728,6 +757,12 @@ function initPokeLifeScript() {
                                               document.title = "Brak odpowiedniego pokeballa";
                                           }
                                       }
+                                  },
+                                  {
+                                      'iconFilePath': "images/pokesklep/premierballe.jpg",
+                                      'iconValue': function() {
+                                          return '&zlap_pokemona=premierballe';
+                                      }
                                   }
 
                                  ];
@@ -862,7 +897,7 @@ function initPokeLifeScript() {
                         document.title = "Spotkany shiny pokemon";
                         $('#refreshShinyWidget').trigger('click');
                         requestDomain("pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time=" + Date.now(), null);
-                    } else if ($('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 50) {
+                    } else if ($('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 75) {
                         if (config.zatrzymujNiezlapane == false || config.zatrzymujNiezlapane == "false") {
                             console.log('PokeLifeScript: spotkany niezłapany pokemona');
                             console.log('PokeLifeScript: atakuje pokemona');
@@ -922,7 +957,7 @@ function initPokeLifeScript() {
             if ($('#settingsAutoGo').length > 0) {
                 $('#settingsAutoGo').remove();
             } else {
-                $('body').append('<div id="settingsAutoGo" style="padding: 10px; position:fixed;top: 60px;right: 69px;width: 880px;background: white;opacity: 1;border: 3px dashed #ffed14;z-index: 999;"></div>');
+                $('body').append('<div id="settingsAutoGo" style="padding: 10px; position:fixed;top: 60px;right: 69px;width: 880px;background: white;opacity: 1;border: 7px solid #d6e9c6;z-index: 999;"></div>');
                 $('#settingsAutoGo').append('<div class="row"><div class="col-sm-6 wznawianieSettings"><table> <tr> <th></th> <th></th> <th></th> </tr></table></div></div>');
                 $('#settingsAutoGo .wznawianieSettings table').append('<col width="60"><col width="20"><col width="340">');
                 $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" ' + ((config.useCzerwoneNapoje == "true" || config.useCzerwoneNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych napojów gdy zabraknie PA</label></td> </tr>');
@@ -941,24 +976,6 @@ function initPokeLifeScript() {
                 $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 30px;" src="images/pokesklep/safariballe.jpg"></td><td><input type="checkbox" id="lapSafariballemNiezlapane" name="lapSafariballemNiezlapane" value="1" ' + ((config.lapSafariballemNiezlapane == "true" || config.lapSafariballemNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Łap safariballem tylko niezłapane pokemony</label></td> </tr></tbody></table>');
                 $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" ' + ((config.useOnlyInNight == "true" || config.useOnlyInNight == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
                 $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td></td><td><select id="switchWidgetOrder"><option value="1" ' + (config.kolejnoscWidgetow == 1 ? 'selected' : '') + '>Zadania - Drużyna</option><option value="2" ' + (config.kolejnoscWidgetow == 2 ? 'selected' : '') +  '>Drużyna - Zadania</option><select></td> </tr>');
-
-
-                $('#settingsAutoGo').append('<div id="exp_mod_settings" class="row"><hr><div class="col-sm-6 first"></div><div class="col-sm-6 second"></div></div>');
-                $('#exp_mod_settings .first').append('<p style=" margin: 0 0 5px; ">Pokemony 1-20</p><select data-order-id="20" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
-                $('#exp_mod_settings .second').append('<p style=" margin: 0 0 5px; ">Pokemony 21-40</p><select data-order-id="40" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
-                $('#exp_mod_settings .first').append('<p style=" margin: 0 0 5px; ">Pokemony 41-60</p><select data-order-id="60" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
-                $('#exp_mod_settings .second').append('<p style=" margin: 0 0 5px; ">Pokemony 61-80</p><select data-order-id="80" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
-                $('#exp_mod_settings .first').append('<p style=" margin: 0 0 5px; ">Pokemony 81-100</p><select data-order-id="100" style="width: 100%; padding: 5px;margin-bottom: 10px;" class="list_of_poks_in_team"></select>');
-
-                $.each($('#sidebar .stan-pokemon:odd()'), function(index, item) {
-                    $('.list_of_poks_in_team').append('<option value="' + index + '">' + $(item).find('b').html() + '</option>');
-                })
-
-                $('.list_of_poks_in_team[data-order-id="20"] option[value="' + config.pok20 + '"]').prop("selected", true);
-                $('.list_of_poks_in_team[data-order-id="40"] option[value="' + config.pok40 + '"]').prop("selected", true);
-                $('.list_of_poks_in_team[data-order-id="60"] option[value="' + config.pok60 + '"]').prop("selected", true);
-                $('.list_of_poks_in_team[data-order-id="80"] option[value="' + config.pok80 + '"]').prop("selected", true);
-                $('.list_of_poks_in_team[data-order-id="100"] option[value="' + config.pok100 + '"]').prop("selected", true);
             }
         });
 
@@ -2769,6 +2786,26 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
 
     // **********************
     //
+    // initPrzypomnienieORepelu()
+    // Funkcja dodająca przypomnienie o konczącym sie repelu
+    //
+    function initPrzypomnienieORepelu() {
+        onReloadSidebar(function() {
+            if(this.find('.well-stan[data-original-title="Czas pozostały do końca działania Tepela/Repela"]').length > 0){
+                var ile = Number(this.find('.well-stan[data-original-title="Czas pozostały do końca działania Tepela/Repela"]').text());
+                if(ile < 200){
+                    var opacity = (200 - ile) / 200;
+                    this.find('.well-stan[data-original-title="Czas pozostały do końca działania Tepela/Repela"]').css("background-color", "rgba(255, 117, 117, " + opacity + ")");
+                }
+            }
+        })
+    }
+    initPrzypomnienieORepelu();
+
+
+
+    // **********************
+    //
     // initSprawdzCzyMaszAktualnaWersjeBota
     // Funkcja dodająca sprawdzenie aktualnej wersji bota na serwerze
     //
@@ -2785,6 +2822,28 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         })
     }
     initSprawdzCzyMaszAktualnaWersjeBota();
+
+
+
+
+    // **********************
+    //
+    // initPrzypomnienieOOpiece
+    // Funkcja dodająca przypomnienie o opiece
+    //
+    // **********************
+    function initPrzypomnienieOOpiece(){
+        $('.statystyki-wyglad:nth-child(13):contains("nie")').css("color", "red").css("font-weight", "800");
+        $('.statystyki-wyglad:nth-child(13):contains("nie")').append('<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>');
+
+        onReloadMain(function() {
+            if (this.find('.panel-heading').html() === "Statystyki") {
+                this.find('.statystyki-wyglad:nth-child(13):contains("nie")').css("color", "red").css("font-weight", "800");
+                this.find('.statystyki-wyglad:nth-child(13):contains("nie")').append('<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>');
+            }
+        })
+    }
+    initPrzypomnienieOOpiece();
 
 }
 
