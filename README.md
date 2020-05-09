@@ -144,3 +144,11 @@ Changelog
 5.9.6 (2020-04-28)
 * Dodanie możliwości oznaczania w czacie
 * Podświetla wiadomość w momencie w którym ktoś cie w niej oznaczył 
+
+5.10 (2020-05-09)
+* Zmiana z zatrzymywaniem niezłapanych poków, teraz gdy ta opcja jest włączona będzie zatrzymywał sie przy pokach do 75lvl, minus jest taki ze jak ktos nie ma osiągnięcia zwiększającego max lvl złapanych poków z 50 do 75 to zatrzyma mu sie na pokach których nie będzie mógł jeszcze złapać.
+* Dodanie minimalistycznego przypomnienia o opiece, gdy sie jeszcze nie odbyło jej w statystykach będzie zaznaczona na czerwono informacja z wykrzyknikiem
+* Dodanie informacji o kończącym sie repelu. W sidebar gdy zosatnie poniżej 200 wypraw na repelu/tepelu zacznie powoli podświetlać sie na czerwono ilośc pozostałych wypraw
+* Dodanie premierballi do wyboru pokeballi
+* Przeniesienie wyboru customowego wybierania pokemonów z ustawien AutoGo do panelu który pojawi sie po wybraniu zębatki w lewym górnym selektorze. Poprzedni panel był mało intuicyjny dla nowych graczy
+* Poprawa wybierania skinów, nie blokuje sie juz na arbuzowym
