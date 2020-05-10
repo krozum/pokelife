@@ -1,0 +1,17 @@
+:root {
+    --customStyle-background: #494b50;
+    --customStyle-borders: #73a4f4;
+    --customStyle-tabs: #73a4f4;
+    }
+
+body {	
+    background-color: var(--customStyle-background);	
+}
+
+.panel-primary, .panel-primary>.panel-heading, .awatar, h2, .modal-header {	
+    border-color: var(--customStyle-borders) !important;
+}	
+	
+.plugin-button, .panel-primary>.panel-heading, h2, .modal-header, #goButton, #goAutoButton {	
+    background-color: var(--customStyle-tabs) !important;
+}

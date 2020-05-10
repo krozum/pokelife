@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.10
+// @version      5.12
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -10,7 +10,10 @@
 // @grant        GM_notification
 // @require      https://bug7a.github.io/iconselect.js/sample/lib/control/iconselect.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.5.0/js/md5.min.js
+// @require      https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js
+// @resource     color_picker_CSS  https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css
 // @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=7
+// @resource     customCSS_style_0  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_0.css?ver=1
 // @resource     customCSS_style_1  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_1.css?ver=1
 // @resource     customCSS_style_2  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_2.css?ver=1
 // @resource     customCSS_style_3  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_3.css?ver=1
@@ -427,8 +430,19 @@ function initPokeLifeScript() {
         var globalCSS = GM_getResourceText("customCSS_global");
         GM_addStyle(globalCSS);
 
+        var colorPickerCSS = GM_getResourceText("color_picker_CSS");
+        GM_addStyle(colorPickerCSS);
+
         var newCSS;
-        if (config.skinStyle == 2) {
+        if (config.skinStyle == 0) {
+            newCSS = GM_getResourceText("customCSS_style_0");
+            GM_addStyle(newCSS);
+
+            $(':root').get(0).style.setProperty("--customStyle-background", localStorage.getItem('customStyle.background'));
+            $(':root').get(0).style.setProperty("--customStyle-borders", localStorage.getItem('customStyle.borders'));
+            $(':root').get(0).style.setProperty("--customStyle-tabs", localStorage.getItem('customStyle.tabs'));
+
+        } else if (config.skinStyle == 2) {
             newCSS = GM_getResourceText("customCSS_style_2");
             GM_addStyle(newCSS);
         } else if (config.skinStyle == 3) {
@@ -443,26 +457,136 @@ function initPokeLifeScript() {
             GM_addStyle(newCSS);
         }
 
-        $('body').append('<div id="changeStyle" class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;bottom: 10px;left: 10px;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"></div>');
-        $(document).on('click', '#changeStyle', function() {
-            console.log(config.skinStyle);
-            switch (Number(config.skinStyle)) {
-                case 1:
-                    config.skinStyle = 2;
-                    break;
-                case 2:
+        $('body').append('<div id="changeStyle" class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;bottom: 10px;left: 10px;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"><icon</div>');
+        
+        $(document).on("click", "#changeStyle", function() {
+            if ($('#styleSettings').length > 0) {
+                $('#styleSettings').remove();
+            } else {
+                $('body').append('<div id="styleSettings" style="padding: 10px; position:fixed; bottom: 52px; left: 0px; width: 400px; background: white; opacity: 1; border: 7px solid #d6e9c6; z-index: 9999; font-weight: 600"></div>');
+                $('#styleSettings').append('<div class="row"><div class="col-sm-6 leftRow">Gotowe style:<table></table></div><div class="col-sm-6 rightRow">Kreator styli:<table></table></div></div>');
+
+                $('#styleSettings .leftRow table').append('<tr><td> <div class="stylArbuzowy" style="background-color: #009688; border-radius: 4px; cursor: pointer;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"></div> </td><td style="padding: 10px"> Arbuzowy </td></tr>');
+
+                $(document).on('click', '.stylArbuzowy', function() {
+                    config.skinStyle = 1;
+                    updateConfig(config, function(){location.reload()});
+                });
+
+                $('#styleSettings .leftRow table').append('<tr><td> <div class="stylPatynowy" style="background-color: #74b5b1; border-radius: 4px; cursor: pointer;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"></div> </td><td style="padding: 10px"> Patynowy </td></tr>');
+
+                $(document).on('click', '.stylPatynowy', function() {
                     config.skinStyle = 3;
-                    break;
-                case 3:
+                    updateConfig(config, function(){location.reload()});
+                });
+
+                $('#styleSettings .leftRow table').append('<tr><td> <div class="stylLososiowy" style="background-color: #eb9d8c; border-radius: 4px; cursor: pointer;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"></div> </td><td style="padding: 10px"> Łososiowy </td></tr>');
+
+                $(document).on('click', '.stylLososiowy', function() {
                     config.skinStyle = 4;
-                    break;
-                case 4:
-                    config.skinStyle = 1;
-                    break;
-                default:
-                    config.skinStyle = 1;
+                    updateConfig(config, function(){location.reload()});
+                });
+
+                $('#styleSettings .leftRow table').append('<tr><td> <div class="stylRozowy" style="background-color: #f2cfc9; border-radius: 4px; cursor: pointer;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"></div> </td><td style="padding: 10px"> Wyblakły Róż </td></tr>');
+
+                $(document).on('click', '.stylRozowy', function() {
+                    config.skinStyle = 2;
+                    updateConfig(config, function(){location.reload()});
+                });
+
+                $('#styleSettings .rightRow table').append(`
+                    <tr>
+                        <td> <div id="color-picker" /> </td>
+                        <td style="padding: 10px"> Tło </td>
+                    </tr>`);
+
+                const pickr = Pickr.create({
+                    el: '#color-picker',
+                    theme: 'nano',
+                    default: localStorage.getItem('customStyle.background') || '#42445A',
+                                
+                    components: {
+
+                        preview: true,
+                        opacity: true,
+                        hue: true,
+
+                        interaction: {
+                            input: true,
+                            save: true
+                        }
+                    }
+                });
+
+                pickr.on('save', (color, instance) => {
+                    localStorage.setItem('customStyle.background', color.toHEXA().toString())
+                })
+
+                $('#styleSettings .rightRow table').append(`
+                    <tr>
+                        <td> <div id="color-picker2" /> </td>
+                        <td style="padding: 10px"> Paski </td>
+                    </tr>`);
+
+                const pickr2 = Pickr.create({
+                    el: '#color-picker2',
+                    theme: 'nano',
+                    default: localStorage.getItem('customStyle.tabs') || '#42445A',
+                                
+                    components: {
+
+                        preview: true,
+                        opacity: true,
+                        hue: true,
+
+                        interaction: {
+                            input: true,
+                            save: true
+                        }
+                    }
+                });
+
+                pickr2.on('save', (color, instance) => {
+                    localStorage.setItem('customStyle.tabs', color.toHEXA().toString())
+                })
+
+                $('#styleSettings .rightRow table').append(`
+                    <tr>
+                        <td> <div id="color-picker3" /> </td>
+                        <td style="padding: 10px"> Ramki </td>
+                    </tr>`);
+
+                const pickr3 = Pickr.create({
+                    el: '#color-picker3',
+                    theme: 'nano',
+                    default: localStorage.getItem('customStyle.borders') || '#42445A',
+                                
+                    components: {
+
+                        preview: true,
+                        opacity: true,
+                        hue: true,
+
+                        interaction: {
+                            input: true,
+                            save: true
+                        }
+                    }
+                });
+
+                pickr3.on('save', (color, instance) => {
+                    localStorage.setItem('customStyle.borders', color.toHEXA().toString())
+                })
+
+                $('#styleSettings .rightRow').append(`<div id="confirmCustomStyle" style="height: 30px; width: 136px; margin: 5px 0px; color: #FFF; background-color: #4285f4; border-radius: 4px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: 400"> Zastosuj </div>`);
+            
+                $(document).on('click', '#confirmCustomStyle', function() {
+                    config.skinStyle = 0;
+                    updateConfig(config, function(){location.reload()});
+                });
+            
+            
             }
-            updateConfig(config, function(){location.reload()});
         });
     }
     initSkins();
