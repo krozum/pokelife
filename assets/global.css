@@ -203,10 +203,6 @@ a {
     background-color: #eaeaea;
 }
 	
-.panel-primary, .panel-primary>.panel-heading, .awatar, h2, .modal-header {	
-    border-color: #74b5b1 !important;
-}
-	
 .panel-primary>.panel-body, .osiagniecie {	
    background-color: #ffffff;	
 }
