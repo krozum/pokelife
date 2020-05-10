@@ -152,3 +152,6 @@ Changelog
 * Dodanie premierballi do wyboru pokeballi
 * Przeniesienie wyboru customowego wybierania pokemonów z ustawien AutoGo do panelu który pojawi sie po wybraniu zębatki w lewym górnym selektorze. Poprzedni panel był mało intuicyjny dla nowych graczy
 * Poprawa wybierania skinów, nie blokuje sie juz na arbuzowym
+
+5.14.1 (2020-05-11)
+* Dodanie opcji ustawiania customowych styli
