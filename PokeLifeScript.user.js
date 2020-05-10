@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.12
+// @version      5.13
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -439,8 +439,8 @@ function initPokeLifeScript() {
             GM_addStyle(newCSS);
 
             $(':root').get(0).style.setProperty("--customStyle-background", localStorage.getItem('customStyle.background'));
-            $(':root').get(0).style.setProperty("--customStyle-borders", localStorage.getItem('customStyle.borders'));
             $(':root').get(0).style.setProperty("--customStyle-tabs", localStorage.getItem('customStyle.tabs'));
+            $(':root').get(0).style.setProperty("--customStyle-font", localStorage.getItem('customStyle.font'));
 
         } else if (config.skinStyle == 2) {
             newCSS = GM_getResourceText("customCSS_style_2");
@@ -464,7 +464,7 @@ function initPokeLifeScript() {
                 $('#styleSettings').remove();
             } else {
                 $('body').append('<div id="styleSettings" style="padding: 10px; position:fixed; bottom: 52px; left: 0px; width: 400px; background: white; opacity: 1; border: 7px solid #d6e9c6; z-index: 9999; font-weight: 600"></div>');
-                $('#styleSettings').append('<div class="row"><div class="col-sm-6 leftRow">Gotowe style:<table></table></div><div class="col-sm-6 rightRow">Kreator styli:<table></table></div></div>');
+                $('#styleSettings').append('<div class="row"><div class="col-sm-6 leftRow">Gotowe style:<table></table></div><div class="col-sm-6 rightRow">Własny styl:<table></table></div></div>');
 
                 $('#styleSettings .leftRow table').append('<tr><td> <div class="stylArbuzowy" style="background-color: #009688; border-radius: 4px; cursor: pointer;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"></div> </td><td style="padding: 10px"> Arbuzowy </td></tr>');
 
@@ -503,7 +503,7 @@ function initPokeLifeScript() {
                 const pickr = Pickr.create({
                     el: '#color-picker',
                     theme: 'nano',
-                    default: localStorage.getItem('customStyle.background') || '#42445A',
+                    default: localStorage.getItem('customStyle.background') || '#323232',
                                 
                     components: {
 
@@ -525,13 +525,13 @@ function initPokeLifeScript() {
                 $('#styleSettings .rightRow table').append(`
                     <tr>
                         <td> <div id="color-picker2" /> </td>
-                        <td style="padding: 10px"> Paski </td>
+                        <td style="padding: 10px"> Akcenty </td>
                     </tr>`);
 
                 const pickr2 = Pickr.create({
                     el: '#color-picker2',
                     theme: 'nano',
-                    default: localStorage.getItem('customStyle.tabs') || '#42445A',
+                    default: localStorage.getItem('customStyle.tabs') || '#C6E9D0',
                                 
                     components: {
 
@@ -553,13 +553,13 @@ function initPokeLifeScript() {
                 $('#styleSettings .rightRow table').append(`
                     <tr>
                         <td> <div id="color-picker3" /> </td>
-                        <td style="padding: 10px"> Ramki </td>
+                        <td style="padding: 10px"> Czcionka </td>
                     </tr>`);
 
                 const pickr3 = Pickr.create({
                     el: '#color-picker3',
                     theme: 'nano',
-                    default: localStorage.getItem('customStyle.borders') || '#42445A',
+                    default: localStorage.getItem('customStyle.font') || '#000000',
                                 
                     components: {
 
@@ -575,7 +575,7 @@ function initPokeLifeScript() {
                 });
 
                 pickr3.on('save', (color, instance) => {
-                    localStorage.setItem('customStyle.borders', color.toHEXA().toString())
+                    localStorage.setItem('customStyle.font', color.toHEXA().toString())
                 })
 
                 $('#styleSettings .rightRow').append(`<div id="confirmCustomStyle" style="height: 30px; width: 136px; margin: 5px 0px; color: #FFF; background-color: #4285f4; border-radius: 4px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: 400"> Zastosuj </div>`);
