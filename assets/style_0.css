@@ -1,7 +1,7 @@
 :root {
-    --customStyle-background: #494b50;
-    --customStyle-borders: #73a4f4;
-    --customStyle-tabs: #73a4f4;
+    --customStyle-background: #3c3c3c;
+    --customStyle-font: #000000;
+    --customStyle-tabs: #C6E9D0;
     }
 
 body {	
@@ -9,9 +9,10 @@ body {
 }
 
 .panel-primary, .panel-primary>.panel-heading, .awatar, h2, .modal-header {	
-    border-color: var(--customStyle-borders) !important;
+    border-color: var(--customStyle-tabs) !important;
 }	
 	
 .plugin-button, .panel-primary>.panel-heading, h2, .modal-header, #goButton, #goAutoButton {	
     background-color: var(--customStyle-tabs) !important;
+    color: var(--customStyle-font) !important
 }
