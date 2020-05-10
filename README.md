@@ -146,7 +146,7 @@ Changelog
 * Podświetla wiadomość w momencie w którym ktoś cie w niej oznaczył 
 
 5.10 (2020-05-09)
-* Zmiana z zatrzymywaniem niezłapanych poków, teraz gdy ta opcja jest włączona będzie zatrzymywał sie przy pokach do 75lvl, minus jest taki ze jak ktos nie ma osiągnięcia zwiększającego max lvl złapanych poków z 50 do 75 to zatrzyma mu sie na pokach których nie będzie mógł jeszcze złapać.
+* Dodanie opcji wyboru lvl poków do którego ma łapać, zwiazane z nowym osiągnięciem
 * Dodanie minimalistycznego przypomnienia o opiece, gdy sie jeszcze nie odbyło jej w statystykach będzie zaznaczona na czerwono informacja z wykrzyknikiem
 * Dodanie informacji o kończącym sie repelu. W sidebar gdy zosatnie poniżej 200 wypraw na repelu/tepelu zacznie powoli podświetlać sie na czerwono ilośc pozostałych wypraw
 * Dodanie premierballi do wyboru pokeballi

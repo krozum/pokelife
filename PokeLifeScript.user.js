@@ -1021,7 +1021,7 @@ function initPokeLifeScript() {
                         document.title = "Spotkany shiny pokemon";
                         $('#refreshShinyWidget').trigger('click');
                         requestDomain("pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time=" + Date.now(), null);
-                    } else if ($('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= 75) {
+                    } else if ($('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= config.maxLapanyLvl) {
                         if (config.zatrzymujNiezlapane == false || config.zatrzymujNiezlapane == "false") {
                             console.log('PokeLifeScript: spotkany niezłapany pokemona');
                             console.log('PokeLifeScript: atakuje pokemona');
@@ -1099,7 +1099,8 @@ function initPokeLifeScript() {
                 $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="zatrzymujNiezlapane" name="zatrzymujNiezlapane" value="1" ' + ((config.zatrzymujNiezlapane == "true" || config.zatrzymujNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Zatrzymuj gdy spotkasz niezłapane pokemony</label></td> </tr></tbody></table>');
                 $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 30px;" src="images/pokesklep/safariballe.jpg"></td><td><input type="checkbox" id="lapSafariballemNiezlapane" name="lapSafariballemNiezlapane" value="1" ' + ((config.lapSafariballemNiezlapane == "true" || config.lapSafariballemNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Łap safariballem tylko niezłapane pokemony</label></td> </tr></tbody></table>');
                 $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" ' + ((config.useOnlyInNight == "true" || config.useOnlyInNight == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td></td><td><select id="switchWidgetOrder"><option value="1" ' + (config.kolejnoscWidgetow == 1 ? 'selected' : '') + '>Zadania - Drużyna</option><option value="2" ' + (config.kolejnoscWidgetow == 2 ? 'selected' : '') +  '>Drużyna - Zadania</option><select></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Maxymalny łapany lvl: </b><input style="width: 50px" id="changeMaxLapanyLvl" type="number" value="' + config.maxLapanyLvl + '"></p></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Kolejność widgetów: </b><select id="switchWidgetOrder"><option value="1" ' + (config.kolejnoscWidgetow == 1 ? 'selected' : '') + '>Zadania - Drużyna</option><option value="2" ' + (config.kolejnoscWidgetow == 2 ? 'selected' : '') +  '>Drużyna - Zadania</option><select></p></td> </tr>');
             }
         });
 
@@ -1108,6 +1109,12 @@ function initPokeLifeScript() {
             updateConfig(config);
             $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
         })
+
+        $(document).on("change", "#changeMaxLapanyLvl", function(event) {
+            config.maxLapanyLvl = $(this).val();
+            updateConfig(config);
+        })
+
 
         $(document).on("change", ".list_of_poks_in_team", function(event) {
             var orderId = $(this).data('order-id');
@@ -1206,7 +1213,7 @@ function initPokeLifeScript() {
                 if ($('input:focus').length == 0 && $('textarea:focus').length == 0 && $('#glowne_okno .panel-heading').length == 0) {
                     e.preventDefault();
                     click();
-                } else if ($('input:focus').length == 0 && $('textarea:focus').length == 0 && $('#glowne_okno .panel-heading').html() !== "Poczta" && !$('#glowne_okno .panel-heading').html().startsWith("Stowarzyszenie")) {
+                } else if ($('input:focus').length == 0 && $('textarea:focus').length == 0 && $('#glowne_okno .panel-heading').html() !== "Poczta" && !$('#glowne_okno .panel-heading').text().trim().startsWith("Stowarzyszenie")) {
                     e.preventDefault();
                     click();
                 }
@@ -2982,6 +2989,9 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
 
     if(data.user != null && data.user.config != ""){
         config = JSON.parse(data.user.config);
+        if(config.maxLapanyLvl == undefined){
+            config.maxLapanyLvl = 50;
+        }
     } else {
         config.skinStyle = 3;
         config.skipTutorial = false;
@@ -3006,6 +3016,7 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
         config.pok80 = 0;
         config.pok100 = 0;
         config.kolejnoscWidgetow = 1;
+        config.maxLapanyLvl = 50;
         updateConfig(config);
     }
 
