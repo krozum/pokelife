@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.14.1
+// @version      5.14.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -463,7 +463,7 @@ function initPokeLifeScript() {
         }
 
         $('body').append('<div id="changeStyle" class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;bottom: 10px;left: 10px;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"><icon</div>');
-        
+
         $(document).on("click", "#changeStyle", function() {
             if ($('#styleSettings').length > 0) {
                 $('#styleSettings').remove();
@@ -509,7 +509,7 @@ function initPokeLifeScript() {
                     el: '#color-picker',
                     theme: 'nano',
                     default: config.customStyleBackground,
-                                
+
                     components: {
 
                         preview: true,
@@ -538,7 +538,7 @@ function initPokeLifeScript() {
                     el: '#color-picker2',
                     theme: 'nano',
                     default: config.customStyleTabs,
-                                
+
                     components: {
 
                         preview: true,
@@ -567,7 +567,7 @@ function initPokeLifeScript() {
                     el: '#color-picker3',
                     theme: 'nano',
                     default: config.customStyleFont,
-                                
+
                     components: {
 
                         preview: true,
@@ -587,13 +587,13 @@ function initPokeLifeScript() {
                 })
 
                 $('#styleSettings .rightRow').append(`<div id="confirmCustomStyle" style="height: 30px; width: 136px; margin: 5px 0px; color: #FFF; background-color: #4285f4; border-radius: 4px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: 400"> Zastosuj </div>`);
-            
+
                 $(document).on('click', '#confirmCustomStyle', function() {
                     config.skinStyle = 0;
                     updateConfig(config, function(){location.reload()});
                 });
-            
-            
+
+
             }
         });
     }
@@ -2997,7 +2997,7 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
 
     if(data.user != null && data.user.config != ""){
         config = JSON.parse(data.user.config);
-        if(config.customStyleBorders == undefined){
+        if(config.customStyleBackground == undefined){
             config.customStyleBackground = "#3c3c3c";
             config.customStyleTabs = "#C6E9D0";
             updateConfig(config);
