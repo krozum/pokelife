@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.13
+// @version      5.14
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -444,8 +444,8 @@ function initPokeLifeScript() {
             GM_addStyle(newCSS);
 
             $(':root').get(0).style.setProperty("--customStyle-background", config.customStyleBackground);
-            $(':root').get(0).style.setProperty("--customStyle-borders", config.customStyleBorders);
             $(':root').get(0).style.setProperty("--customStyle-tabs", config.customStyleTabs);
+            $(':root').get(0).style.setProperty("--customStyle-font", config.customStyleFont);
 
         } else if (config.skinStyle == 2) {
             newCSS = GM_getResourceText("customCSS_style_2");
@@ -560,13 +560,13 @@ function initPokeLifeScript() {
                 $('#styleSettings .rightRow table').append(`
                     <tr>
                         <td> <div id="color-picker3" /> </td>
-                        <td style="padding: 10px"> Ramki </td>
+                        <td style="padding: 10px"> Czcionka </td>
                     </tr>`);
 
                 const pickr3 = Pickr.create({
                     el: '#color-picker3',
                     theme: 'nano',
-                    default: config.customStyleBorders,
+                    default: config.customStyleFont,
                                 
                     components: {
 
@@ -582,7 +582,7 @@ function initPokeLifeScript() {
                 });
 
                 pickr3.on('save', (color, instance) => {
-                    config.customStyleBorders = color.toHEXA().toString();
+                    config.customStyleFont = color.toHEXA().toString();
                     updateConfig(config);
                 })
 
@@ -2999,8 +2999,11 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
         config = JSON.parse(data.user.config);
         if(config.customStyleBorders == undefined){
             config.customStyleBackground = "#3c3c3c";
-            config.customStyleBorders = "#3c3c3c";
-            config.customStyleTabs = "#3c3c3c";
+            config.customStyleTabs = "#C6E9D0";
+            updateConfig(config);
+        }
+        if(config.customStyleFont == undefined){
+            config.customStyleFont = "#000000";
             updateConfig(config);
         }
         if(config.maxLapanyLvl == undefined){
