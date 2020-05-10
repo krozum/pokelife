@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.12
+// @version      5.13
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -44,6 +44,11 @@ var domain = "https://bra2ns.pl/"
 // funkcja do zapisu do bazy
 //
 // **********************
+function requestDomainPost(url, data, callback) {
+    $.post(domain + url, {config: data}, function(result){
+        callback == null ? "" : callback(result)
+    })
+}
 function requestDomain(url, callback) {
     $.ajax(domain + url)
         .done(data => callback == null ? "" : callback(data))
@@ -57,7 +62,7 @@ function updateConfig(config, callback){
     console.log("------------");
     console.log(config);
     console.log("------------");
-    requestDomain("pokelife/api/update_config.php?config=" + JSON.stringify(config) + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim(), callback != undefined ? function(){ callback.call()} : null);
+    requestDomainPost("pokelife/api/update_config_post.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim(), JSON.stringify(config), callback != undefined ? function(){ callback.call()} : null);
 }
 
 
@@ -438,9 +443,9 @@ function initPokeLifeScript() {
             newCSS = GM_getResourceText("customCSS_style_0");
             GM_addStyle(newCSS);
 
-            $(':root').get(0).style.setProperty("--customStyle-background", localStorage.getItem('customStyle.background'));
-            $(':root').get(0).style.setProperty("--customStyle-borders", localStorage.getItem('customStyle.borders'));
-            $(':root').get(0).style.setProperty("--customStyle-tabs", localStorage.getItem('customStyle.tabs'));
+            $(':root').get(0).style.setProperty("--customStyle-background", config.customStyleBackground);
+            $(':root').get(0).style.setProperty("--customStyle-borders", config.customStyleBorders);
+            $(':root').get(0).style.setProperty("--customStyle-tabs", config.customStyleTabs);
 
         } else if (config.skinStyle == 2) {
             newCSS = GM_getResourceText("customCSS_style_2");
@@ -503,7 +508,7 @@ function initPokeLifeScript() {
                 const pickr = Pickr.create({
                     el: '#color-picker',
                     theme: 'nano',
-                    default: localStorage.getItem('customStyle.background') || '#42445A',
+                    default: config.customStyleBackground,
                                 
                     components: {
 
@@ -519,7 +524,8 @@ function initPokeLifeScript() {
                 });
 
                 pickr.on('save', (color, instance) => {
-                    localStorage.setItem('customStyle.background', color.toHEXA().toString())
+                    config.customStyleBackground = color.toHEXA().toString();
+                    updateConfig(config);
                 })
 
                 $('#styleSettings .rightRow table').append(`
@@ -531,7 +537,7 @@ function initPokeLifeScript() {
                 const pickr2 = Pickr.create({
                     el: '#color-picker2',
                     theme: 'nano',
-                    default: localStorage.getItem('customStyle.tabs') || '#42445A',
+                    default: config.customStyleTabs,
                                 
                     components: {
 
@@ -547,7 +553,8 @@ function initPokeLifeScript() {
                 });
 
                 pickr2.on('save', (color, instance) => {
-                    localStorage.setItem('customStyle.tabs', color.toHEXA().toString())
+                    config.customStyleTabs = color.toHEXA().toString();
+                    updateConfig(config);
                 })
 
                 $('#styleSettings .rightRow table').append(`
@@ -559,7 +566,7 @@ function initPokeLifeScript() {
                 const pickr3 = Pickr.create({
                     el: '#color-picker3',
                     theme: 'nano',
-                    default: localStorage.getItem('customStyle.borders') || '#42445A',
+                    default: config.customStyleBorders,
                                 
                     components: {
 
@@ -575,7 +582,8 @@ function initPokeLifeScript() {
                 });
 
                 pickr3.on('save', (color, instance) => {
-                    localStorage.setItem('customStyle.borders', color.toHEXA().toString())
+                    config.customStyleBorders = color.toHEXA().toString();
+                    updateConfig(config);
                 })
 
                 $('#styleSettings .rightRow').append(`<div id="confirmCustomStyle" style="height: 30px; width: 136px; margin: 5px 0px; color: #FFF; background-color: #4285f4; border-radius: 4px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: 400"> Zastosuj </div>`);
@@ -2877,7 +2885,6 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
                     var name = $(item).find('a').data('original-title').split('Wyprawa: ')[1];
 
                     $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce='+url+'"]', function(){
-                        console.log('aa');
                         var html = '<div class="row" id="opis'+name.replace(/[ ]/g, '')+'" style="z-index: 999; width: 600px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">';
                         var wszystkie = true;
 
@@ -2984,13 +2991,21 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
 }).done(function (data) {
     console.log(data);
 
-
-    window.localStorage.falseLogin = data.user.false_login;
+    if(data.user != null){
+        window.localStorage.falseLogin = data.user.false_login;
+    }
 
     if(data.user != null && data.user.config != ""){
         config = JSON.parse(data.user.config);
+        if(config.customStyleBorders == undefined){
+            config.customStyleBackground = "#3c3c3c";
+            config.customStyleBorders = "#3c3c3c";
+            config.customStyleTabs = "#3c3c3c";
+            updateConfig(config);
+        }
         if(config.maxLapanyLvl == undefined){
             config.maxLapanyLvl = 50;
+            updateConfig(config);
         }
     } else {
         config.skinStyle = 3;
@@ -3017,6 +3032,9 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
         config.pok100 = 0;
         config.kolejnoscWidgetow = 1;
         config.maxLapanyLvl = 50;
+        config.customStyleBackground = "#3c3c3c";
+        config.customStyleBorders = "#3c3c3c";
+        config.customStyleTabs = "#3c3c3c";
         updateConfig(config);
     }
 
