@@ -26,6 +26,8 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.14.3 (2020-05-13)
+* Dodanie nowego stylu, nowy sposób zapisywania gotowych styli
 
 5.14.1 (2020-05-11)
 * Dodanie opcji ustawiania customowych styli
