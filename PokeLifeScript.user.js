@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.14.2
+// @version      5.14.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -36,6 +36,7 @@ var region;
 var lastSeeShoutId;
 var timeoutMin = 300;
 var timeoutMax = 400;
+var styles = [];
 var domain = "https://bra2ns.pl/"
 
 
@@ -438,31 +439,28 @@ function initPokeLifeScript() {
         var colorPickerCSS = GM_getResourceText("color_picker_CSS");
         GM_addStyle(colorPickerCSS);
 
-        var newCSS;
-        if (config.skinStyle == 0) {
-            newCSS = GM_getResourceText("customCSS_style_0");
-            GM_addStyle(newCSS);
+        var newCSS = GM_getResourceText("customCSS_style_0");
+        GM_addStyle(newCSS);
 
+        if (config.skinStyle == 0) {
             $(':root').get(0).style.setProperty("--customStyle-background", config.customStyleBackground);
             $(':root').get(0).style.setProperty("--customStyle-tabs", config.customStyleTabs);
             $(':root').get(0).style.setProperty("--customStyle-font", config.customStyleFont);
-
-        } else if (config.skinStyle == 2) {
-            newCSS = GM_getResourceText("customCSS_style_2");
-            GM_addStyle(newCSS);
-        } else if (config.skinStyle == 3) {
-            newCSS = GM_getResourceText("customCSS_style_3");
-            GM_addStyle(newCSS);
-        } else if (config.skinStyle == 4) {
-            newCSS = GM_getResourceText("customCSS_style_4");
-            GM_addStyle(newCSS);
         } else {
-            config.skinStyle = 1;
-            newCSS = GM_getResourceText("customCSS_style_1");
-            GM_addStyle(newCSS);
+            var style = styles[config.skinStyle - 1];
+            $(':root').get(0).style.setProperty("--customStyle-background", style.bg);
+            $(':root').get(0).style.setProperty("--customStyle-tabs", style.tabs);
+            $(':root').get(0).style.setProperty("--customStyle-font", style.font);
         }
 
+        console.log(styles);
+
         $('body').append('<div id="changeStyle" class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;bottom: 10px;left: 10px;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"><icon</div>');
+
+        $(document).on('click', '.changeStyleTo', function() {
+            config.skinStyle = $(this).data('id');
+            updateConfig(config, function(){location.reload()});
+        });
 
         $(document).on("click", "#changeStyle", function() {
             if ($('#styleSettings').length > 0) {
@@ -471,32 +469,8 @@ function initPokeLifeScript() {
                 $('body').append('<div id="styleSettings" style="padding: 10px; position:fixed; bottom: 52px; left: 0px; width: 400px; background: white; opacity: 1; border: 7px solid #d6e9c6; z-index: 9999; font-weight: 600"></div>');
                 $('#styleSettings').append('<div class="row"><div class="col-sm-6 leftRow">Gotowe style:<table></table></div><div class="col-sm-6 rightRow">Kreator styli:<table></table></div></div>');
 
-                $('#styleSettings .leftRow table').append('<tr><td> <div class="stylArbuzowy" style="background-color: #009688; border-radius: 4px; cursor: pointer;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"></div> </td><td style="padding: 10px"> Arbuzowy </td></tr>');
-
-                $(document).on('click', '.stylArbuzowy', function() {
-                    config.skinStyle = 1;
-                    updateConfig(config, function(){location.reload()});
-                });
-
-                $('#styleSettings .leftRow table').append('<tr><td> <div class="stylPatynowy" style="background-color: #74b5b1; border-radius: 4px; cursor: pointer;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"></div> </td><td style="padding: 10px"> Patynowy </td></tr>');
-
-                $(document).on('click', '.stylPatynowy', function() {
-                    config.skinStyle = 3;
-                    updateConfig(config, function(){location.reload()});
-                });
-
-                $('#styleSettings .leftRow table').append('<tr><td> <div class="stylLososiowy" style="background-color: #eb9d8c; border-radius: 4px; cursor: pointer;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"></div> </td><td style="padding: 10px"> Łososiowy </td></tr>');
-
-                $(document).on('click', '.stylLososiowy', function() {
-                    config.skinStyle = 4;
-                    updateConfig(config, function(){location.reload()});
-                });
-
-                $('#styleSettings .leftRow table').append('<tr><td> <div class="stylRozowy" style="background-color: #f2cfc9; border-radius: 4px; cursor: pointer;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"></div> </td><td style="padding: 10px"> Wyblakły Róż </td></tr>');
-
-                $(document).on('click', '.stylRozowy', function() {
-                    config.skinStyle = 2;
-                    updateConfig(config, function(){location.reload()});
+                $.each(styles, function( key, value ) {
+                    $('#styleSettings .leftRow table').append('<tr><td> <div class="changeStyleTo" data-id="' + value.style_id + '" style="background:linear-gradient(90deg, ' + value.bg + ' 50%, ' + value.tabs + ' 50%); border-radius: 4px; cursor: pointer;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"></div> </td><td style="padding: 10px"> ' + value.nazwa + ' </td></tr>');
                 });
 
                 $('#styleSettings .rightRow table').append(`
@@ -2990,6 +2964,8 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
     format: "json"
 }).done(function (data) {
     console.log(data);
+
+    styles = data.styles;
 
     if(data.user != null){
         window.localStorage.falseLogin = data.user.false_login;
