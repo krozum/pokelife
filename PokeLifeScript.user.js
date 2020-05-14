@@ -502,6 +502,14 @@ function initPokeLifeScript() {
                     updateConfig(config);
                 })
 
+                pickr.on('change', (color, instance) => {
+                    $(':root').get(0).style.setProperty("--customStyle-background", color.toHEXA().toString());
+                })
+
+                pickr.on('hide', (color, instance) => {
+                    $(':root').get(0).style.setProperty("--customStyle-background", config.customStyleBackground);
+                })
+
                 $('#styleSettings .rightRow table').append(`
                     <tr>
                         <td> <div id="color-picker2" /> </td>
@@ -531,6 +539,14 @@ function initPokeLifeScript() {
                     updateConfig(config);
                 })
 
+                pickr2.on('change', (color, instance) => {
+                    $(':root').get(0).style.setProperty("--customStyle-tabs", color.toHEXA().toString());
+                })
+
+                pickr2.on('hide', (color, instance) => {
+                    $(':root').get(0).style.setProperty("--customStyle-tabs", config.customStyleTabs);
+                })
+
                 $('#styleSettings .rightRow table').append(`
                     <tr>
                         <td> <div id="color-picker3" /> </td>
@@ -558,6 +574,14 @@ function initPokeLifeScript() {
                 pickr3.on('save', (color, instance) => {
                     config.customStyleFont = color.toHEXA().toString();
                     updateConfig(config);
+                })
+
+                pickr3.on('change', (color, instance) => {
+                    $(':root').get(0).style.setProperty("--customStyle-font", color.toHEXA().toString());
+                })
+
+                pickr3.on('hide', (color, instance) => {
+                    $(':root').get(0).style.setProperty("--customStyle-font", config.customStyleFont);
                 })
 
                 $('#styleSettings .rightRow').append(`<div id="confirmCustomStyle" style="height: 30px; width: 136px; margin: 5px 0px; color: #FFF; background-color: #4285f4; border-radius: 4px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: 400"> Zastosuj </div>`);
