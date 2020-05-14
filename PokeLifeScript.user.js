@@ -507,7 +507,11 @@ function initPokeLifeScript() {
                 })
 
                 pickr.on('hide', (color, instance) => {
-                    $(':root').get(0).style.setProperty("--customStyle-background", config.customStyleBackground);
+                    if (config.skinStyle == 0) {
+                        $(':root').get(0).style.setProperty("--customStyle-background", config.customStyleBackground);
+                    } else {
+                        $(':root').get(0).style.setProperty("--customStyle-background", style.bg);
+                    }
                 })
 
                 $('#styleSettings .rightRow table').append(`
@@ -544,7 +548,11 @@ function initPokeLifeScript() {
                 })
 
                 pickr2.on('hide', (color, instance) => {
-                    $(':root').get(0).style.setProperty("--customStyle-tabs", config.customStyleTabs);
+                    if (config.skinStyle == 0) {
+                        $(':root').get(0).style.setProperty("--customStyle-tabs", config.customStyleTabs);
+                    } else {
+                        $(':root').get(0).style.setProperty("--customStyle-tabs", style.tabs);
+                    }
                 })
 
                 $('#styleSettings .rightRow table').append(`
@@ -581,7 +589,11 @@ function initPokeLifeScript() {
                 })
 
                 pickr3.on('hide', (color, instance) => {
-                    $(':root').get(0).style.setProperty("--customStyle-font", config.customStyleFont);
+                    if (config.skinStyle == 0) {
+                        $(':root').get(0).style.setProperty("--customStyle-font", config.customStyleFont);
+                    } else {
+                        $(':root').get(0).style.setProperty("--customStyle-font", style.font);
+                    }
                 })
 
                 $('#styleSettings .rightRow').append(`<div id="confirmCustomStyle" style="height: 30px; width: 136px; margin: 5px 0px; color: #FFF; background-color: #4285f4; border-radius: 4px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: 400"> Zastosuj </div>`);
