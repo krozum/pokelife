@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.14.5
+// @version      5.15
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1479,7 +1479,7 @@ function initPokeLifeScript() {
                                                 if ($('.thumbnail-plecak img[src="images/pokesklep/duzy_napoj_energetyczny.jpg"]').length > 0) {
                                                     window.setTimeout(function() {
                                                         if (autoGo) {
-                                                            reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=duzy_napoj_energetyczny&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=1", function() {
+                                                            reloadMain("#glowne_okno", "gra/plecak.php?uzyj&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=duzy_napoj_energetyczny&postData%5B1%5D%5Bname%5D=napewno&postData%5B1%5D%5Bvalue%5D=1&postData%5B2%5D%5Bname%5D=ilosc&postData%5B2%5D%5Bvalue%5D=1", function() {
                                                                 $('#goAutoButton').html('STOP');
                                                                 console.log('Przywrócono PA');
                                                                 window.setTimeout(function() {
@@ -1489,7 +1489,6 @@ function initPokeLifeScript() {
                                                                     }
                                                                 }, 1000);
                                                             });
-
                                                         }
                                                     }, 1000);
                                                 } else {
@@ -2459,13 +2458,13 @@ function initPokeLifeScript() {
         }
 
         onReloadSidebar(function() {
-            if (hodowlaPokemonDniaStowarzyszenieImage != undefined || hodowlaPokemonDniaStowarzyszenieImage != "undefined") {
-                this.find('button[href="raport.php"]').parent().prepend('<img class="btn-akcja" href="hodowla.php?wszystkie&pokemon_dnia" src="https://gra.pokelife.pl/' + hodowlaPokemonDniaStowarzyszenieImage + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokemon Dnia Stowarzyszenia" style="cursor: pointer; width: 50px;margin-left: 10px; float: left; ">');
+            if (hodowlaPokemonDniaImage !== undefined) {
+                this.find('button[href="raport.php"]').parent().prepend('<img class="btn-akcja" href="hodowla.php?wszystkie&pokemon_dnia" src="https://gra.pokelife.pl/' + hodowlaPokemonDniaImage + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokemon Dnia" style="cursor: pointer; width: 50px;margin-left: 10px; float: left; ">');
                 this.find('button[href="raport.php"]').parent().css('margin-top', '10px').css('padding-right', '10px');
                 $('[data-toggle="tooltip"]').tooltip();
             }
-            if (hodowlaPokemonDniaImage != undefined) {
-                this.find('button[href="raport.php"]').parent().prepend('<img class="btn-akcja" href="hodowla.php?wszystkie&pokemon_dnia_stow"" src="https://gra.pokelife.pl/' + hodowlaPokemonDniaImage + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokemon Dnia" style="cursor: pointer; width: 50px;margin-left: 10px; float: left; ">');
+            if (hodowlaPokemonDniaStowarzyszenieImage !== undefined && hodowlaPokemonDniaStowarzyszenieImage !== "undefined") {
+                this.find('button[href="raport.php"]').parent().prepend('<img class="btn-akcja" href="hodowla.php?wszystkie&pokemon_dnia_stow"" src="https://gra.pokelife.pl/' + hodowlaPokemonDniaStowarzyszenieImage + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokemon Dnia Stowarzyszenia" style="cursor: pointer; width: 50px;margin-left: 10px; float: left; ">');
                 this.find('button[href="raport.php"]').parent().css('margin-top', '10px').css('padding-right', '10px');
                 $('[data-toggle="tooltip"]').tooltip();
             }
@@ -2841,8 +2840,48 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         if (window.localStorage.kolekcjaDnia == undefined) {
             window.localStorage.kolekcjaDnia = "";
         }
-
         var login = $('#wyloguj').parent().parent().html().split("<div")[0].trim();
+
+        onReloadMain(function() {
+            if (this.find('.panel-heading').html() === "Kolekcja") {
+                kolekcjaData.data = today;
+                kolekcjaData.login = login;
+
+                kolekcjaData.kanto = new Object();
+                this.find('#kolekcja-1 div').each(function(index, value){
+                    kolekcjaData.kanto[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                })
+
+                kolekcjaData.johto = new Object();
+                this.find('#kolekcja-2 div').each(function(index, value){
+                    kolekcjaData.johto[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                })
+
+                kolekcjaData.hoenn = new Object();
+                this.find('#kolekcja-3 div').each(function(index, value){
+                    kolekcjaData.hoenn[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                })
+
+                kolekcjaData.sinnoh = new Object();
+                this.find('#kolekcja-4 div').each(function(index, value){
+                    kolekcjaData.sinnoh[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                })
+
+                kolekcjaData.unova = new Object();
+                this.find('#kolekcja-5 div').each(function(index, value){
+                    kolekcjaData.unova[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                })
+
+                kolekcjaData.kalos = new Object();
+                this.find('#kolekcja-6 div').each(function(index, value){
+                    kolekcjaData.kalos[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                })
+                window.localStorage.kolekcjaDnia = JSON.stringify(kolekcjaData);
+                console.log("Reloaded");
+                initPasek();
+            }
+        })
+
         if (!window.localStorage.kolekcjaDnia.includes(today) || !window.localStorage.kolekcjaDnia.includes(login)) {
             $.get('gra/kolekcja.php', function( data ) {
                 kolekcjaData.data = today;
@@ -2894,20 +2933,25 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
                     var url = $(item).find('a').attr('href').split('miejsce=')[1];
                     var name = $(item).find('a').data('original-title').split('Wyprawa: ')[1];
 
+                    if(name == 'Miasto'){
+                        name = 'Opuszczone Miasto';
+                    }
+                    if(name == 'laka'){
+                        name = 'Łąka';
+                    }
+                    if(name == 'wybrzeze'){
+                        name = 'Wybrzeże';
+                    }
+                    if(name == 'gory'){
+                        name = 'Góry';
+                    }
+
+                    $(document).off('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce='+url+'"]');
                     $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce='+url+'"]', function(){
                         var html = '<div class="row" id="opis'+name.replace(/[ ]/g, '')+'" style="z-index: 999; width: 600px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">';
                         var wszystkie = true;
 
                         $.each(pokemonData[region], function(index, value) {
-                            if(name == 'laka'){
-                                name = 'Łąka';
-                            }
-                            if(name == 'wybrzeze'){
-                                name = 'Wybrzeże';
-                            }
-                            if(name == 'gory'){
-                                name = 'Góry';
-                            }
                             if(value.wystepowanie == name && value.do_zlapania == 1 && kolekcjaData[region][value.id] == false){
                                 wszystkie = false;
                                 html = html + '<div class="col-xs-2" style="display: inline; float: left; padding: 0; margin-top: 5px; text-align: center;"><img style="margin-bottom: 5px; text-align: center; max-width: 80%;" src="https://gra.pokelife.pl/pokemony/niezdobyte/'+value.id+'.png"><p style="margin: 0; margin-top: 5px; margin-bottom: 5px">'+value.name+'</p></div>';
