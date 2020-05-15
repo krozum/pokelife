@@ -26,6 +26,11 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.15 (2020-05-15)
+* Poprawka do czerwonych napojów aby działały gdy jest mniej niz 850PA
+* Dodanie przeładowania opisu dziczy po wejściu na kolekcje
+* Od teraz zmiana kolorów w kreatorze styli jest widoczna od razu na stronie, a zapisuje sie dopiero po save
+
 5.14.3 (2020-05-13)
 * Dodanie nowego stylu, nowy sposób zapisywania gotowych styli
 
