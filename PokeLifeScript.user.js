@@ -474,10 +474,10 @@ function initPokeLifeScript() {
                 });
 
                 $('#styleSettings .rightRow table').append(`
-                    <tr>
-                        <td> <div id="color-picker" /> </td>
-                        <td style="padding: 10px"> Tło </td>
-                    </tr>`);
+<tr>
+<td> <div id="color-picker" /> </td>
+<td style="padding: 10px"> Tło </td>
+</tr>`);
 
                 const pickr = Pickr.create({
                     el: '#color-picker',
@@ -515,10 +515,10 @@ function initPokeLifeScript() {
                 })
 
                 $('#styleSettings .rightRow table').append(`
-                    <tr>
-                        <td> <div id="color-picker2" /> </td>
-                        <td style="padding: 10px"> Paski </td>
-                    </tr>`);
+<tr>
+<td> <div id="color-picker2" /> </td>
+<td style="padding: 10px"> Paski </td>
+</tr>`);
 
                 const pickr2 = Pickr.create({
                     el: '#color-picker2',
@@ -556,10 +556,10 @@ function initPokeLifeScript() {
                 })
 
                 $('#styleSettings .rightRow table').append(`
-                    <tr>
-                        <td> <div id="color-picker3" /> </td>
-                        <td style="padding: 10px"> Czcionka </td>
-                    </tr>`);
+<tr>
+<td> <div id="color-picker3" /> </td>
+<td style="padding: 10px"> Czcionka </td>
+</tr>`);
 
                 const pickr3 = Pickr.create({
                     el: '#color-picker3',
@@ -1095,45 +1095,6 @@ function initPokeLifeScript() {
             }
         }
 
-        $(document).on("click", "#goSettingsAutoGo", function() {
-            if ($('#settingsAutoGo').length > 0) {
-                $('#settingsAutoGo').remove();
-            } else {
-                $('body').append('<div id="settingsAutoGo" style="padding: 10px; position:fixed;top: 60px;right: 69px;width: 880px;background: white;opacity: 1;border: 7px solid #d6e9c6;z-index: 999;"></div>');
-                $('#settingsAutoGo').append('<div class="row"><div class="col-sm-6 wznawianieSettings"><table> <tr> <th></th> <th></th> <th></th> </tr></table></div></div>');
-                $('#settingsAutoGo .wznawianieSettings table').append('<col width="60"><col width="20"><col width="340">');
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" ' + ((config.useCzerwoneNapoje == "true" || config.useCzerwoneNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych napojów gdy zabraknie PA</label></td> </tr>');
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/zielony_napoj.jpg"></td><td><input type="checkbox" id="autoUseZieloneNapoje" name="autoUseZieloneNapoje" value="1" ' + ((config.useZieloneNapoje == "true" || config.useZieloneNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj zielonych napojów gdy zabraknie PA</label></td> </tr>');
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieNapoje" name="autoUseNiebieskieNapoje" value="1" ' + ((config.useNiebieskieNapoje == "true" || config.useNiebieskieNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj niebieskich napojów gdy zabraknie PA <span style="font-size: 9px">(niebieskie eventowe + niebieskie)</span></label></td> </tr>');
-
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAMAAACahl6sAAAAHlBMVEX4+PgwMDBYwNCYmJiA6PjIyMho0OBYWFjQ+PhIsMBk4eMZAAACB0lEQVR4nO3d3Y6CMBCGYZfK3/3f8CYwHHxktmkXsVN93zNZSebRBFgEfTyIiIiIiIiIiD6rcS95ja2HqynNWz9ec+vhagISLSDR6hgyermb32R/bD3xH+mrnp3SnvOuySoDEi0g0eoRUrClXdwVl60xCmScvb1dbo1FsUBeHBAgN/U5kH2cWcuuEQWS5LVPBWtkD+OBXA4IkJsCEgZiO72SEx7Z0UXQ4nQQECA3BQTITR0Q6ThDkhvdju31YckO6F5IUkkJxF58eQQECBAgbSA5QY4FBAgQIEBeDzkd78rStG7ZshbXblyFHAuHrdX2kkCAAAESFWKtBrGn2PrRICbYdxWrfkJqAs3emBZn44EAAQLkH5ChOeRp5SDaSTBtAQECBMibINPumLqHDDZdAcQVTECAAAECpApis56O5hViIz+lyQsIECBAgBRCbOdwvvclI4gK2Wf1ITYeECBAgMSB2LZ1WJ2G/d7upQvIcR7I/ScDCBAgQKJCdC5btvQI0RYJCBAgQIAAAQIECJDvgQy5gAABAgTIBYieDpoqIFLDS8qBAAECpC+Iez9LPaT9DZVAgAAB0gnEsotQ1FMC0dsSG36dyAHx3pgSiH4BOBAgQIC8KftJgdOlgElyLxPUS7f9X1dpkH41dklBf3QLSLSAROtjIGN1YTa4RERERERERERERBS1XxA3rOR3FFuIAAAAAElFTkSuQmCC"></td><td><input type="checkbox" id="autoUseEventoweNapoje" name="autoUseEventoweNapoje" value="1" ' + ((config.useEventoweNapoje == "true" || config.useEventoweNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj eventowych napojów gdy zabraknie PA <span style="font-size: 9px">(te z przycisku w statystykach)</span></label></td> </tr>');
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/niebieskie_jagody.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieJagody" name="autoUseNiebieskieJagody" value="1" ' + ((config.useNiebieskieJagody == "true" || config.useNiebieskieJagody == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj niebieskich jagód gdy zabraknie PA</label></td> </tr>');
-
-                $('#settingsAutoGo .wznawianieSettings').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Eventowe napoje</b> -> <b>Niebieskie napoje</b> -> <b>Zielone napoje</b> -> <b>Czerwone napoje</b></p>');
-
-                $('#settingsAutoGo .row').append('<div class="col-sm-6 dziczSettings"><table> <tr> <th></th> <th></th> <th></th> </tr></table></div>');
-                $('#settingsAutoGo .dziczSettings table').append('<col width="60"><col width="20"><col width="340">');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/czerwone_jagody.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneJagody" name="autoUseCzerwoneJagody" value="1" ' + ((config.useCzerwoneJagody == "true" || config.useCzerwoneJagody == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych jagód do leczenia</label></td> </tr>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="zatrzymujNiezlapane" name="zatrzymujNiezlapane" value="1" ' + ((config.zatrzymujNiezlapane == "true" || config.zatrzymujNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Zatrzymuj gdy spotkasz niezłapane pokemony</label></td> </tr></tbody></table>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 30px;" src="images/pokesklep/safariballe.jpg"></td><td><input type="checkbox" id="lapSafariballemNiezlapane" name="lapSafariballemNiezlapane" value="1" ' + ((config.lapSafariballemNiezlapane == "true" || config.lapSafariballemNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Łap safariballem tylko niezłapane pokemony</label></td> </tr></tbody></table>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" ' + ((config.useOnlyInNight == "true" || config.useOnlyInNight == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Maxymalny łapany lvl: </b><input style="width: 50px" id="changeMaxLapanyLvl" type="number" value="' + config.maxLapanyLvl + '"></p></td> </tr>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Kolejność widgetów: </b><select id="switchWidgetOrder"><option value="1" ' + (config.kolejnoscWidgetow == 1 ? 'selected' : '') + '>Zadania - Drużyna</option><option value="2" ' + (config.kolejnoscWidgetow == 2 ? 'selected' : '') +  '>Drużyna - Zadania</option><select></p></td> </tr>');
-            }
-        });
-
-        $(document).on("change", "#switchWidgetOrder", function(event) {
-            config.kolejnoscWidgetow = $(this).val();
-            updateConfig(config);
-            $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
-        })
-
-        $(document).on("change", "#changeMaxLapanyLvl", function(event) {
-            config.maxLapanyLvl = $(this).val();
-            updateConfig(config);
-        })
-
-
         $(document).on("change", ".list_of_poks_in_team", function(event) {
             var orderId = $(this).data('order-id');
             if (orderId == 20) {
@@ -1151,60 +1112,6 @@ function initPokeLifeScript() {
             if (orderId == 100) {
                 config.pok100 = Number($(this).val());
             }
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#zatrzymujNiezlapane", function(event) {
-            var isChecked = $('#zatrzymujNiezlapane').prop('checked');
-            config.zatrzymujNiezlapane = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#lapSafariballemNiezlapane", function(event) {
-            var isChecked = $('#lapSafariballemNiezlapane').prop('checked');
-            config.lapSafariballemNiezlapane = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#autoUseNiebieskieJagody", function(event) {
-            var isChecked = $('#autoUseNiebieskieJagody').prop('checked');
-            config.useNiebieskieJagody = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#autoUseCzerwoneJagody", function(event) {
-            var isChecked = $('#autoUseCzerwoneJagody').prop('checked');
-            config.useCzerwoneJagody = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#autoUseNiebieskieNapoje", function() {
-            var isChecked = $('#autoUseNiebieskieNapoje').prop('checked');
-            config.useNiebieskieNapoje = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#autoUseZieloneNapoje", function() {
-            var isChecked = $('#autoUseZieloneNapoje').prop('checked');
-            config.useZieloneNapoje = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#autoUseEventoweNapoje", function() {
-            var isChecked = $('#autoUseEventoweNapoje').prop('checked');
-            config.useEventoweNapoje = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#autoUseCzerwoneNapoje", function() {
-            var isChecked = $('#autoUseCzerwoneNapoje').prop('checked');
-            config.useCzerwoneNapoje = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#useOnlyInNight", function() {
-            var isChecked = $('#useOnlyInNight').prop('checked');
-            config.useOnlyInNight = isChecked;
             updateConfig(config);
         });
 
@@ -1588,6 +1495,110 @@ function initPokeLifeScript() {
         })
     }
     initAutoGo();
+
+
+
+    // **********************
+    //
+    // initAutoGoSettings
+    // Funkcja dodająca ustawienia do autogo i bota
+    //
+    // **********************
+    function initAutoGoSettings() {
+        $(document).on("click", "#goSettingsAutoGo", function() {
+            if ($('#settingsAutoGo').length > 0) {
+                $('#settingsAutoGo').remove();
+            } else {
+                $('body').append('<div id="settingsAutoGo" style="padding: 10px; position:fixed;top: 60px;right: 69px;width: 880px;background: white;opacity: 1;border: 7px solid #d6e9c6;z-index: 999;"></div>');
+                $('#settingsAutoGo').append('<div class="row"><div class="col-sm-6 wznawianieSettings"><table> <tr> <th></th> <th></th> <th></th> </tr></table></div></div>');
+                $('#settingsAutoGo .wznawianieSettings table').append('<col width="60"><col width="20"><col width="340">');
+                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" ' + ((config.useCzerwoneNapoje == "true" || config.useCzerwoneNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych napojów gdy zabraknie PA</label></td> </tr>');
+                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/zielony_napoj.jpg"></td><td><input type="checkbox" id="autoUseZieloneNapoje" name="autoUseZieloneNapoje" value="1" ' + ((config.useZieloneNapoje == "true" || config.useZieloneNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj zielonych napojów gdy zabraknie PA</label></td> </tr>');
+                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieNapoje" name="autoUseNiebieskieNapoje" value="1" ' + ((config.useNiebieskieNapoje == "true" || config.useNiebieskieNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj niebieskich napojów gdy zabraknie PA <span style="font-size: 9px">(niebieskie eventowe + niebieskie)</span></label></td> </tr>');
+
+                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAMAAACahl6sAAAAHlBMVEX4+PgwMDBYwNCYmJiA6PjIyMho0OBYWFjQ+PhIsMBk4eMZAAACB0lEQVR4nO3d3Y6CMBCGYZfK3/3f8CYwHHxktmkXsVN93zNZSebRBFgEfTyIiIiIiIiIiD6rcS95ja2HqynNWz9ec+vhagISLSDR6hgyermb32R/bD3xH+mrnp3SnvOuySoDEi0g0eoRUrClXdwVl60xCmScvb1dbo1FsUBeHBAgN/U5kH2cWcuuEQWS5LVPBWtkD+OBXA4IkJsCEgZiO72SEx7Z0UXQ4nQQECA3BQTITR0Q6ThDkhvdju31YckO6F5IUkkJxF58eQQECBAgbSA5QY4FBAgQIEBeDzkd78rStG7ZshbXblyFHAuHrdX2kkCAAAESFWKtBrGn2PrRICbYdxWrfkJqAs3emBZn44EAAQLkH5ChOeRp5SDaSTBtAQECBMibINPumLqHDDZdAcQVTECAAAECpApis56O5hViIz+lyQsIECBAgBRCbOdwvvclI4gK2Wf1ITYeECBAgMSB2LZ1WJ2G/d7upQvIcR7I/ScDCBAgQKJCdC5btvQI0RYJCBAgQIAAAQIECJDvgQy5gAABAgTIBYieDpoqIFLDS8qBAAECpC+Iez9LPaT9DZVAgAAB0gnEsotQ1FMC0dsSG36dyAHx3pgSiH4BOBAgQIC8KftJgdOlgElyLxPUS7f9X1dpkH41dklBf3QLSLSAROtjIGN1YTa4RERERERERERERBS1XxA3rOR3FFuIAAAAAElFTkSuQmCC"></td><td><input type="checkbox" id="autoUseEventoweNapoje" name="autoUseEventoweNapoje" value="1" ' + ((config.useEventoweNapoje == "true" || config.useEventoweNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj eventowych napojów gdy zabraknie PA <span style="font-size: 9px">(te z przycisku w statystykach)</span></label></td> </tr>');
+                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/niebieskie_jagody.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieJagody" name="autoUseNiebieskieJagody" value="1" ' + ((config.useNiebieskieJagody == "true" || config.useNiebieskieJagody == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj niebieskich jagód gdy zabraknie PA</label></td> </tr>');
+
+                $('#settingsAutoGo .wznawianieSettings').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Eventowe napoje</b> -> <b>Niebieskie napoje</b> -> <b>Zielone napoje</b> -> <b>Czerwone napoje</b></p>');
+
+                $('#settingsAutoGo .row').append('<div class="col-sm-6 dziczSettings"><table> <tr> <th></th> <th></th> <th></th> </tr></table></div>');
+                $('#settingsAutoGo .dziczSettings table').append('<col width="60"><col width="20"><col width="340">');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/czerwone_jagody.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneJagody" name="autoUseCzerwoneJagody" value="1" ' + ((config.useCzerwoneJagody == "true" || config.useCzerwoneJagody == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych jagód do leczenia</label></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="zatrzymujNiezlapane" name="zatrzymujNiezlapane" value="1" ' + ((config.zatrzymujNiezlapane == "true" || config.zatrzymujNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Zatrzymuj gdy spotkasz niezłapane pokemony</label></td> </tr></tbody></table>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 30px;" src="images/pokesklep/safariballe.jpg"></td><td><input type="checkbox" id="lapSafariballemNiezlapane" name="lapSafariballemNiezlapane" value="1" ' + ((config.lapSafariballemNiezlapane == "true" || config.lapSafariballemNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Łap safariballem tylko niezłapane pokemony</label></td> </tr></tbody></table>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" ' + ((config.useOnlyInNight == "true" || config.useOnlyInNight == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Maxymalny łapany lvl: </b><input style="width: 50px" id="changeMaxLapanyLvl" type="number" value="' + config.maxLapanyLvl + '"></p></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Kolejność widgetów: </b><select id="switchWidgetOrder"><option value="1" ' + (config.kolejnoscWidgetow == 1 ? 'selected' : '') + '>Zadania - Drużyna</option><option value="2" ' + (config.kolejnoscWidgetow == 2 ? 'selected' : '') +  '>Drużyna - Zadania</option><select></p></td> </tr>');
+            }
+        });
+
+        $(document).on("change", "#switchWidgetOrder", function(event) {
+            config.kolejnoscWidgetow = $(this).val();
+            updateConfig(config);
+            $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+        })
+
+        $(document).on("change", "#changeMaxLapanyLvl", function(event) {
+            config.maxLapanyLvl = $(this).val();
+            updateConfig(config);
+        })
+
+        $(document).on("click", "#zatrzymujNiezlapane", function(event) {
+            var isChecked = $('#zatrzymujNiezlapane').prop('checked');
+            config.zatrzymujNiezlapane = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#lapSafariballemNiezlapane", function(event) {
+            var isChecked = $('#lapSafariballemNiezlapane').prop('checked');
+            config.lapSafariballemNiezlapane = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#autoUseNiebieskieJagody", function(event) {
+            var isChecked = $('#autoUseNiebieskieJagody').prop('checked');
+            config.useNiebieskieJagody = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#autoUseCzerwoneJagody", function(event) {
+            var isChecked = $('#autoUseCzerwoneJagody').prop('checked');
+            config.useCzerwoneJagody = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#autoUseNiebieskieNapoje", function() {
+            var isChecked = $('#autoUseNiebieskieNapoje').prop('checked');
+            config.useNiebieskieNapoje = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#autoUseZieloneNapoje", function() {
+            var isChecked = $('#autoUseZieloneNapoje').prop('checked');
+            config.useZieloneNapoje = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#autoUseEventoweNapoje", function() {
+            var isChecked = $('#autoUseEventoweNapoje').prop('checked');
+            config.useEventoweNapoje = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#autoUseCzerwoneNapoje", function() {
+            var isChecked = $('#autoUseCzerwoneNapoje').prop('checked');
+            config.useCzerwoneNapoje = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#useOnlyInNight", function() {
+            var isChecked = $('#useOnlyInNight').prop('checked');
+            config.useOnlyInNight = isChecked;
+            updateConfig(config);
+        });
+    };
+    initAutoGoSettings();
+
 
 
 
