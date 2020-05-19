@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.15.2 (2020-05-19)
+* Dodanie obsługi zmiany resetu z 3:30 na północ
+
 5.15.1 (2020-05-15)
 * Poprawka do nieładującego sie czatu
 
