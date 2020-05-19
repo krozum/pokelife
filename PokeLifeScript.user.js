@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.15.1
+// @version      5.15.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1653,7 +1653,7 @@ function initPokeLifeScript() {
         var shinyWidget;
 
         function refreshShinyWidget() {
-            var api = domain + "pokelife/api/get_shiny.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim();
+            var api = domain + "pokelife/api/get_shiny.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&region=" + region;
             $.getJSON(api, {
                 format: "json"
             }).done(function(data) {
@@ -2233,13 +2233,19 @@ function initPokeLifeScript() {
             }).done(function(data) {
                 if (data['list'] != undefined) {
                     var messages = data['list'].reverse();
+                    var lastDate = null;
                     $.each(messages, function(key, value) {
-                        if (value['false_login'] == "bot") {
+                        var d = new Date(value["creation_date"]);
+                        if(lastDate != null && d.getDay() !== lastDate.getDay()){
+                            $("#bot_list").append('<li style="word-break: break-word; padding: 1px 5px 1px 5px; font-family: Arial; font-size: 14px; text-align: center; color: #777; border-radius: 3px; background: #00000008;">' + d.toISOString().slice(0, 10) + '</li>')
+                        }
+                        if (value['false_login'] == null) {
                             $("#bot_list").append('<li style="word-break: break-word;text-align: center;border-bottom: 2px dashed #aa1c00;padding-top: 3px;padding-bottom: 3px;color: #aa1c00;font-size: 18px;font-family: Arial;"><span>' + value["message"] + '</span></li>');
                         } else {
-                            $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "") + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["false_login"] == "Lew" ? '<img src="/images/stow/deko/176.png" style=" width: 15px; margin-right: 1px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
+                            $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "") + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["avatar"] != "" ? '<img src="'+value["avatar"]+'" style=" width: 15px; margin-right: 3px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
                         }
                         window.localStorage.max_chat_id = value["czat_id"];
+                        lastDate = new Date(value["creation_date"]);
                     });
                     $('#shouts').animate({ scrollTop: $('#shouts').prop("scrollHeight") }, 500);
                 }
@@ -2253,10 +2259,10 @@ function initPokeLifeScript() {
                             if (data['list'] != undefined) {
                                 var messages = data['list'].reverse();
                                 $.each(messages, function(key, value) {
-                                    if (value['false_login'] == "bot") {
+                                    if (value['false_login'] == null) {
                                         $("#bot_list").append('<li style="word-break: break-word;text-align: center;border-bottom: 2px dashed #aa1c00;padding-top: 3px;padding-bottom: 3px;color: #aa1c00;font-size: 18px;font-family: Arial;"><span>' + value["message"] + '</span></li>');
                                     } else {
-                                        $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "") + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["false_login"] == "Lew" ? '<img src="/images/stow/deko/176.png" style=" width: 15px; margin-right: 1px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
+                                        $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "") + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["avatar"] != "" ? '<img src="/images/stow/deko/176.png" style=" width: 15px; margin-right: 3px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
                                     }
                                     window.localStorage.max_chat_id = value["czat_id"];
                                 });
@@ -2431,7 +2437,11 @@ function initPokeLifeScript() {
     // **********************
     function initPokemonDniaWidget() {
         var d = new Date();
-        d.setMinutes(d.getMinutes() - 210);
+
+        var tempDate = new Date('2020-05-20 15:00:00');
+        if(d < tempDate){
+            d.setMinutes(d.getMinutes() - 210);
+        }
         var today = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
         var hodowlaPokemonDniaImage;
         var hodowlaPokemonDniaStowarzyszenieImage;
@@ -2834,7 +2844,10 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
     // **********************
     function initRozbudowanyOpisDziczy(){
         var d = new Date();
-        d.setMinutes(d.getMinutes() - 210);
+        var tempDate = new Date('2020-05-20 15:00:00');
+        if(d < tempDate){
+            d.setMinutes(d.getMinutes() - 210);
+        }
         var today = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
         var kolekcjaData = new Object()
         var kolekcjaDnia;
