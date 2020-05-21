@@ -26,6 +26,15 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.15.4 (2020-05-21)
+* Poprawka do resetu, nie powinno zapisywać złych danych juz po wejściu na strone w czasie resetu
+* Po wejściu na hodowle przeładuje widget z pokemonami dnia
+* Zamieniono input na textarea w chat bota, rozszerza sie gdy tekst jest dłuższy.
+* Minimalna optymalizacja na widoku plecaka, troche szybciej powinien sie ładować
+* Poprawki na zakładke Wystaw Przedmioty: 
+  - podsumowanie wystawionych zostało dodane do tabeli Twoje oferty na targu
+  - możliwy zarobek z jagód domyślnie pokazuje sumę, po kliknięciu nagłówek pokazują sie szczegóły
+
 5.15.2 (2020-05-19)
 * Dodanie obsługi zmiany resetu z 3:30 na północ
 
