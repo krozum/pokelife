@@ -2192,8 +2192,16 @@ function initPokeLifeScript() {
 
         $('#chat-inner > ul').append('<li role="presentation" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokój widoczny wyłącznie dla użytkowników bota"><a href="#room-99999" aria-controls="room-99999" role="tab" data-toggle="tab" class="showRoomBot" data-room="99999" aria-expanded="true">Bot</a></li>');
         $('#shout_list').after('<ol style="list-style: none; display: none; margin: 0; padding: 0" id="bot_list"></ol>');
-        $('#shoutbox-panel-footer').after('<div style="display: none;background: none;" id="shoutbox-bot-panel-footer" class="panel-footer input-group"><input id="shout_bot_message" type="text" class="form-control" placeholder="Wiadomość" name="message"> <span class="input-group-btn"> <button id="shout_bot_button" class="btn btn-primary" type="button">Wyślij</button> </span> </div>');
+        $('#shoutbox-panel-footer').after('<div style="display: none;background: none;" id="shoutbox-bot-panel-footer" class="panel-footer input-group"><textarea id="shout_bot_message" maxlength="255" style="resize: none; overflow: hidden;height: 34px" type="text" class="form-control" placeholder="Wiadomość" name="message"></textarea> <span class="input-group-btn"> <button id="shout_bot_button" class="btn btn-primary" type="button">Wyślij</button> </span> </div>');
 
+
+        $('#shout_bot_message').on('keydown', function(e){
+            if(e.which == 13) {e.preventDefault();}
+        }).on('input', function(){
+            $(this).height(1);
+            var totalHeight = $(this).prop('scrollHeight') - parseInt($(this).css('padding-top')) - parseInt($(this).css('padding-bottom'));
+            $(this).height(totalHeight);
+        });
 
         $("a[href='#room-99999']").click(function() {
             $('#bot-chat-counter').css("display", "none");
@@ -2224,6 +2232,7 @@ function initPokeLifeScript() {
         });
 
         var interval;
+        var lastDate2;
 
         $(document).on('click', '#zaloguj_chat,#zaloguj_czat_bot', function(e) {
             $('#zaloguj_czat_bot').remove();
@@ -2246,6 +2255,7 @@ function initPokeLifeScript() {
                         }
                         window.localStorage.max_chat_id = value["czat_id"];
                         lastDate = new Date(value["creation_date"]);
+                        lastDate2 = new Date(value["creation_date"]);
                     });
                     $('#shouts').animate({ scrollTop: $('#shouts').prop("scrollHeight") }, 500);
                 }
@@ -2259,6 +2269,10 @@ function initPokeLifeScript() {
                             if (data['list'] != undefined) {
                                 var messages = data['list'].reverse();
                                 $.each(messages, function(key, value) {
+                                    var d = new Date(value["creation_date"]);
+                                    if(lastDate2 != null && d.getDay() !== lastDate2.getDay()){
+                                        $("#bot_list").append('<li style="word-break: break-word; padding: 1px 5px 1px 5px; font-family: Arial; font-size: 14px; text-align: center; color: #777; border-radius: 3px; background: #00000008;">' + d.toISOString().slice(0, 10) + '</li>')
+                                    }
                                     if (value['false_login'] == null) {
                                         $("#bot_list").append('<li style="word-break: break-word;text-align: center;border-bottom: 2px dashed #aa1c00;padding-top: 3px;padding-bottom: 3px;color: #aa1c00;font-size: 18px;font-family: Arial;"><span>' + value["message"] + '</span></li>');
                                     } else {
@@ -2289,7 +2303,7 @@ function initPokeLifeScript() {
                     login: $('#wyloguj').parent().parent().html().split("<div")[0].trim()
                 }).done(function(data) {
                     $("#shout_bot_button").val(value);
-                    $("#shout_bot_message").val('');
+                    $("#shout_bot_message").val('').trigger('input');
                 });
             }
         }
