@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.15.2
+// @version      5.15.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -2451,11 +2451,7 @@ function initPokeLifeScript() {
     // **********************
     function initPokemonDniaWidget() {
         var d = new Date();
-
-        var tempDate = new Date('2020-05-20 15:00:00');
-        if(d < tempDate){
-            d.setMinutes(d.getMinutes() - 210);
-        }
+        d.setMinutes(d.getMinutes() - 21);
         var today = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
         var hodowlaPokemonDniaImage;
         var hodowlaPokemonDniaStowarzyszenieImage;
@@ -2484,7 +2480,7 @@ function initPokeLifeScript() {
         }
 
         onReloadSidebar(function() {
-            if (hodowlaPokemonDniaImage !== undefined) {
+            if (hodowlaPokemonDniaImage !== undefined && hodowlaPokemonDniaImage !== "undefined") {
                 this.find('button[href="raport.php"]').parent().prepend('<img class="btn-akcja" href="hodowla.php?wszystkie&pokemon_dnia" src="https://gra.pokelife.pl/' + hodowlaPokemonDniaImage + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokemon Dnia" style="cursor: pointer; width: 50px;margin-left: 10px; float: left; ">');
                 this.find('button[href="raport.php"]').parent().css('margin-top', '10px').css('padding-right', '10px');
                 $('[data-toggle="tooltip"]').tooltip();
@@ -2858,10 +2854,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
     // **********************
     function initRozbudowanyOpisDziczy(){
         var d = new Date();
-        var tempDate = new Date('2020-05-20 15:00:00');
-        if(d < tempDate){
-            d.setMinutes(d.getMinutes() - 210);
-        }
+        d.setMinutes(d.getMinutes() - 21);
         var today = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
         var kolekcjaData = new Object()
         var kolekcjaDnia;
