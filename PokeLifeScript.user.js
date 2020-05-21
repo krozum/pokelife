@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.15.3
+// @version      5.15.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -13,12 +13,36 @@
 // @require      https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js
 // @resource     color_picker_CSS  https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css
 // @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=7
-// @resource     customCSS_style_0  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_0.css?ver=2
-// @resource     customCSS_style_1  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_1.css?ver=2
-// @resource     customCSS_style_2  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_2.css?ver=2
-// @resource     customCSS_style_3  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_3.css?ver=2
-// @resource     customCSS_style_4  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_4.css?ver=2
+// @resource     customCSS_style  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_0.css?ver=2
 // ==/UserScript==
+
+
+
+// Wszystkie funkcje od góry:
+//
+//     initSkins
+//     initAutoGo
+//     initAutoGoSettings
+//     initVersionInfo
+//     initAutouzupelnianieFormularzy
+//     initShinyWidget
+//     initPlecakTMView
+//     initPlecakTrzymaneView
+//     initSzybkieKlikanieWLinkiPromocyjne
+//     initStatystykiLink
+//     initLogger
+//     initWbijanieSzkoleniowca
+//     initChat
+//     initPokemonyLiga
+//     initZadaniaWidget
+//     initPokemonDniaWidget
+//     initPrzypomnienieOPracy
+//     initWystawView
+//     initRozbudowanyOpisDziczy
+//     initPrzypomnienieORepelu
+//     initSprawdzCzyMaszAktualnaWersjeBota
+//     initPrzypomnienieOOpiece
+
 
 
 // **********************
@@ -33,6 +57,7 @@ var autoGo;
 var previousPageContent = null;
 var pokemonData;
 var region;
+var zarobek;
 var lastSeeShoutId;
 var timeoutMin = 300;
 var timeoutMax = 400;
@@ -40,24 +65,25 @@ var styles = [];
 var domain = "https://bra2ns.pl/"
 
 
+
 // **********************
 //
 // funkcja do zapisu do bazy
 //
 // **********************
+
 function requestDomainPost(url, data, callback) {
     $.post(domain + url, {config: data}, function(result){
         callback == null ? "" : callback(result)
     })
 }
+
 function requestDomain(url, callback) {
     $.ajax(domain + url)
         .done(data => callback == null ? "" : callback(data))
         .fail((xhr, status) => console.log('error:', status));
 }
 requestDomain("pokelife/api/update_user.php?bot_version=" + GM_info.script.version + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&poziom=" + $('button[data-original-title="Poziom Trenera Pokemon"]').html(), null);
-
-
 
 function updateConfig(config, callback){
     console.log("------------");
@@ -73,20 +99,18 @@ function updateConfig(config, callback){
 // eventy do wykorzystania przy pisaniu dodatków
 //
 // **********************
-window.onReloadSidebarFunctions = [];
 
+window.onReloadSidebarFunctions = [];
 function onReloadSidebar(fn) {
     window.onReloadSidebarFunctions.push(fn);
 }
 
 window.onReloadMainFunctions = [];
-
 function onReloadMain(fn) {
     window.onReloadMainFunctions.push(fn);
 }
 
 window.afterReloadMainFunctions = [];
-
 function afterReloadMain(fn) {
     window.afterReloadMainFunctions.push(fn);
 }
@@ -101,6 +125,7 @@ function getPreviousPageContent() {
 // loggery
 //
 // **********************
+
 function updateEvent(text, eventTypeId, dzicz) {
     if (dzicz != null) {
         requestDomain("pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text=" + text + "&event_type_id=" + eventTypeId + "&dzicz=" + dzicz + "&time=" + Date.now(), function(response) {
@@ -212,11 +237,9 @@ jQuery.fn.html = function() {
     return ret
 }
 
-
 $(document).on('click', '#zaloguj_chat', function(e) {
     $("#shout_refresher").load("gra/chat/shout.php?refresh=0");
 })
-
 
 $(document).off("click", "nav a");
 $(document).on("click", "nav a:not('.btn-akcja')", function(event) {
@@ -249,12 +272,9 @@ $(document).on("click", "nav a:not('.btn-akcja')", function(event) {
     }
 });
 
-var zarobek;
-
 $(document).on("click", function(event) {
     document.title = "PokeLife - Gra Pokemon Online";
 })
-
 
 $(document).off("click", ".btn-akcja");
 $(document).on("click", ".btn-akcja", function(event) {
@@ -301,7 +321,6 @@ $(document).on("click", ".btn-akcja", function(event) {
     reloadMain("#glowne_okno", 'gra/' + $(this).attr('href'));
 });
 
-
 $(document).off("click", ".btn-edycja-nazwy-grupy");
 $(document).on("click", ".btn-edycja-nazwy-grupy", function(event) {
     $("#panel_grupa_id_" + $(this).attr('data-grupa-id')).html('<form action="druzyna.php?p=2&zmien_nazwe_grupy=' + $(this).attr('data-grupa-id') + '" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="' + $(this).attr('data-obecna-nazwa') + '"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>');
@@ -315,7 +334,6 @@ $(document).on("click", ".nauka-ataku", function(event) {
 
     var naucz_zamiast = $("input[name=nauczZamiast-" + $(this).attr("data-pokemon-id") + "]:checked").val();
 
-    //$("#glowne_okno").html('Wczytywanie...');
     if ($(this).attr("data-tm-zapomniany")) {
         reloadMain("#glowne_okno", 'gra/sala.php?zabezpieczone_id=' + $(this).attr('zabezpieczone-id') + '&p=' + $(this).attr("data-pokemon-id") + '&tm_zapomniany=' + $(this).attr("data-tm-zapomniany") + '&naucz_zamiast=' + naucz_zamiast + '&zrodlo=' + $(this).attr('data-zrodlo'));
     } else if ($(this).attr("data-tm")) {
@@ -325,16 +343,13 @@ $(document).on("click", ".nauka-ataku", function(event) {
     }
 });
 
-
 $(document).off('submit', 'form');
 $(document).on('submit', 'form', function(e) {
     if (!$(this).attr("form-normal-submit")) {
-
         e.preventDefault();
 
         $("html, body").animate({ scrollTop: 0 }, "fast");
 
-        //Obejście modali
         if ($('body').hasClass('modal-open') && $(this).attr("dont-close-modal") != 1) {
             $('body').removeClass('modal-open');
             $('body').css({ "padding-right": "0px" });
@@ -346,21 +361,9 @@ $(document).on('submit', 'form', function(e) {
         var postData = $(this).serializeArray();
 
         if ($(this).attr("form-target")) {
-            //$($(this).attr('form-target')).html(loadingbar);
-            //$($(this).attr('form-target')).load('gra/'+$(this).attr('action'),  postData );
-
-
             reloadMainPOST($(this).attr('form-target'), 'gra/' + $(this).attr('action'), postData);
         } else {
             $("html, body").animate({ scrollTop: 0 }, "fast");
-            //$("#glowne_okno").html(loadingbar);
-            //$("#glowne_okno").load('gra/'+$(this).attr('action'),  postData );
-
-            //$.post( 'gra/'+$(this).attr('action') , postData , function( data ) {
-            //	alert( "Data Loaded: " + postData );
-            //	$( "#glowne_okno" ).html( data );
-            //});
-
             reloadMainPOST("#glowne_okno", 'gra/' + $(this).attr('action'), postData);
         }
         var submit = $(this).closest("form").find(":submit");
@@ -374,7 +377,6 @@ $(document).on("change", ".select-submit", function(e) {
     e.preventDefault();
     $("html, body").animate({ scrollTop: 0 }, "slow");
 
-    //Obejście modali
     $('body').removeClass('modal-open');
     $('body').css({ "padding-right": "0px" });
     $('.modal-backdrop').remove();
@@ -390,7 +392,6 @@ $(document).off("click", "#zatwierdz_reprezentacje");
 $(document).on("click", "#zatwierdz_reprezentacje", function(e) {
     $("html, body").animate({ scrollTop: 0 }, "slow");
 
-    //Obejście modali
     $('body').removeClass('modal-open');
     $('body').css({ "padding-right": "0px" });
     $('.modal-backdrop').remove();
@@ -398,9 +399,7 @@ $(document).on("click", "#zatwierdz_reprezentacje", function(e) {
     var postData = $(this).closest('form').serializeArray();
     $("html, body").animate({ scrollTop: 0 }, "fast");
 
-
     reloadMainPOST("#glowne_okno", 'gra/' + $(this).closest('form').attr('action'), postData);
-
     e.preventDefault();
 });
 
@@ -421,6 +420,7 @@ $(document).on("click", ".collapse_toggle_icon", function(e) {
 // główna funkcja gry
 //
 // **********************
+
 function initPokeLifeScript() {
 
 
@@ -431,6 +431,7 @@ function initPokeLifeScript() {
     // Funkcja dodająca nowe skórki do gry
     //
     // **********************
+
     function initSkins() {
 
         var globalCSS = GM_getResourceText("customCSS_global");
@@ -439,7 +440,7 @@ function initPokeLifeScript() {
         var colorPickerCSS = GM_getResourceText("color_picker_CSS");
         GM_addStyle(colorPickerCSS);
 
-        var newCSS = GM_getResourceText("customCSS_style_0");
+        var newCSS = GM_getResourceText("customCSS_style");
         GM_addStyle(newCSS);
 
         if (config.skinStyle == 0) {
@@ -452,8 +453,6 @@ function initPokeLifeScript() {
             $(':root').get(0).style.setProperty("--customStyle-tabs", style.tabs);
             $(':root').get(0).style.setProperty("--customStyle-font", style.font);
         }
-
-        console.log(styles);
 
         $('body').append('<div id="changeStyle" class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;bottom: 10px;left: 10px;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"><icon</div>');
 
@@ -474,10 +473,10 @@ function initPokeLifeScript() {
                 });
 
                 $('#styleSettings .rightRow table').append(`
-                    <tr>
-                        <td> <div id="color-picker" /> </td>
-                        <td style="padding: 10px"> Tło </td>
-                    </tr>`);
+<tr>
+<td> <div id="color-picker" /> </td>
+<td style="padding: 10px"> Tło </td>
+</tr>`);
 
                 const pickr = Pickr.create({
                     el: '#color-picker',
@@ -515,10 +514,10 @@ function initPokeLifeScript() {
                 })
 
                 $('#styleSettings .rightRow table').append(`
-                    <tr>
-                        <td> <div id="color-picker2" /> </td>
-                        <td style="padding: 10px"> Paski </td>
-                    </tr>`);
+<tr>
+<td> <div id="color-picker2" /> </td>
+<td style="padding: 10px"> Paski </td>
+</tr>`);
 
                 const pickr2 = Pickr.create({
                     el: '#color-picker2',
@@ -556,10 +555,10 @@ function initPokeLifeScript() {
                 })
 
                 $('#styleSettings .rightRow table').append(`
-                    <tr>
-                        <td> <div id="color-picker3" /> </td>
-                        <td style="padding: 10px"> Czcionka </td>
-                    </tr>`);
+<tr>
+<td> <div id="color-picker3" /> </td>
+<td style="padding: 10px"> Czcionka </td>
+</tr>`);
 
                 const pickr3 = Pickr.create({
                     el: '#color-picker3',
@@ -610,12 +609,14 @@ function initPokeLifeScript() {
     initSkins();
 
 
+
     // **********************
     //
     // initAutoGo
     // Funkcja dodająca automatyczne klikanie w wyprawy
     //
     // **********************
+
     function initAutoGo() {
 
         function getRandomInt(min, max) {
@@ -1095,45 +1096,6 @@ function initPokeLifeScript() {
             }
         }
 
-        $(document).on("click", "#goSettingsAutoGo", function() {
-            if ($('#settingsAutoGo').length > 0) {
-                $('#settingsAutoGo').remove();
-            } else {
-                $('body').append('<div id="settingsAutoGo" style="padding: 10px; position:fixed;top: 60px;right: 69px;width: 880px;background: white;opacity: 1;border: 7px solid #d6e9c6;z-index: 999;"></div>');
-                $('#settingsAutoGo').append('<div class="row"><div class="col-sm-6 wznawianieSettings"><table> <tr> <th></th> <th></th> <th></th> </tr></table></div></div>');
-                $('#settingsAutoGo .wznawianieSettings table').append('<col width="60"><col width="20"><col width="340">');
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" ' + ((config.useCzerwoneNapoje == "true" || config.useCzerwoneNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych napojów gdy zabraknie PA</label></td> </tr>');
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/zielony_napoj.jpg"></td><td><input type="checkbox" id="autoUseZieloneNapoje" name="autoUseZieloneNapoje" value="1" ' + ((config.useZieloneNapoje == "true" || config.useZieloneNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj zielonych napojów gdy zabraknie PA</label></td> </tr>');
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieNapoje" name="autoUseNiebieskieNapoje" value="1" ' + ((config.useNiebieskieNapoje == "true" || config.useNiebieskieNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj niebieskich napojów gdy zabraknie PA <span style="font-size: 9px">(niebieskie eventowe + niebieskie)</span></label></td> </tr>');
-
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAMAAACahl6sAAAAHlBMVEX4+PgwMDBYwNCYmJiA6PjIyMho0OBYWFjQ+PhIsMBk4eMZAAACB0lEQVR4nO3d3Y6CMBCGYZfK3/3f8CYwHHxktmkXsVN93zNZSebRBFgEfTyIiIiIiIiIiD6rcS95ja2HqynNWz9ec+vhagISLSDR6hgyermb32R/bD3xH+mrnp3SnvOuySoDEi0g0eoRUrClXdwVl60xCmScvb1dbo1FsUBeHBAgN/U5kH2cWcuuEQWS5LVPBWtkD+OBXA4IkJsCEgZiO72SEx7Z0UXQ4nQQECA3BQTITR0Q6ThDkhvdju31YckO6F5IUkkJxF58eQQECBAgbSA5QY4FBAgQIEBeDzkd78rStG7ZshbXblyFHAuHrdX2kkCAAAESFWKtBrGn2PrRICbYdxWrfkJqAs3emBZn44EAAQLkH5ChOeRp5SDaSTBtAQECBMibINPumLqHDDZdAcQVTECAAAECpApis56O5hViIz+lyQsIECBAgBRCbOdwvvclI4gK2Wf1ITYeECBAgMSB2LZ1WJ2G/d7upQvIcR7I/ScDCBAgQKJCdC5btvQI0RYJCBAgQIAAAQIECJDvgQy5gAABAgTIBYieDpoqIFLDS8qBAAECpC+Iez9LPaT9DZVAgAAB0gnEsotQ1FMC0dsSG36dyAHx3pgSiH4BOBAgQIC8KftJgdOlgElyLxPUS7f9X1dpkH41dklBf3QLSLSAROtjIGN1YTa4RERERERERERERBS1XxA3rOR3FFuIAAAAAElFTkSuQmCC"></td><td><input type="checkbox" id="autoUseEventoweNapoje" name="autoUseEventoweNapoje" value="1" ' + ((config.useEventoweNapoje == "true" || config.useEventoweNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj eventowych napojów gdy zabraknie PA <span style="font-size: 9px">(te z przycisku w statystykach)</span></label></td> </tr>');
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/niebieskie_jagody.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieJagody" name="autoUseNiebieskieJagody" value="1" ' + ((config.useNiebieskieJagody == "true" || config.useNiebieskieJagody == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj niebieskich jagód gdy zabraknie PA</label></td> </tr>');
-
-                $('#settingsAutoGo .wznawianieSettings').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Eventowe napoje</b> -> <b>Niebieskie napoje</b> -> <b>Zielone napoje</b> -> <b>Czerwone napoje</b></p>');
-
-                $('#settingsAutoGo .row').append('<div class="col-sm-6 dziczSettings"><table> <tr> <th></th> <th></th> <th></th> </tr></table></div>');
-                $('#settingsAutoGo .dziczSettings table').append('<col width="60"><col width="20"><col width="340">');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/czerwone_jagody.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneJagody" name="autoUseCzerwoneJagody" value="1" ' + ((config.useCzerwoneJagody == "true" || config.useCzerwoneJagody == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych jagód do leczenia</label></td> </tr>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="zatrzymujNiezlapane" name="zatrzymujNiezlapane" value="1" ' + ((config.zatrzymujNiezlapane == "true" || config.zatrzymujNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Zatrzymuj gdy spotkasz niezłapane pokemony</label></td> </tr></tbody></table>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 30px;" src="images/pokesklep/safariballe.jpg"></td><td><input type="checkbox" id="lapSafariballemNiezlapane" name="lapSafariballemNiezlapane" value="1" ' + ((config.lapSafariballemNiezlapane == "true" || config.lapSafariballemNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Łap safariballem tylko niezłapane pokemony</label></td> </tr></tbody></table>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" ' + ((config.useOnlyInNight == "true" || config.useOnlyInNight == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Maxymalny łapany lvl: </b><input style="width: 50px" id="changeMaxLapanyLvl" type="number" value="' + config.maxLapanyLvl + '"></p></td> </tr>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Kolejność widgetów: </b><select id="switchWidgetOrder"><option value="1" ' + (config.kolejnoscWidgetow == 1 ? 'selected' : '') + '>Zadania - Drużyna</option><option value="2" ' + (config.kolejnoscWidgetow == 2 ? 'selected' : '') +  '>Drużyna - Zadania</option><select></p></td> </tr>');
-            }
-        });
-
-        $(document).on("change", "#switchWidgetOrder", function(event) {
-            config.kolejnoscWidgetow = $(this).val();
-            updateConfig(config);
-            $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
-        })
-
-        $(document).on("change", "#changeMaxLapanyLvl", function(event) {
-            config.maxLapanyLvl = $(this).val();
-            updateConfig(config);
-        })
-
-
         $(document).on("change", ".list_of_poks_in_team", function(event) {
             var orderId = $(this).data('order-id');
             if (orderId == 20) {
@@ -1153,61 +1115,6 @@ function initPokeLifeScript() {
             }
             updateConfig(config);
         });
-
-        $(document).on("click", "#zatrzymujNiezlapane", function(event) {
-            var isChecked = $('#zatrzymujNiezlapane').prop('checked');
-            config.zatrzymujNiezlapane = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#lapSafariballemNiezlapane", function(event) {
-            var isChecked = $('#lapSafariballemNiezlapane').prop('checked');
-            config.lapSafariballemNiezlapane = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#autoUseNiebieskieJagody", function(event) {
-            var isChecked = $('#autoUseNiebieskieJagody').prop('checked');
-            config.useNiebieskieJagody = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#autoUseCzerwoneJagody", function(event) {
-            var isChecked = $('#autoUseCzerwoneJagody').prop('checked');
-            config.useCzerwoneJagody = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#autoUseNiebieskieNapoje", function() {
-            var isChecked = $('#autoUseNiebieskieNapoje').prop('checked');
-            config.useNiebieskieNapoje = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#autoUseZieloneNapoje", function() {
-            var isChecked = $('#autoUseZieloneNapoje').prop('checked');
-            config.useZieloneNapoje = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#autoUseEventoweNapoje", function() {
-            var isChecked = $('#autoUseEventoweNapoje').prop('checked');
-            config.useEventoweNapoje = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#autoUseCzerwoneNapoje", function() {
-            var isChecked = $('#autoUseCzerwoneNapoje').prop('checked');
-            config.useCzerwoneNapoje = isChecked;
-            updateConfig(config);
-        });
-
-        $(document).on("click", "#useOnlyInNight", function() {
-            var isChecked = $('#useOnlyInNight').prop('checked');
-            config.useOnlyInNight = isChecked;
-            updateConfig(config);
-        });
-
 
         $(document).on("click", "#goButton", function() {
             click();
@@ -1593,10 +1500,116 @@ function initPokeLifeScript() {
 
     // **********************
     //
+    // initAutoGoSettings
+    // Funkcja dodająca ustawienia autoGo
+    //
+    // **********************
+
+    function initAutoGoSettings() {
+
+        $(document).on("click", "#goSettingsAutoGo", function() {
+            if ($('#settingsAutoGo').length > 0) {
+                $('#settingsAutoGo').remove();
+            } else {
+                $('body').append('<div id="settingsAutoGo" style="padding: 10px; position:fixed;top: 60px;right: 69px;width: 880px;background: white;opacity: 1;border: 7px solid #d6e9c6;z-index: 999;"></div>');
+                $('#settingsAutoGo').append('<div class="row"><div class="col-sm-6 wznawianieSettings"><table> <tr> <th></th> <th></th> <th></th> </tr></table></div></div>');
+                $('#settingsAutoGo .wznawianieSettings table').append('<col width="60"><col width="20"><col width="340">');
+                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" ' + ((config.useCzerwoneNapoje == "true" || config.useCzerwoneNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych napojów gdy zabraknie PA</label></td> </tr>');
+                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/zielony_napoj.jpg"></td><td><input type="checkbox" id="autoUseZieloneNapoje" name="autoUseZieloneNapoje" value="1" ' + ((config.useZieloneNapoje == "true" || config.useZieloneNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj zielonych napojów gdy zabraknie PA</label></td> </tr>');
+                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieNapoje" name="autoUseNiebieskieNapoje" value="1" ' + ((config.useNiebieskieNapoje == "true" || config.useNiebieskieNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj niebieskich napojów gdy zabraknie PA <span style="font-size: 9px">(niebieskie eventowe + niebieskie)</span></label></td> </tr>');
+
+                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAMAAACahl6sAAAAHlBMVEX4+PgwMDBYwNCYmJiA6PjIyMho0OBYWFjQ+PhIsMBk4eMZAAACB0lEQVR4nO3d3Y6CMBCGYZfK3/3f8CYwHHxktmkXsVN93zNZSebRBFgEfTyIiIiIiIiIiD6rcS95ja2HqynNWz9ec+vhagISLSDR6hgyermb32R/bD3xH+mrnp3SnvOuySoDEi0g0eoRUrClXdwVl60xCmScvb1dbo1FsUBeHBAgN/U5kH2cWcuuEQWS5LVPBWtkD+OBXA4IkJsCEgZiO72SEx7Z0UXQ4nQQECA3BQTITR0Q6ThDkhvdju31YckO6F5IUkkJxF58eQQECBAgbSA5QY4FBAgQIEBeDzkd78rStG7ZshbXblyFHAuHrdX2kkCAAAESFWKtBrGn2PrRICbYdxWrfkJqAs3emBZn44EAAQLkH5ChOeRp5SDaSTBtAQECBMibINPumLqHDDZdAcQVTECAAAECpApis56O5hViIz+lyQsIECBAgBRCbOdwvvclI4gK2Wf1ITYeECBAgMSB2LZ1WJ2G/d7upQvIcR7I/ScDCBAgQKJCdC5btvQI0RYJCBAgQIAAAQIECJDvgQy5gAABAgTIBYieDpoqIFLDS8qBAAECpC+Iez9LPaT9DZVAgAAB0gnEsotQ1FMC0dsSG36dyAHx3pgSiH4BOBAgQIC8KftJgdOlgElyLxPUS7f9X1dpkH41dklBf3QLSLSAROtjIGN1YTa4RERERERERERERBS1XxA3rOR3FFuIAAAAAElFTkSuQmCC"></td><td><input type="checkbox" id="autoUseEventoweNapoje" name="autoUseEventoweNapoje" value="1" ' + ((config.useEventoweNapoje == "true" || config.useEventoweNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj eventowych napojów gdy zabraknie PA <span style="font-size: 9px">(te z przycisku w statystykach)</span></label></td> </tr>');
+                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/niebieskie_jagody.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieJagody" name="autoUseNiebieskieJagody" value="1" ' + ((config.useNiebieskieJagody == "true" || config.useNiebieskieJagody == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj niebieskich jagód gdy zabraknie PA</label></td> </tr>');
+
+                $('#settingsAutoGo .wznawianieSettings').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Eventowe napoje</b> -> <b>Niebieskie napoje</b> -> <b>Zielone napoje</b> -> <b>Czerwone napoje</b></p>');
+
+                $('#settingsAutoGo .row').append('<div class="col-sm-6 dziczSettings"><table> <tr> <th></th> <th></th> <th></th> </tr></table></div>');
+                $('#settingsAutoGo .dziczSettings table').append('<col width="60"><col width="20"><col width="340">');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/czerwone_jagody.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneJagody" name="autoUseCzerwoneJagody" value="1" ' + ((config.useCzerwoneJagody == "true" || config.useCzerwoneJagody == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych jagód do leczenia</label></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="zatrzymujNiezlapane" name="zatrzymujNiezlapane" value="1" ' + ((config.zatrzymujNiezlapane == "true" || config.zatrzymujNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Zatrzymuj gdy spotkasz niezłapane pokemony</label></td> </tr></tbody></table>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 30px;" src="images/pokesklep/safariballe.jpg"></td><td><input type="checkbox" id="lapSafariballemNiezlapane" name="lapSafariballemNiezlapane" value="1" ' + ((config.lapSafariballemNiezlapane == "true" || config.lapSafariballemNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Łap safariballem tylko niezłapane pokemony</label></td> </tr></tbody></table>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" ' + ((config.useOnlyInNight == "true" || config.useOnlyInNight == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Maxymalny łapany lvl: </b><input style="width: 50px" id="changeMaxLapanyLvl" type="number" value="' + config.maxLapanyLvl + '"></p></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Kolejność widgetów: </b><select id="switchWidgetOrder"><option value="1" ' + (config.kolejnoscWidgetow == 1 ? 'selected' : '') + '>Zadania - Drużyna</option><option value="2" ' + (config.kolejnoscWidgetow == 2 ? 'selected' : '') +  '>Drużyna - Zadania</option><select></p></td> </tr>');
+            }
+        });
+
+        $(document).on("click", "#zatrzymujNiezlapane", function(event) {
+            var isChecked = $('#zatrzymujNiezlapane').prop('checked');
+            config.zatrzymujNiezlapane = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#lapSafariballemNiezlapane", function(event) {
+            var isChecked = $('#lapSafariballemNiezlapane').prop('checked');
+            config.lapSafariballemNiezlapane = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#autoUseNiebieskieJagody", function(event) {
+            var isChecked = $('#autoUseNiebieskieJagody').prop('checked');
+            config.useNiebieskieJagody = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#autoUseCzerwoneJagody", function(event) {
+            var isChecked = $('#autoUseCzerwoneJagody').prop('checked');
+            config.useCzerwoneJagody = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#autoUseNiebieskieNapoje", function() {
+            var isChecked = $('#autoUseNiebieskieNapoje').prop('checked');
+            config.useNiebieskieNapoje = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#autoUseZieloneNapoje", function() {
+            var isChecked = $('#autoUseZieloneNapoje').prop('checked');
+            config.useZieloneNapoje = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#autoUseEventoweNapoje", function() {
+            var isChecked = $('#autoUseEventoweNapoje').prop('checked');
+            config.useEventoweNapoje = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#autoUseCzerwoneNapoje", function() {
+            var isChecked = $('#autoUseCzerwoneNapoje').prop('checked');
+            config.useCzerwoneNapoje = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("click", "#useOnlyInNight", function() {
+            var isChecked = $('#useOnlyInNight').prop('checked');
+            config.useOnlyInNight = isChecked;
+            updateConfig(config);
+        });
+
+        $(document).on("change", "#switchWidgetOrder", function(event) {
+            config.kolejnoscWidgetow = $(this).val();
+            updateConfig(config);
+            $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+        })
+
+        $(document).on("change", "#changeMaxLapanyLvl", function(event) {
+            config.maxLapanyLvl = $(this).val();
+            updateConfig(config);
+        })
+
+    }
+
+
+
+    // **********************
+    //
     // initVersionInfo
     // Funkcja dodająca numer wersji na dole strony
     //
     // **********************
+
     function initVersionInfo() {
         $('body').append('<div id="newVersionInfo" style="border-radius: 4px; position: fixed; cursor: pointer; bottom: 10px; right: 20px; font-size: 19px; text-align: center; width: auto; height: 30px; line-height: 35px; z-index: 9998; text-align: right;"><a style="color: yellow !important;text-decoration:none;" target="_blank" href="https://github.com/krozum/pokelife#user-content-changelog">' + 'v' + GM_info.script.version + '</a></div>');
     };
@@ -1604,15 +1617,14 @@ function initPokeLifeScript() {
 
 
 
-
-
     // **********************
     //
-    // initAutouzupelnianiePol
-    // Funkcja dodająca logowanie tego co wyświetla sie na ekranie
+    // initAutouzupelnianieFormularzy
+    // Funkcja dodająca autouzupełnienie formularzy
     //
     // **********************
-    function initAutouzupelnianiePol() {
+
+    function initAutouzupelnianieFormularzy() {
 
         $(document).on("click", "#plecak-jagody .thumbnail-plecak, .thumbnail-plecak[data-target='#plecak-11'], .thumbnail-plecak[data-target='#plecak-14'], .thumbnail-plecak[data-target='#plecak-15'], .thumbnail-plecak[data-target='#plecak-8'], .thumbnail-plecak[data-target='#plecak-7'], .thumbnail-plecak[data-target='#plecak-19'], .thumbnail-plecak[data-target='#plecak-16']", function(event) {
             var id = $(this).data("target");
@@ -1637,8 +1649,7 @@ function initPokeLifeScript() {
             }
         })
     }
-    initAutouzupelnianiePol();
-
+    initAutouzupelnianieFormularzy();
 
 
 
@@ -1701,7 +1712,6 @@ function initPokeLifeScript() {
 
 
 
-
     // **********************
     //
     // initPlecakTMView
@@ -1726,11 +1736,9 @@ function initPokeLifeScript() {
                     $(this).find("br").remove();
                     if (tmData["tm"][id - 1]["category_id"] == 1) {
                         $(this).children().css("background-color", "#f9856e");
-                    }
-                    if (tmData["tm"][id - 1]["category_id"] == 2) {
+                    } else if (tmData["tm"][id - 1]["category_id"] == 2) {
                         $(this).children().css("background-color", "#4d98b0");
-                    }
-                    if (tmData["tm"][id - 1]["category_id"] == 3) {
+                    } else if (tmData["tm"][id - 1]["category_id"] == 3) {
                         $(this).children().css("background-color", "#bdbcbb");
                     }
                     $(this).children().prepend('<br><img src="https://pokelife.pl/images/typy/' + tmData["tm"][id - 1]["type_id"] + '.png" style="width: 40px;">');
@@ -1742,13 +1750,13 @@ function initPokeLifeScript() {
 
 
 
-
     // **********************
     //
     // initPlecakTrzymaneView
     // Funkcja zmieniająca wygląd plecaka
     //
     // **********************
+
     function initPlecakTrzymaneView() {
         onReloadMain(function() {
             if (this.find('.panel-heading').html() === "Plecak") {
@@ -1872,13 +1880,13 @@ function initPokeLifeScript() {
 
 
 
-
     // **********************
     //
     // initSzybkieKlikanieWLinkiPromocyjne
     // Funkcja dodająca szybkie klikanie w linki promocyjne
     //
     // **********************
+
     function initSzybkieKlikanieWLinkiPromocyjne() {
 
         function clickInLink(number, id) {
@@ -1916,19 +1924,18 @@ function initPokeLifeScript() {
 
 
 
-
     // **********************
     //
     // initStatystykiLink
     // Funkcja dodająca link do statystyk
     //
     // **********************
+
     function initStatystykiLink() {
         $('body').append('<a id="PokeLifeScriptStats" style="color: #333333 !important;text-decoration:none;" target="_blank" href="' + domain + 'pokelife/stats/"><div class="plugin-button" style="border-radius: 4px;position: fixed;cursor: pointer;top: 15px;left: 190px;font-size: 19px;text-align: center;width: 100px;height: 30px;line-height: 35px;z-index: 9998;text-align: center;line-height: 30px;color: #333333;">Statystyki</div></a>');
         $("#PokeLifeScriptStats").attr("href", domain + "pokelife/stats/?login=" + md5($('#wyloguj').parent().parent().html().split("<div")[0].trim()));
     }
     initStatystykiLink();
-
 
 
 
@@ -1948,8 +1955,11 @@ function initPokeLifeScript() {
     // 9 - zebrane jagody
     // 10 - event w dziczy
     // **********************
+
     function initLogger() {
+
         var aktualnyPokemonDzicz;
+
         onReloadMain(function(url) {
             var dzicz = null;
             if (url != null && url.indexOf('miejsce=') != -1) {
@@ -1963,7 +1973,6 @@ function initPokeLifeScript() {
                     updateStats("zarobek_z_pracy", yeny);
                 }
             }
-
 
             if (DATA.find(".panel-heading:contains('Łapanie Jajka')").length == 0 && (DATA.find('img[src="images/event/jajko1.png"]').length > 0 || DATA.find('img[src="images/event/jajko2.png"]').length > 0 || DATA.find('img[src="images/event/jajko3.png"]').length > 0)) {
                 console.log('PokeLifeScript: spotkano jajko');
@@ -2077,15 +2086,13 @@ function initPokeLifeScript() {
 
 
 
-
-
-
     // **********************
     //
     // initWbijanieSzkoleniowca
     // Funkcja automatycznie przechodząca po przechowalni i zwiększaniu treningów do miniumum 7 w każdą statystyke
     //
     // **********************
+
     function initWbijanieSzkoleniowca() {
         var array = [];
         var affected = 0;
@@ -2106,7 +2113,6 @@ function initPokeLifeScript() {
                 })
             }
         })
-
 
         $(document).on('click', '#skrot_szkoleniowiec', function() {
             reloadMain("#glowne_okno", 'gra/druzyna.php?p=3', function() {
@@ -2179,21 +2185,19 @@ function initPokeLifeScript() {
 
 
 
-
-
     // **********************
     //
     // initChat
-    // Funkcja automatycznie przechodząca po przechowalni i zwiększaniu treningów do miniumum 7 w każdą statystyke
+    // Funkcja dodająca czat bota
     //
     // **********************
+
     function initChat() {
         window.localStorage.max_chat_id = 0;
 
         $('#chat-inner > ul').append('<li role="presentation" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokój widoczny wyłącznie dla użytkowników bota"><a href="#room-99999" aria-controls="room-99999" role="tab" data-toggle="tab" class="showRoomBot" data-room="99999" aria-expanded="true">Bot</a></li>');
         $('#shout_list').after('<ol style="list-style: none; display: none; margin: 0; padding: 0" id="bot_list"></ol>');
         $('#shoutbox-panel-footer').after('<div style="display: none;background: none;" id="shoutbox-bot-panel-footer" class="panel-footer input-group"><textarea id="shout_bot_message" maxlength="255" style="resize: none; overflow: hidden;height: 34px" type="text" class="form-control" placeholder="Wiadomość" name="message"></textarea> <span class="input-group-btn"> <button id="shout_bot_button" class="btn btn-primary" type="button">Wyślij</button> </span> </div>');
-
 
         $('#shout_bot_message').on('keydown', function(e){
             if(e.which == 13) {e.preventDefault();}
@@ -2214,8 +2218,6 @@ function initPokeLifeScript() {
             $('#bot_list').show();
             $('#shout_refresher').hide();
             $('#shoutbox-bot-panel-footer').show();
-
-
 
             if ($('#shout_refresher:contains("tymczasowo wyłączony")').length > 0 && $('#bot_list li').length == 0) {
                 $('#shouts').append("<button style='text-align: center; margin: 0 auto; display: block; margin-top: 20px;' class='btn btn-primary' id='zaloguj_czat_bot'>Zaloguj</button>");
@@ -2327,15 +2329,14 @@ function initPokeLifeScript() {
 
 
 
-
-
     // **********************
     //
-    // initPokemonGracza
-    // Funkcja zapisuje pokemony gracza w lizde
+    // initPokemonyLiga
+    // Funkcja zapisuje pokemony graczy w lidze
     //
     // **********************
-    function initPokemonGracza() {
+
+    function initPokemonyLiga() {
         onReloadMain(function() {
             var THAT = this;
             if (this.find('.panel-heading').html() === "Liga - pojedynek") {
@@ -2355,7 +2356,7 @@ function initPokeLifeScript() {
             }
         })
     }
-    initPokemonGracza();
+    initPokemonyLiga();
 
 
 
@@ -2377,22 +2378,7 @@ function initPokeLifeScript() {
                 type: 'POST',
                 url: "gra/zadania.php"
             }).done(function(response) {
-                var html = '<div class="panel panel-primary"><div data-login="' + login + '" data-time="' + today + '" class="panel-heading">Zadania<div class="navbar-right"><span id="refreshZadaniaWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
-                $.each($(response).find('#zadania_codzienne .panel-primary .panel-heading'), function(key, value) {
-                    if ($(value).html().split("<div")[0] !== "brak zadania") {
-                        html = html + '<tr><td>' + $(value).html().split("<div")[0];
-                    }
-                    if ($(value).parent().find(".text-center").html() != undefined) {
-                        $.each($(value).parent().find(".text-center p"), function(key2, value2) {
-                            html = html + " - " + $(value2).html().trim();
-                        })
-                    }
-                    html = html + '</tr></td>';
-                });
-                html = html + '</tbody></table></div>';
-                zadaniaWidget = html;
-                config.zadaniaWidget = html;
-                updateConfig(config);
+                parseResponse($(response));
                 $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
             })
         }
@@ -2400,6 +2386,25 @@ function initPokeLifeScript() {
             refreshZadaniaWidget();
         } else {
             zadaniaWidget = config.zadaniaWidget;
+        }
+
+        function parseResponse(THAT){
+            var html = '<div class="panel panel-primary"><div class="panel-heading">Zadania<div class="navbar-right"><span id="refreshZadaniaWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
+            $.each(THAT.find('#zadania_codzienne .panel-primary .panel-heading'), function(key, value) {
+                if ($(value).html().split("<div")[0] !== "brak zadania") {
+                    html = html + '<tr><td>' + $(value).html().split("<div")[0];
+                }
+                if ($(value).parent().find(".text-center").html() != undefined) {
+                    $.each($(value).parent().find(".text-center p"), function(key2, value2) {
+                        html = html + " - " + $(value2).html().trim();
+                    })
+                }
+                html = html + '</tr></td>';
+            });
+            html = html + '</tbody></table></div>';
+            zadaniaWidget = html;
+            config.zadaniaWidget = html;
+            updateConfig(config);
         }
 
         onReloadSidebar(function() {
@@ -2415,22 +2420,7 @@ function initPokeLifeScript() {
         onReloadMain(function() {
             var THAT = this;
             if (this.find('.panel-heading').html() === "Zadania") {
-                var html = '<div class="panel panel-primary"><div class="panel-heading">Zadania<div class="navbar-right"><span id="refreshZadaniaWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
-                $.each(THAT.find('#zadania_codzienne .panel-primary .panel-heading'), function(key, value) {
-                    if ($(value).html().split("<div")[0] !== "brak zadania") {
-                        html = html + '<tr><td>' + $(value).html().split("<div")[0];
-                    }
-                    if ($(value).parent().find(".text-center").html() != undefined) {
-                        $.each($(value).parent().find(".text-center p"), function(key2, value2) {
-                            html = html + " - " + $(value2).html().trim();
-                        })
-                    }
-                    html = html + '</tr></td>';
-                });
-                html = html + '</tbody></table></div>';
-                zadaniaWidget = html;
-                config.zadaniaWidget = html;
-                updateConfig(config);
+                parseResponse(THAT);
             }
         })
 
@@ -2449,6 +2439,7 @@ function initPokeLifeScript() {
     // Funkcja dodająca pokemona dnia do sidebaru
     //
     // **********************
+
     function initPokemonDniaWidget() {
         var d = new Date();
         d.setMinutes(d.getMinutes() - 21);
@@ -2463,14 +2454,7 @@ function initPokeLifeScript() {
                 type: 'POST',
                 url: "gra/hodowla.php"
             }).done(function(response) {
-                hodowlaPokemonDniaImage = $(response).find('#hodowla-glowne img').attr('src');
-                config.hodowlaPokemonDniaImage = today + "" + login + hodowlaPokemonDniaImage;
-                hodowlaPokemonDniaStowarzyszenieImage = $(response).find('#hodowla-glowne img:nth(1)').attr('src');
-                if ($(response).find('.panel-heading:contains("Pokemon dnia Stowa")').length == 0) {
-                    hodowlaPokemonDniaStowarzyszenieImage = undefined;
-                }
-                config.hodowlaPokemonDniaStowarzyszenieImage = today + "" + login + hodowlaPokemonDniaStowarzyszenieImage;
-                updateConfig(config);
+                parseResponse($(response));
             });
         } else {
             hodowlaPokemonDniaImage = config.hodowlaPokemonDniaImage.replace(today, "");
@@ -2478,6 +2462,24 @@ function initPokeLifeScript() {
             hodowlaPokemonDniaStowarzyszenieImage = config.hodowlaPokemonDniaStowarzyszenieImage.replace(today, "");
             hodowlaPokemonDniaStowarzyszenieImage = hodowlaPokemonDniaStowarzyszenieImage.replace(login, "");
         }
+
+        function parseResponse(THAT){
+            hodowlaPokemonDniaImage = THAT.find('#hodowla-glowne img').attr('src');
+            config.hodowlaPokemonDniaImage = today + "" + login + hodowlaPokemonDniaImage;
+            hodowlaPokemonDniaStowarzyszenieImage = THAT.find('#hodowla-glowne img:nth(1)').attr('src');
+            if (THAT.find('.panel-heading:contains("Pokemon dnia Stowa")').length == 0) {
+                hodowlaPokemonDniaStowarzyszenieImage = undefined;
+            }
+            config.hodowlaPokemonDniaStowarzyszenieImage = today + "" + login + hodowlaPokemonDniaStowarzyszenieImage;
+            updateConfig(config);
+        }
+
+        onReloadMain(function() {
+            var THAT = this;
+            if (this.find('.panel-heading').html() === "Hodowla Pokemon") {
+                parseResponse(THAT);
+            }
+        })
 
         onReloadSidebar(function() {
             if (hodowlaPokemonDniaImage !== undefined && hodowlaPokemonDniaImage !== "undefined") {
@@ -2501,6 +2503,8 @@ function initPokeLifeScript() {
     // initPrzypomnienieOPracy()
     // Funkcja dodająca przypomnienie o pracy po wyjściu poza obszar strony
     //
+    // **********************
+
     function initPrzypomnienieOPracy() {
         $('body').append('<div id="jobAlertBox" style="position: fixed; width: 100%; height: 100%; background: linear-gradient(rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0) 100%); z-index: 99999; top: 0px; display: none;"><h1 style="text-align: center;color: #dadada;font-size: 90px;vertical-align: middle;">Brak aktywności</h1></div>');
 
@@ -2530,7 +2534,6 @@ function initPokeLifeScript() {
 
 
 
-
     // **********************
     //
     // initWystawView()
@@ -2550,7 +2553,6 @@ function initPokeLifeScript() {
                 }
             }
         })
-
 
         $(document).off("click", "#targ_wysprz-zwykle .check-price");
         $(document).on("click", "#targ_wysprz-zwykle .check-price", function() {
@@ -2634,37 +2636,22 @@ function initPokeLifeScript() {
             var sumaJagodyYen = 0;
             var sumaJagodyZas = 0;
 
-            $($(DATA).find(".panel .panel-primary")[0]).after(`
-<div class="panel panel-primary">
-<div class="panel-heading">Podsumowanie wystawionych</div>
-<table class="table table-strippedd">
-<tbody>
+            $(DATA).find('#targ_wysprz-zwykle').css('margin-top', '20px');
+
+            $(DATA).find(".panel .panel-primary:contains('Twoje oferty na targu') tbody").append(`
 <tr>
-<th>&nbsp;</th>
-<th>Ilość</th>
-<th>Cena ¥</th>
-<th>Cena §</th>
-<th></th>
-<th>&nbsp;</th>
-</tr>
-<tr>
-<td>
-<img src="images/yen.png" class="visible-lg-inline" style="width: 26px; margin: -6px 0px -6px 10px;">
-</td>
+<td></td>
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(summaryCount) + `</td>
 <td id="summarYen">` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(summarYen) + `</td>
-<td id="summaryZas">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(summaryZas) + `</td>
-
+<td id="summaryZas">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(summaryZas) + ` §</td>
+<td></td>
 <td></td>
 </tr>
-</tbody>
-</table>
-</div>`
-                                                             )
+`)
 
-            $($(DATA).find(".panel .panel-primary")[1]).after(`
+              $($(DATA).find(".panel .panel-primary")[0]).after(`
 <div class="panel panel-primary">
-<div class="panel-heading">Możliwy zarobek z jagód</div>
+<div class="panel-heading" style="cursor: pointer">Możliwy zarobek z jagód</div>
 <table class="table table-strippedd">
 <tbody id="JagodytoAppend">
 <tr>
@@ -2672,11 +2659,9 @@ function initPokeLifeScript() {
 <th>Ilość</th>
 <th>Cena ¥</th>
 <th>Cena §</th>
-<th></th>
-<th>&nbsp;</th>
 </tr>` + (
                 $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').length > 0 ? `
-<tr class="classToSum"
+<tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-yen="` + (5000 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (2 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
@@ -2687,11 +2672,10 @@ data-zas="` + (2 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagod
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(5000 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(2 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td></td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').length > 0 ? `
-<tr class="classToSum"
+<tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-yen="` + (17000 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (3 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
@@ -2702,11 +2686,10 @@ data-zas="` + (3 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jago
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(17000 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(3 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td></td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').length > 0 ? `
-<tr class="classToSum"
+<tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-yen="` + (10000 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (3 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
@@ -2717,11 +2700,10 @@ data-zas="` + (3 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(10000 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(3 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td></td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').length > 0 ? `
-<tr class="classToSum"
+<tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-yen="` + (48000 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
@@ -2732,11 +2714,10 @@ data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(48000 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(15 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td></td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').length > 0 ? `
-<tr class="classToSum"
+<tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-yen="` + (56000 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
@@ -2747,11 +2728,10 @@ data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe 
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(56000 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(15 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td></td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').length > 0 ? `
-<tr class="classToSum"
+<tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-yen="` + (48000 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
@@ -2762,11 +2742,10 @@ data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jago
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(48000 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(15 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td></td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').length > 0 ? `
-<tr class="classToSum"
+<tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-yen="` + (53000 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
@@ -2777,11 +2756,10 @@ data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagod
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(53000 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(15 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td></td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').length > 0 ? `
-<tr class="classToSum"
+<tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-yen="` + (60000 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
@@ -2792,11 +2770,10 @@ data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagod
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(60000 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(15 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td></td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').length > 0 ? `
-<tr class="classToSum"
+<tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-yen="` + (1500 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
@@ -2807,13 +2784,12 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(1500 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td></td>
 </tr>
 ` : ``) + `
 </tbody>
 </table>
 </div>`
-                                                             )
+                                                               )
 
 
             $.each($(DATA.find('.classToSum')), function(index, item) {
@@ -2830,10 +2806,16 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(sumaJagodyCount) + `</td>
 <td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(sumaJagodyYen) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(sumaJagodyZas) + `</td>
-
-<td></td>
 </tr>`);
         }
+
+        $(document).on('click', '.panel-heading:contains("Możliwy zarobek z jagód")', function() {
+            if($('.classToSum.hidden').length > 0){
+                $('.classToSum').removeClass('hidden');
+            } else {
+                $('.classToSum').addClass('hidden');
+            }
+        });
 
         $('body').off('click', ':not(#marketTable, #marketTable *)');
         $('body').on('click', ':not(#marketTable, #marketTable *)', function() {
@@ -2845,13 +2827,13 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
 
 
 
-
     // **********************
     //
     // initRozbudowanyOpisDziczy
     // Funkcja dodająca podgląd statystyk dotyczących dziczy
     //
     // **********************
+
     function initRozbudowanyOpisDziczy(){
         var d = new Date();
         d.setMinutes(d.getMinutes() - 21);
@@ -2947,8 +2929,6 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         }
 
 
-
-
         function initPasek(){
             $.each($('#pasek_skrotow li'), function (index, item) {
                 if ($(item).find('a').attr('href').includes("gra/dzicz")) {
@@ -3003,6 +2983,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
     // initPrzypomnienieORepelu()
     // Funkcja dodająca przypomnienie o konczącym sie repelu
     //
+
     function initPrzypomnienieORepelu() {
         onReloadSidebar(function() {
             if(this.find('.well-stan[data-original-title="Czas pozostały do końca działania Tepela/Repela"]').length > 0){
@@ -3024,8 +3005,8 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
     // Funkcja dodająca sprawdzenie aktualnej wersji bota na serwerze
     //
     // **********************
-    function initSprawdzCzyMaszAktualnaWersjeBota(){
 
+    function initSprawdzCzyMaszAktualnaWersjeBota(){
         var url = domain + '/pokelife/api/get_bot_version.php';
         $.getJSON(url, {
             format: "json"
@@ -3039,13 +3020,13 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
 
 
 
-
     // **********************
     //
     // initPrzypomnienieOOpiece
     // Funkcja dodająca przypomnienie o opiece
     //
     // **********************
+
     function initPrzypomnienieOOpiece(){
         $('.statystyki-wyglad:nth-child(13):contains("nie")').css("color", "red").css("font-weight", "800");
         $('.statystyki-wyglad:nth-child(13):contains("nie")').append('<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>');
@@ -3118,8 +3099,6 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
         config.customStyleFont = "#000000";
         updateConfig(config);
     }
-
-
 
     $.getJSON("https://raw.githubusercontent.com/krozum/pokelife/master/pokemon.json", {
         format: "json"
