@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.15.6 (2020-05-22)
+* Dodanie zatrzymania AutoGo na dziennym przeliczaniu
+
 5.15.4 (2020-05-21)
 * Poprawka do resetu, nie powinno zapisywać złych danych juz po wejściu na strone w czasie resetu
 * Po wejściu na hodowle przeładuje widget z pokemonami dnia
