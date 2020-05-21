@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.15.5
+// @version      5.15.6
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1029,7 +1029,13 @@ function initPokeLifeScript() {
 
             if (canRun) {
                 if ($('#glowne_okno .panel-heading').length > 0) {
-                    if ($('#glowne_okno').find(".panel-heading:contains('Łapanie Jajka')").length > 0) {
+                    if ($('#glowne_okno').find(".panel-heading:contains('Dzienne Przeliczenie')").length > 0) {
+                        console.log('PokeLifeScript: Dzienne Przeliczenie, przerwanie AutoGo');
+                        autoGo = false;
+                        $('#goAutoButton').html('AutoGO');
+                        $("#goStopReason").html("Dzienne Przeliczenie").show();
+                        document.title = "Dzienne Przeliczenie";
+                    } else if ($('#glowne_okno').find(".panel-heading:contains('Łapanie Jajka')").length > 0) {
                         console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".");
                         $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
                     } else if ($('.dzikipokemon-background-shiny').length > 0) {
