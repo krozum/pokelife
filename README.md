@@ -28,6 +28,7 @@ Changelog
 ---------
 5.15.6 (2020-05-22)
 * Dodanie zatrzymania AutoGo na dziennym przeliczaniu
+* Zmiana w pokazywaniu widgetu shiny, od teraz nie powinno pokazywac duplikatów tego samego pokemomona gdy jeden gracz spotka go kilka razy w przeciągu paru minut
 
 5.15.4 (2020-05-21)
 * Poprawka do resetu, nie powinno zapisywać złych danych juz po wejściu na strone w czasie resetu
