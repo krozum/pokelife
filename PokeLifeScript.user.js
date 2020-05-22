@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.15.7
+// @version      5.15.8
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -674,16 +674,16 @@ function initPokeLifeScript() {
             selectPokemon.push({
                 'iconFilePath': 'https://cdn0.iconfinder.com/data/icons/seo-smart-pack/128/grey_new_seo-05-512.png',
                 'iconValue': function() {
-                    if (Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 20) {
+                    if (Number($('#glowne_okno .panel-body.nopadding b').html().split(': ')[1]) <= 20) {
                         return "&wybierz_pokemona=" + config.pok20;
                     }
-                    if (Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 40) {
+                    if (Number($('#glowne_okno .panel-body.nopadding b').html().split(': ')[1]) <= 40) {
                         return "&wybierz_pokemona=" + config.pok40;
                     }
-                    if (Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 60) {
+                    if (Number($('#glowne_okno .panel-body.nopadding b').html().split(': ')[1]) <= 60) {
                         return "&wybierz_pokemona=" + config.pok60;
                     }
-                    if (Number($('#glowne_okno .dzikipokemon-background-normalny b').html().split(': ')[1]) <= 80) {
+                    if (Number($('#glowne_okno .panel-body.nopadding b').html().split(': ')[1]) <= 80) {
                         return "&wybierz_pokemona=" + config.pok80;
                     }
                     return "&wybierz_pokemona=" + config.pok100;
@@ -836,7 +836,7 @@ function initPokeLifeScript() {
                                   {
                                       'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb4.jpg",
                                       'iconValue': function() {
-                                          if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc1.png"]').length > 0) {
+                                          if ($(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc1.png"]').length > 0) {
                                               return '&zlap_pokemona=levelballe';
                                           } else {
                                               var d = new Date();
@@ -857,7 +857,7 @@ function initPokeLifeScript() {
                                       'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb5.jpg",
                                       'iconValue': function() {
                                           let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                          if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnosc1.png"]').length > 0 && pokeLvlNumber <= 5) {
+                                          if ($(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc1.png"]').length > 0 && pokeLvlNumber <= 5) {
                                               return '&zlap_pokemona=luxuryballe';
                                           } else {
                                               var d = new Date();
@@ -880,7 +880,7 @@ function initPokeLifeScript() {
                                           if ($('label[data-original-title="Safariball"]').length > 0) {
                                               if (Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1) {
                                                   if (config.lapSafariballemNiezlapane == true || config.lapSafariballemNiezlapane == "true")
-                                                      if ($(previousPageContent).find('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
+                                                      if ($(previousPageContent).find('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
                                                           return '&zlap_pokemona=safariballe';
                                                       } else {
                                                           $('button:contains("Pomiń i szukaj dalej")').click();
@@ -2016,7 +2016,7 @@ function initPokeLifeScript() {
                     updateEvent("Na twojej drodze staje inny trener pokemon, który wyzywa Cię na pojedynek ale niestety go przegrywasz. Zdobyte doświadczenie: <b>" + pd + "</b>", 3, dzicz);
                     updateStatsDoswiadczenie("{" + json.substring(0, json.length - 1) + "}");
                 }
-            } else if (DATA.find(".dzikipokemon-background-normalny").length > 0) {
+            } else if (DATA.find('h2:contains("Wybierz Pokemona")').length > 0) {
                 console.log('PokeLifeScript: spotkany pokemon');
                 updateEvent("Spotkany pokemon <b>" + DATA.find('.panel-primary i').html() + "</b>", 4, dzicz);
                 aktualnyPokemonDzicz = DATA.find('.panel-primary i').html();
