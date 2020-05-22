@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.15.6
+// @version      5.15.7
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1038,7 +1038,7 @@ function initPokeLifeScript() {
                     } else if ($('#glowne_okno').find(".panel-heading:contains('Łapanie Jajka')").length > 0) {
                         console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".");
                         $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
-                    } else if ($('.dzikipokemon-background-shiny').length > 0) {
+                    } else if ($('h2:contains("Wybierz Pokemona")').length > 0 && $('.panel-body.nopadding').attr('style').indexOf("background-color: #FFBB") == -1) {
                         console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
                         autoGo = false;
                         $('#goAutoButton').html('AutoGO');
@@ -1046,7 +1046,7 @@ function initPokeLifeScript() {
                         document.title = "Spotkany shiny pokemon";
                         $('#refreshShinyWidget').trigger('click');
                         requestDomain("pokelife/api/update_shiny.php?pokemon_id=" + $('.dzikipokemon-background-shiny .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time=" + Date.now(), null);
-                    } else if ($('.dzikipokemon-background-normalny img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.dzikipokemon-background-normalny img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.dzikipokemon-background-normalny .col-xs-9 > b').html().split("Poziom: ")[1] <= config.maxLapanyLvl) {
+                    } else if ($('h2:contains("Wybierz Pokemona")').length && $('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.panel-body.nopadding img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.panel-body.nopadding .col-xs-9 > b').html().split("Poziom: ")[1] <= config.maxLapanyLvl) {
                         if (config.zatrzymujNiezlapane == false || config.zatrzymujNiezlapane == "false") {
                             console.log('PokeLifeScript: spotkany niezłapany pokemona');
                             console.log('PokeLifeScript: atakuje pokemona');
@@ -1066,7 +1066,7 @@ function initPokeLifeScript() {
                             $("#goStopReason").html("Spotkany niezłapany pokemona").show();
                             document.title = "Spotkany niezłapany pokemona";
                         }
-                    } else if ($('.dzikipokemon-background-normalny').length == 1) {
+                    } else if ($('h2:contains("Wybierz Pokemona")').length == 1) {
                         console.log('PokeLifeScript: atakuje pokemona');
                         var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
                         if ($('button[href="' + url + '"]').length == 0) {
