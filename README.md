@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.16 (2020-05-22)
+* Poprawka do shiny alertów
+
 5.15.8 (2020-05-22)
 * Poprawka na zmiany dotyczące niektórych class
 
