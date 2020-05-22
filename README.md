@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.15.8 (2020-05-22)
+* Poprawka na zmiany dotyczące niektórych class
+
 5.15.6 (2020-05-22)
 * Dodanie zatrzymania AutoGo na dziennym przeliczaniu
 * Zmiana w pokazywaniu widgetu shiny, od teraz nie powinno pokazywac duplikatów tego samego pokemomona gdy jeden gracz spotka go kilka razy w przeciągu paru minut
