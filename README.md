@@ -26,6 +26,15 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.17 (2020-05-23)
+* Dodanie pokazywania w opisach dziczy trudności złapania pokemonów
+* Dodanie pokazywania w widget shiny regionu i dziczy gdzie shiny pokemon występuje
+* Zamiast wybierać czy zatrzymywać przy niezłapanych pokemonach czy nie, od teraz są do wyboru 4 tryby:
+  - Zatrzymuj gdy spotkasz
+  - Zatrzymuj tylko gdy spotkasz poki o trudności IV lub V
+  - Nie zatrzymuj (traktuje niezłapane w taki sam sposób jak złapane, czyli rzuci pokeball zgodnie z configiem)
+  - Rzucaj cherishballe w poki o trudności IV lub V (poki o trudności I, II, III potraktuje jak złapane, czyli rzuci pokeball zgodnie z configiem, IV i V rzuci cherishballe)
+
 5.16 (2020-05-22)
 * Poprawka do shiny alertów
 
