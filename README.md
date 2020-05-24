@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.17.1 (2020-05-24)
+* Poprawka do niezłapanych
+
 5.17 (2020-05-23)
 * Dodanie pokazywania w opisach dziczy trudności złapania pokemonów
 * Dodanie pokazywania w widget shiny regionu i dziczy gdzie shiny pokemon występuje
