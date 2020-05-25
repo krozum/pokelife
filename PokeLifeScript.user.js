@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.17.1
+// @version      5.17.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -119,6 +119,22 @@ function afterReloadMain(fn) {
 
 function getPreviousPageContent() {
     return previousPageContent;
+}
+
+
+var rnd = Math.floor(Math.random() * 10);
+var audio = new Audio('https://www.bra2ns.pl/pokelife/stats/assets/pokemon_info.mp3');
+if(rnd == 6){
+    audio = new Audio('https://www.bra2ns.pl/pokelife/stats/assets/pokemon_lavendercity.mp3');
+}
+function triggerSound() {
+    audio.play();
+    audio.volume = 0.4;
+}
+
+function stopSound() {
+    audio.pause();
+    audio.currentTime = 0;
 }
 
 
@@ -309,6 +325,7 @@ $(document).on("click", "nav a:not('.btn-akcja')", function(event) {
 
 $(document).on("click", function(event) {
     document.title = "PokeLife - Gra Pokemon Online";
+    stopSound();
 })
 
 $(document).off("click", ".btn-akcja");
@@ -1127,6 +1144,7 @@ function initPokeLifeScript() {
                         $('#goAutoButton').html('AutoGO');
                         $("#goStopReason").html("Spotkany shiny pokemon").show();
                         document.title = "Spotkany shiny pokemon";
+                        triggerSound();
                         $('#refreshShinyWidget').trigger('click');
                         requestDomain("pokelife/api/update_shiny.php?pokemon_id=" + $('.panel-body.nopadding .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time=" + Date.now(), null);
                     } else if ($('h2:contains("Wybierz Pokemona")').length && $('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.panel-body.nopadding img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.panel-body.nopadding .col-xs-9 > b').html().split("Poziom: ")[1] <= config.maxLapanyLvl) {
@@ -1137,6 +1155,7 @@ function initPokeLifeScript() {
                                 $('#goAutoButton').html('AutoGO');
                                 $("#goStopReason").html("Spotkany niezłapany pokemona").show();
                                 document.title = "Spotkany niezłapany pokemona";
+                                triggerSound();
                                 break;
                             case 2:
                                 if($('.panel-body.nopadding img[src="images/trudnosc/trudnosc4.png"]').length > 0 || $('.panel-body.nopadding img[src="images/trudnosc/trudnosc5.png"]').length > 0){
@@ -1145,6 +1164,7 @@ function initPokeLifeScript() {
                                     $('#goAutoButton').html('AutoGO');
                                     $("#goStopReason").html("Spotkany niezłapany pokemona").show();
                                     document.title = "Spotkany niezłapany pokemona";
+                                    triggerSound();
                                 } else {
                                     console.log('PokeLifeScript: spotkany niezłapany pokemona');
                                     console.log('PokeLifeScript: atakuje pokemona');
@@ -2328,16 +2348,14 @@ function initPokeLifeScript() {
         $('#shoutbox-panel-footer').after('<div style="display: none;background: none;" id="shoutbox-bot-panel-footer" class="panel-footer input-group"><textarea id="shout_bot_message" maxlength="255" style="resize: none; overflow: hidden;height: 34px" type="text" class="form-control" placeholder="Wiadomość" name="message"></textarea> <span class="input-group-btn"> <button id="shout_bot_button" class="btn btn-primary" type="button">Wyślij</button> </span> </div>');
 
         $('#shout_bot_message').on('keydown', function(e){
-            if(e.which == 13) {e.preventDefault();}
+            if(e.which == 13) {
+                e.preventDefault();
+                wyslij();
+            }
         }).on('input', function(){
             $(this).height(1);
             var totalHeight = $(this).prop('scrollHeight') - parseInt($(this).css('padding-top')) - parseInt($(this).css('padding-bottom'));
             $(this).height(totalHeight);
-        });
-
-        $("a[href='#room-99999']").click(function() {
-            $('#bot-chat-counter').css("display", "none");
-            $('#bot-chat-counter').html(0);
         });
 
         $('.showRoomBot').click(function() {
@@ -2350,6 +2368,8 @@ function initPokeLifeScript() {
             if ($('#shout_refresher:contains("tymczasowo wyłączony")').length > 0 && $('#bot_list li').length == 0) {
                 $('#shouts').append("<button style='text-align: center; margin: 0 auto; display: block; margin-top: 20px;' class='btn btn-primary' id='zaloguj_czat_bot'>Zaloguj</button>");
             }
+            var objDiv = document.getElementById("shouts");
+            objDiv.scrollTop = objDiv.scrollHeight;
         });
 
         $('.showRoom').click(function() {
@@ -2372,11 +2392,14 @@ function initPokeLifeScript() {
             }).done(function(data) {
                 if (data['list'] != undefined) {
                     var messages = data['list'].reverse();
+                    console.log(messages);
                     var lastDate = null;
                     $.each(messages, function(key, value) {
                         var d = new Date(value["creation_date"]);
                         if(lastDate != null && d.getDay() !== lastDate.getDay()){
-                            $("#bot_list").append('<li style="word-break: break-word; padding: 1px 5px 1px 5px; font-family: Arial; font-size: 14px; text-align: center; color: #777; border-radius: 3px; background: #00000008;">' + d.toISOString().slice(0, 10) + '</li>')
+                            var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+                            var localISOTime = (new Date(d - tzoffset)).toISOString().slice(0, 10);
+                            $("#bot_list").append('<li style="word-break: break-word; padding: 1px 5px 1px 5px; font-family: Arial; font-size: 14px; text-align: center; color: #777; border-radius: 3px; background: #00000008;">' + localISOTime + '</li>')
                         }
                         if (value['false_login'] == null) {
                             $("#bot_list").append('<li style="word-break: break-word;text-align: center;border-bottom: 2px dashed #aa1c00;padding-top: 3px;padding-bottom: 3px;color: #aa1c00;font-size: 18px;font-family: Arial;"><span>' + value["message"] + '</span></li>');
@@ -2401,7 +2424,9 @@ function initPokeLifeScript() {
                                 $.each(messages, function(key, value) {
                                     var d = new Date(value["creation_date"]);
                                     if(lastDate2 != null && d.getDay() !== lastDate2.getDay()){
-                                        $("#bot_list").append('<li style="word-break: break-word; padding: 1px 5px 1px 5px; font-family: Arial; font-size: 14px; text-align: center; color: #777; border-radius: 3px; background: #00000008;">' + d.toISOString().slice(0, 10) + '</li>')
+                                        var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+                                        var localISOTime = (new Date(d - tzoffset)).toISOString().slice(0, 10);
+                                        $("#bot_list").append('<li style="word-break: break-word; padding: 1px 5px 1px 5px; font-family: Arial; font-size: 14px; text-align: center; color: #777; border-radius: 3px; background: #00000008;">' + localISOTime + '</li>')
                                     }
                                     if (value['false_login'] == null) {
                                         $("#bot_list").append('<li style="word-break: break-word;text-align: center;border-bottom: 2px dashed #aa1c00;padding-top: 3px;padding-bottom: 3px;color: #aa1c00;font-size: 18px;font-family: Arial;"><span>' + value["message"] + '</span></li>');
@@ -2409,6 +2434,7 @@ function initPokeLifeScript() {
                                         $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "") + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["avatar"] != "" ? '<img src="/images/stow/deko/176.png" style=" width: 15px; margin-right: 3px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
                                     }
                                     window.localStorage.max_chat_id = value["czat_id"];
+                                    lastDate2 = new Date(value["creation_date"]);
                                 });
                                 $('#shouts').animate({ scrollTop: $('#shouts').prop("scrollHeight") }, 500);
                             }
@@ -2437,12 +2463,6 @@ function initPokeLifeScript() {
                 });
             }
         }
-
-        $('#shout_bot_message').keypress(function(event) {
-            if (event.keyCode == 13) {
-                wyslij();
-            }
-        });
 
         $("#shout_bot_button").click(function() {
             wyslij();
@@ -3171,6 +3191,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
     }
     initPrzypomnienieOOpiece();
 
+
 }
 
 
@@ -3235,7 +3256,7 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
         updateConfig(config);
     }
 
-    $.getJSON("https://raw.githubusercontent.com/krozum/pokelife/master/PokemonData.json", {
+    $.getJSON("https://raw.githubusercontent.com/krozum/pokelife/master/PokemonData.json?a=1", {
         format: "json"
     }).done(function(data) {
         pokemonData = data;
