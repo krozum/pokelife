@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.17.2
+// @version      5.17.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1818,6 +1818,7 @@ function initPokeLifeScript() {
     //
     // **********************
 
+    var pokemonPriceData;
     function initShinyWidget() {
         var shinyWidget;
 
@@ -1834,7 +1835,14 @@ function initPokeLifeScript() {
                         wystepowanie = pokemonData[value['pokemon_id']].region + ", " + pokemonData[value['pokemon_id']].wystepowanie_shiny;
                         nazwa = pokemonData[value['pokemon_id']].name;
                     }
-                    html = html + "<td data-toggle='tooltip' data-placement='top' title='' data-original-title='Spotkany : " + value['creation_date'] + " \n" + wystepowanie + "' style='text-align: center;'><a target='_blank' href='https://pokelife.pl/pokedex/index.php?title=" + nazwa + "'><img src='pokemony/srednie/s" + value['pokemon_id'] + ".png' style='width: 40px; height: 40px;'></a></td>";
+
+                    var id = Number(value['pokemon_id']);
+                    if (id > 1000) {
+                        id = "" + id;
+                        id = Number(id.substring(1));
+                    }
+
+                    html = html + "<td data-toggle='tooltip' data-html='true' data-placement='top' title='' data-original-title='Spotkany : " + value['creation_date'] + "<br>" + wystepowanie + "<br>Cena w hodowli: " + pokemonPriceData[id] + " §' style='text-align: center;'><a target='_blank' href='https://pokelife.pl/pokedex/index.php?title=" + nazwa + "'><img src='pokemony/srednie/s" + value['pokemon_id'] + ".png' style='width: 40px; height: 40px;'></a></td>";
                 });
                 html = html + '</tr></tbody></table></div>';
                 shinyWidget = html;
@@ -1856,7 +1864,14 @@ function initPokeLifeScript() {
             refreshShinyWidget();
         }, 300000);
     }
-    initShinyWidget();
+
+    var api = "https://raw.githubusercontent.com/krozum/pokelife/master/pokemonPriceData.json";
+    $.getJSON(api, {
+        format: "json"
+    }).done(function(data) {
+        pokemonPriceData = data;
+        initShinyWidget();
+    });
 
 
 
