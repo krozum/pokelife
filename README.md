@@ -26,6 +26,12 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.17.2 (2020-05-25)
+* Dodanie dzwięku powiadomienia przy spotkaniu shiny/niezłapanego
+* Dodanie scrollowania do chat bota
+* Dodanie wysyłania wiadomości na enter
+* Poprawka do wyświetlania nagłówków dni w chat bota
+
 5.17.1 (2020-05-24)
 * Poprawka do niezłapanych
 
