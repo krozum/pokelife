@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.17.3 (2020-05-25)
+* Dodanie ceny w hodowli na shiny widget
+
 5.17.2 (2020-05-25)
 * Dodanie dzwięku powiadomienia przy spotkaniu shiny/niezłapanego
 * Dodanie scrollowania do chat bota
