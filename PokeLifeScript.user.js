@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.17.3
+// @version      5.17.30
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -67,6 +67,12 @@ var styles = [];
 var domain = "https://bra2ns.pl/"
 
 
+var activeScript = [];
+var run;
+var throwCommand = null;
+var actionCommand = null;
+
+
 
 // **********************
 //
@@ -75,7 +81,7 @@ var domain = "https://bra2ns.pl/"
 // **********************
 
 function requestDomainPost(url, data, callback) {
-    $.post(domain + url, {config: data}, function(result){
+    $.post(domain + url, { config: data }, function(result) {
         callback == null ? "" : callback(result)
     })
 }
@@ -87,11 +93,11 @@ function requestDomain(url, callback) {
 }
 requestDomain("pokelife/api/update_user.php?bot_version=" + GM_info.script.version + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&poziom=" + $('button[data-original-title="Poziom Trenera Pokemon"]').html(), null);
 
-function updateConfig(config, callback){
+function updateConfig(config, callback) {
     console.log("------------");
     console.log(config);
     console.log("------------");
-    requestDomainPost("pokelife/api/update_config_post.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim(), JSON.stringify(config), callback != undefined ? function(){ callback.call()} : null);
+    requestDomainPost("pokelife/api/update_config_post.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim(), JSON.stringify(config), callback != undefined ? function() { callback.call() } : null);
 }
 
 
@@ -103,16 +109,19 @@ function updateConfig(config, callback){
 // **********************
 
 window.onReloadSidebarFunctions = [];
+
 function onReloadSidebar(fn) {
     window.onReloadSidebarFunctions.push(fn);
 }
 
 window.onReloadMainFunctions = [];
+
 function onReloadMain(fn) {
     window.onReloadMainFunctions.push(fn);
 }
 
 window.afterReloadMainFunctions = [];
+
 function afterReloadMain(fn) {
     window.afterReloadMainFunctions.push(fn);
 }
@@ -124,9 +133,10 @@ function getPreviousPageContent() {
 
 var rnd = Math.floor(Math.random() * 10);
 var audio = new Audio('https://www.bra2ns.pl/pokelife/stats/assets/pokemon_info.mp3');
-if(rnd == 6){
+if (rnd == 6) {
     audio = new Audio('https://www.bra2ns.pl/pokelife/stats/assets/pokemon_lavendercity.mp3');
 }
+
 function triggerSound() {
     audio.play();
     audio.volume = 0.4;
@@ -261,11 +271,11 @@ $(document).on('click', '#zaloguj_chat', function(e) {
 
 
 $(document).off("click", ".stan-pokemon");
-$(document).on( "click", ".stan-pokemon", function(event) {
-    reloadMain("#glowne_okno", 'gra/stan.php?p='+$(this).attr('data-pokemon-id'));
+$(document).on("click", ".stan-pokemon", function(event) {
+    reloadMain("#glowne_okno", 'gra/stan.php?p=' + $(this).attr('data-pokemon-id'));
 });
 
-$(document).on( "click", ".pokazpoka", function(event) {
+$(document).on("click", ".pokazpoka", function(event) {
     //$("#podgladPoka_content").html('Wczytywanie...');
     var ukrycie = 0;
     var zmienna = $(this).attr('data-ignoruj-ukrycie');
@@ -288,7 +298,7 @@ $(document).on( "click", ".pokazpoka", function(event) {
         rank = zmienna4;
     }
 
-    reloadMain("#podgladPoka_content", 'gra/pokemon_skr.php?nopanel&p='+$(this).attr('data-id-pokemona')+'&ignoruj_ukrycie='+ukrycie+'&ograniczenia_hali='+hala+'&pokemon_hala='+hala2+'&treningi_rank='+rank);
+    reloadMain("#podgladPoka_content", 'gra/pokemon_skr.php?nopanel&p=' + $(this).attr('data-id-pokemona') + '&ignoruj_ukrycie=' + ukrycie + '&ograniczenia_hali=' + hala + '&pokemon_hala=' + hala2 + '&treningi_rank=' + rank);
 });
 
 
@@ -501,8 +511,8 @@ function initPokeLifeScript() {
             $(':root').get(0).style.setProperty("--customStyle-font", config.customStyleFont);
         } else {
             var style = styles[0];
-            $.each(styles, function( key, value ) {
-                if(value.style_id == config.skinStyle){
+            $.each(styles, function(key, value) {
+                if (value.style_id == config.skinStyle) {
                     style = value;
                 }
             });
@@ -515,7 +525,7 @@ function initPokeLifeScript() {
 
         $(document).on('click', '.changeStyleTo', function() {
             config.skinStyle = $(this).data('id');
-            updateConfig(config, function(){location.reload()});
+            updateConfig(config, function() { location.reload() });
         });
 
         $(document).on("click", "#changeStyle", function() {
@@ -525,7 +535,7 @@ function initPokeLifeScript() {
                 $('body').append('<div id="styleSettings" style="padding: 10px; position:fixed; bottom: 52px; left: 0px; width: 400px; background: white; opacity: 1; border: 7px solid #d6e9c6; z-index: 9999; font-weight: 600"></div>');
                 $('#styleSettings').append('<div class="row"><div class="col-sm-6 leftRow">Gotowe style:<table></table></div><div class="col-sm-6 rightRow">Kreator styli:<table></table></div></div>');
 
-                $.each(styles, function( key, value ) {
+                $.each(styles, function(key, value) {
                     $('#styleSettings .leftRow table').append('<tr><td> <div class="changeStyleTo" data-id="' + value.style_id + '" style="background:linear-gradient(90deg, ' + value.bg + ' 50%, ' + value.tabs + ' 50%); border-radius: 4px; cursor: pointer;font-size: 19px;text-align: center;width: 30px;height: 30px;line-height: 35px;z-index: 9999;"></div> </td><td style="padding: 10px"> ' + value.nazwa + ' </td></tr>');
                 });
 
@@ -656,7 +666,7 @@ function initPokeLifeScript() {
 
                 $(document).on('click', '#confirmCustomStyle', function() {
                     config.skinStyle = 0;
-                    updateConfig(config, function(){location.reload()});
+                    updateConfig(config, function() { location.reload() });
                 });
 
 
@@ -674,7 +684,7 @@ function initPokeLifeScript() {
     //
     // **********************
 
-    function initPodmianaObrazkow(){
+    function initPodmianaObrazkow() {
 
         onReloadMain(function() {
             if (this.find('img[src="pokemony/srednie/ms94.png"]').length > 0) {
@@ -704,7 +714,7 @@ function initPokeLifeScript() {
         })
         $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
     }
-    if(md5($('#wyloguj').parent().parent().html().split("<div")[0].trim()) == "bac40cb0ec0198e3a2c22657f6786c41"){
+    if (md5($('#wyloguj').parent().parent().html().split("<div")[0].trim()) == "bac40cb0ec0198e3a2c22657f6786c41") {
         initPodmianaObrazkow();
     }
 
@@ -800,7 +810,7 @@ function initPokeLifeScript() {
         }
         initPokemonIcon();
 
-        $('#setPokemon-box-scroll .icon:last').on('click', function(){
+        $('#setPokemon-box-scroll .icon:last').on('click', function() {
             $('body').append('<div id="settingsPokemonIcon" style="padding: 10px; position: fixed; top: 70px; left: 10px; width: 500px; background: white; opacity: 1; border: 7px solid #d6e9c6; z-index: 999;"></div>');
             $('#settingsPokemonIcon').html("");
             $('#settingsPokemonIcon').append('<div id="exp_mod_settings" class="row"><div class="col-sm-6 first"></div><div class="col-sm-6 second"></div></div>');
@@ -821,7 +831,7 @@ function initPokeLifeScript() {
             $('.list_of_poks_in_team[data-order-id="100"] option[value="' + config.pok100 + '"]').prop("selected", true);
         });
 
-        $('html').click(function(e){
+        $('html').click(function(e) {
             if (e.target.id == 'settingsPokemonIcon' || $(e.target).parents('#settingsPokemonIcon').length > 0) {
                 // clicked menu content or children
             } else {
@@ -845,170 +855,171 @@ function initPokeLifeScript() {
             });
 
             var selectPokeball = [{
-                'iconFilePath': "images/pokesklep/pokeballe.jpg",
-                'iconValue': function() {
-                    return '&zlap_pokemona=pokeballe';
-                }
-            },
-                                  {
-                                      'iconFilePath': "images/pokesklep/greatballe.jpg",
-                                      'iconValue': function() {
-                                          return '&zlap_pokemona=greatballee';
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "images/pokesklep/nestballe.jpg",
-                                      'iconValue': function() {
-                                          return '&zlap_pokemona=nestballe';
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "images/pokesklep/friendballe.jpg",
-                                      'iconValue': function() {
-                                          return '&zlap_pokemona=friendballe';
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "images/pokesklep/nightballe.jpg",
-                                      'iconValue': function() {
-                                          return '&zlap_pokemona=nightballe';
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "images/pokesklep/cherishballe.jpg",
-                                      'iconValue': function() {
-                                          return '&zlap_pokemona=cherishballe';
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "images/pokesklep/lureballe.jpg",
-                                      'iconValue': function() {
-                                          return '&zlap_pokemona=lureballe';
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb1.jpg",
-                                      'iconValue': function() {
-                                          let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                          if (pokeLvlNumber < 15) {
-                                              return '&zlap_pokemona=nestballe';
-                                          } else {
-                                              return '&zlap_pokemona=greatballee';
-                                          }
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb2.png",
-                                      'iconValue': function() {
-                                          var d = new Date();
-                                          var h = d.getHours();
-                                          if (h >= 22 || h < 6) {
-                                              return '&zlap_pokemona=nightballe';
-                                          }
-                                          let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                          if (pokeLvlNumber < 15) {
-                                              return '&zlap_pokemona=nestballe';
-                                          } else {
-                                              return '&zlap_pokemona=greatballee';
-                                          }
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb3.jpg",
-                                      'iconValue': function() {
-                                          let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                          if (pokeLvlNumber <= 5) {
-                                              return '&zlap_pokemona=uzyj_swarmballe';
-                                          } else {
-                                              var d = new Date();
-                                              var h = d.getHours();
-                                              if (h >= 22 || h < 6) {
-                                                  return '&zlap_pokemona=nightballe';
-                                              }
-                                              if (pokeLvlNumber > 5 && pokeLvlNumber < 15) {
-                                                  return '&zlap_pokemona=nestballe';
-                                              } else {
-                                                  return '&zlap_pokemona=greatballee';
-                                              }
-                                          }
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb4.jpg",
-                                      'iconValue': function() {
-                                          if ($(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc1.png"]').length > 0) {
-                                              return '&zlap_pokemona=levelballe';
-                                          } else {
-                                              var d = new Date();
-                                              var h = d.getHours();
-                                              if (h >= 22 || h < 6) {
-                                                  return '&zlap_pokemona=nightballe';
-                                              }
-                                              let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                              if (pokeLvlNumber < 15) {
-                                                  return '&zlap_pokemona=nestballe';
-                                              } else {
-                                                  return '&zlap_pokemona=greatballee';
-                                              }
-                                          }
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb5.jpg",
-                                      'iconValue': function() {
-                                          let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                          if ($(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc1.png"]').length > 0 && pokeLvlNumber <= 5) {
-                                              return '&zlap_pokemona=luxuryballe';
-                                          } else {
-                                              var d = new Date();
-                                              var h = d.getHours();
-                                              if (h >= 22 || h < 6) {
-                                                  return '&zlap_pokemona=nightballe';
-                                              }
-                                              let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                              if (pokeLvlNumber < 15) {
-                                                  return '&zlap_pokemona=nestballe';
-                                              } else {
-                                                  return '&zlap_pokemona=greatballee';
-                                              }
-                                          }
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "images/pokesklep/safariballe.jpg",
-                                      'iconValue': function() {
-                                          if ($('label[data-original-title="Safariball"]').length > 0) {
-                                              if (Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1) {
-                                                  if (config.lapSafariballemNiezlapane == true || config.lapSafariballemNiezlapane == "true")
-                                                      if ($(previousPageContent).find('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
-                                                          return '&zlap_pokemona=safariballe';
-                                                      } else {
-                                                          $('button:contains("Pomiń i szukaj dalej")').click();
-                                                          return "";
-                                                      }
-                                                  else {
-                                                      return '&zlap_pokemona=safariballe';
-                                                  }
-                                              } else {
-                                                  $('button:contains("Pomiń i szukaj dalej")').click();
-                                                  return "";
-                                              }
-                                          } else {
-                                              autoGo = false;
-                                              $('#goAutoButton').html('AutoGO');
-                                              $("#goStopReason").html("Brak odpowiedniego pokeballa").show();
-                                              document.title = "Brak odpowiedniego pokeballa";
-                                          }
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "images/pokesklep/premierballe.jpg",
-                                      'iconValue': function() {
-                                          return '&zlap_pokemona=premierballe';
-                                      }
-                                  }
+                    'iconFilePath': "images/pokesklep/pokeballe.jpg",
+                    'iconValue': function() {
+                        return '&zlap_pokemona=pokeballe';
+                    }
+                },
+                {
+                    'iconFilePath': "images/pokesklep/greatballe.jpg",
+                    'iconValue': function() {
+                        return '&zlap_pokemona=greatballee';
+                    }
+                },
+                {
+                    'iconFilePath': "images/pokesklep/nestballe.jpg",
+                    'iconValue': function() {
+                        return '&zlap_pokemona=nestballe';
+                    }
+                },
+                {
+                    'iconFilePath': "images/pokesklep/friendballe.jpg",
+                    'iconValue': function() {
+                        return '&zlap_pokemona=friendballe';
+                    }
+                },
+                {
+                    'iconFilePath': "images/pokesklep/nightballe.jpg",
+                    'iconValue': function() {
+                        return '&zlap_pokemona=nightballe';
+                    }
+                },
+                {
+                    'iconFilePath': "images/pokesklep/cherishballe.jpg",
+                    'iconValue': function() {
+                        return '&zlap_pokemona=cherishballe';
+                    }
+                },
+                {
+                    'iconFilePath': "images/pokesklep/lureballe.jpg",
+                    'iconValue': function() {
+                        return '&zlap_pokemona=lureballe';
+                    }
+                },
+                {
+                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb1.jpg",
+                    'iconValue': function() {
+                        let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                        if (pokeLvlNumber < 15) {
+                            return '&zlap_pokemona=nestballe';
+                        } else {
+                            return '&zlap_pokemona=greatballee';
+                        }
+                    }
+                },
+                {
+                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb2.png",
+                    'iconValue': function() {
+                        var d = new Date();
+                        var h = d.getHours();
+                        if (h >= 22 || h < 6) {
+                            return '&zlap_pokemona=nightballe';
+                        }
+                        let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                        if (pokeLvlNumber < 15) {
+                            return '&zlap_pokemona=nestballe';
+                        } else {
+                            return '&zlap_pokemona=greatballee';
+                        }
+                    }
+                },
+                {
+                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb3.jpg",
+                    'iconValue': function() {
+                        let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                        if (pokeLvlNumber <= 5) {
+                            return '&zlap_pokemona=uzyj_swarmballe';
+                        } else {
+                            var d = new Date();
+                            var h = d.getHours();
+                            if (h >= 22 || h < 6) {
+                                return '&zlap_pokemona=nightballe';
+                            }
+                            if (pokeLvlNumber > 5 && pokeLvlNumber < 15) {
+                                return '&zlap_pokemona=nestballe';
+                            } else {
+                                return '&zlap_pokemona=greatballee';
+                            }
+                        }
+                    }
+                },
+                {
+                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb4.jpg",
+                    'iconValue': function() {
+                        if ($(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc1.png"]').length > 0) {
+                            return '&zlap_pokemona=levelballe';
+                        } else {
+                            var d = new Date();
+                            var h = d.getHours();
+                            if (h >= 22 || h < 6) {
+                                return '&zlap_pokemona=nightballe';
+                            }
+                            let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                            if (pokeLvlNumber < 15) {
+                                return '&zlap_pokemona=nestballe';
+                            } else {
+                                return '&zlap_pokemona=greatballee';
+                            }
+                        }
+                    }
+                },
+                {
+                    'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb5.jpg",
+                    'iconValue': function() {
+                        let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                        if ($(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc1.png"]').length > 0 && pokeLvlNumber <= 5) {
+                            return '&zlap_pokemona=luxuryballe';
+                        } else {
+                            var d = new Date();
+                            var h = d.getHours();
+                            if (h >= 22 || h < 6) {
+                                return '&zlap_pokemona=nightballe';
+                            }
+                            let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
+                            if (pokeLvlNumber < 15) {
+                                return '&zlap_pokemona=nestballe';
+                            } else {
+                                return '&zlap_pokemona=greatballee';
+                            }
+                        }
+                    }
+                },
+                {
+                    'iconFilePath': "images/pokesklep/safariballe.jpg",
+                    'iconValue': function() {
+                        if ($('label[data-original-title="Safariball"]').length > 0) {
+                            if (Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1) {
+                                if (config.lapSafariballemNiezlapane == true || config.lapSafariballemNiezlapane == "true")
+                                    if ($(previousPageContent).find('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
+                                        return '&zlap_pokemona=safariballe';
+                                    } else {
+                                        $('button:contains("Pomiń i szukaj dalej")').click();
 
-                                 ];
+                                        return "";
+                                    }
+                                else {
+                                    return '&zlap_pokemona=safariballe';
+                                }
+                            } else {
+                                $('button:contains("Pomiń i szukaj dalej")').click();
+                                return "";
+                            }
+                        } else {
+                            autoGo = false;
+                            $('#goAutoButton').html('AutoGO');
+                            $("#goStopReason").html("Brak odpowiedniego pokeballa").show();
+                            document.title = "Brak odpowiedniego pokeballa";
+                        }
+                    }
+                },
+                {
+                    'iconFilePath': "images/pokesklep/premierballe.jpg",
+                    'iconValue': function() {
+                        return '&zlap_pokemona=premierballe';
+                    }
+                }
+
+            ];
 
             AutoGoSettings.iconPokeball.refresh(selectPokeball);
             AutoGoSettings.iconPokeball.setSelectedIndex(config.pokeballIconsIndex);
@@ -1138,6 +1149,41 @@ function initPokeLifeScript() {
                     } else if ($('#glowne_okno').find(".panel-heading:contains('Łapanie Jajka')").length > 0) {
                         console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".");
                         $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
+                    } else if ($('h2:contains("Wybierz Pokemona")').length > 0 && activeScript.length > 0 && pokemonTrigger(
+                            $('#glowne_okno i').text().trim(),
+                            Number.parseInt($('.panel-body.nopadding .col-xs-9 > b').html().split("Poziom: ")[1]),
+                            $('.panel-body.nopadding img[src="images/trudnosc/trudnosc1.png"]').length > 0 ? 1 :
+                            $('.panel-body.nopadding img[src="images/trudnosc/trudnosc2.png"]').length > 0 ? 2 :
+                            $('.panel-body.nopadding img[src="images/trudnosc/trudnosc3.png"]').length > 0 ? 3 :
+                            $('.panel-body.nopadding img[src="images/trudnosc/trudnosc4.png"]').length > 0 ? 4 :
+                            $('.panel-body.nopadding img[src="images/trudnosc/trudnosc5.png"]').length > 0 ? 5 : 10,
+                            getTableWithType(),
+                            $('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0,
+                            $('.panel-body.nopadding').attr('style').indexOf("background-color: #FFBB") == -1
+                        ) != null) {
+                        if (actionCommand == "StopAutoGo") {
+                            console.log('PokeLifeScript: akcja skryptu, przerwanie AutoGo');
+                            autoGo = false;
+                            document.title = "Zatrzymany przez skrypt";
+                        }
+                        if (actionCommand == "SkipPokemon") {
+                            console.log('PokeLifeScript: akcja skryptu, ominiecie pokemona');
+                            $('button:contains("Pomiń i szukaj dalej")').click();
+                        }
+                        if (actionCommand.includes("&wybierz_pokemona=")) {
+                            console.log('PokeLifeScript: akcja skryptu,  atakuje pokemona');
+                            var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + actionCommand;
+                            if ($('button[href="' + url + '"]').length == 0) {
+                                autoGo = false;
+                                $('#goAutoButton').html('AutoGO');
+                                $("#goStopReason").html("Dzicz została zmieniona").show();
+                                document.title = "Dzicz została zmienion";
+                            } else {
+                                $('button[href="' + url + '"]').trigger('click');
+                            }
+                        }
+                        run = null;
+                        actionCommand == null;
                     } else if ($('h2:contains("Wybierz Pokemona")').length > 0 && $('.panel-body.nopadding').attr('style').indexOf("background-color: #FFBB") == -1) {
                         console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
                         autoGo = false;
@@ -1148,7 +1194,7 @@ function initPokeLifeScript() {
                         $('#refreshShinyWidget').trigger('click');
                         requestDomain("pokelife/api/update_shiny.php?pokemon_id=" + $('.panel-body.nopadding .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time=" + Date.now(), null);
                     } else if ($('h2:contains("Wybierz Pokemona")').length && $('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.panel-body.nopadding img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.panel-body.nopadding .col-xs-9 > b').html().split("Poziom: ")[1] <= config.maxLapanyLvl) {
-                        switch(Number(config.niezlapaneMode)){
+                        switch (Number(config.niezlapaneMode)) {
                             case 1:
                                 console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
                                 autoGo = false;
@@ -1158,7 +1204,7 @@ function initPokeLifeScript() {
                                 triggerSound();
                                 break;
                             case 2:
-                                if($('.panel-body.nopadding img[src="images/trudnosc/trudnosc4.png"]').length > 0 || $('.panel-body.nopadding img[src="images/trudnosc/trudnosc5.png"]').length > 0){
+                                if ($('.panel-body.nopadding img[src="images/trudnosc/trudnosc4.png"]').length > 0 || $('.panel-body.nopadding img[src="images/trudnosc/trudnosc5.png"]').length > 0) {
                                     console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
                                     autoGo = false;
                                     $('#goAutoButton').html('AutoGO');
@@ -1219,17 +1265,17 @@ function initPokeLifeScript() {
                         }
                     } else if ($("form[action='dzicz.php?zlap']").length == 1) {
                         if (AutoGoSettings.iconPokeball.getSelectedValue().call() !== "") {
-                            var button = $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokeball.getSelectedValue().call() + '"]');
-                            if(config.niezlapaneMode == 4){
+                            var button = $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + (throwCommand == null ? AutoGoSettings.iconPokeball.getSelectedValue().call() : throwCommand) + '"]');
+                            if (config.niezlapaneMode == 4) {
                                 if ($(previousPageContent).find('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
-                                    if($(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc4.png"]').length > 0 || $(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc5.png"]').length > 0){
+                                    if ($(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc4.png"]').length > 0 || $(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc5.png"]').length > 0) {
                                         button = $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '&zlap_pokemona=cherishball"]');
                                     }
                                 }
                             }
                             if (button.length > 0) {
                                 console.log('PokeLifeScript: rzucam pokeballa');
-                                $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokeball.getSelectedValue().call() + '"]').trigger('click');
+                                $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + (throwCommand == null ? AutoGoSettings.iconPokeball.getSelectedValue().call() : throwCommand) + '"]').trigger('click');
                             } else {
                                 autoGo = false;
                                 $('#goAutoButton').html('AutoGO');
@@ -1238,6 +1284,7 @@ function initPokeLifeScript() {
                                 console.log('PokeLifeScript: brak odpowiedniego balla');
                             }
                         }
+                        throwCommand = null;
                     } else if ($("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + "']").length == 1) {
                         console.log('PokeLifeScript: rzucam 1 swarmballa');
                         $("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + "']").submit();
@@ -1507,7 +1554,7 @@ function initPokeLifeScript() {
                                                             }
                                                         }, 1000);
 
-                                                    }else {
+                                                    } else {
                                                         console.log('Brak napojów');
                                                         window.setTimeout(function() {
                                                             if (autoGo) {
@@ -1683,7 +1730,8 @@ function initPokeLifeScript() {
                 $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 30px;" src="images/pokesklep/safariballe.jpg"></td><td><input type="checkbox" id="lapSafariballemNiezlapane" name="lapSafariballemNiezlapane" value="1" ' + ((config.lapSafariballemNiezlapane == "true" || config.lapSafariballemNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Łap safariballem tylko niezłapane pokemony</label></td> </tr></tbody></table>');
                 $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" ' + ((config.useOnlyInNight == "true" || config.useOnlyInNight == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
                 $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Maxymalny łapany lvl: </b><input style="width: 50px" id="changeMaxLapanyLvl" type="number" value="' + config.maxLapanyLvl + '"></p></td> </tr>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Kolejność widgetów: </b><select id="switchWidgetOrder"><option value="1" ' + (config.kolejnoscWidgetow == 1 ? 'selected' : '') + '>Zadania - Drużyna</option><option value="2" ' + (config.kolejnoscWidgetow == 2 ? 'selected' : '') +  '>Drużyna - Zadania</option><select></p></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Kolejność widgetów: </b><select id="switchWidgetOrder"><option value="1" ' + (config.kolejnoscWidgetow == 1 ? 'selected' : '') + '>Zadania - Drużyna</option><option value="2" ' + (config.kolejnoscWidgetow == 2 ? 'selected' : '') + '>Drużyna - Zadania</option><select></p></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Skrypt: </b> Script name:<input id="scriptName"> Script:<input style="width:150px" id="scriptText"> <button id="addNewScript">+</button</p></td> </tr>');
             }
         });
 
@@ -1743,6 +1791,14 @@ function initPokeLifeScript() {
             var isChecked = $('#useOnlyInNight').prop('checked');
             config.useOnlyInNight = isChecked;
             updateConfig(config);
+        });
+
+        $(document).on("click", "#addNewScript", function() {
+            var text = $('#scriptText').val();
+            var name = $('#scriptName').val();
+            console.log(text);
+            activeScript.push({ text: text, name: name });
+            $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>' + name + '</b></p></td> </tr>');
         });
 
         $(document).on("change", "#switchWidgetOrder", function(event) {
@@ -1819,6 +1875,7 @@ function initPokeLifeScript() {
     // **********************
 
     var pokemonPriceData;
+
     function initShinyWidget() {
         var shinyWidget;
 
@@ -2061,7 +2118,8 @@ function initPokeLifeScript() {
                     console.log('PokeLifeScript: klikam link ' + number);
                     window.setTimeout(function() {
                         w.close();
-                        clickInLink(number + 1, id); }, 300);
+                        clickInLink(number + 1, id);
+                    }, 300);
                 }, 300));
             } else {
                 window.setTimeout(function() {
@@ -2362,12 +2420,12 @@ function initPokeLifeScript() {
         $('#shout_list').after('<ol style="list-style: none; display: none; margin: 0; padding: 0" id="bot_list"></ol>');
         $('#shoutbox-panel-footer').after('<div style="display: none;background: none;" id="shoutbox-bot-panel-footer" class="panel-footer input-group"><textarea id="shout_bot_message" maxlength="255" style="resize: none; overflow: hidden;height: 34px" type="text" class="form-control" placeholder="Wiadomość" name="message"></textarea> <span class="input-group-btn"> <button id="shout_bot_button" class="btn btn-primary" type="button">Wyślij</button> </span> </div>');
 
-        $('#shout_bot_message').on('keydown', function(e){
-            if(e.which == 13) {
+        $('#shout_bot_message').on('keydown', function(e) {
+            if (e.which == 13) {
                 e.preventDefault();
                 wyslij();
             }
-        }).on('input', function(){
+        }).on('input', function() {
             $(this).height(1);
             var totalHeight = $(this).prop('scrollHeight') - parseInt($(this).css('padding-top')) - parseInt($(this).css('padding-bottom'));
             $(this).height(totalHeight);
@@ -2411,7 +2469,7 @@ function initPokeLifeScript() {
                     var lastDate = null;
                     $.each(messages, function(key, value) {
                         var d = new Date(value["creation_date"]);
-                        if(lastDate != null && d.getDay() !== lastDate.getDay()){
+                        if (lastDate != null && d.getDay() !== lastDate.getDay()) {
                             var tzoffset = (new Date()).getTimezoneOffset() * 60000;
                             var localISOTime = (new Date(d - tzoffset)).toISOString().slice(0, 10);
                             $("#bot_list").append('<li style="word-break: break-word; padding: 1px 5px 1px 5px; font-family: Arial; font-size: 14px; text-align: center; color: #777; border-radius: 3px; background: #00000008;">' + localISOTime + '</li>')
@@ -2419,7 +2477,7 @@ function initPokeLifeScript() {
                         if (value['false_login'] == null) {
                             $("#bot_list").append('<li style="word-break: break-word;text-align: center;border-bottom: 2px dashed #aa1c00;padding-top: 3px;padding-bottom: 3px;color: #aa1c00;font-size: 18px;font-family: Arial;"><span>' + value["message"] + '</span></li>');
                         } else {
-                            $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "") + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["avatar"] != "" ? '<img src="'+value["avatar"]+'" style=" width: 15px; margin-right: 3px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
+                            $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "") + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">' + (value["avatar"] != "" ? '<img src="' + value["avatar"] + '" style=" width: 15px; margin-right: 3px; ">' : "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
                         }
                         window.localStorage.max_chat_id = value["czat_id"];
                         lastDate = new Date(value["creation_date"]);
@@ -2438,7 +2496,7 @@ function initPokeLifeScript() {
                                 var messages = data['list'].reverse();
                                 $.each(messages, function(key, value) {
                                     var d = new Date(value["creation_date"]);
-                                    if(lastDate2 != null && d.getDay() !== lastDate2.getDay()){
+                                    if (lastDate2 != null && d.getDay() !== lastDate2.getDay()) {
                                         var tzoffset = (new Date()).getTimezoneOffset() * 60000;
                                         var localISOTime = (new Date(d - tzoffset)).toISOString().slice(0, 10);
                                         $("#bot_list").append('<li style="word-break: break-word; padding: 1px 5px 1px 5px; font-family: Arial; font-size: 14px; text-align: center; color: #777; border-radius: 3px; background: #00000008;">' + localISOTime + '</li>')
@@ -2446,7 +2504,7 @@ function initPokeLifeScript() {
                                     if (value['false_login'] == null) {
                                         $("#bot_list").append('<li style="word-break: break-word;text-align: center;border-bottom: 2px dashed #aa1c00;padding-top: 3px;padding-bottom: 3px;color: #aa1c00;font-size: 18px;font-family: Arial;"><span>' + value["message"] + '</span></li>');
                                     } else {
-                                        $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "") + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["avatar"] != "" ? '<img src="/images/stow/deko/176.png" style=" width: 15px; margin-right: 3px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
+                                        $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "") + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">' + (value["avatar"] != "" ? '<img src="/images/stow/deko/176.png" style=" width: 15px; margin-right: 3px; ">' : "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
                                     }
                                     window.localStorage.max_chat_id = value["czat_id"];
                                     lastDate2 = new Date(value["creation_date"]);
@@ -2551,7 +2609,7 @@ function initPokeLifeScript() {
             zadaniaWidget = config.zadaniaWidget;
         }
 
-        function parseResponse(THAT){
+        function parseResponse(THAT) {
             var html = '<div class="panel panel-primary"><div class="panel-heading">Zadania<div class="navbar-right"><span id="refreshZadaniaWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
             $.each(THAT.find('#zadania_codzienne .panel-primary .panel-heading'), function(key, value) {
                 if ($(value).html().split("<div")[0] !== "brak zadania") {
@@ -2572,9 +2630,9 @@ function initPokeLifeScript() {
 
         onReloadSidebar(function() {
             if (zadaniaWidget != undefined && zadaniaWidget.length > 140) {
-                if(config.kolejnoscWidgetow == 1){
+                if (config.kolejnoscWidgetow == 1) {
                     this.find(".panel-heading:contains('Drużyna')").parent().before(zadaniaWidget);
-                } else if(config.kolejnoscWidgetow == 2){
+                } else if (config.kolejnoscWidgetow == 2) {
                     this.find(".panel-heading:contains('Drużyna')").parent().after(zadaniaWidget);
                 }
             }
@@ -2626,7 +2684,7 @@ function initPokeLifeScript() {
             hodowlaPokemonDniaStowarzyszenieImage = hodowlaPokemonDniaStowarzyszenieImage.replace(login, "");
         }
 
-        function parseResponse(THAT){
+        function parseResponse(THAT) {
             hodowlaPokemonDniaImage = THAT.find('#hodowla-glowne img').attr('src');
             config.hodowlaPokemonDniaImage = today + "" + login + hodowlaPokemonDniaImage;
             hodowlaPokemonDniaStowarzyszenieImage = THAT.find('#hodowla-glowne img:nth(1)').attr('src');
@@ -2951,8 +3009,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
 ` : ``) + `
 </tbody>
 </table>
-</div>`
-                                                             )
+</div>`)
 
 
             $.each($(DATA.find('.classToSum')), function(index, item) {
@@ -2973,7 +3030,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         }
 
         $(document).on('click', '.panel-heading:contains("Możliwy zarobek z jagód")', function() {
-            if($('.classToSum.hidden').length > 0){
+            if ($('.classToSum.hidden').length > 0) {
                 $('.classToSum').removeClass('hidden');
             } else {
                 $('.classToSum').addClass('hidden');
@@ -2997,7 +3054,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
     //
     // **********************
 
-    function initRozbudowanyOpisDziczy(){
+    function initRozbudowanyOpisDziczy() {
         var d = new Date();
         d.setMinutes(d.getMinutes() - 21);
         var today = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
@@ -3015,33 +3072,33 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
                 kolekcjaData.login = login;
 
                 kolekcjaData.kanto = new Object();
-                this.find('#kolekcja-1 div').each(function(index, value){
-                    kolekcjaData.kanto[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                this.find('#kolekcja-1 div').each(function(index, value) {
+                    kolekcjaData.kanto["" + $(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
                 })
 
                 kolekcjaData.johto = new Object();
-                this.find('#kolekcja-2 div').each(function(index, value){
-                    kolekcjaData.johto[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                this.find('#kolekcja-2 div').each(function(index, value) {
+                    kolekcjaData.johto["" + $(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
                 })
 
                 kolekcjaData.hoenn = new Object();
-                this.find('#kolekcja-3 div').each(function(index, value){
-                    kolekcjaData.hoenn[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                this.find('#kolekcja-3 div').each(function(index, value) {
+                    kolekcjaData.hoenn["" + $(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
                 })
 
                 kolekcjaData.sinnoh = new Object();
-                this.find('#kolekcja-4 div').each(function(index, value){
-                    kolekcjaData.sinnoh[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                this.find('#kolekcja-4 div').each(function(index, value) {
+                    kolekcjaData.sinnoh["" + $(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
                 })
 
                 kolekcjaData.unova = new Object();
-                this.find('#kolekcja-5 div').each(function(index, value){
-                    kolekcjaData.unova[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                this.find('#kolekcja-5 div').each(function(index, value) {
+                    kolekcjaData.unova["" + $(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
                 })
 
                 kolekcjaData.kalos = new Object();
-                this.find('#kolekcja-6 div').each(function(index, value){
-                    kolekcjaData.kalos[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                this.find('#kolekcja-6 div').each(function(index, value) {
+                    kolekcjaData.kalos["" + $(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
                 })
                 window.localStorage.kolekcjaDnia = JSON.stringify(kolekcjaData);
                 console.log("Reloaded");
@@ -3050,38 +3107,38 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         })
 
         if (!window.localStorage.kolekcjaDnia.includes(today) || !window.localStorage.kolekcjaDnia.includes(login)) {
-            $.get('gra/kolekcja.php', function( data ) {
+            $.get('gra/kolekcja.php', function(data) {
                 kolekcjaData.data = today;
                 kolekcjaData.login = login;
 
                 kolekcjaData.kanto = new Object();
-                $(data).find('#kolekcja-1 div').each(function(index, value){
-                    kolekcjaData.kanto[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                $(data).find('#kolekcja-1 div').each(function(index, value) {
+                    kolekcjaData.kanto["" + $(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
                 })
 
                 kolekcjaData.johto = new Object();
-                $(data).find('#kolekcja-2 div').each(function(index, value){
-                    kolekcjaData.johto[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                $(data).find('#kolekcja-2 div').each(function(index, value) {
+                    kolekcjaData.johto["" + $(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
                 })
 
                 kolekcjaData.hoenn = new Object();
-                $(data).find('#kolekcja-3 div').each(function(index, value){
-                    kolekcjaData.hoenn[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                $(data).find('#kolekcja-3 div').each(function(index, value) {
+                    kolekcjaData.hoenn["" + $(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
                 })
 
                 kolekcjaData.sinnoh = new Object();
-                $(data).find('#kolekcja-4 div').each(function(index, value){
-                    kolekcjaData.sinnoh[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                $(data).find('#kolekcja-4 div').each(function(index, value) {
+                    kolekcjaData.sinnoh["" + $(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
                 })
 
                 kolekcjaData.unova = new Object();
-                $(data).find('#kolekcja-5 div').each(function(index, value){
-                    kolekcjaData.unova[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                $(data).find('#kolekcja-5 div').each(function(index, value) {
+                    kolekcjaData.unova["" + $(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
                 })
 
                 kolekcjaData.kalos = new Object();
-                $(data).find('#kolekcja-6 div').each(function(index, value){
-                    kolekcjaData.kalos[""+$(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
+                $(data).find('#kolekcja-6 div').each(function(index, value) {
+                    kolekcjaData.kalos["" + $(value).data('id-pokemona')] = $(value).hasClass('kolekcja-zlapane');
                 })
                 window.localStorage.kolekcjaDnia = JSON.stringify(kolekcjaData);
                 initPasek();
@@ -3092,40 +3149,40 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         }
 
 
-        function initPasek(){
-            $.each($('#pasek_skrotow li'), function (index, item) {
+        function initPasek() {
+            $.each($('#pasek_skrotow li'), function(index, item) {
                 if ($(item).find('a').attr('href').includes("gra/dzicz")) {
                     var url = $(item).find('a').attr('href').split('miejsce=')[1];
                     var name = $(item).find('a').data('original-title').split('Wyprawa: ')[1];
 
-                    if(name == 'Miasto'){
+                    if (name == 'Miasto') {
                         name = 'Opuszczone Miasto';
                     }
 
-                    $(document).off('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce='+url+'"]');
-                    $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce='+url+'"]', function(){
-                        var html = '<div class="row" id="opis'+name.replace(/[ ]/g, '')+'" style="z-index: 999; width: 600px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">';
+                    $(document).off('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce=' + url + '"]');
+                    $(document).on('mouseenter', 'a[href="gra/dzicz.php?poluj&miejsce=' + url + '"]', function() {
+                        var html = '<div class="row" id="opis' + name.replace(/[ ]/g, '') + '" style="z-index: 999; width: 600px; bottom: 90px; position: fixed; left: 0; right: 0; margin: 0 auto; background: #222; opacity: .9; color: white; padding: 15px">';
                         var wszystkie = true;
 
                         $.each(pokemonData, function(index, value) {
                             if (jQuery.inArray(name, value.wystepowanie) != -1 && value.do_zlapania && kolekcjaData[value.region.toLowerCase()][value.id] == false) {
                                 wszystkie = false;
                                 var trudnoscNumber = 1;
-                                if (value.trudnosc_zlapania == "Niska"){
+                                if (value.trudnosc_zlapania == "Niska") {
                                     trudnoscNumber = 2;
-                                } else if (value.trudnosc_zlapania == "Średnia"){
+                                } else if (value.trudnosc_zlapania == "Średnia") {
                                     trudnoscNumber = 3;
-                                } else if (value.trudnosc_zlapania == "Wysoka"){
+                                } else if (value.trudnosc_zlapania == "Wysoka") {
                                     trudnoscNumber = 4;
-                                } else if (value.trudnosc_zlapania == "Bardzo wysoka"){
+                                } else if (value.trudnosc_zlapania == "Bardzo wysoka") {
                                     trudnoscNumber = 5;
-                                } else if (value.trudnosc_zlapania == "Niemożliwa"){
+                                } else if (value.trudnosc_zlapania == "Niemożliwa") {
                                     trudnoscNumber = "x";
                                 }
-                                html = html + '<div class="col-xs-2" style="display: inline; float: left; padding: 0; margin-top: 5px; text-align: center;"><img style="margin-bottom: 5px; text-align: center; max-width: 80%;" src="https://gra.pokelife.pl/pokemony/niezdobyte/'+value.id+'.png"><p style="margin: 0; margin-top: 5px; margin-bottom: 5px">'+value.name+'</p><p><img src="/images/trudnosc/trudnosc' + trudnoscNumber + '.png" style="filter: grayscale(80%)"></p></div>';
+                                html = html + '<div class="col-xs-2" style="display: inline; float: left; padding: 0; margin-top: 5px; text-align: center;"><img style="margin-bottom: 5px; text-align: center; max-width: 80%;" src="https://gra.pokelife.pl/pokemony/niezdobyte/' + value.id + '.png"><p style="margin: 0; margin-top: 5px; margin-bottom: 5px">' + value.name + '</p><p><img src="/images/trudnosc/trudnosc' + trudnoscNumber + '.png" style="filter: grayscale(80%)"></p></div>';
                             }
                         })
-                        if(wszystkie){
+                        if (wszystkie) {
                             html = html + "Udało ci się złapać wszystkie poki w tej dziczy";
                         }
                         html = html + '</div>';
@@ -3133,8 +3190,8 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
                     })
 
 
-                    $(document).on('mouseleave', 'a[href="gra/dzicz.php?poluj&miejsce='+url+'"]', function(){
-                        $('#opis'+name.replace(/[ ]/g, '')).remove();
+                    $(document).on('mouseleave', 'a[href="gra/dzicz.php?poluj&miejsce=' + url + '"]', function() {
+                        $('#opis' + name.replace(/[ ]/g, '')).remove();
                     })
                 }
             });
@@ -3152,9 +3209,9 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
 
     function initPrzypomnienieORepelu() {
         onReloadSidebar(function() {
-            if(this.find('.well-stan[data-original-title="Czas pozostały do końca działania Tepela/Repela"]').length > 0){
+            if (this.find('.well-stan[data-original-title="Czas pozostały do końca działania Tepela/Repela"]').length > 0) {
                 var ile = Number(this.find('.well-stan[data-original-title="Czas pozostały do końca działania Tepela/Repela"]').text());
-                if(ile < 200){
+                if (ile < 200) {
                     var opacity = (200 - ile) / 200;
                     this.find('.well-stan[data-original-title="Czas pozostały do końca działania Tepela/Repela"]').css("background-color", "rgba(255, 117, 117, " + opacity + ")");
                 }
@@ -3172,13 +3229,13 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
     //
     // **********************
 
-    function initSprawdzCzyMaszAktualnaWersjeBota(){
+    function initSprawdzCzyMaszAktualnaWersjeBota() {
         var url = domain + '/pokelife/api/get_bot_version.php';
         $.getJSON(url, {
             format: "json"
         }).done(function(data) {
-            if(data != GM_info.script.version){
-                $('body').append('<div id="botVersionAlertBox" style="position: fixed;width: 100%;height: 100%;background: rgb(22, 27, 29);z-index: 99999;top: 0px;display: block;"><h1 style="text-align: center; color: #ffffff; vertical-align: middle; font-size: 44px; top: 35%; position: relative;">Nieaktualna wersja bota<br> kliknij <a target="_self" href="https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js?temp='+Math.random()+'"><span style="color: #88e0d5; text-decoration: underline; ">tutaj</span></a> aby zaktualizować. <br>Odśwież strone po aktualizacji</h1></div>');
+            if (data != GM_info.script.version) {
+                $('body').append('<div id="botVersionAlertBox" style="position: fixed;width: 100%;height: 100%;background: rgb(22, 27, 29);z-index: 99999;top: 0px;display: block;"><h1 style="text-align: center; color: #ffffff; vertical-align: middle; font-size: 44px; top: 35%; position: relative;">Nieaktualna wersja bota<br> kliknij <a target="_self" href="https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js?temp=' + Math.random() + '"><span style="color: #88e0d5; text-decoration: underline; ">tutaj</span></a> aby zaktualizować. <br>Odśwież strone po aktualizacji</h1></div>');
             }
         })
     }
@@ -3193,7 +3250,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
     //
     // **********************
 
-    function initPrzypomnienieOOpiece(){
+    function initPrzypomnienieOOpiece() {
         $('.statystyki-wyglad:nth-child(13):contains("nie")').css("color", "red").css("font-weight", "800");
         $('.statystyki-wyglad:nth-child(13):contains("nie")').append('<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>');
 
@@ -3209,34 +3266,93 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
 
 }
 
+function getTableWithType() {
+    var table = []
+    var normal = $('.panel-body.nopadding img[src="images/typy/1.png"]').length > 0;
+    if (normal)
+        table.push("Normalny");
+    var fire = $('.panel-body.nopadding img[src="images/typy/2.png"]').length > 0;
+    if (fire)
+        table.push("Ognisty");
+    var water = $('.panel-body.nopadding img[src="images/typy/3.png"]').length > 0;
+    if (water)
+        table.push("Wodny");
+    var grass = $('.panel-body.nopadding img[src="images/typy/4.png"]').length > 0;
+    if (grass)
+        table.push("Trawiasty");
+    var electro = $('.panel-body.nopadding img[src="images/typy/5.png"]').length > 0;
+    if (electro)
+        table.push("Elektryczny");
+    var fly = $('.panel-body.nopadding img[src="images/typy/6.png"]').length > 0;
+    if (fly)
+        table.push("Latający");
+    var psycho = $('.panel-body.nopadding img[src="images/typy/7.png"]').length > 0;
+    if (psycho)
+        table.push("Psychiczny");
+    var poison = $('.panel-body.nopadding img[src="images/typy/8.png"]').length > 0;
+    if (poison)
+        table.push("Trujący");
+    var ghost = $('.panel-body.nopadding img[src="images/typy/9.png"]').length > 0;
+    if (ghost)
+        table.push("Duch");
+    var fight = $('.panel-body.nopadding img[src="images/typy/10.png"]').length > 0;
+    if (fight)
+        table.push("Walka");
+    var steel = $('.panel-body.nopadding img[src="images/typy/11.png"]').length > 0;
+    if (steel)
+        table.push("Stalowy");
+    var earth = $('.panel-body.nopadding img[src="images/typy/12.png"]').length > 0;
+    if (earth)
+        table.push("Ziemnny");
+    var rock = $('.panel-body.nopadding img[src="images/typy/13.png"]').length > 0;
+    if (rock)
+        table.push("Kamienny");
+    var ice = $('.panel-body.nopadding img[src="images/typy/14.png"]').length > 0;
+    if (ice)
+        table.push("Lodowy");
+    var dark = $('.panel-body.nopadding img[src="images/typy/15.png"]').length > 0;
+    if (dark)
+        table.push("Mroczny");
+    var nbug = $('.panel-body.nopadding img[src="images/typy/16.png"]').length > 0;
+    if (nbug)
+        table.push("Robak");
+    var dragon = $('.panel-body.nopadding img[src="images/typy/17.png"]').length > 0;
+    if (dragon)
+        table.push("Smok");
+    var fairy = $('.panel-body.nopadding img[src="images/typy/18.png"]').length > 0;
+    if (fairy)
+        table.push("Wróżka");
 
-$.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now(), {
+    return table
+}
+
+$.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time=" + Date.now(), {
     format: "json"
-}).done(function (data) {
+}).done(function(data) {
     console.log(data);
 
     styles = data.styles;
 
-    if(data.user != null){
+    if (data.user != null) {
         window.localStorage.falseLogin = data.user.false_login;
     }
 
-    if(data.user != null && data.user.config != ""){
+    if (data.user != null && data.user.config != "") {
         config = JSON.parse(data.user.config);
-        if(config.customStyleBackground == undefined){
+        if (config.customStyleBackground == undefined) {
             config.customStyleBackground = "#3c3c3c";
             config.customStyleTabs = "#C6E9D0";
             updateConfig(config);
         }
-        if(config.customStyleFont == undefined){
+        if (config.customStyleFont == undefined) {
             config.customStyleFont = "#000000";
             updateConfig(config);
         }
-        if(config.maxLapanyLvl == undefined){
+        if (config.maxLapanyLvl == undefined) {
             config.maxLapanyLvl = 50;
             updateConfig(config);
         }
-        if(config.niezlapaneMode == undefined){
+        if (config.niezlapaneMode == undefined) {
             config.niezlapaneMode = 1;
             updateConfig(config);
         }
@@ -3327,3 +3443,194 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
         initPokeLifeScript();
     })
 });
+
+function extractFromScripts(scrtipt, instruction) {
+    var scriptSplit = scrtipt.split(";");
+    for (let i = 0; i < scriptSplit.length; i++) {
+        const element = scriptSplit[i];
+        var instr = element.split("&");
+        for (let j = 0; j < instr.length; j++) {
+            if (instr[j].includes(instruction)) {
+                var instructionText = instr[j].substring(instruction.length);
+                return instructionText.split(',');
+            }
+        }
+    }
+    return null
+
+}
+
+function actionTriger() {
+    const scriptText = run.text.split(";")[1];
+    var actionInstruction = scriptText.split("&");
+    var returnCommand = action(actionInstruction[0].split(":")[0], scriptText)
+    if (actionInstruction.length > 1) {
+        throwCommand = action(actionInstruction[1].split(":")[0], scriptText)
+    }
+    if (returnCommand == "StopAutoGo" || returnCommand == "SkipPokemon") {
+        run = null;
+    }
+    if (returnCommand != null && returnCommand.includes("&wybierz_pokemona=") && throwCommand == null) {
+        run = null;
+    }
+    if (returnCommand != null) {
+        actionCommand = returnCommand;
+        return true;
+    }
+    return null;
+}
+
+function actionAtakuj(runScript) {
+    var pokemonIndex = extractFromScripts(runScript, "Atakuj:");
+    if (pokemonIndex >= 0 && pokemonIndex != null)
+        return "&wybierz_pokemona=" + pokemonIndex;
+    else
+        return null;
+}
+
+function actionStop(runScript) {
+    var pokemonIndex = extractFromScripts(runScript, "Stop:");
+    if (pokemonIndex != null)
+        return "StopAutoGo"
+    else
+        return null;
+}
+
+function actionSkip(runScript) {
+    var pokemonIndex = extractFromScripts(runScript, "Omin:");
+    if (pokemonIndex != null)
+        return "SkipPokemon"
+    else
+        return null;
+}
+
+function actionThrow(runScript) {
+    var ballName = extractFromScripts(runScript, "Rzuc:");
+    if (ballName != null && ballName != "")
+        return "&zlap_pokemona=" + ballName;
+    else
+        return null;
+}
+
+function pokemonTrigger(pokemon, lvl, dificul, types, catched, shinny) {
+    console.log("PokemonTRIGER");
+    console.log(pokemon);
+    console.log(lvl);
+    console.log(dificul);
+    console.log(types);
+    console.log(catched);
+    console.log(shinny);
+    for (let i = 0; i < activeScript.length; i++) {
+        var canRunScript = false;
+        const scriptText = activeScript[i].text.split(";")[0];
+        var whereInstruction = scriptText.split("&");
+        for (let j = 0; j < whereInstruction.length; j++) {
+            const instruction = whereInstruction[j];
+            var instrIndex = instruction.indexOf(":");
+            var instrText = instruction.substring(0, instrIndex);
+            canRunScript = where(instrText, scriptText, pokemon, lvl, dificul, types, catched, shinny);
+            if (canRunScript == true)
+                continue;
+            else break;
+        }
+        if (canRunScript == true) {
+            run = activeScript[i];
+            break;
+        }
+    }
+    if (run != undefined && run != null)
+        return actionTriger(run);
+    else return null;
+}
+
+function action(name, script) {
+    switch (name) {
+        case "Atakuj":
+            return actionAtakuj(script);
+        case "Omin":
+            return actionSkip(script);
+        case "Rzuc":
+            return actionThrow(script);
+        case "Stop":
+            return actionStop(script);
+    }
+}
+
+function where(name, script, pokemon, lvl, dificul, types, catched, shinny) {
+    switch (name) {
+        case "Pokemon":
+            var pokemons = extractFromScripts(script, "Pokemon:")
+            if (pokemons.includes(pokemon))
+                return true;
+            return false;
+        case "Poziom":
+            var lvls = extractFromScripts(script, "Poziom:")
+            for (let i = 0; i < lvls.length; i++) {
+                const element = lvls[i];
+                if (element.includes("-")) {
+                    var ranges = element.split("-");
+                    var parseFirst = Number.parseInt(ranges[0]);
+                    var parseSec = Number.parseInt(ranges[1]);
+                    var max = parseFirst;
+                    var min = 0;
+                    if (parseFirst < parseSec) {
+                        min = parseFirst;
+                        max = parseSec;
+                    }
+                    if (lvl >= min && lvl <= max)
+                        return true;
+                } else {
+                    var parse = Number.parseInt(element);
+                    if (lvl == parse)
+                        return true;
+                }
+            }
+            return false;
+        case "Trudnosc":
+            var dificuls = extractFromScripts(script, "Trudnosc:")
+            for (let i = 0; i < dificuls.length; i++) {
+                const element = dificuls[i];
+                if (element.includes("-")) {
+                    var ranges = element.split("-");
+                    var parseFirst = Number.parseInt(ranges[0]);
+                    var parseSec = Number.parseInt(ranges[1]);
+                    var max = parseFirst;
+                    var min = 0;
+                    if (parseFirst < parseSec) {
+                        min = parseFirst;
+                        max = parseSec;
+                    }
+                    if (dificul >= min && dificul <= max)
+                        return true;
+                } else {
+                    var parse = Number.parseInt(element);
+                    if (dificul == parse)
+                        return true;
+                }
+            }
+            return false;
+        case "Typ":
+            var type = extractFromScripts(script, "Typ:")
+            for (let i = 0; i < types.length; i++) {
+                const element = types[i];
+                if (type.includes(element)) {
+                    return true;
+                }
+            }
+            return false;
+        case "Zlapany":
+            var catche = extractFromScripts(script, "Zlapany:")
+            if (catche[0] == "TAK" && catched == true)
+                return true;
+            if (catched[0] == "NIE" && catched == false)
+                return true;
+            return false;
+        case "Shiny":
+            var shin = extractFromScripts(script, "Shiny:")
+            if (shin[0] == "TAK" && shinny == true)
+                return true;
+            if (shin[0] == "NIE" && shinny == false)
+                return true;
+            return false;
+    }
+}
