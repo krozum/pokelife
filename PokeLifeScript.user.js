@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.18
+// @version      5.18.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -857,10 +857,10 @@ function initPokeLifeScript() {
 <p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">4-15</p>
 </div>
 <div class="col-xs-2">
-<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">max</p>
+<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">16-`+(config.maxLapanyLvl-1)+`</p>
 </div>
 <div class="col-xs-2">
-<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">inne</p>
+<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">`+config.maxLapanyLvl+`</p>
 </div>
 </div>
 <div class="row" style="height: 50px; margin-bottom: 15px">
@@ -874,11 +874,11 @@ function initPokeLifeScript() {
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien13">
+<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien14">
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien14">
+<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien13">
 </div>
 </div>
 </div>
@@ -893,11 +893,11 @@ function initPokeLifeScript() {
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien23">
+<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien24">
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien24">
+<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien23">
 </div>
 </div>
 </div>
@@ -912,11 +912,11 @@ function initPokeLifeScript() {
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien33">
+<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien34">
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien34">
+<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien33">
 </div>
 </div>
 </div>
@@ -931,11 +931,11 @@ function initPokeLifeScript() {
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien43">
+<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien44">
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien44">
+<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien43">
 </div>
 </div>
 </div>
@@ -950,11 +950,11 @@ function initPokeLifeScript() {
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien53">
+<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien54">
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien54">
+<div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien53">
 </div>
 </div>
 </div>
@@ -988,10 +988,10 @@ function initPokeLifeScript() {
 <p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">4-15</p>
 </div>
 <div class="col-xs-2">
-<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">max</p>
+<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">16-`+(config.maxLapanyLvl-1)+`</p>
 </div>
 <div class="col-xs-2">
-<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">inne</p>
+<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">`+config.maxLapanyLvl+`</p>
 </div>
 </div>
 <div class="row" style="height: 50px; margin-bottom: 15px">
@@ -1005,11 +1005,11 @@ function initPokeLifeScript() {
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc13">
+<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc14">
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc14">
+<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc13">
 </div>
 </div>
 </div>
@@ -1024,11 +1024,11 @@ function initPokeLifeScript() {
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc23">
+<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc24">
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc24">
+<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc23">
 </div>
 </div>
 </div>
@@ -1043,11 +1043,11 @@ function initPokeLifeScript() {
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc33">
+<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc34">
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc34">
+<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc33">
 </div>
 </div>
 </div>
@@ -1062,11 +1062,11 @@ function initPokeLifeScript() {
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc43">
+<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc44">
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc44">
+<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc43">
 </div>
 </div>
 </div>
@@ -1081,11 +1081,11 @@ function initPokeLifeScript() {
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc53">
+<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc54">
 </div>
 </div>
 <div class="col-xs-2">
-<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc54">
+<div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc53">
 </div>
 </div>
 </div>
