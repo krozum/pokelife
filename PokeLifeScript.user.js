@@ -831,192 +831,223 @@ function initPokeLifeScript() {
 
 
         function initPokeballIcon() {
-            $('body').append('<div id="setPokeball" style="position: fixed; cursor: pointer; top: 0; left: 60px; z-index: 9999"></div>');
+            $('body').append('<div id="setPokeball" style="position: fixed;cursor: pointer;top: 6px;left: 65px;z-index: 9999;width: 45px;height: 45px;background: red;"></div>');
 
-            AutoGoSettings.iconPokeball = new IconSelect("setPokeball", {
-                'selectedIconWidth': 48,
-                'selectedIconHeight': 48,
-                'selectedBoxPadding': 1,
-                'iconsWidth': 48,
-                'iconsHeight': 48,
-                'boxIconSpace': 1,
-                'vectoralIconNumber': 1,
-                'horizontalIconNumber': 6
+            $('#setPokeball').click(function(e){
+                $('body').append('<div id="settingsPokeball" style="padding: 10px; position: fixed; top: 70px; left: 10px; width: 900px; min-height: 300px; background: white; opacity: 1; border: 7px solid #d6e9c6; z-index: 999;"></div>');
+
+                $('#settingsPokeball').append(`
+<div class="table-responsive">
+                <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
+                    <thead>
+                        <tr class="text-left text-uppercase">
+                            <th style="min-width: 250px" class="pl-7"><span class="text-dark-75">products</span></th>
+                            <th style="min-width: 100px">earnings</th>
+                            <th style="min-width: 100px">comission</th>
+                            <th style="min-width: 100px">company</th>
+                            <th style="min-width: 130px">rating</th>
+                            <th style="min-width: 80px"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="pl-0 py-8">
+                                <div class="d-flex align-items-center">
+                                    <div class="symbol symbol-50 symbol-light mr-4">
+                                        <span class="symbol-label">
+                                            <img src="/metronic/themes/metronic/theme/html/demo2/dist/assets/media/svg/avatars/001-boy.svg" class="h-75 align-self-end" alt="">
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <a href="#" class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">Brad Simmons</a>
+                                        <span class="text-muted font-weight-bold d-block">HTML, JS, ReactJS</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                    $8,000,000
+                                </span>
+                                <span class="text-muted font-weight-bold">
+                                    In Proccess
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                    $520
+                                </span>
+                                <span class="text-muted font-weight-bold">
+                                    Paid
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                    Intertico
+                                </span>
+                                <span class="text-muted font-weight-bold">
+                                    Web, UI/UX Design
+                                </span>
+                            </td>
+                            <td>
+                                <img src="/metronic/themes/metronic/theme/html/demo2/dist/assets/media/logos/stars.png" alt="image" style="width: 5.5rem">
+                                <span class="text-muted font-weight-bold d-block font-size-sm">
+                                    Best Rated
+                                </span>
+                            </td>
+                            <td class="pr-0 text-right">
+                                <a href="#" class="btn btn-light-success font-weight-bolder font-size-sm">View Offer</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="pl-0 py-0">
+                                <div class="d-flex align-items-center">
+                                    <div class="symbol symbol-50 symbol-light mr-4">
+                                        <span class="symbol-label">
+                                            <img src="/metronic/themes/metronic/theme/html/demo2/dist/assets/media/svg/avatars/018-girl-9.svg" class="h-75 align-self-end" alt="">
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <a href="#" class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">Jessie Clarcson</a>
+                                        <span class="text-muted font-weight-bold d-block">C#, ASP.NET, MS SQL</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                    $23,000,000
+                                </span>
+                                <span class="text-muted font-weight-bold">
+                                    Pending
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                    $1,600
+                                </span>
+                                <span class="text-muted font-weight-bold">
+                                    Rejected
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                    Agoda
+                                </span>
+                                <span class="text-muted font-weight-bold">
+                                    Houses &amp; Hotels
+                                </span>
+                            </td>
+                            <td>
+                                <img src="/metronic/themes/metronic/theme/html/demo2/dist/assets/media/logos/stars.png" alt="image" style="width: 5.5rem">
+                                <span class="text-muted font-weight-bold d-block font-size-sm">
+                                    Above Avarage
+                                </span>
+                            </td>
+                            <td class="pr-0 text-right">
+                                <a href="#" class="btn btn-light-success font-weight-bolder font-size-sm">View Offer</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="pl-0 py-8">
+                                <div class="d-flex align-items-center">
+                                    <div class="symbol symbol-50 symbol-light mr-4">
+                                        <span class="symbol-label">
+                                            <img src="/metronic/themes/metronic/theme/html/demo2/dist/assets/media/svg/avatars/047-girl-25.svg" class="h-75 align-self-end" alt="">
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <a href="#" class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">Lebron Wayde</a>
+                                        <span class="text-muted font-weight-bold d-block">PHP, Laravel, VueJS</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                    $34,000,000
+                                </span>
+                                <span class="text-muted font-weight-bold">
+                                    Paid
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                    $6,700
+                                </span>
+                                <span class="text-muted font-weight-bold">
+                                    Paid
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                    RoadGee
+                                </span>
+                                <span class="text-muted font-weight-bold">
+                                    Paid
+                                </span>
+                            </td>
+                            <td>
+                                <img src="/metronic/themes/metronic/theme/html/demo2/dist/assets/media/logos/stars.png" alt="image" style="width: 5.5rem">
+                                <span class="text-muted font-weight-bold d-block font-size-sm">
+                                    Best Rated
+                                </span>
+                            </td>
+                            <td class="pr-0 text-right">
+                                <a href="#" class="btn btn-light-success font-weight-bolder font-size-sm">View Offer</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="pl-0 py-0 ">
+                                <div class="d-flex align-items-center">
+                                    <div class="symbol symbol-50 symbol-light mr-4">
+                                        <span class="symbol-label">
+                                            <img src="/metronic/themes/metronic/theme/html/demo2/dist/assets/media/svg/avatars/014-girl-7.svg" class="h-75 align-self-end" alt="">
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <a href="#" class="text-dark font-weight-bolder text-hover-primary mb-1 font-size-lg">Natali Trump</a>
+                                        <span class="text-muted font-weight-bold d-block">Python, PostgreSQL, ReactJS</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-left pr-0">
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                    $2,600,000
+                                </span>
+                                <span class="text-muted font-weight-bold">
+                                    Paid
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                    $14,000
+                                </span>
+                                <span class="text-muted font-weight-bold">
+                                    Pending
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+                                    The Hill
+                                </span>
+                                <span class="text-muted font-weight-bold">
+                                    Insurance
+                                </span>
+                            </td>
+                            <td>
+                                <img src="/metronic/themes/metronic/theme/html/demo2/dist/assets/media/logos/stars.png" alt="image" style="width: 5.5rem">
+                                <span class="text-muted font-weight-bold d-block font-size-sm">
+                                    Avarage
+                                </span>
+                            </td>
+                            <td class="pr-0 text-right">
+                                <a href="#" class="btn btn-light-success font-weight-bolder font-size-sm" style="width: 7rem">View Offer</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+`);
             });
 
-            var selectPokeball = [{
-                'iconFilePath': "images/pokesklep/pokeballe.jpg",
-                'iconValue': function() {
-                    return '&zlap_pokemona=pokeballe';
-                }
-            },
-                                  {
-                                      'iconFilePath': "images/pokesklep/greatballe.jpg",
-                                      'iconValue': function() {
-                                          return '&zlap_pokemona=greatballee';
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "images/pokesklep/nestballe.jpg",
-                                      'iconValue': function() {
-                                          return '&zlap_pokemona=nestballe';
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "images/pokesklep/friendballe.jpg",
-                                      'iconValue': function() {
-                                          return '&zlap_pokemona=friendballe';
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "images/pokesklep/nightballe.jpg",
-                                      'iconValue': function() {
-                                          return '&zlap_pokemona=nightballe';
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "images/pokesklep/cherishballe.jpg",
-                                      'iconValue': function() {
-                                          return '&zlap_pokemona=cherishballe';
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "images/pokesklep/lureballe.jpg",
-                                      'iconValue': function() {
-                                          return '&zlap_pokemona=lureballe';
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb1.jpg",
-                                      'iconValue': function() {
-                                          let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                          if (pokeLvlNumber < 15) {
-                                              return '&zlap_pokemona=nestballe';
-                                          } else {
-                                              return '&zlap_pokemona=greatballee';
-                                          }
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb2.png",
-                                      'iconValue': function() {
-                                          var d = new Date();
-                                          var h = d.getHours();
-                                          if (h >= 22 || h < 6) {
-                                              return '&zlap_pokemona=nightballe';
-                                          }
-                                          let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                          if (pokeLvlNumber < 15) {
-                                              return '&zlap_pokemona=nestballe';
-                                          } else {
-                                              return '&zlap_pokemona=greatballee';
-                                          }
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb3.jpg",
-                                      'iconValue': function() {
-                                          let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                          if (pokeLvlNumber <= 5) {
-                                              return '&zlap_pokemona=uzyj_swarmballe';
-                                          } else {
-                                              var d = new Date();
-                                              var h = d.getHours();
-                                              if (h >= 22 || h < 6) {
-                                                  return '&zlap_pokemona=nightballe';
-                                              }
-                                              if (pokeLvlNumber > 5 && pokeLvlNumber < 15) {
-                                                  return '&zlap_pokemona=nestballe';
-                                              } else {
-                                                  return '&zlap_pokemona=greatballee';
-                                              }
-                                          }
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb4.jpg",
-                                      'iconValue': function() {
-                                          if ($(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc1.png"]').length > 0) {
-                                              return '&zlap_pokemona=levelballe';
-                                          } else {
-                                              var d = new Date();
-                                              var h = d.getHours();
-                                              if (h >= 22 || h < 6) {
-                                                  return '&zlap_pokemona=nightballe';
-                                              }
-                                              let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                              if (pokeLvlNumber < 15) {
-                                                  return '&zlap_pokemona=nestballe';
-                                              } else {
-                                                  return '&zlap_pokemona=greatballee';
-                                              }
-                                          }
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "https://raw.githubusercontent.com/krozum/pokelife/master/assets/nb5.jpg",
-                                      'iconValue': function() {
-                                          let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                          if ($(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc1.png"]').length > 0 && pokeLvlNumber <= 5) {
-                                              return '&zlap_pokemona=luxuryballe';
-                                          } else {
-                                              var d = new Date();
-                                              var h = d.getHours();
-                                              if (h >= 22 || h < 6) {
-                                                  return '&zlap_pokemona=nightballe';
-                                              }
-                                              let pokeLvlNumber = $('#glowne_okno i:nth("1")').parent().html().split("(")[1].split(" poz")[0];
-                                              if (pokeLvlNumber < 15) {
-                                                  return '&zlap_pokemona=nestballe';
-                                              } else {
-                                                  return '&zlap_pokemona=greatballee';
-                                              }
-                                          }
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "images/pokesklep/safariballe.jpg",
-                                      'iconValue': function() {
-                                          if ($('label[data-original-title="Safariball"]').length > 0) {
-                                              if (Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1) {
-                                                  if (config.lapSafariballemNiezlapane == true || config.lapSafariballemNiezlapane == "true")
-                                                      if ($(previousPageContent).find('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
-                                                          return '&zlap_pokemona=safariballe';
-                                                      } else {
-                                                          $('button:contains("Pomiń i szukaj dalej")').click();
-                                                          return "";
-                                                      }
-                                                  else {
-                                                      return '&zlap_pokemona=safariballe';
-                                                  }
-                                              } else {
-                                                  $('button:contains("Pomiń i szukaj dalej")').click();
-                                                  return "";
-                                              }
-                                          } else {
-                                              autoGo = false;
-                                              $('#goAutoButton').html('AutoGO');
-                                              $("#goStopReason").html("Brak odpowiedniego pokeballa").show();
-                                              document.title = "Brak odpowiedniego pokeballa";
-                                          }
-                                      }
-                                  },
-                                  {
-                                      'iconFilePath': "images/pokesklep/premierballe.jpg",
-                                      'iconValue': function() {
-                                          return '&zlap_pokemona=premierballe';
-                                      }
-                                  }
-
-                                 ];
-
-            AutoGoSettings.iconPokeball.refresh(selectPokeball);
-            AutoGoSettings.iconPokeball.setSelectedIndex(config.pokeballIconsIndex);
-
-            document.getElementById('setPokeball').addEventListener('changed', function(e) {
-                config.pokeballIconsIndex = AutoGoSettings.iconPokeball.getSelectedIndex();
-                updateConfig(config);
-            });
         }
         initPokeballIcon();
 
