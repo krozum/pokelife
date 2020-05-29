@@ -26,6 +26,11 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.18 (2020-05-29)
+* Została przepisana opcja wyboru pokeballi. Od teraz można wybrać rodzaj pokeballa w zależności od trudności złapania i lvl pokemona jak i pory dnia.
+* Została dodana zakładka z informacjami przy wyborze pokeballi.
+* Dodano liczenie doświadczenia przy przegranych walkach
+
 5.17.3 (2020-05-25)
 * Dodanie ceny w hodowli na shiny widget
 
