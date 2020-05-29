@@ -106,6 +106,7 @@
     -moz-border-radius: 3px;
     border-radius: 3px;
     overflow: auto;
+    z-index: 999;
 }
 .icon-select .icon {
     position: relative;
