@@ -26,6 +26,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.18.2 (2020-05-30)
+* Dodanie autowzowianie PA za pomocą fontanny
+* Dodanie ultraballi i swarmballi jako opcje wyboru
+
 5.18 (2020-05-29)
 * Została przepisana opcja wyboru pokeballi. Od teraz można wybrać rodzaj pokeballa w zależności od trudności złapania i lvl pokemona jak i pory dnia.
 * Została dodana zakładka z informacjami przy wyborze pokeballi.
