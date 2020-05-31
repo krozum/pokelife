@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.18.3
+// @version      5.18.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1328,29 +1328,58 @@ function initPokeLifeScript() {
         function getPokeball() {
             var miejsce = $(previousPageContent).find('button[href*="dzicz.php?miejsce="]').attr('href').split("&")[0].split('miejsce=')[1].trim();
             if(miejsce == "meteorytowa_gora" || miejsce == "park_narodowy" || miejsce == "wielkie_bagna" || miejsce == "reliktowy_zamek" || miejsce == "safari" || miejsce == "przyjazne_safari"){
-                if ($('label[data-original-title="Safariball"]').length > 0) {
-                    if (Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1) {
-                        if (config.lapSafariballemNiezlapane == true || config.lapSafariballemNiezlapane == "true")
-                            if ($(previousPageContent).find('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
+                switch(Number(config.safariMode)){
+                    case 1:
+                        if(isNiezlapany()){
+                            zatrzymajAutoGo("Spotkany niezłapany pokemon", true);
+                        } else {
+                            $('button:contains("Pomiń i szukaj dalej")').click();
+                        }
+                        return "";
+                        break;
+                    case 2:
+                        if(isNiezlapany()){
+                            if ($('label[data-original-title="Safariball"]').length > 0) {
+                                if (Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1) {
+                                    return '&zlap_pokemona=safariballe';
+                                } else {
+                                    $('button:contains("Pomiń i szukaj dalej")').click();
+                                    return "";
+                                }
+                            } else {
+                                zatrzymajAutoGo("Brak odpowiedniego pokeballa", true);
+                            }
+                        } else {
+                            $('button:contains("Pomiń i szukaj dalej")').click();
+                            return "";
+                        }
+                        break;
+                    case 3:
+                        if ($('label[data-original-title="Safariball"]').length > 0) {
+                            if (Number($('label[data-original-title="Safariball"]').html().split('">')[1].trim()) > 1) {
                                 return '&zlap_pokemona=safariballe';
                             } else {
                                 $('button:contains("Pomiń i szukaj dalej")').click();
                                 return "";
                             }
-                        else {
-                            return '&zlap_pokemona=safariballe';
+                        } else {
+                            zatrzymajAutoGo("Brak odpowiedniego pokeballa", true);
                         }
-                    } else {
-                        $('button:contains("Pomiń i szukaj dalej")').click();
-                        return "";
-                    }
-                } else {
-                    autoGo = false;
-                    $('#goAutoButton').html('AutoGO');
-                    $("#goStopReason").html("Brak odpowiedniego pokeballa").show();
-                    document.title = "Brak odpowiedniego pokeballa";
+                        break;
+
                 }
             } else {
+                if(Number(config.niezlapaneMode) == 4){
+                    if(isNiezlapany()){
+                        return '&zlap_pokemona=cherishballe';
+                    }
+                }
+                if ($(previousPageContent).find('h2:contains("Wybierz Pokemona")').length > 0 && $(previousPageContent).find('.panel-body.nopadding').attr('style').indexOf("background-color: #FFBB") == -1) {
+                    if(Number(config.shinyMode) == 3){
+                        return '&zlap_pokemona=cherishballe';
+                    }
+                }
+
                 var d = new Date();
                 var h = d.getHours();
                 var type = "dzien";
@@ -1434,6 +1463,8 @@ function initPokeLifeScript() {
         initLocationIcon();
 
         function click(poLeczeniu) {
+            var miejsce;
+
             if (poLeczeniu != true) {
                 poLeczeniu = false;
             }
@@ -1520,122 +1551,56 @@ function initPokeLifeScript() {
                         $('#refreshShinyWidget').trigger('click');
                         switch(Number(config.shinyMode)){
                             case 1:
-                                console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
-                                autoGo = false;
-                                $('#goAutoButton').html('AutoGO');
-                                $("#goStopReason").html("Spotkany shiny pokemon").show();
-                                document.title = "Spotkany shiny pokemon";
-                                triggerSound();
+                                zatrzymajAutoGo("Spotkany shiny pokemon", true);
                                 break;
                             case 2:
                             case 3:
                                 console.log('PokeLifeScript: spotkany Shiny');
-                                console.log('PokeLifeScript: atakuje pokemona');
-                                var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
-                                if ($('button[href="' + url + '"]').length == 0) {
-                                    autoGo = false;
-                                    $('#goAutoButton').html('AutoGO');
-                                    $("#goStopReason").html("Dzicz została zmieniona").show();
-                                    document.title = "Dzicz została zmieniona";
-                                } else {
-                                    $('button[href="' + url + '"]').trigger('click');
-                                }
+                                atakujPokemona();
                                 break;
                         }
-                    } else if ($('h2:contains("Wybierz Pokemona")').length && $('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.panel-body.nopadding img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.panel-body.nopadding .col-xs-9 > b').html().split("Poziom: ")[1] <= config.maxLapanyLvl) {
-                        switch(Number(config.niezlapaneMode)){
-                            case 1:
-                                console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
-                                autoGo = false;
-                                $('#goAutoButton').html('AutoGO');
-                                $("#goStopReason").html("Spotkany niezłapany pokemona").show();
-                                document.title = "Spotkany niezłapany pokemona";
-                                triggerSound();
-                                break;
-                            case 2:
-                                if($('.panel-body.nopadding img[src="images/trudnosc/trudnosc4.png"]').length > 0 || $('.panel-body.nopadding img[src="images/trudnosc/trudnosc5.png"]').length > 0){
-                                    console.log('PokeLifeScript: spotkany niezłapany pokemona, przerwanie AutoGo');
-                                    autoGo = false;
-                                    $('#goAutoButton').html('AutoGO');
-                                    $("#goStopReason").html("Spotkany niezłapany pokemona").show();
-                                    document.title = "Spotkany niezłapany pokemona";
-                                    triggerSound();
-                                } else {
-                                    console.log('PokeLifeScript: spotkany niezłapany pokemona');
-                                    console.log('PokeLifeScript: atakuje pokemona');
-                                    var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
-                                    if ($('button[href="' + url + '"]').length == 0) {
-                                        autoGo = false;
-                                        $('#goAutoButton').html('AutoGO');
-                                        $("#goStopReason").html("Dzicz została zmieniona").show();
-                                        document.title = "Dzicz została zmieniona";
+                    } else if ($('h2:contains("Wybierz Pokemona")').length && isNiezlapany() && $('.panel-body.nopadding img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.panel-body.nopadding .col-xs-9 > b').html().split("Poziom: ")[1] <= config.maxLapanyLvl) {
+                        miejsce = $('button[href*="dzicz.php?miejsce="]').attr('href').split("&")[0].split('miejsce=')[1].trim();
+                        if(miejsce == "meteorytowa_gora" || miejsce == "park_narodowy" || miejsce == "wielkie_bagna" || miejsce == "reliktowy_zamek" || miejsce == "safari" || miejsce == "przyjazne_safari"){
+                            switch(Number(config.safariMode)){
+                                case 1:
+                                    zatrzymajAutoGo("Spotkany niezłapany pokemon", true);
+                                    break;
+                                case 2:
+                                case 3:
+                                    atakujPokemona();
+                                    break;
+                            }
+                        } else {
+                            switch(Number(config.niezlapaneMode)){
+                                case 1:
+                                    zatrzymajAutoGo("Spotkany niezłapany pokemon", true);
+                                    break;
+                                case 2:
+                                    if($('.panel-body.nopadding img[src="images/trudnosc/trudnosc4.png"]').length > 0 || $('.panel-body.nopadding img[src="images/trudnosc/trudnosc5.png"]').length > 0){
+                                        zatrzymajAutoGo("Spotkany niezłapany pokemon", true);
                                     } else {
-                                        $('button[href="' + url + '"]').trigger('click');
+                                        console.log('PokeLifeScript: spotkany niezłapany pokemona');
+                                        atakujPokemona();
                                     }
-                                }
-                                break;
-                            case 3:
-                                console.log('PokeLifeScript: spotkany niezłapany pokemona');
-                                console.log('PokeLifeScript: atakuje pokemona');
-                                var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
-                                if ($('button[href="' + url + '"]').length == 0) {
-                                    autoGo = false;
-                                    $('#goAutoButton').html('AutoGO');
-                                    $("#goStopReason").html("Dzicz została zmieniona").show();
-                                    document.title = "Dzicz została zmieniona";
-                                } else {
-                                    $('button[href="' + url + '"]').trigger('click');
-                                }
-                                break;
-                            case 4:
-                                console.log('PokeLifeScript: spotkany niezłapany pokemona');
-                                console.log('PokeLifeScript: atakuje pokemona');
-                                var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
-                                if ($('button[href="' + url + '"]').length == 0) {
-                                    autoGo = false;
-                                    $('#goAutoButton').html('AutoGO');
-                                    $("#goStopReason").html("Dzicz została zmieniona").show();
-                                    document.title = "Dzicz została zmieniona";
-                                } else {
-                                    $('button[href="' + url + '"]').trigger('click');
-                                }
-                                break;
+                                    break;
+                                case 3:
+                                case 4:
+                                    console.log('PokeLifeScript: spotkany niezłapany pokemona');
+                                    atakujPokemona();
+                                    break;
+                            }
                         }
                     } else if ($('h2:contains("Wybierz Pokemona")').length == 1) {
-                        console.log('PokeLifeScript: atakuje pokemona');
-                        var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
-                        if ($('button[href="' + url + '"]').length == 0) {
-                            autoGo = false;
-                            $('#goAutoButton').html('AutoGO');
-                            $("#goStopReason").html("Dzicz została zmieniona").show();
-                            document.title = "Dzicz została zmienion";
-                        } else {
-                            $('button[href="' + url + '"]').trigger('click');
-                        }
+                        atakujPokemona();
                     } else if ($("form[action='dzicz.php?zlap']").length == 1) {
                         if (getPokeball() !== "") {
                             var button = $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + getPokeball() + '"]');
-                            if(Number(config.niezlapaneMode) == 4){
-                                if ($(previousPageContent).find('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
-                                    if($(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc4.png"]').length > 0 || $(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc5.png"]').length > 0){
-                                        button = $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '&zlap_pokemona=cherishballe"]');
-                                    }
-                                }
-                            }
-                            if ($(previousPageContent).find('h2:contains("Wybierz Pokemona")').length > 0 && $(previousPageContent).find('.panel-body.nopadding').attr('style').indexOf("background-color: #FFBB") == -1) {
-                                if(Number(config.shinyMode) == 3){
-                                    button = $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '&zlap_pokemona=cherishballe"]');
-                                }
-                            }
                             if (button.length > 0) {
                                 console.log('PokeLifeScript: rzucam pokeballa');
                                 $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + getPokeball() + '"]').trigger('click');
                             } else {
-                                autoGo = false;
-                                $('#goAutoButton').html('AutoGO');
-                                $("#goStopReason").html("Brak odpowiedniego pokeballa").show();
-                                document.title = "Brak odpowiedniego pokeballa";
-                                console.log('PokeLifeScript: brak odpowiedniego balla');
+                                zatrzymajAutoGo("Brak odpowiedniego pokeballa", true);
                             }
                         }
                     } else if ($("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + "']").length == 1) {
@@ -1647,6 +1612,35 @@ function initPokeLifeScript() {
                     }
                 }
             }
+        }
+
+        function zatrzymajAutoGo(reason, makeVoice){
+            console.log('PokeLifeScript: ' + reason + ', przerwanie AutoGo');
+            autoGo = false;
+            $('#goAutoButton').html('AutoGO');
+            $("#goStopReason").html(reason).show();
+            document.title = reason;
+            if(makeVoice == true || makeVoice == "true"){
+                triggerSound();
+            }
+        }
+
+        function atakujPokemona(){
+            console.log('PokeLifeScript: atakuje pokemona');
+            var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
+            if ($('button[href="' + url + '"]').length == 0) {
+                autoGo = false;
+                $('#goAutoButton').html('AutoGO');
+                $("#goStopReason").html("Dzicz została zmieniona").show();
+                document.title = "Dzicz została zmieniona";
+            } else {
+                $('button[href="' + url + '"]').trigger('click');
+            }
+        }
+
+
+        function isNiezlapany(){
+            return ($(previousPageContent).find('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0) || ($('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0);
         }
 
         $(document).on("change", ".list_of_poks_in_team", function(event) {
@@ -2109,14 +2103,14 @@ function initPokeLifeScript() {
                 $('#settingsAutoGo .wznawianieSettings').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Eventowe napoje</b> -> <b>Fontanna</b> -> <b>Niebieskie napoje</b> -> <b>Zielone napoje</b> -> <b>Czerwone napoje</b></p>');
 
                 $('#settingsAutoGo .row').append('<div class="col-sm-6 dziczSettings"><table> <tr> <th></th> <th></th> <th></th> </tr></table></div>');
-                $('#settingsAutoGo .dziczSettings table').append('<col width="60"><col width="20"><col width="340">');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/czerwone_jagody.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneJagody" name="autoUseCzerwoneJagody" value="1" ' + ((config.useCzerwoneJagody == "true" || config.useCzerwoneJagody == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych jagód do leczenia</label></td> </tr>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Niezłapane: </b><select id="switchNiezlapane"><option value="1" ' + (Number(config.niezlapaneMode) == 1 ? 'selected' : '') + '>Zatrzymuj gdy spotkasz</option><option value="2" ' + (Number(config.niezlapaneMode) == 2 ? 'selected' : '') + '>Zatrzymuj tylko IV i V</option><option value="3" ' + (Number(config.niezlapaneMode) == 3 ? 'selected' : '') + '>Nie zatrzymuj</option><option value="4" ' + (Number(config.niezlapaneMode) == 4 ? 'selected' : '') + '>Rzucaj cherishballe w IV i V</option><select></p></td> </tr>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Shiny: </b><select id="switchShiny"><option value="1" ' + (Number(config.shinyMode) == 1 ? 'selected' : '') + '>Zatrzymuj gdy spotkasz</option><option value="2" ' + (Number(config.shinyMode) == 2 ? 'selected' : '') + '>Nie zatrzymuj</option><option value="3" ' + (Number(config.shinyMode) == 3 ? 'selected' : '') + '>Rzucaj cherishballe</option><select></p></td> </tr>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 30px;" src="images/pokesklep/safariballe.jpg"></td><td><input type="checkbox" id="lapSafariballemNiezlapane" name="lapSafariballemNiezlapane" value="1" ' + ((config.lapSafariballemNiezlapane == "true" || config.lapSafariballemNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Łap safariballem tylko niezłapane pokemony</label></td> </tr></tbody></table>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" ' + ((config.useOnlyInNight == "true" || config.useOnlyInNight == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Maxymalny łapany lvl: </b><input style="width: 50px" id="changeMaxLapanyLvl" type="number" value="' + config.maxLapanyLvl + '"></p></td> </tr>');
-                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Kolejność widgetów: </b><select id="switchWidgetOrder"><option value="1" ' + (config.kolejnoscWidgetow == 1 ? 'selected' : '') + '>Zadania - Drużyna</option><option value="2" ' + (config.kolejnoscWidgetow == 2 ? 'selected' : '') +  '>Drużyna - Zadania</option><select></p></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<<col width="20"><col width="340">');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td><input type="checkbox" id="autoUseCzerwoneJagody" name="autoUseCzerwoneJagody" value="1" ' + ((config.useCzerwoneJagody == "true" || config.useCzerwoneJagody == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych jagód do leczenia</label></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td><p><b>Niezłapane: </b><select id="switchNiezlapane"><option value="1" ' + (Number(config.niezlapaneMode) == 1 ? 'selected' : '') + '>Zatrzymuj gdy spotkasz</option><option value="2" ' + (Number(config.niezlapaneMode) == 2 ? 'selected' : '') + '>Zatrzymuj tylko IV i V</option><option value="3" ' + (Number(config.niezlapaneMode) == 3 ? 'selected' : '') + '>Nie zatrzymuj</option><option value="4" ' + (Number(config.niezlapaneMode) == 4 ? 'selected' : '') + '>Rzucaj cherishballe w IV i V</option><select></p></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td><p><b>Shiny: </b><select id="switchShiny"><option value="1" ' + (Number(config.shinyMode) == 1 ? 'selected' : '') + '>Zatrzymuj gdy spotkasz</option><option value="2" ' + (Number(config.shinyMode) == 2 ? 'selected' : '') + '>Nie zatrzymuj</option><option value="3" ' + (Number(config.shinyMode) == 3 ? 'selected' : '') + '>Nie zatrzymuj, rzucaj cherishballe</option><select></p></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td><p><b>Safari: </b><select id="switchSafari"><option value="1" ' + (Number(config.safariMode) == 1 ? 'selected' : '') + '>Zatrzymuj niezłapane, pomijaj pozostałe</option><option value="2" ' + (Number(config.safariMode) == 2 ? 'selected' : '') + '>Nie zatrzymuj, rzucaj tylko w niezłapane</option><option value="3" ' + (Number(config.safariMode) == 3 ? 'selected' : '') + '>Nie zatrzymuj, rzucaj we wszystkie</option><select></p></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" ' + ((config.useOnlyInNight == "true" || config.useOnlyInNight == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td><p><b>Maxymalny łapany lvl: </b><input style="width: 50px" id="changeMaxLapanyLvl" type="number" value="' + config.maxLapanyLvl + '"></p></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td><p><b>Kolejność widgetów: </b><select id="switchWidgetOrder"><option value="1" ' + (config.kolejnoscWidgetow == 1 ? 'selected' : '') + '>Zadania - Drużyna</option><option value="2" ' + (config.kolejnoscWidgetow == 2 ? 'selected' : '') +  '>Drużyna - Zadania</option><select></p></td> </tr>');
             }
         });
 
@@ -2130,16 +2124,15 @@ function initPokeLifeScript() {
             updateConfig(config);
         })
 
+        $(document).on("change", "#switchSafari", function(event) {
+            config.safariMode = Number($(this).val());
+            updateConfig(config);
+        })
+
         $(document).on("change", "#changeMaxLapanyLvl", function(event) {
             config.maxLapanyLvl = $(this).val();
             updateConfig(config);
         })
-
-        $(document).on("click", "#lapSafariballemNiezlapane", function(event) {
-            var isChecked = $('#lapSafariballemNiezlapane').prop('checked');
-            config.lapSafariballemNiezlapane = isChecked;
-            updateConfig(config);
-        });
 
         $(document).on("click", "#autoUseNiebieskieJagody", function(event) {
             var isChecked = $('#autoUseNiebieskieJagody').prop('checked');
@@ -3698,6 +3691,10 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
             config.shinyMode = 1;
             updateConfig(config);
         }
+        if(config.safariMode == undefined){
+            config.safariMode = 1;
+            updateConfig(config);
+        }
         if(config.dzien == undefined){
             console.log(config.dzien);
             config.dzien = new Object();
@@ -3759,7 +3756,6 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
         config.useOnlyInNight = false;
         config.niezlapaneMode = 1;
         config.useFontanna = false;
-        config.lapSafariballemNiezlapane = true;
         config.hodowlaPokemonDniaImage = "";
         config.zadaniaWidget = "";
         config.hodowlaPokemonDniaStowarzyszenieImage = "";
@@ -3776,6 +3772,7 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
         config.useFontanna = false;
         config.fontannaLastUsedDate = "1994512";
         config.shinyMode = 1;
+        config.safariMode = 1;
 
         config.dzien = new Object();
         config.dzien.data11 = "nestballe";
