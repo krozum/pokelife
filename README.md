@@ -26,6 +26,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.18.3 (2020-05-31)
+* Poprawka do rzucania cherishballi
+* Dodanie opcji ustawienia Shiny: zatrzymuj, nie zatrzymuj, rzucaj cherishballe
+
 5.18.2 (2020-05-30)
 * Dodanie autowzowianie PA za pomocą fontanny
 * Dodanie ultraballi i swarmballi jako opcje wyboru
