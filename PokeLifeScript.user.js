@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.18.2
+// @version      5.18.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1516,14 +1516,32 @@ function initPokeLifeScript() {
                         console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".");
                         $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
                     } else if ($('h2:contains("Wybierz Pokemona")').length > 0 && $('.panel-body.nopadding').attr('style').indexOf("background-color: #FFBB") == -1) {
-                        console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
-                        autoGo = false;
-                        $('#goAutoButton').html('AutoGO');
-                        $("#goStopReason").html("Spotkany shiny pokemon").show();
-                        document.title = "Spotkany shiny pokemon";
-                        triggerSound();
-                        $('#refreshShinyWidget').trigger('click');
                         requestDomain("pokelife/api/update_shiny.php?pokemon_id=" + $('.panel-body.nopadding .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time=" + Date.now(), null);
+                        $('#refreshShinyWidget').trigger('click');
+                        switch(Number(config.shinyMode)){
+                            case 1:
+                                console.log('PokeLifeScript: spotkany Shiny, przerwanie AutoGo');
+                                autoGo = false;
+                                $('#goAutoButton').html('AutoGO');
+                                $("#goStopReason").html("Spotkany shiny pokemon").show();
+                                document.title = "Spotkany shiny pokemon";
+                                triggerSound();
+                                break;
+                            case 2:
+                            case 3:
+                                console.log('PokeLifeScript: spotkany Shiny');
+                                console.log('PokeLifeScript: atakuje pokemona');
+                                var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
+                                if ($('button[href="' + url + '"]').length == 0) {
+                                    autoGo = false;
+                                    $('#goAutoButton').html('AutoGO');
+                                    $("#goStopReason").html("Dzicz została zmieniona").show();
+                                    document.title = "Dzicz została zmieniona";
+                                } else {
+                                    $('button[href="' + url + '"]').trigger('click');
+                                }
+                                break;
+                        }
                     } else if ($('h2:contains("Wybierz Pokemona")').length && $('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0 && $('.panel-body.nopadding img[src="images/trudnosc/trudnoscx.png"]').length < 1 && $('.panel-body.nopadding .col-xs-9 > b').html().split("Poziom: ")[1] <= config.maxLapanyLvl) {
                         switch(Number(config.niezlapaneMode)){
                             case 1:
@@ -1600,8 +1618,13 @@ function initPokeLifeScript() {
                             if(Number(config.niezlapaneMode) == 4){
                                 if ($(previousPageContent).find('.panel-body.nopadding img[src="images/inne/pokeball_miniature2.png"]').length > 0) {
                                     if($(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc4.png"]').length > 0 || $(previousPageContent).find('.panel-body.nopadding img[src="images/trudnosc/trudnosc5.png"]').length > 0){
-                                        button = $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '&zlap_pokemona=cherishball"]');
+                                        button = $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '&zlap_pokemona=cherishballe"]');
                                     }
+                                }
+                            }
+                            if ($(previousPageContent).find('h2:contains("Wybierz Pokemona")').length > 0 && $(previousPageContent).find('.panel-body.nopadding').attr('style').indexOf("background-color: #FFBB") == -1) {
+                                if(Number(config.shinyMode) == 3){
+                                    button = $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '&zlap_pokemona=cherishballe"]');
                                 }
                             }
                             if (button.length > 0) {
@@ -2089,6 +2112,7 @@ function initPokeLifeScript() {
                 $('#settingsAutoGo .dziczSettings table').append('<col width="60"><col width="20"><col width="340">');
                 $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/czerwone_jagody.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneJagody" name="autoUseCzerwoneJagody" value="1" ' + ((config.useCzerwoneJagody == "true" || config.useCzerwoneJagody == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych jagód do leczenia</label></td> </tr>');
                 $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Niezłapane: </b><select id="switchNiezlapane"><option value="1" ' + (Number(config.niezlapaneMode) == 1 ? 'selected' : '') + '>Zatrzymuj gdy spotkasz</option><option value="2" ' + (Number(config.niezlapaneMode) == 2 ? 'selected' : '') + '>Zatrzymuj tylko IV i V</option><option value="3" ' + (Number(config.niezlapaneMode) == 3 ? 'selected' : '') + '>Nie zatrzymuj</option><option value="4" ' + (Number(config.niezlapaneMode) == 4 ? 'selected' : '') + '>Rzucaj cherishballe w IV i V</option><select></p></td> </tr>');
+                $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Shiny: </b><select id="switchShiny"><option value="1" ' + (Number(config.shinyMode) == 1 ? 'selected' : '') + '>Zatrzymuj gdy spotkasz</option><option value="2" ' + (Number(config.shinyMode) == 2 ? 'selected' : '') + '>Nie zatrzymuj</option><option value="3" ' + (Number(config.shinyMode) == 3 ? 'selected' : '') + '>Rzucaj cherishballe</option><select></p></td> </tr>');
                 $('#settingsAutoGo .dziczSettings table').append('<tr><td><img style="width: 30px;" src="images/pokesklep/safariballe.jpg"></td><td><input type="checkbox" id="lapSafariballemNiezlapane" name="lapSafariballemNiezlapane" value="1" ' + ((config.lapSafariballemNiezlapane == "true" || config.lapSafariballemNiezlapane == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px;">Łap safariballem tylko niezłapane pokemony</label></td> </tr></tbody></table>');
                 $('#settingsAutoGo .dziczSettings table').append('<tr><td></td><td><input type="checkbox" id="useOnlyInNight" name="useOnlyInNight" value="1" ' + ((config.useOnlyInNight == "true" || config.useOnlyInNight == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj wznawiania PA tylko pomiędzy 22-6</label></td> </tr>');
                 $('#settingsAutoGo .dziczSettings table').append('<tr style="height: 55px;"><td></td><td></td><td><p><b>Maxymalny łapany lvl: </b><input style="width: 50px" id="changeMaxLapanyLvl" type="number" value="' + config.maxLapanyLvl + '"></p></td> </tr>');
@@ -2098,6 +2122,11 @@ function initPokeLifeScript() {
 
         $(document).on("change", "#switchNiezlapane", function(event) {
             config.niezlapaneMode = Number($(this).val());
+            updateConfig(config);
+        })
+
+        $(document).on("change", "#switchShiny", function(event) {
+            config.shinyMode = Number($(this).val());
             updateConfig(config);
         })
 
@@ -3665,6 +3694,10 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
             config.fontannaLastUsedDate = "1994512";
             updateConfig(config);
         }
+        if(config.shinyMode == undefined){
+            config.shinyMode = 1;
+            updateConfig(config);
+        }
         if(config.dzien == undefined){
             console.log(config.dzien);
             config.dzien = new Object();
@@ -3742,6 +3775,7 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
         config.customStyleFont = "#000000";
         config.useFontanna = false;
         config.fontannaLastUsedDate = "1994512";
+        config.shinyMode = 1;
 
         config.dzien = new Object();
         config.dzien.data11 = "nestballe";
