@@ -26,6 +26,13 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.18.4 (2020-05-31)
+* Nowe ustawienia safari:
+  - Zatrzymuj niezłapane, pomijaj pozostałe
+  - Nie zatrzymuj, ruczaj tylko w niezłapane
+  - Nie zatrzymuj, rzucaj we wszystkie
+* Refaktoring kodu
+
 5.18.3 (2020-05-31)
 * Poprawka do rzucania cherishballi
 * Dodanie opcji ustawienia Shiny: zatrzymuj, nie zatrzymuj, rzucaj cherishballe
