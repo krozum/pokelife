@@ -27,7 +27,7 @@ Instrukcja instalacji
 Changelog
 ---------
 
-5.18.6 (2020-06-02)
+5.18.7 (2020-06-02)
 * Usunięcie opcji eventowych napojów
 * Wyłączenie Go na spacji dla Opcji konta
 
