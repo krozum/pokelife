@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.18.4
+// @version      5.18.5
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -324,7 +324,9 @@ $(document).on("click", "nav a:not('.btn-akcja')", function(event) {
 });
 
 $(document).on("click", function(event) {
-    document.title = "PokeLife - Gra Pokemon Online";
+    if (document.hidden == false) {
+        document.title = "PokeLife - Gra Pokemon Online";
+    }
     stopSound();
 })
 
@@ -1462,7 +1464,11 @@ function initPokeLifeScript() {
         }
         initLocationIcon();
 
+        var counter = 0;
         function click(poLeczeniu) {
+            counter++;
+            document.title = "PokeLife - " + counter + " - Gra Pokemon Online";
+
             var miejsce;
 
             if (poLeczeniu != true) {
@@ -1673,6 +1679,7 @@ function initPokeLifeScript() {
                 autoGoWznawianie = false;
                 $('#goAutoButton').html('AutoGO');
             } else {
+                counter = 0;
                 autoGo = true;
                 autoGoWznawianie = false;
                 $('#goAutoButton').html('STOP');
@@ -1928,7 +1935,7 @@ function initPokeLifeScript() {
                             if ($("a[href='gra/stowarzyszenie.php']:contains('Twoje')").length > 0 && autoGo) {
                                 reloadMain("#glowne_okno", "gra/stowarzyszenie.php", function() {
                                     window.setTimeout(function() {
-                                        var isFontanna = $('#stow-mapa img[src="images/stow/18_6.png"]').length > 0;
+                                        var isFontanna = $('#stow-mapa img[src*="images/stow/18"]').length > 0;
                                         if(isFontanna && ($('button[href="stowarzyszenie.php?p=2&fontanna_wypij"]').length > 0)){
                                             reloadMain("#glowne_okno", "gra/stowarzyszenie.php?p=2&fontanna_wypij", function() {
                                                 var d = new Date();
