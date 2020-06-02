@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.18.5
+// @version      5.18.6
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1692,7 +1692,7 @@ function initPokeLifeScript() {
                 if ($('input:focus').length == 0 && $('textarea:focus').length == 0 && $('#glowne_okno .panel-heading').length == 0) {
                     e.preventDefault();
                     click();
-                } else if ($('input:focus').length == 0 && $('textarea:focus').length == 0 && $('#glowne_okno .panel-heading').html() !== "Poczta" && !$('#glowne_okno .panel-heading').text().trim().startsWith("Stowarzyszenie")) {
+                } else if ($('input:focus').length == 0 && $('textarea:focus').length == 0 && $('#glowne_okno .panel-heading').html() !== "Poczta" && $('#glowne_okno .panel-heading').html() !== "Opcje Konta" && !$('#glowne_okno .panel-heading').text().trim().startsWith("Stowarzyszenie")) {
                     e.preventDefault();
                     click();
                 }
@@ -2104,10 +2104,10 @@ function initPokeLifeScript() {
                 $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieNapoje" name="autoUseNiebieskieNapoje" value="1" ' + ((config.useNiebieskieNapoje == "true" || config.useNiebieskieNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj niebieskich napojów gdy zabraknie PA <span style="font-size: 9px">(niebieskie eventowe + niebieskie)</span></label></td> </tr>');
                 $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/stow/18_6.png"></td><td><input type="checkbox" id="autoUseFontanna" name="autoUseFontanna" value="1" ' + ((config.useFontanna == "true" || config.useFontanna == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj fontanny gdy zabraknie PA</label></td> </tr>');
 
-                $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAMAAACahl6sAAAAHlBMVEX4+PgwMDBYwNCYmJiA6PjIyMho0OBYWFjQ+PhIsMBk4eMZAAACB0lEQVR4nO3d3Y6CMBCGYZfK3/3f8CYwHHxktmkXsVN93zNZSebRBFgEfTyIiIiIiIiIiD6rcS95ja2HqynNWz9ec+vhagISLSDR6hgyermb32R/bD3xH+mrnp3SnvOuySoDEi0g0eoRUrClXdwVl60xCmScvb1dbo1FsUBeHBAgN/U5kH2cWcuuEQWS5LVPBWtkD+OBXA4IkJsCEgZiO72SEx7Z0UXQ4nQQECA3BQTITR0Q6ThDkhvdju31YckO6F5IUkkJxF58eQQECBAgbSA5QY4FBAgQIEBeDzkd78rStG7ZshbXblyFHAuHrdX2kkCAAAESFWKtBrGn2PrRICbYdxWrfkJqAs3emBZn44EAAQLkH5ChOeRp5SDaSTBtAQECBMibINPumLqHDDZdAcQVTECAAAECpApis56O5hViIz+lyQsIECBAgBRCbOdwvvclI4gK2Wf1ITYeECBAgMSB2LZ1WJ2G/d7upQvIcR7I/ScDCBAgQKJCdC5btvQI0RYJCBAgQIAAAQIECJDvgQy5gAABAgTIBYieDpoqIFLDS8qBAAECpC+Iez9LPaT9DZVAgAAB0gnEsotQ1FMC0dsSG36dyAHx3pgSiH4BOBAgQIC8KftJgdOlgElyLxPUS7f9X1dpkH41dklBf3QLSLSAROtjIGN1YTa4RERERERERERERBS1XxA3rOR3FFuIAAAAAElFTkSuQmCC"></td><td><input type="checkbox" id="autoUseEventoweNapoje" name="autoUseEventoweNapoje" value="1" ' + ((config.useEventoweNapoje == "true" || config.useEventoweNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj eventowych napojów gdy zabraknie PA <span style="font-size: 9px">(te z przycisku w statystykach)</span></label></td> </tr>');
+                //$('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAMAAACahl6sAAAAHlBMVEX4+PgwMDBYwNCYmJiA6PjIyMho0OBYWFjQ+PhIsMBk4eMZAAACB0lEQVR4nO3d3Y6CMBCGYZfK3/3f8CYwHHxktmkXsVN93zNZSebRBFgEfTyIiIiIiIiIiD6rcS95ja2HqynNWz9ec+vhagISLSDR6hgyermb32R/bD3xH+mrnp3SnvOuySoDEi0g0eoRUrClXdwVl60xCmScvb1dbo1FsUBeHBAgN/U5kH2cWcuuEQWS5LVPBWtkD+OBXA4IkJsCEgZiO72SEx7Z0UXQ4nQQECA3BQTITR0Q6ThDkhvdju31YckO6F5IUkkJxF58eQQECBAgbSA5QY4FBAgQIEBeDzkd78rStG7ZshbXblyFHAuHrdX2kkCAAAESFWKtBrGn2PrRICbYdxWrfkJqAs3emBZn44EAAQLkH5ChOeRp5SDaSTBtAQECBMibINPumLqHDDZdAcQVTECAAAECpApis56O5hViIz+lyQsIECBAgBRCbOdwvvclI4gK2Wf1ITYeECBAgMSB2LZ1WJ2G/d7upQvIcR7I/ScDCBAgQKJCdC5btvQI0RYJCBAgQIAAAQIECJDvgQy5gAABAgTIBYieDpoqIFLDS8qBAAECpC+Iez9LPaT9DZVAgAAB0gnEsotQ1FMC0dsSG36dyAHx3pgSiH4BOBAgQIC8KftJgdOlgElyLxPUS7f9X1dpkH41dklBf3QLSLSAROtjIGN1YTa4RERERERERERERBS1XxA3rOR3FFuIAAAAAElFTkSuQmCC"></td><td><input type="checkbox" id="autoUseEventoweNapoje" name="autoUseEventoweNapoje" value="1" ' + ((config.useEventoweNapoje == "true" || config.useEventoweNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; line-height: 1.1; font-size: 14px; ">Używaj eventowych napojów gdy zabraknie PA <span style="font-size: 9px">(te z przycisku w statystykach)</span></label></td> </tr>');
                 $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/niebieskie_jagody.jpg"></td><td><input type="checkbox" id="autoUseNiebieskieJagody" name="autoUseNiebieskieJagody" value="1" ' + ((config.useNiebieskieJagody == "true" || config.useNiebieskieJagody == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj niebieskich jagód gdy zabraknie PA</label></td> </tr>');
 
-                $('#settingsAutoGo .wznawianieSettings').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Eventowe napoje</b> -> <b>Fontanna</b> -> <b>Niebieskie napoje</b> -> <b>Zielone napoje</b> -> <b>Czerwone napoje</b></p>');
+                $('#settingsAutoGo .wznawianieSettings').append('<p>Bot będzie starał sie przywrócać PA w kolejności <b>Niebieskie Jagody</b> -> <b>Fontanna</b> -> <b>Niebieskie napoje</b> -> <b>Zielone napoje</b> -> <b>Czerwone napoje</b></p>');
 
                 $('#settingsAutoGo .row').append('<div class="col-sm-6 dziczSettings"><table> <tr> <th></th> <th></th> <th></th> </tr></table></div>');
                 $('#settingsAutoGo .dziczSettings table').append('<<col width="20"><col width="340">');
@@ -3826,6 +3826,9 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
         config.noc.data54 = "nightballe";
         updateConfig(config);
     }
+
+
+    config.useEventoweNapoje = false;
 
     $.getJSON("https://raw.githubusercontent.com/krozum/pokelife/master/PokemonData.json?a=1", {
         format: "json"
