@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.18.6
+// @version      5.18.7
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -3640,13 +3640,18 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
     // **********************
 
     function initPrzypomnienieOOpiece(){
-        $('.statystyki-wyglad:nth-child(13):contains("nie")').css("color", "red").css("font-weight", "800");
-        $('.statystyki-wyglad:nth-child(13):contains("nie")').append('<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>');
+        $("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html()
+        if($("#statystyki .statystyki-wyglad:contains('Opieka Dzisiaj:')").next().html()){
+            $("#statystyki .statystyki-wyglad:contains('Opieka Dzisiaj:')").next().css("color", "red").css("font-weight", "800");
+            $("#statystyki .statystyki-wyglad:contains('Opieka Dzisiaj:')").next().append('<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>');
+        }
 
         onReloadMain(function() {
             if (this.find('.panel-heading').html() === "Statystyki") {
-                this.find('.statystyki-wyglad:nth-child(13):contains("nie")').css("color", "red").css("font-weight", "800");
-                this.find('.statystyki-wyglad:nth-child(13):contains("nie")').append('<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>');
+                if(this.find("#statystyki .statystyki-wyglad:contains('Opieka Dzisiaj:')").next().html()){
+                    this.find("#statystyki .statystyki-wyglad:contains('Opieka Dzisiaj:')").next().css("color", "red").css("font-weight", "800");
+                    this.find("#statystyki .statystyki-wyglad:contains('Opieka Dzisiaj:')").next().append('<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>');
+                }
             }
         })
     }
