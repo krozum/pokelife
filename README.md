@@ -43,7 +43,7 @@ Changelog
 * Dodanie opcji ustawienia Shiny: zatrzymuj, nie zatrzymuj, rzucaj cherishballe
 
 5.18.2 (2020-05-30)
-* Dodanie autowzowianie PA za pomocą fontanny
+* Dodanie autowzawianie PA za pomocą fontanny
 * Dodanie ultraballi i swarmballi jako opcje wyboru
 
 5.18 (2020-05-29)
