@@ -27,6 +27,10 @@ Instrukcja instalacji
 Changelog
 ---------
 
+5.18.6 (2020-06-02)
+* Usunięcie opcji eventowych napojów
+* Wyłączenie Go na spacji dla Opcji konta
+
 5.18.5 (2020-06-02)
 * Poprawka na wznawiania PA za pomocą fonanny
 * Dodanie licznika kliknięc AutoGo w tytule strony gdy karta nie jest aktywna
