@@ -26,6 +26,11 @@ Instrukcja instalacji
 
 Changelog
 ---------
+
+5.18.5 (2020-06-02)
+* Poprawka na wznawiania PA za pomocą fonanny
+* Dodanie licznika kliknięc AutoGo w tytule strony gdy karta nie jest aktywna
+
 5.18.4 (2020-05-31)
 * Nowe ustawienia safari:
   - Zatrzymuj niezłapane, pomijaj pozostałe
