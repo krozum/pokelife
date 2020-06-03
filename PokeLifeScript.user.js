@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.18.7
+// @version      5.18.8
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -254,6 +254,11 @@ jQuery.fn.html = function() {
     }
     return ret
 }
+
+jQuery.expr[':'].icontains = function(a, i, m) {
+  return jQuery(a).text().toUpperCase()
+      .indexOf(m[3].toUpperCase()) >= 0;
+};
 
 $(document).on('click', '#zaloguj_chat', function(e) {
     $("#shout_refresher").load("gra/chat/shout.php?refresh=0");
@@ -774,7 +779,7 @@ function initPokeLifeScript() {
             });
 
             selectPokemon.push({
-                'iconFilePath': 'https://cdn0.iconfinder.com/data/icons/seo-smart-pack/128/grey_new_seo-05-512.png',
+                'iconFilePath': 'https://raw.githubusercontent.com/krozum/pokelife/master/assets/settings-pokemon.png',
                 'iconValue': function() {
                     if (Number($('#glowne_okno .panel-body.nopadding b').html().split(': ')[1]) <= 20) {
                         return "&wybierz_pokemona=" + config.pok20;
@@ -833,7 +838,7 @@ function initPokeLifeScript() {
 
 
         function initPokeballIcon() {
-            $('body').append('<div id="setPokeball" style="position: fixed;cursor: pointer;top: 6px;left: 65px;z-index: 9999;width: 45px;height: 45px;"><img style="max-width: 100%" src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/pokebal-settings.png"></div>');
+            $('body').append('<div id="setPokeball" style="position: fixed;cursor: pointer;top: 6px;left: 65px;z-index: 9999;width: 45px;height: 45px;"><img style="max-width: 100%" src="https://raw.githubusercontent.com/krozum/pokelife/master/assets/settings-pokeball.png"></div>');
 
 
             $(document).on("click", "#setPokeball", function() {
@@ -3641,14 +3646,14 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
 
     function initPrzypomnienieOOpiece(){
         $("#statystyki b:contains('Napoje Energetyczne:')").parent().next().html()
-        if($("#statystyki .statystyki-wyglad:contains('Opieka Dzisiaj:')").next().html()){
+        if($("#statystyki .statystyki-wyglad:contains('Opieka Dzisiaj:')").next().html() == "nie"){
             $("#statystyki .statystyki-wyglad:contains('Opieka Dzisiaj:')").next().css("color", "red").css("font-weight", "800");
             $("#statystyki .statystyki-wyglad:contains('Opieka Dzisiaj:')").next().append('<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>');
         }
 
         onReloadMain(function() {
             if (this.find('.panel-heading').html() === "Statystyki") {
-                if(this.find("#statystyki .statystyki-wyglad:contains('Opieka Dzisiaj:')").next().html()){
+                if(this.find("#statystyki .statystyki-wyglad:contains('Opieka Dzisiaj:')").next().html() == "nie"){
                     this.find("#statystyki .statystyki-wyglad:contains('Opieka Dzisiaj:')").next().css("color", "red").css("font-weight", "800");
                     this.find("#statystyki .statystyki-wyglad:contains('Opieka Dzisiaj:')").next().append('<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>');
                 }
@@ -3656,6 +3661,102 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         })
     }
     initPrzypomnienieOOpiece();
+
+
+
+    // **********************
+    //
+    // initOsiagnieciaView
+    // Funkcja zmieniająca wygląd zakładki osiągnięcia
+    //
+    // **********************
+
+    function initOsiagnieciaView(){
+
+        var html;
+
+        onReloadMain(function() {
+            if(this.find('.panel-heading').text().trim() === "Osiągnięcia") {
+                this.find('.nav-tabs').parent().prepend('<input id="wyszukajOsiagniecie" style="margin-bottom: 20px;display: inline; width: 100%;" type="text" class="form-control" placeholder="Wyszukaj osiągnięcie...">');
+                this.find('span[href="osiagniecia.php?rozwin"]').remove();
+                html = this.html();
+                changeHTML(this);
+            }
+        })
+
+        $(document).on("keyup", "#wyszukajOsiagniecie", function (event) {
+            if($(this).val() == ""){
+                $('#glowne_okno .panel-default').css('display', 'block');
+                var tab_id = $('#glowne_okno li[role="presentation"].active a').attr('aria-controls');
+                $('#'+tab_id).parent().find("div.tab-pane[role='tabpanel']").removeClass('active').removeClass('in').addClass('fade');
+                $('#'+tab_id).addClass('in').addClass('active');
+            } else {
+                $('#glowne_okno .tab-pane').removeClass('fade').addClass('in').addClass('active');
+                $('#glowne_okno .panel-default').css('display', 'none');
+                $('#glowne_okno .panel-default:icontains("'+$(this).val()+'")').css("display", "block");
+            }
+        });
+
+        $(document).on("click", 'li[role="presentation"]', function (event) {
+            if($(this).parent().parent().parent().find('.panel-heading:contains("Osiągnięcia")').length > 0){
+                $('#wyszukajOsiagniecie').val("");
+                $('#glowne_okno .panel-default').css('display', 'block');
+                var tab_id = $('#glowne_okno li[role="presentation"].active a').attr('aria-controls');
+                $('#'+tab_id).parent().find("div.tab-pane[role='tabpanel']").removeClass('active').removeClass('in').addClass('fade');
+                $('#'+tab_id).addClass('in').addClass('active');
+            }
+        });
+
+
+        function changeHTML(THAT){
+            THAT.find('li[role="presentation"]').removeClass('active');
+            THAT.find('.nav-tabs').prepend('<li role="presentation" class="active"><a href="#osiagniecia-ulubione" aria-controls="osiagniecia-ulubione" role="tab" data-toggle="tab">Ulubione</a></li>');
+            THAT.find('.tab-pane').removeClass('in').removeClass('active');
+            THAT.find('.tab-content').prepend('<div role="tabpanel" class="tab-pane in active" id="osiagniecia-ulubione"> <div class="row"> <div class="panel-group" style="margin: 0 0 0 0; padding: 0 10px 0 10px;"> </div></div> </div>');
+            THAT.find('.tab-content button').append('<span class="dodajDoUlubionych glyphicon glyphicon-heart pull-right" aria-hidden="true" style=" margin-right: 7px;"></span>');
+
+            $(config.ulubioneOsiagniecia).each(function(index, value){
+                THAT.find(value).addClass('in');
+                THAT.find(value).parent().appendTo(THAT.find('#osiagniecia-ulubione .panel-group'));
+            });
+
+            THAT.find('.panel-collapse').css('display', 'contents');
+        }
+
+        $(document).on('click', '.dodajDoUlubionych', function() {
+            var tempHTML;
+            var tempTHIS;
+            var href;
+            if($(this).parent().parent().parent().parent().parent().attr('id') !== 'osiagniecia-ulubione'){
+                href = $(this).parent().attr('href').trim();
+                if(!config.ulubioneOsiagniecia.includes(href)){
+                    config.ulubioneOsiagniecia.push(href);
+                    updateConfig(config);
+                    tempHTML = html;
+                    tempTHIS = $(tempHTML);
+                    changeHTML(tempTHIS);
+                    $('#glowne_okno .panel-body').html(tempTHIS.find('.panel-body').html());
+                }
+            } else {
+                href = $(this).parent().attr('href').trim();
+                removeItemOnce(config.ulubioneOsiagniecia, href);
+                updateConfig(config);
+                tempHTML = html;
+                tempTHIS = $(tempHTML);
+                changeHTML(tempTHIS);
+                $('#glowne_okno .panel-body').html(tempTHIS.find('.panel-body').html());
+            }
+        });
+
+        function removeItemOnce(arr, value) {
+            var index = arr.indexOf(value);
+            if (index > -1) {
+                arr.splice(index, 1);
+            }
+            return arr;
+        }
+    }
+    initOsiagnieciaView();
 
 
 }
@@ -3707,6 +3808,11 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
             config.safariMode = 1;
             updateConfig(config);
         }
+        if(config.ulubioneOsiagniecia == undefined){
+            config.ulubioneOsiagniecia = [];
+            updateConfig(config);
+        }
+
         if(config.dzien == undefined){
             console.log(config.dzien);
             config.dzien = new Object();
@@ -3785,6 +3891,7 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
         config.fontannaLastUsedDate = "1994512";
         config.shinyMode = 1;
         config.safariMode = 1;
+        config.ulubioneOsiagniecia = [];
 
         config.dzien = new Object();
         config.dzien.data11 = "nestballe";
