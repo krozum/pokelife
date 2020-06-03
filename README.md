@@ -26,6 +26,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.18.8 (2020-06-03)
+* Poprawka do wyświetlania na czerwono nieodbytej opieki
+* Dodanie wyszukiwarki osiągnięć na widoku Osiągnięcia
+* Dodanie zakładki Ulubione na osiągnięciach. Można dodawać tam osiągnięcia poprzed kliknięcie serduszka na danym osiągnięciu
 
 5.18.7 (2020-06-02)
 * Usunięcie opcji eventowych napojów
