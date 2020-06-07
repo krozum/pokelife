@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.19
+// @version      5.19.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -3680,9 +3680,15 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
     // **********************
 
     function initSprawdzCzyMaszAktualnaWersjeBota(){
-        if(bot_version != GM_info.script.version){
+        if(bot_version !== GM_info.script.version){
             console.log('Nieaktualna wersja bota');
-            $('body').append('<div id="botVersionAlertBox" style="position: fixed;width: 100%;height: 100%;background: rgb(22, 27, 29);z-index: 99999;top: 0px;display: block;"><h1 style="text-align: center; color: #ffffff; vertical-align: middle; font-size: 44px; top: 35%; position: relative;">Nieaktualna wersja bota<br> kliknij <a target="_self" href="https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js?temp='+Math.random()+'"><span style="color: #88e0d5; text-decoration: underline; ">tutaj</span></a> aby zaktualizować. <br>Odśwież strone po aktualizacji</h1></div>');
+            var api = "https://raw.githubusercontent.com/krozum/pokelife/master/README.md";
+            $.get(api, {
+                format: "text"
+            }).done(function(data) {
+                var changelog = data.split('Changelog')[1];
+                $('body').append('<div id="botVersionAlertBox" style="position: absolute; width: 100%;background: rgb(22, 27, 29);z-index: 99999;top: 0px;display: block;"><h1 style="text-align: center; color: #ffffff; vertical-align: middle; font-size: 44px; margin-top: 200px">Nieaktualna wersja bota<br> kliknij <a target="_self" href="https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js?temp='+Math.random()+'"><span style="color: #88e0d5; text-decoration: underline; ">tutaj</span></a> aby zaktualizować. <br>Odśwież strone po aktualizacji</h1><p style=" margin-top: 30px; color: white; text-align: center; white-space: pre-line; width: 70%; margin: 0 auto; text-align: left; margin-bottom: 100px ">'+changelog+'</p></div>');
+            });
         } else {
             console.log('Aktualna wersja bota');
         }
