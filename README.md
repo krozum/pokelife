@@ -26,6 +26,13 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.19 (2020-06-07)
+* Dodanie możliwości podpięcia widgetu z Tropicielem do Sidebaru, na razie tylko regiony Kanto i Sinooh
+* Poprawienie błędu w którym nie zapisywał sie widget z zadaniami przez co przy każdym logowaniu pytał o widok z Zadaniami
+* Przepisanie zapytań do bazy tak aby było jedno globalne get_user, dzięki czemu nie odświeża sidebaru przy logowaniu 4 razy tylko 1.
+* Dodanie obsługi na niskim lvl do eventu w dziczy gdzie informuje o braku życia pokemona i konieczności leczenia
+* Poprawka do widgetu Zadania aby zamiast pustego na niskich lvl wyświetlał: brak zadań
+
 5.18.8 (2020-06-03)
 * Poprawka do wyświetlania na czerwono nieodbytej opieki
 * Dodanie wyszukiwarki osiągnięć na widoku Osiągnięcia
