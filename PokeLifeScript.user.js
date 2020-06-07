@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.18.8
+// @version      5.19
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -44,6 +44,8 @@
 //     initPrzypomnienieORepelu
 //     initSprawdzCzyMaszAktualnaWersjeBota
 //     initPrzypomnienieOOpiece
+//     initOsiagnieciaView
+//     initTropicielDziczWidget
 
 
 
@@ -54,6 +56,9 @@
 // **********************
 
 var config = new Object();
+var bot_version;
+var shiny = [];
+var tropiciel = new Object();
 var AutoGoSettings = new Object();
 var autoGo;
 var previousPageContent = null;
@@ -256,8 +261,8 @@ jQuery.fn.html = function() {
 }
 
 jQuery.expr[':'].icontains = function(a, i, m) {
-  return jQuery(a).text().toUpperCase()
-      .indexOf(m[3].toUpperCase()) >= 0;
+    return jQuery(a).text().toUpperCase()
+        .indexOf(m[3].toUpperCase()) >= 0;
 };
 
 $(document).on('click', '#zaloguj_chat', function(e) {
@@ -710,9 +715,6 @@ function initPokeLifeScript() {
             }
         })
         $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
-    }
-    if(md5($('#wyloguj').parent().parent().html().split("<div")[0].trim()) == "bac40cb0ec0198e3a2c22657f6786c41"){
-        initPodmianaObrazkow();
     }
 
 
@@ -1621,6 +1623,10 @@ function initPokeLifeScript() {
                         console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".");
                         $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
                     }
+                } else {
+                    if($('#glowne_okno p:contains("Nie możesz podróżować po dziczy, ponieważ wszystkie twoje pokemony są ranne! Musisz je najpierw wyleczyć.")').length > 0){
+                        $('#glowne_okno button[href="dzicz.php?poluj&miejsce=laka"]').trigger('click');
+                    }
                 }
             }
         }
@@ -2272,31 +2278,28 @@ function initPokeLifeScript() {
         var shinyWidget;
 
         function refreshShinyWidget() {
-            var api = domain + "pokelife/api/get_shiny.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&region=" + region;
-            $.getJSON(api, {
-                format: "json"
-            }).done(function(data) {
-                var html = '<div class="panel panel-primary"><div class="panel-heading">Ostatnio spotkane shiny<div class="navbar-right"><span id="refreshShinyWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody><tr>';
-                $.each(data.list, function(key, value) {
-                    var wystepowanie = "";
-                    var nazwa = "";
-                    if (pokemonData != undefined) {
-                        wystepowanie = pokemonData[value['pokemon_id']].region + ", " + pokemonData[value['pokemon_id']].wystepowanie_shiny;
-                        nazwa = pokemonData[value['pokemon_id']].name;
-                    }
+            var html = '<div class="panel panel-primary"><div class="panel-heading">Ostatnio spotkane shiny<div class="navbar-right"><span id="refreshShinyWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody><tr>';
+            $.each(shiny, function(key, value) {
+                var wystepowanie = "";
+                var nazwa = "";
+                if (pokemonData != undefined) {
+                    wystepowanie = pokemonData[value['pokemon_id']].region + ", " + pokemonData[value['pokemon_id']].wystepowanie_shiny;
+                    nazwa = pokemonData[value['pokemon_id']].name;
+                }
 
-                    var id = Number(value['pokemon_id']);
-                    if (id > 1000) {
-                        id = "" + id;
-                        id = Number(id.substring(1));
-                    }
+                var id = Number(value['pokemon_id']);
+                if (id > 1000) {
+                    id = "" + id;
+                    id = Number(id.substring(1));
+                }
 
-                    html = html + "<td data-toggle='tooltip' data-html='true' data-placement='top' title='' data-original-title='Spotkany : " + value['creation_date'] + "<br>" + wystepowanie + "<br>Cena w hodowli: " + pokemonPriceData[id] + " §' style='text-align: center;'><a target='_blank' href='https://pokelife.pl/pokedex/index.php?title=" + nazwa + "'><img src='pokemony/srednie/s" + value['pokemon_id'] + ".png' style='width: 40px; height: 40px;'></a></td>";
-                });
-                html = html + '</tr></tbody></table></div>';
-                shinyWidget = html;
-                $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+                html = html + "<td data-toggle='tooltip' data-html='true' data-placement='top' title='' data-original-title='Spotkany : " + value['creation_date'] + "<br>" + wystepowanie + "<br>Cena w hodowli: " + pokemonPriceData[id] + " §' style='text-align: center;'><a target='_blank' href='https://pokelife.pl/pokedex/index.php?title=" + nazwa + "'><img src='pokemony/srednie/s" + value['pokemon_id'] + ".png' style='width: 40px; height: 40px;'></a></td>";
             });
+            html = html + '</tr></tbody></table></div>';
+            shinyWidget = html;
+            if($('#sidebar').find(".panel-heading:contains('Ostatnio spotkane shiny')").length == 0){
+                $('#sidebar').find(".panel-heading:contains('Drużyna')").parent().before(shinyWidget);
+            }
         }
         refreshShinyWidget();
 
@@ -2306,11 +2309,25 @@ function initPokeLifeScript() {
         })
 
         $(document).on("click", "#refreshShinyWidget", function(event) {
-            refreshShinyWidget();
+            var api = domain + "pokelife/api/get_shiny.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&region=" + region;
+            $.getJSON(api, {
+                format: "json"
+            }).done(function(data) {
+                shiny = data.list;
+                refreshShinyWidget();
+                $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+            })
         });
 
         var intervalShiny = setInterval(function() {
-            refreshShinyWidget();
+            var api = domain + "pokelife/api/get_shiny.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&region=" + region;
+            $.getJSON(api, {
+                format: "json"
+            }).done(function(data) {
+                shiny = data.list;
+                refreshShinyWidget();
+                $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
+            })
         }, 300000);
     }
 
@@ -2586,7 +2603,10 @@ function initPokeLifeScript() {
                 }
             }
 
-            if (DATA.find(".panel-heading:contains('Łapanie Jajka')").length == 0 && (DATA.find('img[src="images/event/jajko1.png"]').length > 0 || DATA.find('img[src="images/event/jajko2.png"]').length > 0 || DATA.find('img[src="images/event/jajko3.png"]').length > 0)) {
+
+            if (DATA.find("p.alert-danger:contains('Nie możesz podróżować po dziczy, ponieważ wszystkie twoje pokemony są ranne! Musisz je najpierw wyleczyć.')").length > 0) {
+                console.log('PokeLifeScript: Nie możesz podróżować po dziczy, ponieważ wszystkie twoje pokemony są ranne! Musisz je najpierw wyleczyć.');
+            } else if (DATA.find(".panel-heading:contains('Łapanie Jajka')").length == 0 && (DATA.find('img[src="images/event/jajko1.png"]').length > 0 || DATA.find('img[src="images/event/jajko2.png"]').length > 0 || DATA.find('img[src="images/event/jajko3.png"]').length > 0)) {
                 console.log('PokeLifeScript: spotkano jajko');
                 updateEvent("Spotkano jajko", 10, dzicz);
             } else if (DATA.find("p.alert-info:contains('Niestety, tym razem nie spotkało cię nic interesującego.')").length > 0) {
@@ -2996,26 +3016,43 @@ function initPokeLifeScript() {
                 $.get('inc/stan.php', function(data) { $("#sidebar").html(data); });
             })
         }
+
         if (config.zadaniaWidget == undefined || !config.zadaniaWidget.includes(today) || !config.zadaniaWidget.includes(login)) {
             refreshZadaniaWidget();
         } else {
             zadaniaWidget = config.zadaniaWidget;
+            if (zadaniaWidget != undefined && zadaniaWidget.length > 140 && $('#sidebar').find(".panel-heading:contains('Zadania')").length == 0) {
+                if(config.kolejnoscWidgetow == 1){
+                    $('#sidebar').find(".panel-heading:contains('Drużyna')").parent().before(zadaniaWidget);
+                } else if(config.kolejnoscWidgetow == 2){
+                    $('#sidebar').find(".panel-heading:contains('Drużyna')").parent().after(zadaniaWidget);
+                }
+            }
         }
 
         function parseResponse(THAT){
-            var html = '<div class="panel panel-primary"><div class="panel-heading">Zadania<div class="navbar-right"><span id="refreshZadaniaWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
+            var html = '<div class="panel panel-primary" data-login="'+login+'" data-today="'+today+'"><div class="panel-heading">Zadania<div class="navbar-right"><span id="refreshZadaniaWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-refresh" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody>';
+            var empty = true;
             $.each(THAT.find('#zadania_codzienne .panel-primary .panel-heading'), function(key, value) {
                 if ($(value).html().split("<div")[0] !== "brak zadania") {
                     html = html + '<tr><td>' + $(value).html().split("<div")[0];
+                    empty = false;
                 }
                 if ($(value).parent().find(".text-center").html() != undefined) {
                     $.each($(value).parent().find(".text-center p"), function(key2, value2) {
                         html = html + " - " + $(value2).html().trim();
+                        empty = false;
                     })
                 }
                 html = html + '</tr></td>';
+                empty = false;
             });
-            html = html + '</tbody></table></div>';
+
+            if(empty){
+                html = html + '<tr><td style=" text-align: center; ">brak zadań</tr></td></tbody></table></div>';
+            } else {
+                html = html + '</tbody></table></div>';
+            }
             zadaniaWidget = html;
             config.zadaniaWidget = html;
             updateConfig(config);
@@ -3107,6 +3144,17 @@ function initPokeLifeScript() {
                 $('[data-toggle="tooltip"]').tooltip();
             }
         })
+
+        if (hodowlaPokemonDniaImage !== undefined && hodowlaPokemonDniaImage !== "undefined") {
+            $('button[href="raport.php"]').parent().prepend('<img class="btn-akcja" href="hodowla.php?wszystkie&pokemon_dnia" src="https://gra.pokelife.pl/' + hodowlaPokemonDniaImage + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokemon Dnia" style="cursor: pointer; width: 50px;margin-left: 10px; float: left; ">');
+            $('button[href="raport.php"]').parent().css('margin-top', '10px').css('padding-right', '10px');
+            $('[data-toggle="tooltip"]').tooltip();
+        }
+        if (hodowlaPokemonDniaStowarzyszenieImage !== undefined && hodowlaPokemonDniaStowarzyszenieImage !== "undefined") {
+            $('button[href="raport.php"]').parent().prepend('<img class="btn-akcja" href="hodowla.php?wszystkie&pokemon_dnia_stow"" src="https://gra.pokelife.pl/' + hodowlaPokemonDniaStowarzyszenieImage + '" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokemon Dnia Stowarzyszenia" style="cursor: pointer; width: 50px;margin-left: 10px; float: left; ">');
+            $('button[href="raport.php"]').parent().css('margin-top', '10px').css('padding-right', '10px');
+            $('[data-toggle="tooltip"]').tooltip();
+        }
     }
     initPokemonDniaWidget();
 
@@ -3611,6 +3659,14 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
                 }
             }
         })
+
+        if($('.well-stan[data-original-title="Czas pozostały do końca działania Tepela/Repela"]').length > 0){
+            var ile = Number($('.well-stan[data-original-title="Czas pozostały do końca działania Tepela/Repela"]').text());
+            if(ile < 200){
+                var opacity = (200 - ile) / 200;
+                $('.well-stan[data-original-title="Czas pozostały do końca działania Tepela/Repela"]').css("background-color", "rgba(255, 117, 117, " + opacity + ")");
+            }
+        }
     }
     initPrzypomnienieORepelu();
 
@@ -3624,14 +3680,12 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
     // **********************
 
     function initSprawdzCzyMaszAktualnaWersjeBota(){
-        var url = domain + '/pokelife/api/get_bot_version.php';
-        $.getJSON(url, {
-            format: "json"
-        }).done(function(data) {
-            if(data != GM_info.script.version){
-                $('body').append('<div id="botVersionAlertBox" style="position: fixed;width: 100%;height: 100%;background: rgb(22, 27, 29);z-index: 99999;top: 0px;display: block;"><h1 style="text-align: center; color: #ffffff; vertical-align: middle; font-size: 44px; top: 35%; position: relative;">Nieaktualna wersja bota<br> kliknij <a target="_self" href="https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js?temp='+Math.random()+'"><span style="color: #88e0d5; text-decoration: underline; ">tutaj</span></a> aby zaktualizować. <br>Odśwież strone po aktualizacji</h1></div>');
-            }
-        })
+        if(bot_version != GM_info.script.version){
+            console.log('Nieaktualna wersja bota');
+            $('body').append('<div id="botVersionAlertBox" style="position: fixed;width: 100%;height: 100%;background: rgb(22, 27, 29);z-index: 99999;top: 0px;display: block;"><h1 style="text-align: center; color: #ffffff; vertical-align: middle; font-size: 44px; top: 35%; position: relative;">Nieaktualna wersja bota<br> kliknij <a target="_self" href="https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js?temp='+Math.random()+'"><span style="color: #88e0d5; text-decoration: underline; ">tutaj</span></a> aby zaktualizować. <br>Odśwież strone po aktualizacji</h1></div>');
+        } else {
+            console.log('Aktualna wersja bota');
+        }
     }
     initSprawdzCzyMaszAktualnaWersjeBota();
 
@@ -3684,6 +3738,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
             }
         })
 
+        $(document).off("keyup", "#wyszukajOsiagniecie");
         $(document).on("keyup", "#wyszukajOsiagniecie", function (event) {
             if($(this).val() == ""){
                 $('#glowne_okno .panel-default').css('display', 'block');
@@ -3697,6 +3752,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
             }
         });
 
+        $(document).off("click", 'li[role="presentation"]');
         $(document).on("click", 'li[role="presentation"]', function (event) {
             if($(this).parent().parent().parent().find('.panel-heading:contains("Osiągnięcia")').length > 0){
                 $('#wyszukajOsiagniecie').val("");
@@ -3723,6 +3779,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
             THAT.find('.panel-collapse').css('display', 'contents');
         }
 
+        $(document).off('click', '.dodajDoUlubionych');
         $(document).on('click', '.dodajDoUlubionych', function() {
             var tempHTML;
             var tempTHIS;
@@ -3748,6 +3805,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
             }
         });
 
+
         function removeItemOnce(arr, value) {
             var index = arr.indexOf(value);
             if (index > -1) {
@@ -3759,6 +3817,106 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
     initOsiagnieciaView();
 
 
+
+    // **********************
+    //
+    // initTropicielDziczWidget
+    // Funkcja dodająca widget osiągnięcia tropiciela
+    //
+    // **********************
+
+    function initTropicielDziczWidget() {
+        var widgetHTML;
+
+        function refreshTropicielDziczWidget() {
+
+            var html = '<div class="panel panel-primary tropicielClassToDelete"><div class="panel-heading">Tropiciel: ' + tropiciel.dzicz_name + '<div class="navbar-right"><span id="removeTropicielWidget" style="color: white; top: 4px; font-size: 16px; right: 3px;" class="glyphicon glyphicon-remove" aria-hidden="true"></span></div></div><table class="table table-striped table-condensed"><tbody><tr>';
+
+            if(tropiciel.tropiciel_cel == null){
+                html = html + "<td style='text-align: center;'>Wypraw do " + tropiciel.dzicz_name + ": <b>" + tropiciel.tropiciel_ilosc_wypraw + "</b>";
+                html = html + "</td>";
+            } else {
+                if(Number(tropiciel.tropiciel_ilosc_wypraw) >= Number(tropiciel.tropiciel_cel)){
+                    html = html + "<td style='text-align: center;'><b>Zdobyto nowy poziom!</b></td>";
+                } else {
+                    html = html + "<td style='text-align: center;'>Wypraw do " + tropiciel.dzicz_name + ": <b>" + tropiciel.tropiciel_ilosc_wypraw + "</b>";
+                    html = html + " / <b>" + tropiciel.tropiciel_cel + "</b></td>";
+                }
+            }
+            html = html + '</tr></tbody></table></div>';
+            widgetHTML = html;
+            if($('#sidebar').find(".panel-heading:contains('Tropiciel')").length == 0){
+                $('#wyloguj').parent().parent().parent().after(widgetHTML);
+            }
+        }
+
+        onReloadMain(function() {
+            if(this.find('.panel-heading').text().trim() === "Osiągnięcia") {
+
+                this.find('.tab-content button[href="#collapselaka_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="laka" data-dzicz-name="Łąka" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapselas_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="las" data-dzicz-name="Las" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsewybrzeze_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="wybrzeze" data-dzicz-name="Wybrzeże" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsemorze_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="morze" data-dzicz-name="Morze" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsegory_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="gory" data-dzicz-name="Góry" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsejaskinia_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="jaskinia" data-dzicz-name="Jaskinia" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsemiasto_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="miasto" data-dzicz-name="Miasto" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsesafari_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="safari" data-dzicz-name="Safari" aria-hidden="true" style=" margin-right: 7px;"></span>');
+
+                this.find('.tab-content button[href="#collapsegesty_zagajnik_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="gesty_zagajnik" data-dzicz-name="Gęsty Zagajnik" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsedolina_wiatrakow_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="dolina_wiatrakow" data-dzicz-name="Dolina Wiatraków" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsekoronny_szczyt_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="koronny_szczyt" data-dzicz-name="Koronny Szczyt" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsepotrojny_staw_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="potrojny_staw" data-dzicz-name="Potrójny Staw" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsepustynia_lodowa_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="pustynia_lodowa" data-dzicz-name="Pustynia Lodowa" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsewielkie_bagna_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="wielkie_bagna" data-dzicz-name="Wielkie Bagna" aria-hidden="true" style=" margin-right: 7px;"></span>');
+            }
+        })
+
+        $(document).on("click", '.dodajDoSidebarTropicielDzicz', function (event) {
+            $('.tropicielClassToDelete').remove();
+            tropiciel.tropiciel_ilosc_wypraw = $(this).parent().parent().find('b').html().split('/')[0].trim();
+            tropiciel.tropiciel_cel = $(this).parent().parent().find('b').html().split('/')[1] == undefined ? null : $(this).parent().parent().find('b').html().split('/')[1].trim();
+            tropiciel.dzicz = $(this).data('dzicz');
+            tropiciel.dzicz_name = $(this).data('dzicz-name');
+            refreshTropicielDziczWidget();
+            config.tropicielWSidebar = tropiciel.dzicz;
+            updateConfig(config);
+            $.getJSON(domain + "pokelife/api/update_tropiciel.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time=" + Date.now() + "&tropiciel_ilosc_wypraw=" + tropiciel.tropiciel_ilosc_wypraw + "&tropiciel_cel=" + tropiciel.tropiciel_cel + "&dzicz=" + tropiciel.dzicz + "&dzicz_name=" + tropiciel.dzicz_name, {
+                format: "json"
+            }).done(function (data) {
+            })
+        });
+
+        $(document).on("click", '#removeTropicielWidget', function (event) {
+            $(this).parent().parent().parent().remove();
+            config.tropicielWSidebar = "";
+            updateConfig(config);
+        });
+
+        onReloadSidebar(function() {
+            if(config.tropicielWSidebar !== "" && tropiciel.tropiciel_ilosc_wypraw !== null){
+                this.find('#wyloguj').parent().parent().parent().after(widgetHTML);
+                $('[data-toggle="tooltip"]').tooltip();
+            }
+        })
+
+        onReloadMain(function(url) {
+            if(config.tropicielWSidebar !== "" && tropiciel.tropiciel_ilosc_wypraw !== null){
+                var to_check = "gra/dzicz.php?poluj&miejsce=" + tropiciel.dzicz;
+                if((url == to_check) && (this.find('div:contains("Posiadasz za mało punktów akcji")').length == 0) && (this.find('p:contains("Nie możesz podróżować po dziczy, ponieważ wszystkie twoje pokemony są ran")').length == 0)) {
+                    tropiciel.tropiciel_ilosc_wypraw++;
+                    refreshTropicielDziczWidget();
+                }
+            }
+        })
+
+        if(config.tropicielWSidebar !== "" && tropiciel.tropiciel_ilosc_wypraw !== null){
+            refreshTropicielDziczWidget();
+        }
+
+    }
+    initTropicielDziczWidget();
+
+
 }
 
 
@@ -3767,7 +3925,11 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
 }).done(function (data) {
     console.log(data);
 
+    bot_version = data.bot_version;
+
     styles = data.styles;
+
+    shiny = data.shiny;
 
     if(data.user != null){
         window.localStorage.falseLogin = data.user.false_login;
@@ -3810,6 +3972,10 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
         }
         if(config.ulubioneOsiagniecia == undefined){
             config.ulubioneOsiagniecia = [];
+            updateConfig(config);
+        }
+        if(config.tropicielWSidebar == undefined){
+            config.tropicielWSidebar = "";
             updateConfig(config);
         }
 
@@ -3892,6 +4058,7 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
         config.shinyMode = 1;
         config.safariMode = 1;
         config.ulubioneOsiagniecia = [];
+        config.tropicielWSidebar = "";
 
         config.dzien = new Object();
         config.dzien.data11 = "nestballe";
@@ -3938,7 +4105,6 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
         config.noc.data54 = "nightballe";
         updateConfig(config);
     }
-
 
     config.useEventoweNapoje = false;
 
@@ -3995,6 +4161,22 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
             delete timeouts[id];
         };
 
-        initPokeLifeScript();
+
+
+        if(config.tropicielWSidebar !== ""){
+            $.getJSON(domain + "pokelife/api/get_tropiciel.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now() + "&dzicz=" + config.tropicielWSidebar, {
+                format: "json"
+            }).done(function (data) {
+                tropiciel = data.tropiciel;
+                initPokeLifeScript();
+            })
+        } else {
+            tropiciel.tropiciel_ilosc_wypraw = null;
+            tropiciel.tropiciel_cel= null;
+            tropiciel.dzicz= null;
+            tropiciel.dzicz_name= null;
+
+            initPokeLifeScript();
+        }
     })
 });
