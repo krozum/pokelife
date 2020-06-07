@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.19.1 (2020-06-07)
+* Dodanie changelogu do alertu o nieaktualnej wersji bota
+
 5.19 (2020-06-07)
 * Dodanie możliwości podpięcia widgetu z Tropicielem do Sidebaru, na razie tylko regiony Kanto i Sinooh
 * Poprawienie błędu w którym nie zapisywał sie widget z zadaniami przez co przy każdym logowaniu pytał o widok z Zadaniami
