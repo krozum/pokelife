@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.19.2 (2020-06-07)
+* Dodanie Hoenn do widgetów z Tropicielem
+
 5.19.1 (2020-06-07)
 * Dodanie changelogu do alertu o nieaktualnej wersji bota
 
