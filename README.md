@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.19.3 (2020-06-07)
+* Dodanie aktualizacji cen jagód na statystykach na podstawie wyszukiwan w zakładce Wystaw. Powinny być zawsze w miare aktualne.
+
 5.19.2 (2020-06-07)
 * Dodanie Hoenn do widgetów z Tropicielem
 
