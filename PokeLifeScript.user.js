@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.19.1
+// @version      5.19.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -3874,6 +3874,15 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
                 this.find('.tab-content button[href="#collapsepotrojny_staw_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="potrojny_staw" data-dzicz-name="Potrójny Staw" aria-hidden="true" style=" margin-right: 7px;"></span>');
                 this.find('.tab-content button[href="#collapsepustynia_lodowa_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="pustynia_lodowa" data-dzicz-name="Pustynia Lodowa" aria-hidden="true" style=" margin-right: 7px;"></span>');
                 this.find('.tab-content button[href="#collapsewielkie_bagna_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="wielkie_bagna" data-dzicz-name="Wielkie Bagna" aria-hidden="true" style=" margin-right: 7px;"></span>');
+
+
+                this.find('.tab-content button[href="#collapsealejka_spacerowa_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="alejka_spacerowa" data-dzicz-name="Alejka Spacerowa" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsepustynia_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="pustynia" data-dzicz-name="Pustynia" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapseglebina_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="glebina" data-dzicz-name="Głębina" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapseogrod_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="ogrod" data-dzicz-name="Ogród" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsenawiedzona_wieza_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="nawiedzona_wieza" data-dzicz-name="Nawiedzona Wieża" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsemeteorytowa_gora_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="meteorytowa_gora" data-dzicz-name="Meteorytowa Góra" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapseopuszczona_elektrownia_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="opuszczona_elektrownia" data-dzicz-name="Opuszczona Elektrownia" aria-hidden="true" style=" margin-right: 7px;"></span>');
             }
         })
 
