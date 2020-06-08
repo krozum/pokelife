@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.19.2
+// @version      5.19.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -57,6 +57,7 @@
 
 var config = new Object();
 var bot_version;
+var cenyJagod = new Object();
 var shiny = [];
 var tropiciel = new Object();
 var AutoGoSettings = new Object();
@@ -3243,6 +3244,10 @@ function initPokeLifeScript() {
                                 if ($($(response).find("form span")[2]).html() != "-----") {
                                     var price = Number($($(response).find("form span")[2]).html().split("&nbsp;")[0].replace(/\./g, '')) * max;
                                     THAT.find('input[name="cena_yeny"]').val(price - 1);
+                                    $.getJSON(domain + "pokelife/api/update_cena.php?nazwa=" + przedmiot + "&time=" + Date.now() + "&cena=" + price, {
+                                        format: "json"
+                                    }).done(function (data) {
+                                    })
                                 } else {
                                     THAT.find('input[name="cena_yeny"]').val("brak");
                                 }
@@ -3325,126 +3330,126 @@ function initPokeLifeScript() {
                 $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').length > 0 ? `
 <tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
-data-yen="` + (5000 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (Number(cenyJagod.fioletowe_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (2 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
 ">
 <td>
 <img src="images/pokesklep/fioletowe_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
 </td>
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(5000 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(Number(cenyJagod.fioletowe_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(2 * $(DATA).find('input[name="nazwa_full"][value="Fioletowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').length > 0 ? `
 <tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
-data-yen="` + (17000 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (Number(cenyJagod.niebieskie_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (3 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
 ">
 <td>
 <img src="images/pokesklep/niebieskie_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
 </td>
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(17000 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(Number(cenyJagod.niebieskie_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(3 * $(DATA).find('input[name="nazwa_full"][value="Niebieskie Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').length > 0 ? `
 <tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
-data-yen="` + (10000 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (Number(cenyJagod.zolte_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (3 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
 ">
 <td>
 <img src="images/pokesklep/zolte_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
 </td>
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(10000 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(Number(cenyJagod.zolte_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(3 * $(DATA).find('input[name="nazwa_full"][value="Żółte Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').length > 0 ? `
 <tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
-data-yen="` + (48000 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (Number(cenyJagod.zielone_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
 ">
 <td>
 <img src="images/pokesklep/zielone_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
 </td>
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(48000 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(Number(cenyJagod.zielone_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(15 * $(DATA).find('input[name="nazwa_full"][value="Zielone Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').length > 0 ? `
 <tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
-data-yen="` + (56000 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (Number(cenyJagod.pomaranczowe_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
 ">
 <td>
 <img src="images/pokesklep/pomaranczowe_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
 </td>
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(56000 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(Number(cenyJagod.pomaranczowe_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(15 * $(DATA).find('input[name="nazwa_full"][value="Pomarańczowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').length > 0 ? `
 <tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
-data-yen="` + (48000 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (Number(cenyJagod.purpurowe_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
 ">
 <td>
 <img src="images/pokesklep/purpurowe_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
 </td>
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(48000 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(Number(cenyJagod.purpurowe_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(15 * $(DATA).find('input[name="nazwa_full"][value="Purpurowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').length > 0 ? `
 <tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
-data-yen="` + (53000 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (Number(cenyJagod.rozowe_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
 ">
 <td>
 <img src="images/pokesklep/rozowe_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
 </td>
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(53000 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(Number(cenyJagod.rozowe_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(15 * $(DATA).find('input[name="nazwa_full"][value="Różowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').length > 0 ? `
 <tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
-data-yen="` + (60000 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (Number(cenyJagod.brazowe_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (15 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
 ">
 <td>
 <img src="images/pokesklep/brazowe_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
 </td>
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(60000 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(Number(cenyJagod.brazowe_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(15 * $(DATA).find('input[name="nazwa_full"][value="Brązowe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 </tr>
 ` : ``) + (
                 $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').length > 0 ? `
 <tr class="classToSum hidden"
 data-count="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
-data-yen="` + (1500 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
+data-yen="` + (Number(cenyJagod.biale_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `"
 data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `
 ">
 <td>
 <img src="images/pokesklep/biale_jagody.jpg" class="visible-lg-inline" style="width: 72px;">
 </td>
 <td id="summaryCount">` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format($(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
-<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(1500 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
+<td id="summarYen">~ ` + new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(Number(cenyJagod.biale_jagody.cena_yeny) * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 <td id="summaryZas">~ ` + new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]').parent().parent().find('.col-md-12').html().split('b> - ')[1].split(" sztuk")[0]) + `</td>
 </tr>
 ` : ``) + `
@@ -3939,6 +3944,8 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
     format: "json"
 }).done(function (data) {
     console.log(data);
+
+    cenyJagod = data.ceny_jagod
 
     bot_version = data.bot_version;
 
