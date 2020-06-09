@@ -26,8 +26,8 @@ Instrukcja instalacji
 
 Changelog
 ---------
-5.20.1 (2020-06-09)
-* Poprawka do jagód
+5.20.2 (2020-06-09)
+* Seria poprawek do eventów i brakujących jagód
 
 5.20 (2020-06-09)
 * Przerobienie zakładki Dzicz na widoku Statystyk
