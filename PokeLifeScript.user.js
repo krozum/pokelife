@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.19.4
+// @version      5.19.5
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -10,7 +10,6 @@
 // @grant        GM_notification
 // @require      https://bug7a.github.io/iconselect.js/sample/lib/iscroll.js
 // @require      https://bug7a.github.io/iconselect.js/sample/lib/control/iconselect.js
-// @require      https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.5.0/js/md5.min.js
 // @require      https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js
 // @resource     color_picker_CSS  https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css
 // @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=8
@@ -176,26 +175,26 @@ function updateStatsDoswiadczenie(json) {
 }
 
 function addClickToMetrics(){
-//     var d = new Date();
-//     var s = d.getSeconds();
-//     if(clicksPer10Seconds[s] !== undefined){
-//         clicksPer10Seconds[s] = clicksPer10Seconds[s] + 1;
-//     } else {
-//         clicksPer10Seconds[s] = 1;
-//     }
-//     var total = 0;
-//     var temp = s;
-//     var i;
-//     for (i = 0; i < 10; i++) {
-//         temp = s - i;
-//         if(temp < 0){
-//             temp = 60 - (i - s);
-//         }
-//         if(clicksPer10Seconds[temp] !== undefined){
-//             total = Number(total) + Number(clicksPer10Seconds[temp]);
-//         }
-//     }
-//     console.log(total + " c/10s");
+    //     var d = new Date();
+    //     var s = d.getSeconds();
+    //     if(clicksPer10Seconds[s] !== undefined){
+    //         clicksPer10Seconds[s] = clicksPer10Seconds[s] + 1;
+    //     } else {
+    //         clicksPer10Seconds[s] = 1;
+    //     }
+    //     var total = 0;
+    //     var temp = s;
+    //     var i;
+    //     for (i = 0; i < 10; i++) {
+    //         temp = s - i;
+    //         if(temp < 0){
+    //             temp = 60 - (i - s);
+    //         }
+    //         if(clicksPer10Seconds[temp] !== undefined){
+    //             total = Number(total) + Number(clicksPer10Seconds[temp]);
+    //         }
+    //     }
+    //     console.log(total + " c/10s");
 }
 
 
@@ -3969,66 +3968,147 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
 $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now(), {
     format: "json"
 }).done(function (data) {
-    console.log(data);
+    if(data.status == 'success'){
 
-    cenyJagod = data.ceny_jagod
+        console.log(data);
 
-    bot_version = data.bot_version;
+        cenyJagod = data.ceny_jagod
 
-    styles = data.styles;
+        bot_version = data.bot_version;
 
-    shiny = data.shiny;
+        styles = data.styles;
 
-    if(data.user != null){
-        window.localStorage.falseLogin = data.user.false_login;
-    }
+        shiny = data.shiny;
 
-    if(data.user != null && data.user.config != ""){
-        config = JSON.parse(data.user.config);
-        if(config.customStyleBackground == undefined){
+        if(data.user != null){
+            window.localStorage.falseLogin = data.user.false_login;
+        }
+
+        if(data.user != null && data.user.config != ""){
+            config = JSON.parse(data.user.config);
+            if(config.customStyleBackground == undefined){
+                config.customStyleBackground = "#3c3c3c";
+                config.customStyleTabs = "#C6E9D0";
+                updateConfig(config);
+            }
+            if(config.customStyleFont == undefined){
+                config.customStyleFont = "#000000";
+                updateConfig(config);
+            }
+            if(config.maxLapanyLvl == undefined){
+                config.maxLapanyLvl = 50;
+                updateConfig(config);
+            }
+            if(config.niezlapaneMode == undefined){
+                config.niezlapaneMode = 1;
+                updateConfig(config);
+            }
+            if(config.useFontanna == undefined){
+                config.useFontanna = false;
+                updateConfig(config);
+            }
+            if(config.fontannaLastUsedDate == undefined){
+                config.fontannaLastUsedDate = "1994512";
+                updateConfig(config);
+            }
+            if(config.shinyMode == undefined){
+                config.shinyMode = 1;
+                updateConfig(config);
+            }
+            if(config.safariMode == undefined){
+                config.safariMode = 1;
+                updateConfig(config);
+            }
+            if(config.ulubioneOsiagniecia == undefined){
+                config.ulubioneOsiagniecia = [];
+                updateConfig(config);
+            }
+            if(config.tropicielWSidebar == undefined){
+                config.tropicielWSidebar = "";
+                updateConfig(config);
+            }
+
+            if(config.dzien == undefined){
+                console.log(config.dzien);
+                config.dzien = new Object();
+                config.dzien.data11 = "nestballe";
+                config.dzien.data12 = "nestballe";
+                config.dzien.data13 = "greatballe";
+                config.dzien.data14 = "greatballe";
+                config.dzien.data21 = "nestballe";
+                config.dzien.data22 = "nestballe";
+                config.dzien.data23 = "greatballe";
+                config.dzien.data24 = "greatballe";
+                config.dzien.data31 = "nestballe";
+                config.dzien.data32 = "nestballe";
+                config.dzien.data33 = "greatballe";
+                config.dzien.data34 = "greatballe";
+                config.dzien.data41 = "nestballe";
+                config.dzien.data42 = "nestballe";
+                config.dzien.data43 = "greatballe";
+                config.dzien.data44 = "greatballe";
+                config.dzien.data51 = "nestballe";
+                config.dzien.data52 = "nestballe";
+                config.dzien.data53 = "greatballe";
+                config.dzien.data54 = "greatballe";
+
+                config.noc = new Object();
+                config.noc.data11 = "nestballe";
+                config.noc.data12 = "nestballe";
+                config.noc.data13 = "nightballe";
+                config.noc.data14 = "nightballe";
+                config.noc.data21 = "nestballe";
+                config.noc.data22 = "nestballe";
+                config.noc.data23 = "nightballe";
+                config.noc.data24 = "nightballe";
+                config.noc.data31 = "nestballe";
+                config.noc.data32 = "nestballe";
+                config.noc.data33 = "nightballe";
+                config.noc.data34 = "nightballe";
+                config.noc.data41 = "nestballe";
+                config.noc.data42 = "nestballe";
+                config.noc.data43 = "nightballe";
+                config.noc.data44 = "nightballe";
+                config.noc.data51 = "nestballe";
+                config.noc.data52 = "nestballe";
+                config.noc.data53 = "nightballe";
+                config.noc.data54 = "nightballe";
+                updateConfig(config);
+            }
+        } else {
+            config.skinStyle = 3;
+            config.skipTutorial = false;
+            config.useNiebieskieJagody = false;
+            config.useNiebieskieNapoje = false;
+            config.useCzerwoneNapoje = false;
+            config.useZieloneNapoje = false;
+            config.useEventoweNapoje = true;
+            config.pokemonIconsIndex = 0;
+            config.pokeballIconsIndex = 8;
+            config.locationIconsIndex = 0;
+            config.useOnlyInNight = false;
+            config.niezlapaneMode = 1;
+            config.useFontanna = false;
+            config.hodowlaPokemonDniaImage = "";
+            config.zadaniaWidget = "";
+            config.hodowlaPokemonDniaStowarzyszenieImage = "";
+            config.pok20 = 0;
+            config.pok40 = 0;
+            config.pok60 = 0;
+            config.pok80 = 0;
+            config.pok100 = 0;
+            config.kolejnoscWidgetow = 1;
+            config.maxLapanyLvl = 50;
             config.customStyleBackground = "#3c3c3c";
             config.customStyleTabs = "#C6E9D0";
-            updateConfig(config);
-        }
-        if(config.customStyleFont == undefined){
             config.customStyleFont = "#000000";
-            updateConfig(config);
-        }
-        if(config.maxLapanyLvl == undefined){
-            config.maxLapanyLvl = 50;
-            updateConfig(config);
-        }
-        if(config.niezlapaneMode == undefined){
-            config.niezlapaneMode = 1;
-            updateConfig(config);
-        }
-        if(config.useFontanna == undefined){
             config.useFontanna = false;
-            updateConfig(config);
-        }
-        if(config.fontannaLastUsedDate == undefined){
             config.fontannaLastUsedDate = "1994512";
-            updateConfig(config);
-        }
-        if(config.shinyMode == undefined){
             config.shinyMode = 1;
-            updateConfig(config);
-        }
-        if(config.safariMode == undefined){
             config.safariMode = 1;
-            updateConfig(config);
-        }
-        if(config.ulubioneOsiagniecia == undefined){
             config.ulubioneOsiagniecia = [];
-            updateConfig(config);
-        }
-        if(config.tropicielWSidebar == undefined){
             config.tropicielWSidebar = "";
-            updateConfig(config);
-        }
 
-        if(config.dzien == undefined){
-            console.log(config.dzien);
             config.dzien = new Object();
             config.dzien.data11 = "nestballe";
             config.dzien.data12 = "nestballe";
@@ -4074,157 +4154,81 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
             config.noc.data54 = "nightballe";
             updateConfig(config);
         }
-    } else {
-        config.skinStyle = 3;
-        config.skipTutorial = false;
-        config.useNiebieskieJagody = false;
-        config.useNiebieskieNapoje = false;
-        config.useCzerwoneNapoje = false;
-        config.useZieloneNapoje = false;
-        config.useEventoweNapoje = true;
-        config.pokemonIconsIndex = 0;
-        config.pokeballIconsIndex = 8;
-        config.locationIconsIndex = 0;
-        config.useOnlyInNight = false;
-        config.niezlapaneMode = 1;
-        config.useFontanna = false;
-        config.hodowlaPokemonDniaImage = "";
-        config.zadaniaWidget = "";
-        config.hodowlaPokemonDniaStowarzyszenieImage = "";
-        config.pok20 = 0;
-        config.pok40 = 0;
-        config.pok60 = 0;
-        config.pok80 = 0;
-        config.pok100 = 0;
-        config.kolejnoscWidgetow = 1;
-        config.maxLapanyLvl = 50;
-        config.customStyleBackground = "#3c3c3c";
-        config.customStyleTabs = "#C6E9D0";
-        config.customStyleFont = "#000000";
-        config.useFontanna = false;
-        config.fontannaLastUsedDate = "1994512";
-        config.shinyMode = 1;
-        config.safariMode = 1;
-        config.ulubioneOsiagniecia = [];
-        config.tropicielWSidebar = "";
 
-        config.dzien = new Object();
-        config.dzien.data11 = "nestballe";
-        config.dzien.data12 = "nestballe";
-        config.dzien.data13 = "greatballe";
-        config.dzien.data14 = "greatballe";
-        config.dzien.data21 = "nestballe";
-        config.dzien.data22 = "nestballe";
-        config.dzien.data23 = "greatballe";
-        config.dzien.data24 = "greatballe";
-        config.dzien.data31 = "nestballe";
-        config.dzien.data32 = "nestballe";
-        config.dzien.data33 = "greatballe";
-        config.dzien.data34 = "greatballe";
-        config.dzien.data41 = "nestballe";
-        config.dzien.data42 = "nestballe";
-        config.dzien.data43 = "greatballe";
-        config.dzien.data44 = "greatballe";
-        config.dzien.data51 = "nestballe";
-        config.dzien.data52 = "nestballe";
-        config.dzien.data53 = "greatballe";
-        config.dzien.data54 = "greatballe";
+        config.useEventoweNapoje = false;
 
-        config.noc = new Object();
-        config.noc.data11 = "nestballe";
-        config.noc.data12 = "nestballe";
-        config.noc.data13 = "nightballe";
-        config.noc.data14 = "nightballe";
-        config.noc.data21 = "nestballe";
-        config.noc.data22 = "nestballe";
-        config.noc.data23 = "nightballe";
-        config.noc.data24 = "nightballe";
-        config.noc.data31 = "nestballe";
-        config.noc.data32 = "nestballe";
-        config.noc.data33 = "nightballe";
-        config.noc.data34 = "nightballe";
-        config.noc.data41 = "nestballe";
-        config.noc.data42 = "nestballe";
-        config.noc.data43 = "nightballe";
-        config.noc.data44 = "nightballe";
-        config.noc.data51 = "nestballe";
-        config.noc.data52 = "nestballe";
-        config.noc.data53 = "nightballe";
-        config.noc.data54 = "nightballe";
-        updateConfig(config);
-    }
+        $.getJSON("https://raw.githubusercontent.com/krozum/pokelife/master/PokemonData.json?a=1", {
+            format: "json"
+        }).done(function(data) {
+            pokemonData = data;
+            if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=las"]').length > 0) {
+                region = 'Kanto';
+            } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=puszcza"]').length > 0) {
+                region = 'Johto';
+            } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=opuszczona_elektrownia"]').length > 0) {
+                region = 'Hoenn';
+            } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=koronny_szczyt"]').length > 0) {
+                region = 'Sinnoh';
+            } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=ranczo"]').length > 0) {
+                region = 'Unova';
+            } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=francuski_labirynt"]').length > 0) {
+                region = 'Kalos';
+            }
+            console.log("Wykryty region: " + region);
 
-    config.useEventoweNapoje = false;
+            var blob = new Blob([
+                'var timers={};function fireTimeout(e){this.postMessage({id:e}),delete timers[e]}this.addEventListener("message",function(e){var t=e.data;switch(t.command){case"setTimeout":var i=parseInt(t.timeout||0,10),s=setTimeout(fireTimeout.bind(null,t.id),i);timers[t.id]=s;break;case"clearTimeout":(s=timers[t.id])&&clearTimeout(s),delete timers[t.id]}});'
+            ])
 
-    $.getJSON("https://raw.githubusercontent.com/krozum/pokelife/master/PokemonData.json?a=1", {
-        format: "json"
-    }).done(function(data) {
-        pokemonData = data;
-        if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=las"]').length > 0) {
-            region = 'Kanto';
-        } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=puszcza"]').length > 0) {
-            region = 'Johto';
-        } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=opuszczona_elektrownia"]').length > 0) {
-            region = 'Hoenn';
-        } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=koronny_szczyt"]').length > 0) {
-            region = 'Sinnoh';
-        } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=ranczo"]').length > 0) {
-            region = 'Unova';
-        } else if ($('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=francuski_labirynt"]').length > 0) {
-            region = 'Kalos';
-        }
-        console.log("Wykryty region: " + region);
+            var timeoutId = 0;
+            var timeouts = {};
 
-        var blob = new Blob([
-            'var timers={};function fireTimeout(e){this.postMessage({id:e}),delete timers[e]}this.addEventListener("message",function(e){var t=e.data;switch(t.command){case"setTimeout":var i=parseInt(t.timeout||0,10),s=setTimeout(fireTimeout.bind(null,t.id),i);timers[t.id]=s;break;case"clearTimeout":(s=timers[t.id])&&clearTimeout(s),delete timers[t.id]}});'
-        ])
+            var worker = new Worker(window.URL.createObjectURL(blob));
 
-        var timeoutId = 0;
-        var timeouts = {};
+            worker.addEventListener("message", function(evt) {
+                var data = evt.data,
+                    id = data.id,
+                    fn = timeouts[id].fn,
+                    args = timeouts[id].args;
 
-        var worker = new Worker(window.URL.createObjectURL(blob));
+                fn.apply(null, args);
+                delete timeouts[id];
+            });
 
-        worker.addEventListener("message", function(evt) {
-            var data = evt.data,
-                id = data.id,
-                fn = timeouts[id].fn,
-                args = timeouts[id].args;
+            window.setTimeout = function(fn, delay) {
+                var args = Array.prototype.slice.call(arguments, 2);
+                timeoutId += 1;
+                delay = delay || 0;
+                var id = timeoutId;
+                timeouts[id] = { fn: fn, args: args };
+                worker.postMessage({ command: "setTimeout", id: id, timeout: delay });
+                return id;
+            };
 
-            fn.apply(null, args);
-            delete timeouts[id];
-        });
-
-        window.setTimeout = function(fn, delay) {
-            var args = Array.prototype.slice.call(arguments, 2);
-            timeoutId += 1;
-            delay = delay || 0;
-            var id = timeoutId;
-            timeouts[id] = { fn: fn, args: args };
-            worker.postMessage({ command: "setTimeout", id: id, timeout: delay });
-            return id;
-        };
-
-        window.clearTimeout = function(id) {
-            worker.postMessage({ command: "clearTimeout", id: id });
-            delete timeouts[id];
-        };
+            window.clearTimeout = function(id) {
+                worker.postMessage({ command: "clearTimeout", id: id });
+                delete timeouts[id];
+            };
 
 
 
-        if(config.tropicielWSidebar !== ""){
-            $.getJSON(domain + "pokelife/api/get_tropiciel.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now() + "&dzicz=" + config.tropicielWSidebar, {
-                format: "json"
-            }).done(function (data) {
-                tropiciel = data.tropiciel;
+            if(config.tropicielWSidebar !== ""){
+                $.getJSON(domain + "pokelife/api/get_tropiciel.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time="+Date.now() + "&dzicz=" + config.tropicielWSidebar, {
+                    format: "json"
+                }).done(function (data) {
+                    if(data.status == 'success'){
+                        tropiciel = data.tropiciel;
+                        initPokeLifeScript();
+                    }
+                })
+            } else {
+                tropiciel.tropiciel_ilosc_wypraw = null;
+                tropiciel.tropiciel_cel= null;
+                tropiciel.dzicz= null;
+                tropiciel.dzicz_name= null;
+
                 initPokeLifeScript();
-            })
-        } else {
-            tropiciel.tropiciel_ilosc_wypraw = null;
-            tropiciel.tropiciel_cel= null;
-            tropiciel.dzicz= null;
-            tropiciel.dzicz_name= null;
-
-            initPokeLifeScript();
-        }
-    })
+            }
+        })
+    }
 });
