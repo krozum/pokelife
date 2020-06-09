@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.19.3
+// @version      5.19.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -70,6 +70,7 @@ var lastSeeShoutId;
 var timeoutMin = 300;
 var timeoutMax = 400;
 var styles = [];
+var clicksPer10Seconds = new Object();
 var domain = "https://bra2ns.pl/"
 
 
@@ -172,6 +173,29 @@ function updateStatsDoswiadczenie(json) {
     requestDomain("pokelife/api/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json=" + json + "&time=" + Date.now(), function(response) {
         console.log("updateStatsDoswiadczenie: " + json);
     })
+}
+
+function addClickToMetrics(){
+//     var d = new Date();
+//     var s = d.getSeconds();
+//     if(clicksPer10Seconds[s] !== undefined){
+//         clicksPer10Seconds[s] = clicksPer10Seconds[s] + 1;
+//     } else {
+//         clicksPer10Seconds[s] = 1;
+//     }
+//     var total = 0;
+//     var temp = s;
+//     var i;
+//     for (i = 0; i < 10; i++) {
+//         temp = s - i;
+//         if(temp < 0){
+//             temp = 60 - (i - s);
+//         }
+//         if(clicksPer10Seconds[temp] !== undefined){
+//             total = Number(total) + Number(clicksPer10Seconds[temp]);
+//         }
+//     }
+//     console.log(total + " c/10s");
 }
 
 
@@ -1474,6 +1498,8 @@ function initPokeLifeScript() {
 
         var counter = 0;
         function click(poLeczeniu) {
+            addClickToMetrics();
+
             counter++;
             document.title = "PokeLife - " + counter + " - Gra Pokemon Online";
 
@@ -1561,7 +1587,7 @@ function initPokeLifeScript() {
                         console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".");
                         $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
                     } else if ($('h2:contains("Wybierz Pokemona")').length > 0 && $('.panel-body.nopadding').attr('style').indexOf("background-color: #FFBB") == -1) {
-                        requestDomain("pokelife/api/update_shiny.php?pokemon_id=" + $('.panel-body.nopadding .center-block img').attr('src').split('/')[1].split('.')[0].split('s')[1] + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time=" + Date.now(), null);
+                        requestDomain("pokelife/api/update_shiny.php?pokemon_name=" + $('.panel-body.nopadding i').html().trim() + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time=" + Date.now(), null);
                         $('#refreshShinyWidget').trigger('click');
                         switch(Number(config.shinyMode)){
                             case 1:
