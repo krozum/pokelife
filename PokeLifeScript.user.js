@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.19.6
+// @version      5.19.7
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -176,26 +176,29 @@ function updateStatsDoswiadczenie(json) {
 }
 
 function addClickToMetrics(){
-        var d = new Date();
-        var s = d.getSeconds();
-        if(clicksPer10Seconds[s] !== undefined){
-            clicksPer10Seconds[s] = clicksPer10Seconds[s] + 1;
-        } else {
-            clicksPer10Seconds[s] = 1;
+    var d = new Date();
+    var s = d.getSeconds();
+    var newClicksPer10Seconds = new Object();
+    if(clicksPer10Seconds[s] !== undefined){
+        clicksPer10Seconds[s] = clicksPer10Seconds[s] + 1;
+    } else {
+        clicksPer10Seconds[s] = 1;
+    }
+    var total = 0;
+    var temp = s;
+    var i;
+    for (i = 0; i < 10; i++) {
+        temp = s - i;
+        if(temp < 0){
+            temp = 60 - (i - s);
         }
-        var total = 0;
-        var temp = s;
-        var i;
-        for (i = 0; i < 10; i++) {
-            temp = s - i;
-            if(temp < 0){
-                temp = 60 - (i - s);
-            }
-            if(clicksPer10Seconds[temp] !== undefined){
-                total = Number(total) + Number(clicksPer10Seconds[temp]);
-            }
+        if(clicksPer10Seconds[temp] !== undefined){
+            newClicksPer10Seconds[temp] = Number(clicksPer10Seconds[temp]);
+            total = Number(total) + Number(clicksPer10Seconds[temp]);
         }
-        console.log(total + " c/10s");
+    }
+    clicksPer10Seconds = newClicksPer10Seconds;
+    console.log(total + " c/10s");
 }
 
 
@@ -2703,7 +2706,7 @@ function initPokeLifeScript() {
                 updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-danger:first').html().split("</b> +")[1].split(' PD')[0]);
                 updateStatsDoswiadczenie('{"' + DATA.find('.panel-body b b').html() + '":"' + DATA.find('p.alert-danger:first').html().split("</b> +")[1].split(' PD')[0] + '"}');
                 updateEvent("Przegrana walka z <b>" + aktualnyPokemonDzicz + "</b>. Musisz uciekać. ", 6, dzicz);
-            } else if (DATA.find(".panel-body > p.alert-success").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
+            } else if (DATA.find(".panel-body > p.alert-success:not(:contains('Moc odznaki odrzutowca sprawia'))").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
                 console.log('PokeLifeScript: event w dziczy');
                 if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html() != undefined && DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html().indexOf("Jagód") != -1) {
                     if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b').html() == "Czerwonych Jagód") {
@@ -2741,6 +2744,9 @@ function initPokeLifeScript() {
             } else if (DATA.find(".panel-body > p.alert-warning").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
                 console.log('PokeLifeScript: event w dziczy');
                 updateEvent(DATA.find('.panel-body > p.alert-warning').html(), 10, dzicz);
+            } else if (DATA.find(".panel-body > p.alert-danger:not(:contains('Posiadasz za mało punktów akcji'))").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
+                console.log('PokeLifeScript: event w dziczy');
+                updateEvent(DATA.find('.panel-body > p.alert-danger').html(), 10, dzicz);
             }
         })
     }
