@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.19.4 (2020-06-09)
+* Poprawka dla shiny alertów, zmienił sie sposób wyswietlania obrazków przez co alerty przestały działać
+
 5.19.3 (2020-06-07)
 * Dodanie aktualizacji cen jagód na statystykach na podstawie wyszukiwan w zakładce Wystaw. Powinny być zawsze w miare aktualne.
 
