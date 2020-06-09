@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.20.1
+// @version      5.20.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -154,24 +154,24 @@ function stopSound() {
 function updateEvent(text, eventTypeId, dzicz) {
     if (dzicz != null) {
         requestDomain("pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text=" + text + "&event_type_id=" + eventTypeId + "&dzicz=" + dzicz + "&time=" + Date.now(), function(response) {
-            console.log("updateEvent: " + eventTypeId + " => " + text);
+            console.log("%cUpdateEvent: " + eventTypeId + " => " + text, "color: orange");
         })
     } else {
         requestDomain("pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text=" + text + "&event_type_id=" + eventTypeId + "&time=" + Date.now(), function(response) {
-            console.log("updateEvent: " + eventTypeId + " => " + text);
+            console.log("%cUpdateEvent: " + eventTypeId + " => " + text, "color: orange");
         })
     }
 }
 
 function updateStats(name, value) {
     requestDomain("pokelife/api/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name=" + name + "&value=" + value + "&time=" + Date.now() + "&dzicz=" + lastClickedDzicz, function(response) {
-        console.log("UpdateStats: " + name + " => " + value);
+        console.log("%cUpdateStats: " + name + " => " + value, "color: #8bc34a");
     })
 }
 
 function updateStatsDoswiadczenie(json) {
     requestDomain("pokelife/api/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json=" + json + "&time=" + Date.now() + "&dzicz=" + lastClickedDzicz, function(response) {
-        console.log("updateStatsDoswiadczenie: " + json);
+        console.log("%cUpdateStatsDoswiadczenie: " + json, "color: #b7a5c1");
     })
 }
 
@@ -1550,13 +1550,13 @@ function initPokeLifeScript() {
             if (canRun) {
                 if ($('#glowne_okno .panel-heading').length > 0) {
                     if ($('#glowne_okno').find(".panel-heading:contains('Dzienne Przeliczenie')").length > 0) {
-                        console.log('PokeLifeScript: Dzienne Przeliczenie, przerwanie AutoGo');
+                        console.log('%cPokeLifeScript: Dzienne Przeliczenie, przerwanie AutoGo', 'color: #cb404b');
                         autoGo = false;
                         $('#goAutoButton').html('AutoGO');
                         $("#goStopReason").html("Dzienne Przeliczenie").show();
                         document.title = "Dzienne Przeliczenie";
                     } else if ($('#glowne_okno').find(".panel-heading:contains('Łapanie Jajka')").length > 0) {
-                        console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".");
+                        console.log('%cPokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".", 'color: #cb404b');
                         $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
                     } else if ($('h2:contains("Wybierz Pokemona")').length > 0 && $('.panel-body.nopadding').attr('style').indexOf("background-color: #FFBB") == -1) {
                         requestDomain("pokelife/api/update_shiny.php?pokemon_name=" + $('.panel-body.nopadding i').html().trim() + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time=" + Date.now(), null);
@@ -1567,7 +1567,7 @@ function initPokeLifeScript() {
                                 break;
                             case 2:
                             case 3:
-                                console.log('PokeLifeScript: spotkany Shiny');
+                                console.log('%cPokeLifeScript: spotkany Shiny', 'color: #cb404b');
                                 atakujPokemona();
                                 break;
                         }
@@ -1592,13 +1592,13 @@ function initPokeLifeScript() {
                                     if($('.panel-body.nopadding img[src="images/trudnosc/trudnosc4.png"]').length > 0 || $('.panel-body.nopadding img[src="images/trudnosc/trudnosc5.png"]').length > 0){
                                         zatrzymajAutoGo("Spotkany niezłapany pokemon", true);
                                     } else {
-                                        console.log('PokeLifeScript: spotkany niezłapany pokemona');
+                                        console.log('%cPokeLifeScript: spotkany niezłapany pokemona', 'color: #cb404b');
                                         atakujPokemona();
                                     }
                                     break;
                                 case 3:
                                 case 4:
-                                    console.log('PokeLifeScript: spotkany niezłapany pokemona');
+                                    console.log('%cPokeLifeScript: spotkany niezłapany pokemona', 'color: #cb404b');
                                     atakujPokemona();
                                     break;
                             }
@@ -1609,17 +1609,17 @@ function initPokeLifeScript() {
                         if (getPokeball() !== "") {
                             var button = $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + getPokeball() + '"]');
                             if (button.length > 0) {
-                                console.log('PokeLifeScript: rzucam pokeballa');
+                                console.log('%cPokeLifeScript: rzucam pokeballa', 'color: #cb404b');
                                 $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + getPokeball() + '"]').trigger('click');
                             } else {
                                 zatrzymajAutoGo("Brak odpowiedniego pokeballa", true);
                             }
                         }
                     } else if ($("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + "']").length == 1) {
-                        console.log('PokeLifeScript: rzucam 1 swarmballa');
+                        console.log('%cPokeLifeScript: rzucam 1 swarmballa', 'color: #cb404b');
                         $("form[action='dzicz.php?zlap_pokemona=swarmballe&miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + "']").submit();
                     } else {
-                        console.log('PokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".");
+                        console.log('%cPokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".", 'color: #cb404b');
                         $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
                     }
                 } else {
@@ -1642,7 +1642,7 @@ function initPokeLifeScript() {
         }
 
         function atakujPokemona(){
-            console.log('PokeLifeScript: atakuje pokemona');
+            console.log('%cPokeLifeScript: atakuje pokemona', 'color: #cb404b');
             var url = "dzicz.php?miejsce=" + AutoGoSettings.iconLocation.getSelectedValue().call() + AutoGoSettings.iconPokemon.getSelectedValue().call();
             if ($('button[href="' + url + '"]').length == 0) {
                 autoGo = false;
@@ -2677,37 +2677,37 @@ function initPokeLifeScript() {
                 updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-danger:first').html().split("</b> +")[1].split(' PD')[0]);
                 updateStatsDoswiadczenie('{"' + DATA.find('.panel-body b b').html() + '":"' + DATA.find('p.alert-danger:first').html().split("</b> +")[1].split(' PD')[0] + '"}');
                 updateEvent("Przegrana walka z <b>" + aktualnyPokemonDzicz + "</b>. Musisz uciekać. ", 6, dzicz);
-            } else if (DATA.find(".panel-body > p.alert-success").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
-                console.log('PokeLifeScript: event w dziczy');
-                if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html() != undefined && DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html().indexOf("Jagód") != -1) {
-                    if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b').html() == "Czerwonych Jagód") {
-                        updateStats("zebrane_czerwone_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
-                    } else if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b').html() == "Niebieskich Jagód") {
-                        updateStats("zebrane_niebieskie_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
-                    } else if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b').html() == "Fioletowych Jagód") {
-                        updateStats("zebrane_fioletowe_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
-                    } else if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b').html() == "Żółtych Jagód") {
-                        updateStats("zebrane_zolte_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
-                    } else if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b').html() == "Białych Jagód") {
-                        updateStats("zebrane_biale_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
-                    } else if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html() == "Czerwonych Jagód") {
-                        updateStats("zebrane_czerwone_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(0)').html());
-                    } else if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html() == "Niebieskich Jagód") {
-                        updateStats("zebrane_niebieskie_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(0)').html());
-                    } else if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html() == "Fioletowych Jagód") {
-                        updateStats("zebrane_fioletowe_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(0)').html());
-                    } else if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html() == "Żółtych Jagód") {
-                        updateStats("zebrane_zolte_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(0)').html());
-                    } else if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html() == "Białych Jagód") {
-                        updateStats("zebrane_biale_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(0)').html());
-                    } else if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html().indexOf("Jagód") != -1) {
-                        updateStats("zebrane_inne_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(0)').html());
+            } else if (DATA.find('p.alert-success:not(:contains("Dzięki mocy odznaki pioruna")):not(:contains("Moc odznaki odrzutowca sprawia"))').length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
+                var TEXT = 'p.alert-success:not(:contains("Dzięki mocy odznaki pioruna")):not(:contains("Moc odznaki odrzutowca sprawia"))';
+                if (DATA.find(TEXT).html().indexOf("Jagód") != -1) {
+                    if (DATA.find(TEXT + ':first b').html() == "Czerwonych Jagód") {
+                        updateStats("zebrane_czerwone_jagody", DATA.find(TEXT + ':first b:nth(1)').html());
+                    } else if (DATA.find(TEXT + ':first b').html() == "Niebieskich Jagód") {
+                        updateStats("zebrane_niebieskie_jagody", DATA.find(TEXT + ':first b:nth(1)').html());
+                    } else if (DATA.find(TEXT + ':first b').html() == "Fioletowych Jagód") {
+                        updateStats("zebrane_fioletowe_jagody", DATA.find(TEXT + ':first b:nth(1)').html());
+                    } else if (DATA.find(TEXT + ':first b').html() == "Żółtych Jagód") {
+                        updateStats("zebrane_zolte_jagody", DATA.find(TEXT + ':first b:nth(1)').html());
+                    } else if (DATA.find(TEXT + ':first b').html() == "Białych Jagód") {
+                        updateStats("zebrane_biale_jagody", DATA.find(TEXT + ':first b:nth(1)').html());
+                    } else if (DATA.find(TEXT + ':first b:nth(1)').html() == "Czerwonych Jagód") {
+                        updateStats("zebrane_czerwone_jagody", DATA.find(TEXT + ':first b:nth(0)').html());
+                    } else if (DATA.find(TEXT + ':first b:nth(1)').html() == "Niebieskich Jagód") {
+                        updateStats("zebrane_niebieskie_jagody", DATA.find(TEXT + ':first b:nth(0)').html());
+                    } else if (DATA.find(TEXT + ':first b:nth(1)').html() == "Fioletowych Jagód") {
+                        updateStats("zebrane_fioletowe_jagody", DATA.find(TEXT + ':first b:nth(0)').html());
+                    } else if (DATA.find(TEXT + ':first b:nth(1)').html() == "Żółtych Jagód") {
+                        updateStats("zebrane_zolte_jagody", DATA.find(TEXT + ':first b:nth(0)').html());
+                    } else if (DATA.find(TEXT + ':first b:nth(1)').html() == "Białych Jagód") {
+                        updateStats("zebrane_biale_jagody", DATA.find(TEXT + ':first b:nth(0)').html());
+                    } else if (DATA.find(TEXT + ':first b:nth(1)').html().indexOf("Jagód") != -1) {
+                        updateStats("zebrane_inne_jagody", DATA.find(TEXT + ':first b:nth(0)').html());
                     } else {
-                        updateStats("zebrane_inne_jagody", DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b:nth(1)').html());
+                        updateStats("zebrane_inne_jagody", DATA.find(TEXT + ':first b:nth(1)').html());
                     }
-                    updateEvent(DATA.find('.panel-body > p.alert-success').html(), 9, dzicz);
+                    updateEvent(DATA.find(TEXT).html(), 9, dzicz);
                 } else if (DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
-                    updateEvent(DATA.find('.panel-body > p.alert-success').html(), 10, dzicz);
+                    updateEvent(DATA.find(TEXT).html(), 10, dzicz);
                 }
             } else if (DATA.find(".panel-body > p.alert-info").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
                 console.log('PokeLifeScript: event w dziczy');
