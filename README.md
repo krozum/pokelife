@@ -28,6 +28,8 @@ Changelog
 ---------
 5.20 (2020-06-09)
 * Przerobienie zakładki Dzicz na widoku Statystyk
+* Poprawka na poprawne zliczanie niektórych eventów gdy wystąpiła Moc odznaki
+* Został usunięty licznik klików w tytule strony
 
 5.19.6 (2020-06-09)
 * Poprawka do przywracania PA za pomocą fontanny, nie zawsze zapisywało że danego dnia juz była użyta
