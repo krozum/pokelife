@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.19.5
+// @version      5.19.6
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -176,26 +176,26 @@ function updateStatsDoswiadczenie(json) {
 }
 
 function addClickToMetrics(){
-    //     var d = new Date();
-    //     var s = d.getSeconds();
-    //     if(clicksPer10Seconds[s] !== undefined){
-    //         clicksPer10Seconds[s] = clicksPer10Seconds[s] + 1;
-    //     } else {
-    //         clicksPer10Seconds[s] = 1;
-    //     }
-    //     var total = 0;
-    //     var temp = s;
-    //     var i;
-    //     for (i = 0; i < 10; i++) {
-    //         temp = s - i;
-    //         if(temp < 0){
-    //             temp = 60 - (i - s);
-    //         }
-    //         if(clicksPer10Seconds[temp] !== undefined){
-    //             total = Number(total) + Number(clicksPer10Seconds[temp]);
-    //         }
-    //     }
-    //     console.log(total + " c/10s");
+        var d = new Date();
+        var s = d.getSeconds();
+        if(clicksPer10Seconds[s] !== undefined){
+            clicksPer10Seconds[s] = clicksPer10Seconds[s] + 1;
+        } else {
+            clicksPer10Seconds[s] = 1;
+        }
+        var total = 0;
+        var temp = s;
+        var i;
+        for (i = 0; i < 10; i++) {
+            temp = s - i;
+            if(temp < 0){
+                temp = 60 - (i - s);
+            }
+            if(clicksPer10Seconds[temp] !== undefined){
+                total = Number(total) + Number(clicksPer10Seconds[temp]);
+            }
+        }
+        console.log(total + " c/10s");
 }
 
 
@@ -1979,6 +1979,7 @@ function initPokeLifeScript() {
                                                 var d = new Date();
                                                 var today = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
                                                 config.fontannaLastUsedDate = today;
+                                                updateConfig(config);
                                                 $('#goAutoButton').html('STOP');
                                                 console.log('Przywrócono PA');
                                                 window.setTimeout(function() {
