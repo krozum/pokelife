@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.19.5 (2020-06-09)
+* Dodanie dodatkowych zabezpieczeń dla danych na stronie: max 10 kont na jednym IP. W razie gdyby ktoś dotarł do limitu i potrzebował więcej slotów można zgłaszać to na github
+
 5.19.4 (2020-06-09)
 * Poprawka dla shiny alertów, zmienił sie sposób wyswietlania obrazków przez co alerty przestały działać
 
