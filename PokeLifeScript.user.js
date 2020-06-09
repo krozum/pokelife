@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.19.6
+// @version      5.20
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -69,8 +69,8 @@ var zarobek;
 var lastSeeShoutId;
 var timeoutMin = 300;
 var timeoutMax = 400;
+var lastClickedDzicz = "";
 var styles = [];
-var clicksPer10Seconds = new Object();
 var domain = "https://bra2ns.pl/"
 
 
@@ -164,38 +164,15 @@ function updateEvent(text, eventTypeId, dzicz) {
 }
 
 function updateStats(name, value) {
-    requestDomain("pokelife/api/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name=" + name + "&value=" + value + "&time=" + Date.now(), function(response) {
+    requestDomain("pokelife/api/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name=" + name + "&value=" + value + "&time=" + Date.now() + "&dzicz=" + lastClickedDzicz, function(response) {
         console.log("UpdateStats: " + name + " => " + value);
     })
 }
 
 function updateStatsDoswiadczenie(json) {
-    requestDomain("pokelife/api/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json=" + json + "&time=" + Date.now(), function(response) {
+    requestDomain("pokelife/api/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json=" + json + "&time=" + Date.now() + "&dzicz=" + lastClickedDzicz, function(response) {
         console.log("updateStatsDoswiadczenie: " + json);
     })
-}
-
-function addClickToMetrics(){
-        var d = new Date();
-        var s = d.getSeconds();
-        if(clicksPer10Seconds[s] !== undefined){
-            clicksPer10Seconds[s] = clicksPer10Seconds[s] + 1;
-        } else {
-            clicksPer10Seconds[s] = 1;
-        }
-        var total = 0;
-        var temp = s;
-        var i;
-        for (i = 0; i < 10; i++) {
-            temp = s - i;
-            if(temp < 0){
-                temp = 60 - (i - s);
-            }
-            if(clicksPer10Seconds[temp] !== undefined){
-                total = Number(total) + Number(clicksPer10Seconds[temp]);
-            }
-        }
-        console.log(total + " c/10s");
 }
 
 
@@ -1496,12 +1473,7 @@ function initPokeLifeScript() {
         }
         initLocationIcon();
 
-        var counter = 0;
         function click(poLeczeniu) {
-            addClickToMetrics();
-
-            counter++;
-            document.title = "PokeLife - " + counter + " - Gra Pokemon Online";
 
             var miejsce;
 
@@ -2621,7 +2593,9 @@ function initPokeLifeScript() {
             var dzicz = null;
             if (url != null && url.indexOf('miejsce=') != -1) {
                 dzicz = url.split('miejsce=')[1].split('&')[0];
+                lastClickedDzicz = dzicz;
             }
+
             var DATA = this;
 
             if (url == "gra/aktywnosc.php?p=praca&przerwij") {
@@ -2703,7 +2677,7 @@ function initPokeLifeScript() {
                 updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-danger:first').html().split("</b> +")[1].split(' PD')[0]);
                 updateStatsDoswiadczenie('{"' + DATA.find('.panel-body b b').html() + '":"' + DATA.find('p.alert-danger:first').html().split("</b> +")[1].split(' PD')[0] + '"}');
                 updateEvent("Przegrana walka z <b>" + aktualnyPokemonDzicz + "</b>. Musisz uciekać. ", 6, dzicz);
-            } else if (DATA.find(".panel-body > p.alert-success").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
+            } else if (DATA.find(".panel-body > p.alert-success:not(:contains('Moc odznaki odrzutowca sprawia'))").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
                 console.log('PokeLifeScript: event w dziczy');
                 if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html() != undefined && DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first').html().indexOf("Jagód") != -1) {
                     if (DATA.find('p.alert-success:not(:contains("Moc odznaki odrzutowca sprawia")):first b').html() == "Czerwonych Jagód") {
@@ -2741,6 +2715,9 @@ function initPokeLifeScript() {
             } else if (DATA.find(".panel-body > p.alert-warning").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
                 console.log('PokeLifeScript: event w dziczy');
                 updateEvent(DATA.find('.panel-body > p.alert-warning').html(), 10, dzicz);
+            } else if (DATA.find(".panel-body > p.alert-danger:not(:contains('Posiadasz za mało punktów akcji'))").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
+                console.log('PokeLifeScript: event w dziczy');
+                updateEvent(DATA.find('.panel-body > p.alert-danger').html(), 10, dzicz);
             }
         })
     }
