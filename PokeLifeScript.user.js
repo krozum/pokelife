@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.20.2
+// @version      5.20.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -299,8 +299,13 @@ $(document).on( "click", ".pokazpoka", function(event) {
     if (typeof zmienna4 !== typeof undefined && zmienna4 !== false) {
         rank = zmienna4;
     }
+    var legendy = 0;
+	var zmienna5 = $(this).attr('data-legendarne-polowanie');
+	if (typeof zmienna5 !== typeof undefined && zmienna5 !== false) {
+		legendy = zmienna5;
+	}
 
-    reloadMain("#podgladPoka_content", 'gra/pokemon_skr.php?nopanel&p='+$(this).attr('data-id-pokemona')+'&ignoruj_ukrycie='+ukrycie+'&ograniczenia_hali='+hala+'&pokemon_hala='+hala2+'&treningi_rank='+rank);
+    reloadMain("#podgladPoka_content", 'gra/pokemon_skr.php?nopanel&p='+$(this).attr('data-id-pokemona')+'&ignoruj_ukrycie='+ukrycie+'&ograniczenia_hali='+hala+'&pokemon_hala='+hala2+'&treningi_rank='+rank+'&legendarne_polowanie='+legendy);
 });
 
 
