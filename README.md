@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.20.3 (2020-06-10)
+* Poprawka na podgląd poków w legendarnych polowaniach
+
 5.20.2 (2020-06-09)
 * Seria poprawek do eventów i brakujących jagód
 
