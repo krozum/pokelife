@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.20.3
+// @version      5.20.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -10,10 +10,11 @@
 // @grant        GM_notification
 // @require      https://bug7a.github.io/iconselect.js/sample/lib/iscroll.js
 // @require      https://bug7a.github.io/iconselect.js/sample/lib/control/iconselect.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/jquery-sparklines/2.1.2/jquery.sparkline.min.js
 // @require      https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.5.0/js/md5.min.js
 // @resource     color_picker_CSS  https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css
-// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=8
+// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=9
 // @resource     customCSS_style  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_0.css?ver=2
 // ==/UserScript==
 
@@ -71,6 +72,8 @@ var timeoutMin = 300;
 var timeoutMax = 400;
 var lastClickedDzicz = "";
 var styles = [];
+var clicksPer10SecondsArray = [0,0,0,0,0,0,0,0,0,0];
+var clicksPer10Seconds = new Object();
 var domain = "https://bra2ns.pl/"
 
 
@@ -173,6 +176,35 @@ function updateStatsDoswiadczenie(json) {
     requestDomain("pokelife/api/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json=" + json + "&time=" + Date.now() + "&dzicz=" + lastClickedDzicz, function(response) {
         console.log("%cUpdateStatsDoswiadczenie: " + json, "color: #b7a5c1");
     })
+}
+
+function addClickToMetrics(){
+    var d = new Date();
+    var s = d.getSeconds();
+    var newClicksPer10Seconds = new Object();
+    if(clicksPer10Seconds[s] !== undefined){
+        clicksPer10Seconds[s] = clicksPer10Seconds[s] + 1;
+    } else {
+        clicksPer10Seconds[s] = 1;
+    }
+    var total = 0;
+    var temp = s;
+    var i;
+    for (i = 0; i < 10; i++) {
+        temp = s - i;
+        if(temp < 0){
+            temp = 60 - (i - s);
+        }
+        if(clicksPer10Seconds[temp] !== undefined){
+            total = Number(total) + Number(clicksPer10Seconds[temp]);
+            newClicksPer10Seconds[temp] = clicksPer10Seconds[temp];
+        }
+    }
+    clicksPer10SecondsArray.push(""+total);
+    if(clicksPer10SecondsArray.length > 10){
+        clicksPer10SecondsArray.shift();
+    }
+    clicksPer10Seconds = newClicksPer10Seconds;
 }
 
 
@@ -300,10 +332,10 @@ $(document).on( "click", ".pokazpoka", function(event) {
         rank = zmienna4;
     }
     var legendy = 0;
-	var zmienna5 = $(this).attr('data-legendarne-polowanie');
-	if (typeof zmienna5 !== typeof undefined && zmienna5 !== false) {
-		legendy = zmienna5;
-	}
+    var zmienna5 = $(this).attr('data-legendarne-polowanie');
+    if (typeof zmienna5 !== typeof undefined && zmienna5 !== false) {
+        legendy = zmienna5;
+    }
 
     reloadMain("#podgladPoka_content", 'gra/pokemon_skr.php?nopanel&p='+$(this).attr('data-id-pokemona')+'&ignoruj_ukrycie='+ukrycie+'&ograniczenia_hali='+hala+'&pokemon_hala='+hala2+'&treningi_rank='+rank+'&legendarne_polowanie='+legendy);
 });
@@ -357,6 +389,7 @@ $(document).on("click", ".btn-akcja", function(event) {
     if (event.originalEvent !== undefined && autoGo == true) {
         autoGo = false;
         $('#goAutoButton').html('AutoGO');
+        $('.dynamicsparkline').hide()
         $("#goStopReason").html("Kliknięto w menu").show();
         document.title = "Kliknięto w menu";
     }
@@ -752,8 +785,26 @@ function initPokeLifeScript() {
             $('body').append('<div id="goButton" style="opacity: 0.3;border-radius: 4px;position: fixed; cursor: pointer; top: 5px; right: 10px; font-size: 36px; text-align: center; width: 100px; height: 48px; line-height: 48px; background: ' + $('.panel-heading').css('background-color') + '; z-index: 9999">GO</div>');
             $('body').append('<div id="goAutoButton" style="border-radius: 4px;position: fixed; cursor: pointer; top: 5px; right: 122px; font-size: 36px; text-align: center; width: 140px; height: 48px; line-height: 48px; background: ' + $('.panel-heading').css('background-color') + '; z-index: 9999">AutoGO</div>');
             $('body').append('<div id="goStopReason" style="position: fixed; cursor: pointer; top: 12px; right: 271px; z-index: 99999; background: rgb(231, 201, 216); padding: 7px; border: 1px solid rgb(225, 187, 206); border-radius: 3px; display: none;"></div>');
+            $('body').append('<div class="dynamicsparkline" style="position: fixed; bottom: 0px; right: 100px; display: none; width: 100px; height: 50px; z-index: 99999; opacity: 0.3; text-align: right"></div>');
         }
         initGoButton();
+
+        function initCanvas() {
+            var range_map = $.range_map({
+                '1:': 'red',
+                '17:': 'green'
+            })
+
+            $('.dynamicsparkline').sparkline(clicksPer10SecondsArray, {
+                width: '100%',
+                height: '50px',
+                type: 'bar',
+                chartRangeMin: 0,
+                chartRangeMax: 30,
+                colorMap: range_map
+            });
+        }
+        initCanvas();
 
         function initPokemonIcon() {
             $('#setPokemon').remove();
@@ -1479,6 +1530,8 @@ function initPokeLifeScript() {
         initLocationIcon();
 
         function click(poLeczeniu) {
+            addClickToMetrics();
+            initCanvas();
 
             var miejsce;
 
@@ -1558,6 +1611,7 @@ function initPokeLifeScript() {
                         console.log('%cPokeLifeScript: Dzienne Przeliczenie, przerwanie AutoGo', 'color: #cb404b');
                         autoGo = false;
                         $('#goAutoButton').html('AutoGO');
+                        $('.dynamicsparkline').hide()
                         $("#goStopReason").html("Dzienne Przeliczenie").show();
                         document.title = "Dzienne Przeliczenie";
                     } else if ($('#glowne_okno').find(".panel-heading:contains('Łapanie Jajka')").length > 0) {
@@ -1639,6 +1693,7 @@ function initPokeLifeScript() {
             console.log('PokeLifeScript: ' + reason + ', przerwanie AutoGo');
             autoGo = false;
             $('#goAutoButton').html('AutoGO');
+            $('.dynamicsparkline').hide()
             $("#goStopReason").html(reason).show();
             document.title = reason;
             if(makeVoice == true || makeVoice == "true"){
@@ -1652,6 +1707,7 @@ function initPokeLifeScript() {
             if ($('button[href="' + url + '"]').length == 0) {
                 autoGo = false;
                 $('#goAutoButton').html('AutoGO');
+                $('.dynamicsparkline').hide()
                 $("#goStopReason").html("Dzicz została zmieniona").show();
                 document.title = "Dzicz została zmieniona";
             } else {
@@ -1693,11 +1749,13 @@ function initPokeLifeScript() {
                 autoGo = false;
                 autoGoWznawianie = false;
                 $('#goAutoButton').html('AutoGO');
+                $('.dynamicsparkline').hide();
             } else {
-                counter = 0;
                 autoGo = true;
                 autoGoWznawianie = false;
                 $('#goAutoButton').html('STOP');
+                clicksPer10SecondsArray = [0,0,0,0,0,0,0,0,0,0];
+                $('.dynamicsparkline').show();
                 click();
             }
         });
@@ -2014,6 +2072,7 @@ function initPokeLifeScript() {
                     autoGoWznawianie = false;
                     autoGo = false;
                     $('#goAutoButton').html('AutoGO');
+                    $('.dynamicsparkline').hide()
                     $("#goStopReason").html("Brak PA").show();
                     document.title = "Brak PA";
                 }
@@ -2021,6 +2080,7 @@ function initPokeLifeScript() {
                 autoGoWznawianie = false;
                 autoGo = false;
                 $('#goAutoButton').html('AutoGO');
+                $('.dynamicsparkline').hide()
             }
         }
 
@@ -2068,6 +2128,7 @@ function initPokeLifeScript() {
                         autoGoWznawianie = false;
                         autoGo = false;
                         $('#goAutoButton').html('AutoGO');
+                        $('.dynamicsparkline').hide()
                         $("#goStopReason").html("Brak PA").show();
                         document.title = "Brak PA";
                     }
@@ -2080,6 +2141,7 @@ function initPokeLifeScript() {
                 autoGoWznawianie = false;
                 autoGo = false;
                 $('#goAutoButton').html('AutoGO');
+                $('.dynamicsparkline').hide()
             }
         }
 
@@ -2712,6 +2774,9 @@ function initPokeLifeScript() {
                     }
                     updateEvent(DATA.find(TEXT).html(), 9, dzicz);
                 } else if (DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
+                    if (DATA.find(TEXT).html().indexOf("To Diamentowy Pył! Po przyniesieniu go do miasta, sprzedajesz go za") != -1) {
+                        updateStats("zarobek_z_eventow", DATA.find(TEXT + " b").html().split(' ')[0].replace(/\./g, ''));
+                    }
                     updateEvent(DATA.find(TEXT).html(), 10, dzicz);
                 }
             } else if (DATA.find(".panel-body > p.alert-info").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
@@ -3752,7 +3817,8 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         onReloadMain(function() {
             if(this.find('.panel-heading').text().trim() === "Osiągnięcia") {
                 this.find('.nav-tabs').parent().prepend('<input id="wyszukajOsiagniecie" style="margin-bottom: 20px;display: inline; width: 100%;" type="text" class="form-control" placeholder="Wyszukaj osiągnięcie...">');
-                this.find('span[href="osiagniecia.php?rozwin"]').remove();
+                this.find('#wyszukajOsiagniecie').after('<p style=" margin-bottom: 15px; font-size: 13px; "><span class="glyphicon glyphicon-plus"></span> Dodaj widget do sidebaru<span class="glyphicon glyphicon-heart" style="margin-left: 10px;"></span> Dodaj do ulubionych<span class="glyphicon glyphicon-inbox" style="margin-left: 10px;"></span> Przedmiot jako nagroda za zdobycie poziomu<span class="glyphicon glyphicon-remove-circle" style="margin-left: 10px;"></span> Nie wlicza się do wszechstronnego</p>');
+                this.find('span[href="osiagniecia.php?rozwin"]').css('margin-right', '5px');
                 html = this.html();
                 changeHTML(this);
             }
@@ -3796,7 +3862,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
                 THAT.find(value).parent().appendTo(THAT.find('#osiagniecia-ulubione .panel-group'));
             });
 
-            THAT.find('.panel-collapse').css('display', 'contents');
+            THAT.find('#osiagniecia-ulubione .panel-group .panel-collapse').css('display', 'contents');
         }
 
         $(document).off('click', '.dodajDoUlubionych');
