@@ -26,6 +26,11 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.20.4 (2020-06-11)
+* Dodanie legendy na widoku osiągnięć
+* Dodanie zliczania zarobku z eventów w dziczy (na razie tylko pył w pustyni lodowej)
+* Dodanie wykresu szybkości klikania AutoGo w prawym dolnym rogu. Średnią wartością jest około 17 kliknięć na 10s. Wszystko powyżej jest na zielono zaznaczane, wszystko poniżej na czerwono
+
 5.20.3 (2020-06-10)
 * Poprawka na podgląd poków w legendarnych polowaniach
 
