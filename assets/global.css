@@ -267,3 +267,7 @@ a {
     font-family: Georgia, "Times New Roman", Times, serif;
     font-weight: bold;
 }
+.jqstooltip {
+    background: none !important;
+    border: none !important;
+}
