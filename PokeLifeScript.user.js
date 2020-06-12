@@ -1614,6 +1614,13 @@ function initPokeLifeScript() {
                         $('.dynamicsparkline').hide()
                         $("#goStopReason").html("Dzienne Przeliczenie").show();
                         document.title = "Dzienne Przeliczenie";
+                    } else if ($('#glowne_okno').find(".alert-danger:contains('Nie możesz wyruszać w inne miejsca przebywając')").length > 0) {
+                        console.log('%cPokeLifeScript: Jesteś w dziczy weekendowej, przerwanie AutoGo', 'color: #cb404b');
+                        autoGo = false;
+                        $('#goAutoButton').html('AutoGO');
+                        $('.dynamicsparkline').hide()
+                        $("#goStopReason").html("Jesteś w dziczy weekendowej").show();
+                        document.title = "Jesteś w dziczy weekendowej";
                     } else if ($('#glowne_okno').find(".panel-heading:contains('Łapanie Jajka')").length > 0) {
                         console.log('%cPokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".", 'color: #cb404b');
                         $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
@@ -3997,7 +4004,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         onReloadMain(function(url) {
             if(config.tropicielWSidebar !== "" && tropiciel.tropiciel_ilosc_wypraw !== null){
                 var to_check = "gra/dzicz.php?poluj&miejsce=" + tropiciel.dzicz;
-                if((url == to_check) && (this.find('div:contains("Posiadasz za mało punktów akcji")').length == 0) && (this.find('p:contains("Nie możesz podróżować po dziczy, ponieważ wszystkie twoje pokemony są ran")').length == 0)) {
+                if((url == to_check) && (this.find('div:contains("Posiadasz za mało punktów akcji")').length == 0) && (this.find('p:contains("Nie możesz podróżować po dziczy, ponieważ wszystkie twoje pokemony są ran")').length == 0) && (this.find('p:contains("Nie możesz wyruszać w inne miejsca przebywając")').length == 0)) {
                     tropiciel.tropiciel_ilosc_wypraw++;
                     refreshTropicielDziczWidget();
                 }
