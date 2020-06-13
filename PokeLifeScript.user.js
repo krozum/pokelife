@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.20.6
+// @version      5.20.7
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -75,6 +75,8 @@ var styles = [];
 var clicksPer10SecondsArray = [0,0,0,0,0,0,0,0,0,0];
 var clicksPer10Seconds = new Object();
 var domain = "https://bra2ns.pl/"
+
+var borderStyle = 'border: 2px solid #000000; border-radius: 3px; box-shadow: 0px 0px 7px #000000b0;'
 
 
 
@@ -905,9 +907,9 @@ function initPokeLifeScript() {
                 if ($('#settingsPokeball').length > 0) {
                     $('#settingsPokeball').remove();
                 } else {
-                    $('body').append('<div id="settingsPokeball" style="padding: 10px; position:fixed;top: 60px;left: 0px;width: 900px;background: white;opacity: 1;border: 7px solid #272727;z-index: 999;"></div>');
+                    $('body').append('<div id="settingsPokeball" style="padding: 10px; position:fixed;top: 60px;left: 0px;width: 500px;background: white;opacity: 1;border: 7px solid #272727;z-index: 999; '+borderStyle+'"></div>');
                     $('#settingsPokeball').html(`
-<div class="panel-body">
+<div class="panel-body" style="padding: 0">
 <ul class="nav nav-tabs">
 <li role="presentation" class="active"><a href="#dzien" aria-controls="dzien" role="tab" data-toggle="tab">Dzień</a></li>
 <li role="presentation"><a href="#noc" aria-controls="noc" role="tab" data-toggle="tab">Noc</a></li>
@@ -916,125 +918,125 @@ function initPokeLifeScript() {
 <div class="tab-content">
 <div role="tabpanel" class="tab-pane  in active" id="dzien">
 <div class="row" style="height: 50px; margin-bottom: 15px">
-<div class="col-xs-3" style=" height: 100%; "></div>
-<div class="col-xs-2">
-<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">1-3</p>
+<div class="col-xs-2" style="width: 20%; height: 100%; "></div>
+<div class="col-xs-2" style="width: 20%;">
+<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 3px;border-radius: 7px;width: 100%; text-align: center;">1-3</p>
 </div>
-<div class="col-xs-2">
-<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">4-15</p>
+<div class="col-xs-2" style="width: 20%;">
+<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 3px;border-radius: 7px;width: 100%; text-align: center;">4-15</p>
 </div>
-<div class="col-xs-2">
-<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">16-`+(config.maxLapanyLvl-1)+`</p>
+<div class="col-xs-2" style="width: 20%;">
+<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 3px;border-radius: 7px;width: 100%; text-align: center;">16-`+(config.maxLapanyLvl-1)+`</p>
 </div>
-<div class="col-xs-2">
-<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">`+config.maxLapanyLvl+`</p>
+<div class="col-xs-2" style="width: 20%;">
+<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 3px;border-radius: 7px;width: 100%; text-align: center;">`+config.maxLapanyLvl+`</p>
 </div>
 </div>
 <div class="row" style="height: 50px; margin-bottom: 15px">
-<div class="col-xs-3" style=" height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #eaeaea;padding: 15px;border-radius: 7px;">Trudność I</p> </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%; height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #bfde9c;padding: 15px;border-radius: 7px; text-align: center;">I</p> </div>
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien11">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien12">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien14">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien13">
 </div>
 </div>
 </div>
 <div class="row" style="height: 50px; margin-bottom: 15px">
-<div class="col-xs-3" style=" height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #eaeaea;padding: 15px;border-radius: 7px;">Trudność II</p> </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%; height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #fff386;padding: 15px;border-radius: 7px; text-align: center;">II</p> </div>
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien21">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien22">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien24">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien23">
 </div>
 </div>
 </div>
 <div class="row" style="height: 50px; margin-bottom: 15px">
-<div class="col-xs-3" style=" height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #eaeaea;padding: 15px;border-radius: 7px;">Trudność III</p> </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%; height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #ffc107;padding: 15px;border-radius: 7px; text-align: center;">III</p> </div>
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien31">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien32">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien34">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien33">
 </div>
 </div>
 </div>
 <div class="row" style="height: 50px; margin-bottom: 15px">
-<div class="col-xs-3" style=" height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #eaeaea;padding: 15px;border-radius: 7px;">Trudność IV</p> </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%; height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #ff9800;padding: 15px;border-radius: 7px; text-align: center;">IV</p> </div>
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien41">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien42">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien44">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien43">
 </div>
 </div>
 </div>
 <div class="row" style="height: 50px; margin-bottom: 15px">
-<div class="col-xs-3" style=" height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #eaeaea;padding: 15px;border-radius: 7px;">Trudność V</p> </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%; height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #da7e77;padding: 15px;border-radius: 7px; text-align: center;">V</p> </div>
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien51">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien52">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien54">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="dzien" id="pokeballConfigIdDzien53">
 </div>
 </div>
 </div>
 
 <div class="row">
-<div class="col-xs-10">
+<div class="col-xs-9">
 </div>
-<div class="col-xs-2">
+<div class="col-xs-3" style="text-align: right">
 <button data-type="dzien" class="zapiszconfigi btn btn-success">Zapisz</button>
 </div>
 </div>
 
-<div class="row" style="margin-top: 20px">
+<div class="row">
 <div class="col-xs-1">
 </div>
 <div class="col-xs-10">
@@ -1047,125 +1049,125 @@ function initPokeLifeScript() {
 <div role="tabpanel" class="tab-pane fade" id="noc">
 
 <div class="row" style="height: 50px; margin-bottom: 15px">
-<div class="col-xs-3" style=" height: 100%; "></div>
-<div class="col-xs-2">
-<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">1-3</p>
+<div class="col-xs-2" style="width: 20%; height: 100%; "></div>
+<div class="col-xs-2" style="width: 20%;">
+<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 3px;border-radius: 7px; width: 100%; text-align: center;">1-3</p>
 </div>
-<div class="col-xs-2">
-<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">4-15</p>
+<div class="col-xs-2" style="width: 20%;">
+<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 3px;border-radius: 7px; width: 100%; text-align: center;">4-15</p>
 </div>
-<div class="col-xs-2">
-<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">16-`+(config.maxLapanyLvl-1)+`</p>
+<div class="col-xs-2" style="width: 20%;">
+<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 3px;border-radius: 7px; width: 100%; text-align: center;">16-`+(config.maxLapanyLvl-1)+`</p>
 </div>
-<div class="col-xs-2">
-<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 15px;border-radius: 7px;">`+config.maxLapanyLvl+`</p>
+<div class="col-xs-2" style="width: 20%;">
+<p style="margin: 0;font-size: 17px;display: inline-block;background: #eaeaea;padding: 3px;border-radius: 7px; width: 100%; text-align: center;">`+config.maxLapanyLvl+`</p>
 </div>
 </div>
 <div class="row" style="height: 50px; margin-bottom: 15px">
-<div class="col-xs-3" style=" height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #eaeaea;padding: 15px;border-radius: 7px;">Trudność I</p> </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%; height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #bfde9c;padding: 15px;border-radius: 7px;text-align: center;">I</p> </div>
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc11">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc12">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc14">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc13">
 </div>
 </div>
 </div>
 <div class="row" style="height: 50px; margin-bottom: 15px">
-<div class="col-xs-3" style=" height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #eaeaea;padding: 15px;border-radius: 7px;">Trudność II</p> </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%; height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #fff386;padding: 15px;border-radius: 7px;text-align: center;">II</p> </div>
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc21">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc22">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc24">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc23">
 </div>
 </div>
 </div>
 <div class="row" style="height: 50px; margin-bottom: 15px">
-<div class="col-xs-3" style=" height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #eaeaea;padding: 15px;border-radius: 7px;">Trudność III</p> </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%; height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #ffc107;padding: 15px;border-radius: 7px;text-align: center;">III</p> </div>
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc31">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc32">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc34">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc33">
 </div>
 </div>
 </div>
 <div class="row" style="height: 50px; margin-bottom: 15px">
-<div class="col-xs-3" style=" height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #eaeaea;padding: 15px;border-radius: 7px;">Trudność IV</p> </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%; height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #ff9800;padding: 15px;border-radius: 7px;text-align: center;">IV</p> </div>
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc41">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc42">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc44">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc43">
 </div>
 </div>
 </div>
 <div class="row" style="height: 50px; margin-bottom: 15px">
-<div class="col-xs-3" style=" height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #eaeaea;padding: 15px;border-radius: 7px;">Trudność V</p> </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%; height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #da7e77;padding: 15px;border-radius: 7px;text-align: center;">V</p> </div>
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc51">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc52">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc54">
 </div>
 </div>
-<div class="col-xs-2">
+<div class="col-xs-2" style="width: 20%;">
 <div class="changePokeball" data-type="noc" id="pokeballConfigIdNoc53">
 </div>
 </div>
 </div>
 
 <div class="row">
-<div class="col-xs-10">
+<div class="col-xs-9">
 </div>
-<div class="col-xs-2">
+<div class="col-xs-3" style="text-align: right">
 <button data-type="noc" class="zapiszconfigi btn btn-success">Zapisz</button>
 </div>
 </div>
 
-<div class="row" style="margin-top: 20px">
+<div class="row">
 <div class="col-xs-1">
 </div>
 <div class="col-xs-10">
@@ -1799,6 +1801,9 @@ function initPokeLifeScript() {
         })
 
 
+        var d = new Date();
+        var today = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
+
         function probujWznowicAutoGo(array, autoGoBefore) {
             if (autoGoBefore) {
                 if (array.length > 0) {
@@ -1844,6 +1849,7 @@ function initPokeLifeScript() {
                                             }
                                         } else {
                                             console.log('Wykorzystałeś limit niebieskich jagód na dzisiaj');
+                                            window.localStorage.useNiebieskieJagody = today;
                                             window.setTimeout(function() {
                                                 if (autoGo) {
                                                     probujWznowicAutoGo(array, autoGoBefore);
@@ -1876,6 +1882,7 @@ function initPokeLifeScript() {
                                             }, 1000);
                                         } else {
                                             console.log('Wykorzystałeś limit eventowych napojów na dzisiaj');
+                                            window.localStorage.useEventoweNapoje = today;
                                             window.setTimeout(function() {
                                                 if (autoGo) {
                                                     probujWznowicAutoGo(array, autoGoBefore);
@@ -1937,6 +1944,7 @@ function initPokeLifeScript() {
                                             }
                                         } else {
                                             console.log('Wykorzystałeś limit napojów na dzisiaj');
+                                            window.localStorage.useZieloneNapoje = today;
                                             window.setTimeout(function() {
                                                 if (autoGo) {
                                                     probujWznowicAutoGo(array, autoGoBefore);
@@ -2000,6 +2008,7 @@ function initPokeLifeScript() {
                                             }
                                         } else {
                                             console.log('Wykorzystałeś limit napojów na dzisiaj');
+                                            window.localStorage.useNiebieskieNapoje = today;
                                             window.setTimeout(function() {
                                                 if (autoGo) {
                                                     probujWznowicAutoGo(array, autoGoBefore);
@@ -2098,6 +2107,7 @@ function initPokeLifeScript() {
 
         function przerwijAutoGoZPowoduBrakuPA(wznawiaj) {
             var d = new Date();
+            var today = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
             var autoGoBefore = autoGo;
             autoGoWznawianie = true;
             console.log('PokeLifeScript: brak PA, próbuje wznowić');
@@ -2108,22 +2118,29 @@ function initPokeLifeScript() {
                     array.push("useCzerwoneNapoje");
                 }
                 if (config.useZieloneNapoje == "true" || config.useZieloneNapoje == true) {
-                    array.push("useZieloneNapoje");
+                    if(window.localStorage.useZieloneNapoje == undefined || window.localStorage.useZieloneNapoje != today) {
+                        array.push("useZieloneNapoje");
+                    }
                 }
                 if (config.useNiebieskieNapoje == "true" || config.useNiebieskieNapoje == true) {
-                    array.push("useNiebieskieNapoje");
+                    if(window.localStorage.useNiebieskieNapoje == undefined || window.localStorage.useNiebieskieNapoje != today) {
+                        array.push("useNiebieskieNapoje");
+                    }
                 }
                 if (config.useFontanna == "true" || config.useFontanna == true) {
-                    var today = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
                     if (config.fontannaLastUsedDate !== today) {
                         array.push("useFontanna");
                     }
                 }
                 if (config.useEventoweNapoje == "true" || config.useEventoweNapoje == true) {
-                    array.push("useEventoweNapoje");
+                    if(window.localStorage.useEventoweNapoje == undefined || window.localStorage.useEventoweNapoje != today) {
+                        array.push("useEventoweNapoje");
+                    }
                 }
                 if (config.useNiebieskieJagody == "true" || config.useNiebieskieJagody == true) {
-                    array.push("useNiebieskieJagody");
+                    if(window.localStorage.useNiebieskieJagody == undefined || window.localStorage.useNiebieskieJagody != today) {
+                        array.push("useNiebieskieJagody");
+                    }
                 }
                 if (config.useOnlyInNight == "true" || config.useOnlyInNight == true) {
                     var h = d.getHours();
@@ -2181,7 +2198,7 @@ function initPokeLifeScript() {
             if ($('#settingsAutoGo').length > 0) {
                 $('#settingsAutoGo').remove();
             } else {
-                $('body').append('<div id="settingsAutoGo" style="padding: 10px; position:fixed;top: 60px;right: 69px;width: 880px;background: white;opacity: 1;border: 7px solid #272727;z-index: 999;"></div>');
+                $('body').append('<div id="settingsAutoGo" style="padding: 10px; position:fixed;top: 60px;right: 69px;width: 880px;background: white;opacity: 1;border: 7px solid #272727;z-index: 999;'+borderStyle+'"></div>');
                 $('#settingsAutoGo').append('<div class="row"><div class="col-sm-6 wznawianieSettings"><table> <tr> <th></th> <th></th> <th></th> </tr></table></div></div>');
                 $('#settingsAutoGo .wznawianieSettings table').append('<col width="60"><col width="20"><col width="340">');
                 $('#settingsAutoGo .wznawianieSettings table').append('<tr><td><img style="width: 40px;" src="images/pokesklep/duzy_napoj_energetyczny.jpg"></td><td><input type="checkbox" id="autoUseCzerwoneNapoje" name="autoUseCzerwoneNapoje" value="1" ' + ((config.useCzerwoneNapoje == "true" || config.useCzerwoneNapoje == true) ? "checked" : "") + ' style=" margin: 0; line-height: 50px; height: 50px; "></td><td><label style=" margin: 0; height: 50px; line-height: 44px; font-size: 14px; ">Używaj czerwonych napojów gdy zabraknie PA</label></td> </tr>');
@@ -2329,6 +2346,10 @@ function initPokeLifeScript() {
 
                 if (ile_moge_kupic > dostepne) {
                     ile_moge_kupic = dostepne;
+                }
+
+                if (ile_moge_kupic > 0) {
+                    ile_moge_kupic = ile_moge_kupic - 1;
                 }
 
                 console.log('PokeLifeScript: dostępnych PZ do kupienia: ' + ile_moge_kupic);
@@ -3336,7 +3357,7 @@ Przykład dla wartości 7:
         $(document).off("click", "#targ_wysprz-zwykle .check-price");
         $(document).on("click", "#targ_wysprz-zwykle .check-price", function() {
             $('#marketTable').remove();
-            $('body').append("<div id='marketTable' style='z-index: 999; width: 260px; height: 400px; position: fixed; right: 0; background: white; bottom: 60px;border: 2px dashed; overflow: scroll; overflow-x:hidden'></div>")
+            $('body').append("<div id='marketTable' style='z-index: 999; width: 260px; height: 400px; position: fixed; right: 0; background: white; bottom: 60px;border: 2px dashed; overflow: scroll; overflow-x:hidden; "+borderStyle+"'></div>")
 
             var przedmiot = $(this).parent().parent().find("input[name='nazwa']").val();
             var THAT = $(this).parent().parent();
