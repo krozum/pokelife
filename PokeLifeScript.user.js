@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.20.4
+// @version      5.20.5
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -2837,9 +2837,49 @@ function initPokeLifeScript() {
         });
 
         $(document).on('click', '#wbijajSzkoleniowca', function() {
+            $('#pokemony-przechowalnia .panel-body').html(`
+<div class="col-md-12 druzyna-sortowanie">
+Podaj do jakiej wartość statystyk trenować: <input type="number" value="7" id="maxSzkoleniowiec">
+</div>
+<div class="col-md-12 druzyna-sortowanie">
+Przykład dla wartości 7:
+</div>
+<div class="col-md-3 druzyna-sortowanie">
+<p>Przed</p>
+<ul>
+<li><b>Atak: </b>7</li>
+<li><b>SpAtak: </b>12</li>
+<li><b>Obrona: </b>0</li>
+<li><b>SpObro: </b>3</li>
+<li><b>Szybkość: </b>44</li>
+<li><b>Życie: </b>15</li>
+</ul>
+</div>
+<div class="col-md-3 druzyna-sortowanie">
+<p>Po</p>
+<ul>
+<li><b>Atak: </b>7</li>
+<li><b>SpAtak: </b>12</li>
+<li><b>Obrona: </b>7</li>
+<li><b>SpObro: </b>7</li>
+<li><b>Szybkość: </b>44</li>
+<li><b>Życie: </b>35</li>
+</ul>
+</div>
+<div class="col-md-12 druzyna-sortowanie">Suma wytrenowanych statystyk: 15</div>
+<div class="col-md-12 druzyna-sortowanie"><button class="plugin-button" id="wbijajSzkoleniowcaConfirm" style="padding: 5px 10px; border-radius: 3px; margin-bottom: 15px">Wbijaj szkoleniowca</button></div>
+`);
+
+
             max = array.length;
             now = 0;
-            wbijajSzkoleniowca(array);
+            wbijajSzkoleniowca(array, limit);
+        });
+
+        $(document).on('click', '#wbijajSzkoleniowcaConfirm', function() {
+            max = array.length;
+            now = 0;
+            wbijajSzkoleniowca(array, $('#maxSzkoleniowiec').val());
         });
 
         function trenuj(array, callback) {
@@ -2855,7 +2895,7 @@ function initPokeLifeScript() {
             }
         }
 
-        function wbijajSzkoleniowca(array) {
+        function wbijajSzkoleniowca(array, limit) {
             if (array.length > 0) {
                 if ($('#szkoleniowiec_progress').length < 1) {
                     $('body').append('<div id="szkoleniowiec_progress" class="" style="position: fixed;bottom: 60px;width: 500px;height: auto;z-index: 999;margin: 0 auto;left: 0;right: 0;background-color: inherit;border: none;"><div class="progress" style="margin:0;box-shadow: none;border-radius: 0; border: 1px solid black"><div class="progress-bar progress-bar-danger" role="progressbar" style="border-radius: 0; width: ' + Number((((max - array.length) * 100) / max)).toFixed(0) + '%;"> <span>' + Number((((max - array.length) * 100) / max)).toFixed(0) + '%</span></div></div></div>');
@@ -2874,9 +2914,9 @@ function initPokeLifeScript() {
                             var count = Number($('.sala_atrybuty_tabelka .row:nth(' + j + ') > div:nth(2)').html());
                             var ile = 0;
                             if (j != 6) {
-                                ile = 7 - count;
+                                ile = limit - count;
                             } else {
-                                ile = 35 - count;
+                                ile = (limit * 5) - count;
                                 ile = ile / 5;
                             }
                             if (ile > 0) {
@@ -2884,7 +2924,7 @@ function initPokeLifeScript() {
                                 treningi.push($('.sala_atrybuty_tabelka .row:nth(' + j + ') > div:nth(3) > form').attr('action') + "&postData%5B0%5D%5Bname%5D=ilosc&postData%5B0%5D%5Bvalue%5D=" + ile);
                             }
                         }
-                        trenuj(treningi, function() { wbijajSzkoleniowca(array) });
+                        trenuj(treningi, function() { wbijajSzkoleniowca(array, limit) });
                     })
                 }, 1000);
             } else {
