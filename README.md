@@ -26,6 +26,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.20.5 (2020-06-13)
+* Dodanie nowego powodu zatrzymania AutoGo: gdy jesteś w dziczy weekendowej a próbujesz uruchomić go dla normalnej dziczy
+* Dodanie opcji podania do ilu statystyk ma wbijać szkoleniowca
+
 5.20.4 (2020-06-11)
 * Dodanie legendy na widoku osiągnięć
 * Dodanie zliczania zarobku z eventów w dziczy (na razie tylko pył w pustyni lodowej)
