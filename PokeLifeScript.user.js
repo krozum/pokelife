@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.20.5
+// @version      5.20.6
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -2869,11 +2869,6 @@ Przykład dla wartości 7:
 <div class="col-md-12 druzyna-sortowanie">Suma wytrenowanych statystyk: 15</div>
 <div class="col-md-12 druzyna-sortowanie"><button class="plugin-button" id="wbijajSzkoleniowcaConfirm" style="padding: 5px 10px; border-radius: 3px; margin-bottom: 15px">Wbijaj szkoleniowca</button></div>
 `);
-
-
-            max = array.length;
-            now = 0;
-            wbijajSzkoleniowca(array, limit);
         });
 
         $(document).on('click', '#wbijajSzkoleniowcaConfirm', function() {
