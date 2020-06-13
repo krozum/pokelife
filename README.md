@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.20.6 (2020-06-13)
+* Drobna poprawka do wbijania szkoleniowca
+
 5.20.5 (2020-06-13)
 * Dodanie nowego powodu zatrzymania AutoGo: gdy jesteś w dziczy weekendowej a próbujesz uruchomić go dla normalnej dziczy
 * Dodanie opcji podania do ilu statystyk ma wbijać szkoleniowca
