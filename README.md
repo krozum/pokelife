@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.20.8 (2020-06-14)
+* Poprawka dla zapisywania informacji o wykorzystaniu danych limitów przy posiadaniu multikont
+
 5.20.7 (2020-06-13)
 * Zmniejszono panel ustawienia pokebali
 * Dodano zapisywanie informacji o wykorzystaniu danych limitów, nie powinno juz teraz próbować wznowic na przykład niebieskimi jagodami gdy juz wykorzystało sie limit danego dnia. Powinno lekko przyśpieszyć AutoGo
