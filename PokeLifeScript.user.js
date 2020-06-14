@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.20.7
+// @version      5.20.8
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1849,7 +1849,8 @@ function initPokeLifeScript() {
                                             }
                                         } else {
                                             console.log('Wykorzystałeś limit niebieskich jagód na dzisiaj');
-                                            window.localStorage.useNiebieskieJagody = today;
+                                            config.niebieskieJagodyLastUsedDate = today;
+                                            updateConfig(config);
                                             window.setTimeout(function() {
                                                 if (autoGo) {
                                                     probujWznowicAutoGo(array, autoGoBefore);
@@ -1882,7 +1883,8 @@ function initPokeLifeScript() {
                                             }, 1000);
                                         } else {
                                             console.log('Wykorzystałeś limit eventowych napojów na dzisiaj');
-                                            window.localStorage.useEventoweNapoje = today;
+                                            config.eventoweNapojeLastUsedDate = today;
+                                            updateConfig(config);
                                             window.setTimeout(function() {
                                                 if (autoGo) {
                                                     probujWznowicAutoGo(array, autoGoBefore);
@@ -1944,7 +1946,8 @@ function initPokeLifeScript() {
                                             }
                                         } else {
                                             console.log('Wykorzystałeś limit napojów na dzisiaj');
-                                            window.localStorage.useZieloneNapoje = today;
+                                            config.zieloneNapojeLastUsedDate = today;
+                                            updateConfig(config);
                                             window.setTimeout(function() {
                                                 if (autoGo) {
                                                     probujWznowicAutoGo(array, autoGoBefore);
@@ -2008,7 +2011,8 @@ function initPokeLifeScript() {
                                             }
                                         } else {
                                             console.log('Wykorzystałeś limit napojów na dzisiaj');
-                                            window.localStorage.useNiebieskieNapoje = today;
+                                            config.niebieskieNapojeLastUsedDate = today;
+                                            updateConfig(config);
                                             window.setTimeout(function() {
                                                 if (autoGo) {
                                                     probujWznowicAutoGo(array, autoGoBefore);
@@ -2118,12 +2122,12 @@ function initPokeLifeScript() {
                     array.push("useCzerwoneNapoje");
                 }
                 if (config.useZieloneNapoje == "true" || config.useZieloneNapoje == true) {
-                    if(window.localStorage.useZieloneNapoje == undefined || window.localStorage.useZieloneNapoje != today) {
+                    if(config.zieloneNapojeLastUsedDate == undefined || config.zieloneNapojeLastUsedDate != today) {
                         array.push("useZieloneNapoje");
                     }
                 }
                 if (config.useNiebieskieNapoje == "true" || config.useNiebieskieNapoje == true) {
-                    if(window.localStorage.useNiebieskieNapoje == undefined || window.localStorage.useNiebieskieNapoje != today) {
+                    if(config.niebieskieNapojeLastUsedDate == undefined || config.niebieskieNapojeLastUsedDate != today) {
                         array.push("useNiebieskieNapoje");
                     }
                 }
@@ -2133,12 +2137,12 @@ function initPokeLifeScript() {
                     }
                 }
                 if (config.useEventoweNapoje == "true" || config.useEventoweNapoje == true) {
-                    if(window.localStorage.useEventoweNapoje == undefined || window.localStorage.useEventoweNapoje != today) {
+                    if(config.eventoweNapojeLastUsedDate == undefined || config.eventoweNapojeLastUsedDate != today) {
                         array.push("useEventoweNapoje");
                     }
                 }
                 if (config.useNiebieskieJagody == "true" || config.useNiebieskieJagody == true) {
-                    if(window.localStorage.useNiebieskieJagody == undefined || window.localStorage.useNiebieskieJagody != today) {
+                    if(config.niebieskieJagodyLastUsedDate == undefined || config.niebieskieJagodyLastUsedDate != today) {
                         array.push("useNiebieskieJagody");
                     }
                 }
@@ -4217,6 +4221,10 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
             config.customStyleFont = "#000000";
             config.useFontanna = false;
             config.fontannaLastUsedDate = "1994512";
+            config.niebieskieNapojeLastUsedDate = "1994512";
+            config.niebieskieJagodyLastUsedDate = "1994512";
+            config.zieloneNapojeLastUsedDate = "1994512";
+            config.eventoweNapojeLastUsedDate = "1994512";
             config.shinyMode = 1;
             config.safariMode = 1;
             config.ulubioneOsiagniecia = [];
