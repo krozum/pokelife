@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.20.8
+// @version      5.20.9
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -342,6 +342,22 @@ $(document).on( "click", ".pokazpoka", function(event) {
     reloadMain("#podgladPoka_content", 'gra/pokemon_skr.php?nopanel&p='+$(this).attr('data-id-pokemona')+'&ignoruj_ukrycie='+ukrycie+'&ograniczenia_hali='+hala+'&pokemon_hala='+hala2+'&treningi_rank='+rank+'&legendarne_polowanie='+legendy);
 });
 
+function remember_back(new_buffer) {
+
+	$('#back_button').prop("disabled",false);
+	var old_buffer = $('#back_button').attr('buffer');
+
+	$('#back_button').attr('prev5', $('#back_button').attr('prev4') );
+	$('#back_button').attr('prev4', $('#back_button').attr('prev3') );
+	$('#back_button').attr('prev3', $('#back_button').attr('prev2') );
+	$('#back_button').attr('prev2', $('#back_button').attr('prev1') );
+	$('#back_button').attr('prev1', $('#back_button').attr('href') );
+
+	$('#back_button').attr('href',old_buffer);
+	$('#back_button').attr('buffer',new_buffer);
+	var prev_buffer = '';
+}
+
 
 $(document).off("click", "nav a");
 $(document).on("click", "nav a:not('.btn-akcja')", function(event) {
@@ -358,7 +374,7 @@ $(document).on("click", "nav a:not('.btn-akcja')", function(event) {
 
         var new_buffer = $(this).attr('href');
         new_buffer = new_buffer.substr(4);
-        remember_back(new_buffer);
+        //remember_back(new_buffer);
 
         var url = $(this).attr('href');
         if (url.indexOf('index.php?url=') != -1) {
