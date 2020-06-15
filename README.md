@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.20.9 (2020-06-15)
+* Drobna poprawka na brak jednej funkcji, bot przez to sie zawieszał dla niektórych
+
 5.20.8 (2020-06-14)
 * Poprawka dla zapisywania informacji o wykorzystaniu danych limitów przy posiadaniu multikont
 
