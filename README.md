@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.21 (2020-06-16)
+* Odblokowanie bota aby nadal chętni mogli korzystać
+
 5.20.9 (2020-06-15)
 * Drobna poprawka na brak jednej funkcji, bot przez to sie zawieszał dla niektórych
 
