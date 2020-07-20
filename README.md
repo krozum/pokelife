@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.23 (2020-07-20)
+* Dodanie obsługi eventu, zatrzymuje na Zdarzeniach czasowych, niektóre rozwiązuje sam
+
 5.21 (2020-06-16)
 * Odblokowanie bota aby nadal chętni mogli korzystać
 
