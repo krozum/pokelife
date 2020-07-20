@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.21
+// @version      5.23
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1625,7 +1625,27 @@ function initPokeLifeScript() {
 
             if (canRun) {
                 if ($('#glowne_okno .panel-heading').length > 0) {
-                    if ($('#glowne_okno').find(".panel-heading:contains('Dzienne Przeliczenie')").length > 0) {
+if ($('#glowne_okno').find(".panel-heading:contains('Zdarzenie')").length > 0) {
+                        if ($('#glowne_okno').find(".alert-info:contains('Kiedy tylko opuszczasz miasto, zauważasz szary dym niedaleko. ')").length > 0) {
+                            var button = $('button:contains("Nie możesz tak po prostu ich zostawić, decydujesz się pomóc na tyle na ile będziesz mógł")');
+                            if (button.length > 0) {
+                                $('button:contains("Nie możesz tak po prostu ich zostawić, decydujesz się pomóc na tyle na ile będziesz mógł")').trigger('click');
+                            } else {
+                                console.log('%cPokeLifeScript: Zdarzenie, przerwanie AutoGo', 'color: #cb404b');
+                                autoGo = false;
+                                $('#goAutoButton').html('AutoGO');
+                                $('.dynamicsparkline').hide()
+                                $("#goStopReason").html("Zdarzenie").show();
+                            }
+                        } else {
+                            console.log('%cPokeLifeScript: Zdarzenie, przerwanie AutoGo', 'color: #cb404b');
+                            autoGo = false;
+                            $('#goAutoButton').html('AutoGO');
+                            $('.dynamicsparkline').hide()
+                            $("#goStopReason").html("Zdarzenie").show();
+                        }
+                        document.title = "Zdarzenie";
+                    } if ($('#glowne_okno').find(".panel-heading:contains('Dzienne Przeliczenie')").length > 0) {
                         console.log('%cPokeLifeScript: Dzienne Przeliczenie, przerwanie AutoGo', 'color: #cb404b');
                         autoGo = false;
                         $('#goAutoButton').html('AutoGO');
