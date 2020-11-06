@@ -1,3 +1,7 @@
+html {
+  overflow-y: scroll;	
+}
+
 .triangle-isosceles {
     position: relative;
     padding: 15px;
