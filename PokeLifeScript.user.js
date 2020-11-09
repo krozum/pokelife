@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.23
+// @version      5.24
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -14,7 +14,7 @@
 // @require      https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.5.0/js/md5.min.js
 // @resource     color_picker_CSS  https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css
-// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=9
+// @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=10
 // @resource     customCSS_style  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_0.css?ver=2
 // ==/UserScript==
 
@@ -41,6 +41,7 @@
 //     initPokemonDniaWidget
 //     initPrzypomnienieOPracy
 //     initWystawView
+//     initHodowlaView
 //     initRozbudowanyOpisDziczy
 //     initPrzypomnienieORepelu
 //     initSprawdzCzyMaszAktualnaWersjeBota
@@ -3132,6 +3133,14 @@ Przykład dla wartości 7:
             wyslij();
         });
 
+
+        $(document).on("contextmenu", ".shout_post_name", function() {
+            var name = $(this).text();
+            var url = 'gra/profil.php?wyszukaj_po_loginie&postData%5B0%5D%5Bname%5D=login&postData%5B0%5D%5Bvalue%5D=' + name;
+            reloadMain("#glowne_okno", url);
+            return false;
+        });
+
         $(document).on("click", ".shout_post_name2", function() {
             var name = $(this).text();
             $("#shout_bot_message").val($("#shout_bot_message").val() + "@" + name);
@@ -3668,6 +3677,29 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
 
     }
     initWystawView();
+
+
+
+
+    // **********************
+    //
+    // initHodowlaView()
+    // Funkcja pokazuje ceny dla danego przedmiotu
+    //
+    // **********************
+    function initHodowlaView() {
+        onReloadMain(function() {
+            var DATA = this;
+            if (this.find('.panel-heading').html() === "Hodowla Pokemon") {
+                if (DATA.find('div:contains("Wartość Pokemonów w Przechowalni")').length > 0) {
+                    let yen = DATA.find('div:contains("Wartość Pokemonów w Przechowalni")').text().split('Wartość Pokemonów w Przechowalni:')[1].split(' Yen')[0];
+                    DATA.find('#hodowla-glowne').prepend('<h3 style=" margin: 20px 0px 30px; ">Wartość Pokemonów w Przechowalni: ' + yen + '¥</h3>')
+                }
+            }
+        })
+    }
+    initHodowlaView();
+
 
 
 
