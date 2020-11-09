@@ -26,6 +26,11 @@ Instrukcja instalacji
 
 Changelog
 ---------
+
+5.24 (2020-11-09)
+* Kliknięcie prawym przyciskiem myszki na nick na czat otwiera profil uzytkownika
+* Dodanie wiadomości o sumie wartości pokemonów w hodowli na góre widoku.
+
 5.23 (2020-07-20)
 * Dodanie obsługi eventu, zatrzymuje na Zdarzeniach czasowych, niektóre rozwiązuje sam
 
