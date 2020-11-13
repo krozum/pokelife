@@ -28,3 +28,7 @@
                       transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,
                       transparent 75%, transparent);
   }
+
+.progress-bar {
+    background-color: #e9635f !important;	
+}
