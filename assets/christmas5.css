@@ -1,9 +1,13 @@
-.panel-heading {
+#chat_okno .panel-primary .panel-heading,
+#glowne_okno > .panel-primary > .panel-heading,
+#sidebar > .panel-primary:first-of-type > .panel-heading {
 	position: relative;
 }
 
 
-.panel-heading::before {
+#chat_okno .panel-primary .panel-heading::before,
+#glowne_okno > .panel-primary > .panel-heading::before,
+#sidebar > .panel-primary:first-of-type > .panel-heading::before {
 	content: '';
 	display: block;
 	position: absolute;
