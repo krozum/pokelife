@@ -27,6 +27,9 @@ Instrukcja instalacji
 Changelog
 ---------
 
+5.25 (2020-11-13)
+* Poprawka dla wbijania szkoleniowca, wbija teraz w atak do max podanej ilości tj gdy pokemon ma sume treningów 25, poda sie wbijaj do 40 to wytrenuje te 15 w atak.
+
 5.24 (2020-11-09)
 * Kliknięcie prawym przyciskiem myszki na nick na czat otwiera profil uzytkownika
 * Dodanie wiadomości o sumie wartości pokemonów w hodowli na góre widoku.
