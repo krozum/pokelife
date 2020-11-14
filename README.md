@@ -27,6 +27,9 @@ Instrukcja instalacji
 Changelog
 ---------
 
+5.26 (2020-11-14)
+* Dodanie swiątecznych dekoracji
+
 5.25 (2020-11-13)
 * Poprawka dla wbijania szkoleniowca, wbija teraz w atak do max podanej ilości tj gdy pokemon ma sume treningów 25, poda sie wbijaj do 40 to wytrenuje te 15 w atak.
 
