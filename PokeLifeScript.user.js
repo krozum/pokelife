@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.25
+// @version      5.26
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -16,6 +16,7 @@
 // @resource     color_picker_CSS  https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css
 // @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=10
 // @resource     customCSS_style  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_0.css?ver=2
+// @resource     christmasCSS_style  https://raw.githubusercontent.com/krozum/pokelife/master/assets/christmas6.css
 // ==/UserScript==
 
 
@@ -565,6 +566,9 @@ function initPokeLifeScript() {
 
         var newCSS = GM_getResourceText("customCSS_style");
         GM_addStyle(newCSS);
+
+        var christmasCSS = GM_getResourceText("christmasCSS_style");
+        GM_addStyle(christmasCSS);
 
         if (config.skinStyle == 0) {
             $(':root').get(0).style.setProperty("--customStyle-background", config.customStyleBackground);
