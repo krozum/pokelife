@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.28
+// @version      5.28.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -2644,52 +2644,6 @@ if ($('#glowne_okno').find(".panel-heading:contains('Zdarzenie')").length > 0) {
 
 
 
-
-
-    // **********************
-    //
-    // initPlecakView
-    // Funkcja zmieniająca wygląd plecaka
-    //
-    // **********************
-
-    function initPlecakView() {
-        onReloadMain(function() {
-            if (this.find('.panel-heading').html() === "Plecak") {
-                var THAT = this;
-                THAT.find('.panel-body').prepend('<input id="wyszukajPrzedmiot" style="margin-bottom: 20px;display: inline; width: 100%;" type="text" class="form-control" placeholder="Wyszukaj przedmiot...">');
-            }
-        })
-
-        $(document).off("keyup", "#wyszukajPrzedmiot");
-        $(document).on("keyup", "#wyszukajPrzedmiot", function (event) {
-            if($(this).val() == ""){
-                $('#glowne_okno .tab-pane > .row > div:not(".modal")').css('display', 'block');
-                var tab_id = $('#glowne_okno li[role="presentation"].active a').attr('aria-controls');
-                $('#'+tab_id).parent().find("div.tab-pane[role='tabpanel']").removeClass('active').removeClass('in').addClass('fade');
-                $('#'+tab_id).addClass('in').addClass('active');
-            } else {
-                $('#glowne_okno .tab-pane').removeClass('fade').addClass('in').addClass('active');
-                $('#glowne_okno .tab-pane > .row > div:not(".modal")').css('display', 'none');
-                $('#glowne_okno .tab-pane > .row > div:not(".modal"):icontains("'+$(this).val()+'")').css("display", "block");
-            }
-        });
-
-        $(document).off("click", '#glowne_okno:contains("Plecak") li[role="presentation"]');
-        $(document).on("click", '#glowne_okno:contains("Plecak") li[role="presentation"]', function (event) {
-            if($(this).parent().parent().parent().find('.panel-heading:contains("Plecak")').length > 0){
-                $('#wyszukajPrzedmiot').val("");
-                $('#glowne_okno .tab-pane > .row > div:not(".modal")').css('display', 'block');
-                var tab_id = $('#glowne_okno li[role="presentation"].active a').attr('aria-controls');
-                $('#'+tab_id).parent().find("div.tab-pane[role='tabpanel']").removeClass('active').removeClass('in').addClass('fade');
-                $('#'+tab_id).addClass('in').addClass('active');
-            }
-        });
-    }
-    initPlecakView();
-
-
-
     // **********************
     //
     // initSzybkieKlikanieWLinkiPromocyjne
@@ -4199,6 +4153,53 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
 
     }
     initTropicielDziczWidget();
+
+
+
+    // **********************
+    //
+    // initPlecakView
+    // Funkcja zmieniająca wygląd plecaka
+    //
+    // **********************
+
+    function initPlecakView() {
+        onReloadMain(function() {
+            if (this.find('.panel-heading').html() === "Plecak") {
+                var THAT = this;
+                THAT.find('.panel-body').prepend('<input id="wyszukajPrzedmiot" style="margin-bottom: 20px;display: inline; width: 100%;" type="text" class="form-control" placeholder="Wyszukaj przedmiot...">');
+            }
+        })
+
+        $(document).off("keyup", "#wyszukajPrzedmiot");
+        $(document).on("keyup", "#wyszukajPrzedmiot", function (event) {
+            if($(this).val() == ""){
+                $('#glowne_okno .tab-pane .col-xs-4').css('display', 'block');
+                $('#glowne_okno #plecak-trzymane h3').css('display', 'block');
+                var tab_id = $('#glowne_okno li[role="presentation"].active a').attr('aria-controls');
+                $('#'+tab_id).parent().find("div.tab-pane[role='tabpanel']").removeClass('active').removeClass('in').addClass('fade');
+                $('#'+tab_id).addClass('in').addClass('active');
+            } else {
+                $('#glowne_okno .tab-pane').removeClass('fade').addClass('in').addClass('active');
+                $('#glowne_okno .tab-pane .col-xs-4').css('display', 'none');
+                $('#glowne_okno #plecak-trzymane h3').css('display', 'none');
+                $('#glowne_okno .tab-pane .col-xs-4:icontains("'+$(this).val()+'")').css("display", "block");
+            }
+        });
+
+        $(document).off("click", '#glowne_okno:contains("Plecak") li[role="presentation"]');
+        $(document).on("click", '#glowne_okno:contains("Plecak") li[role="presentation"]', function (event) {
+            if($(this).parent().parent().parent().find('.panel-heading:contains("Plecak")').length > 0){
+                $('#wyszukajPrzedmiot').val("");
+                $('#glowne_okno .tab-pane .col-xs-4').css('display', 'block');
+                $('#glowne_okno #plecak-trzymane h3').css('display', 'block');
+                var tab_id = $('#glowne_okno li[role="presentation"].active a').attr('aria-controls');
+                $('#'+tab_id).parent().find("div.tab-pane[role='tabpanel']").removeClass('active').removeClass('in').addClass('fade');
+                $('#'+tab_id).addClass('in').addClass('active');
+            }
+        });
+    }
+    initPlecakView();
 
 
 }
