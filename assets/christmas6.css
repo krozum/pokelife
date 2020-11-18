@@ -29,6 +29,11 @@
                       transparent 75%, transparent);
   }
 
-.progress-stan2 progress-bar {
+.progress-stan2 .progress-bar {
     background-color: #e9635f !important;	
+}
+
+#sidebar .btn-poziom {
+    background: #ed8e8b !important;	
+    border-color: #d46561 !important;	
 }
