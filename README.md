@@ -27,6 +27,9 @@ Instrukcja instalacji
 Changelog
 ---------
 
+5.27 (2020-11-18)
+* Poprawka na zliczanie zarobków z hodowli
+
 5.26 (2020-11-14)
 * Dodanie swiątecznych dekoracji
 
