@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.26
+// @version      5.27
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -16,7 +16,7 @@
 // @resource     color_picker_CSS  https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css
 // @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=10
 // @resource     customCSS_style  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_0.css?ver=2
-// @resource     christmasCSS_style  https://raw.githubusercontent.com/krozum/pokelife/master/assets/christmas6.css
+// @resource     christmasCSS_style  https://raw.githubusercontent.com/krozum/pokelife/master/assets/christmas6.css?v=4
 // ==/UserScript==
 
 
@@ -402,9 +402,6 @@ $(document).on("click", function(event) {
 $(document).off("click", ".btn-akcja");
 $(document).on("click", ".btn-akcja", function(event) {
     var url = $(this).attr('href');
-    if ($('#hodowla-glowne b').length > 1) {
-        zarobek = $('#hodowla-glowne b:nth(1)').html().split("¥")[0].replace('.', '').replace('.', '').replace('.', '');
-    }
 
     if (event.originalEvent !== undefined && autoGo == true) {
         autoGo = false;
@@ -437,10 +434,6 @@ $(document).on("click", ".btn-akcja", function(event) {
     }
 
     $(this).attr("disabled", "disabled");
-
-    if (url.startsWith("hodowla.php?sprzedaj_wszystkie=")) {
-        updateStats("zarobki_z_hodowli", zarobek);
-    }
 
     reloadMain("#glowne_okno", 'gra/' + $(this).attr('href'));
 });
@@ -2745,6 +2738,13 @@ if ($('#glowne_okno').find(".panel-heading:contains('Zdarzenie')").length > 0) {
                 }
             }
 
+            if (url.startsWith("gra/hodowla.php?sprzedaj_wszystkie=")) {
+                if (DATA.find("p.alert-success:contains('Za oddane pokemony otrzymujesz')").length > 0) {
+                    var zarobek = DATA.find("strong").html().split("¥")[0].replace('.', '').replace('.', '').replace('.', '').trim();
+                    updateStats("zarobki_z_hodowli", zarobek);
+                }
+            }
+
 
             if (DATA.find("p.alert-danger:contains('Nie możesz podróżować po dziczy, ponieważ wszystkie twoje pokemony są ranne! Musisz je najpierw wyleczyć.')").length > 0) {
                 console.log('PokeLifeScript: Nie możesz podróżować po dziczy, ponieważ wszystkie twoje pokemony są ranne! Musisz je najpierw wyleczyć.');
@@ -3102,7 +3102,7 @@ Przykład dla wartości 35:
                                     if (value['false_login'] == null) {
                                         $("#bot_list").append('<li style="word-break: break-word;text-align: center;border-bottom: 2px dashed #aa1c00;padding-top: 3px;padding-bottom: 3px;color: #aa1c00;font-size: 18px;font-family: Arial;"><span>' + value["message"] + '</span></li>');
                                     } else {
-                                        $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "") + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["avatar"] != "" ? '<img src="/images/stow/deko/176.png" style=" width: 15px; margin-right: 3px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
+                                        $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "") + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["avatar"] != "" ? '<img src="'+value["avatar"]+'" style=" width: 15px; margin-right: 3px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
                                     }
                                     window.localStorage.max_chat_id = value["czat_id"];
                                     lastDate2 = new Date(value["creation_date"]);
