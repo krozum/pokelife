@@ -26,6 +26,8 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.28 (2020-11-18)
+* Dodanie wyszukiwarki przedmiotów
 
 5.27 (2020-11-18)
 * Poprawka na zliczanie zarobków z hodowli
