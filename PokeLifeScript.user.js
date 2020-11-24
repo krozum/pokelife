@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.28.2
+// @version      5.28.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1808,7 +1808,7 @@ if ($('#glowne_okno').find(".panel-heading:contains('Zdarzenie')").length > 0) {
                 if ($('input:focus').length == 0 && $('textarea:focus').length == 0 && $('#glowne_okno .panel-heading').length == 0) {
                     e.preventDefault();
                     click();
-                } else if ($('input:focus').length == 0 && $('textarea:focus').length == 0 && $('#glowne_okno .panel-heading').html() !== "Poczta" && $('#glowne_okno .panel-heading').html() !== "Opcje Konta" && !$('#glowne_okno .panel-heading').text().trim().startsWith("Stowarzyszenie")) {
+                } else if ($('input:focus').length == 0 && $('textarea:focus').length == 0 && $('#glowne_okno .panel-heading').html() !== "Notatnik" && $('#glowne_okno .panel-heading').html() !== "Poczta" && $('#glowne_okno .panel-heading').html() !== "Opcje Konta" && !$('#glowne_okno .panel-heading').text().trim().startsWith("Stowarzyszenie")) {
                     e.preventDefault();
                     click();
                 }
