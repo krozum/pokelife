@@ -26,6 +26,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+
+5.28.2 (2020-11-24)
+* Poprawka na możliwość klikania spacji na notatniku
+
 5.28 (2020-11-18)
 * Dodanie wyszukiwarki przedmiotów
 
