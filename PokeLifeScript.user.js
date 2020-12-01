@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.29
+// @version      5.30
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -4044,6 +4044,35 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         }
     }
     initOsiagnieciaView();
+
+
+
+    // **********************
+    //
+    // initKalendarzSwiateczny
+    // Funkcja dodająca powiadomienie o kalendarzu swiatecznym
+    //
+    // **********************
+
+    function initKalendarzSwiateczny() {
+        var d = new Date();
+        if (d.getMonth() == 11 && d.getDate() <= 24) {
+            $.ajax({
+                type: 'POST',
+                url: "gra/kalendarz_swiateczny.php"
+            }).done(function(response) {
+                let day = d.getDate();
+                if ($(response).find('button[aria-label="' + day + '. grudnia"]').length > 0) {
+                    $('body').append('<div id="alertKalendarz" style="position: fixed; bottom: 55px; background: #bf4e4e; width: 200px; text-align: center; z-index: 9999; padding: 10px 20px; left: 0; right: 0; margin: 0 auto; color: black;">Nie odebrano prezentu dzisiaj</div>');
+                }
+            });
+        }
+
+        $(document).on('click', '.btn-akcja[href="kalendarz_swiateczny.php?id=' + d.getDate() + '&potwierdz"]', function(event) {
+          $('#alertKalendarz').remove();
+        })
+    }
+    initKalendarzSwiateczny();
 
 
 
