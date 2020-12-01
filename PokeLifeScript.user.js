@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.30
+// @version      5.30.1
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -4055,22 +4055,25 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
     // **********************
 
     function initKalendarzSwiateczny() {
-        var d = new Date();
-        if (d.getMonth() == 11 && d.getDate() <= 24) {
-            $.ajax({
-                type: 'POST',
-                url: "gra/kalendarz_swiateczny.php"
-            }).done(function(response) {
-                let day = d.getDate();
-                if ($(response).find('button[aria-label="' + day + '. grudnia"]').length > 0) {
-                    $('body').append('<div id="alertKalendarz" style="position: fixed; bottom: 55px; background: #bf4e4e; width: 200px; text-align: center; z-index: 9999; padding: 10px 20px; left: 0; right: 0; margin: 0 auto; color: black;">Nie odebrano prezentu dzisiaj</div>');
+        onReloadMain(function() {
+            if(this.find('.panel-heading').text().trim() === "Statystyki") {
+                if (this.find('b:contains("Kalendarz dziś otwarty")').length > 0) {
+                    if (this.find('b:contains("Kalendarz dziś otwarty")').parent().next().text() == "TAK") {
+                        let html = '<div class="panel panel-primary"> <div class="panel-body"> <p class="alert alert-danger text-center text-center" style=" margin-bottom: 0; "><b>Nie zapomnij odebrać dzisiaj prezentu!</b><br><button class="btn-akcja" href="kalendarz_swiateczny.php" style="margin-top: 5px;">Przejdź do Kalendarza</button></p></div> </div>';
+                        this.prepend(html);
+                    }
                 }
-            });
-        }
-
-        $(document).on('click', '.btn-akcja[href="kalendarz_swiateczny.php?id=' + d.getDate() + '&potwierdz"]', function(event) {
-          $('#alertKalendarz').remove();
+            }
         })
+
+        if($('#glowne_okno').find('.panel-heading').text().trim() === "Statystyki") {
+            if ($('#glowne_okno').find('b:contains("Kalendarz dziś otwarty")').length > 0) {
+                if ($('#glowne_okno').find('b:contains("Kalendarz dziś otwarty")').parent().next().text() == "TAK") {
+                    let html = '<div class="panel panel-primary"> <div class="panel-body"> <p class="alert alert-danger text-center text-center" style=" margin-bottom: 0; "><b>Nie zapomnij odebrać dzisiaj prezentu!</b><br><button class="btn-akcja" href="kalendarz_swiateczny.php" style="margin-top: 5px;">Przejdź do Kalendarza</button></p></div> </div>';
+                    $('#glowne_okno').prepend(html);
+                }
+            }
+        }
     }
     initKalendarzSwiateczny();
 
