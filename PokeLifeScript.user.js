@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.28.3
+// @version      5.29
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -3014,6 +3014,8 @@ Przykład dla wartości 35:
     // **********************
 
     function initChat() {
+        var login = $('#wyloguj').parent().parent().html().split("<div")[0].trim();
+
         window.localStorage.max_chat_id = 0;
 
         $('#chat-inner > ul').append('<li role="presentation" data-toggle="tooltip" data-placement="top" title="" data-original-title="Pokój widoczny wyłącznie dla użytkowników bota"><a href="#room-99999" aria-controls="room-99999" role="tab" data-toggle="tab" class="showRoomBot" data-room="99999" aria-expanded="true">Bot</a></li>');
@@ -3059,7 +3061,7 @@ Przykład dla wartości 35:
 
         $(document).on('click', '#zaloguj_chat,#zaloguj_czat_bot', function(e) {
             $('#zaloguj_czat_bot').remove();
-            var url = domain + 'pokelife/api/get_czat.php?czat_id=' + 0;
+            var url = domain + 'pokelife/api/get_czat.php?login=' + login + '&czat_id=' + 0;
             $.getJSON(url, {
                 format: "json"
             }).done(function(data) {
@@ -3077,7 +3079,7 @@ Przykład dla wartości 35:
                         if (value['false_login'] == null) {
                             $("#bot_list").append('<li style="word-break: break-word;text-align: center;border-bottom: 2px dashed #aa1c00;padding-top: 3px;padding-bottom: 3px;color: #aa1c00;font-size: 18px;font-family: Arial;"><span>' + value["message"] + '</span></li>');
                         } else {
-                            $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "") + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["avatar"] != "" ? '<img src="'+value["avatar"]+'" style=" width: 15px; margin-right: 3px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
+                            $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf("PW @") >= 0 ? "background: #ffb99e9e; border-radius: 3px;" : (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "" )) + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["avatar"] != "" ? '<img src="'+value["avatar"]+'" style=" width: 15px; margin-right: 3px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
                         }
                         window.localStorage.max_chat_id = value["czat_id"];
                         lastDate = new Date(value["creation_date"]);
@@ -3088,7 +3090,7 @@ Przykład dla wartości 35:
 
                 if (interval == undefined) {
                     interval = setInterval(function() {
-                        var url = domain + 'pokelife/api/get_czat.php?czat_id=' + window.localStorage.max_chat_id;
+                        var url = domain + 'pokelife/api/get_czat.php?login=' + login + '&czat_id=' + window.localStorage.max_chat_id;
                         $.getJSON(url, {
                             format: "json"
                         }).done(function(data) {
@@ -3104,7 +3106,7 @@ Przykład dla wartości 35:
                                     if (value['false_login'] == null) {
                                         $("#bot_list").append('<li style="word-break: break-word;text-align: center;border-bottom: 2px dashed #aa1c00;padding-top: 3px;padding-bottom: 3px;color: #aa1c00;font-size: 18px;font-family: Arial;"><span>' + value["message"] + '</span></li>');
                                     } else {
-                                        $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "") + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["avatar"] != "" ? '<img src="'+value["avatar"]+'" style=" width: 15px; margin-right: 3px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
+                                        $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf("PW @") >= 0 ? "background: #ffb99e9e; border-radius: 3px;" : (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "" )) + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["avatar"] != "" ? '<img src="'+value["avatar"]+'" style=" width: 15px; margin-right: 3px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
                                     }
                                     window.localStorage.max_chat_id = value["czat_id"];
                                     lastDate2 = new Date(value["creation_date"]);
@@ -4001,15 +4003,13 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
             THAT.find('.tab-content button').append('<span class="dodajDoUlubionych glyphicon glyphicon-heart pull-right" aria-hidden="true" style=" margin-right: 7px;"></span>');
 
             $(config.ulubioneOsiagniecia).each(function(index, value){
-                THAT.find(value).addClass('in');
                 THAT.find(value).parent().appendTo(THAT.find('#osiagniecia-ulubione .panel-group'));
             });
-
-            THAT.find('#osiagniecia-ulubione .panel-group .panel-collapse').css('display', 'contents');
         }
 
         $(document).off('click', '.dodajDoUlubionych');
-        $(document).on('click', '.dodajDoUlubionych', function() {
+        $(document).on('click', '.dodajDoUlubionych', function(event) {
+            event.stopPropagation();
             var tempHTML;
             var tempTHIS;
             var href;
@@ -4091,13 +4091,20 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
                 this.find('.tab-content button[href="#collapsemiasto_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="miasto" data-dzicz-name="Miasto" aria-hidden="true" style=" margin-right: 7px;"></span>');
                 this.find('.tab-content button[href="#collapsesafari_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="safari" data-dzicz-name="Safari" aria-hidden="true" style=" margin-right: 7px;"></span>');
 
+
+                this.find('.tab-content button[href="#collapserownina_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="rownina" data-dzicz-name="Równina" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsewulkan_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="wulkan" data-dzicz-name="Wulkan" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsejezioro_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="jezioro" data-dzicz-name="Jezioro" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsepuszcza_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="puszcza" data-dzicz-name="Puszcza" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapseruiny_miasta_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="ruiny_miasta" data-dzicz-name="Ruiny Miasta" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsepark_narodowy_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="park_narodowy" data-dzicz-name="Park Narodowy" aria-hidden="true" style=" margin-right: 7px;"></span>');
+
                 this.find('.tab-content button[href="#collapsegesty_zagajnik_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="gesty_zagajnik" data-dzicz-name="Gęsty Zagajnik" aria-hidden="true" style=" margin-right: 7px;"></span>');
                 this.find('.tab-content button[href="#collapsedolina_wiatrakow_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="dolina_wiatrakow" data-dzicz-name="Dolina Wiatraków" aria-hidden="true" style=" margin-right: 7px;"></span>');
                 this.find('.tab-content button[href="#collapsekoronny_szczyt_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="koronny_szczyt" data-dzicz-name="Koronny Szczyt" aria-hidden="true" style=" margin-right: 7px;"></span>');
                 this.find('.tab-content button[href="#collapsepotrojny_staw_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="potrojny_staw" data-dzicz-name="Potrójny Staw" aria-hidden="true" style=" margin-right: 7px;"></span>');
                 this.find('.tab-content button[href="#collapsepustynia_lodowa_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="pustynia_lodowa" data-dzicz-name="Pustynia Lodowa" aria-hidden="true" style=" margin-right: 7px;"></span>');
                 this.find('.tab-content button[href="#collapsewielkie_bagna_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="wielkie_bagna" data-dzicz-name="Wielkie Bagna" aria-hidden="true" style=" margin-right: 7px;"></span>');
-
 
                 this.find('.tab-content button[href="#collapsealejka_spacerowa_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="alejka_spacerowa" data-dzicz-name="Alejka Spacerowa" aria-hidden="true" style=" margin-right: 7px;"></span>');
                 this.find('.tab-content button[href="#collapsepustynia_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="pustynia" data-dzicz-name="Pustynia" aria-hidden="true" style=" margin-right: 7px;"></span>');
@@ -4106,6 +4113,23 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
                 this.find('.tab-content button[href="#collapsenawiedzona_wieza_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="nawiedzona_wieza" data-dzicz-name="Nawiedzona Wieża" aria-hidden="true" style=" margin-right: 7px;"></span>');
                 this.find('.tab-content button[href="#collapsemeteorytowa_gora_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="meteorytowa_gora" data-dzicz-name="Meteorytowa Góra" aria-hidden="true" style=" margin-right: 7px;"></span>');
                 this.find('.tab-content button[href="#collapseopuszczona_elektrownia_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="opuszczona_elektrownia" data-dzicz-name="Opuszczona Elektrownia" aria-hidden="true" style=" margin-right: 7px;"></span>');
+
+                this.find('.tab-content button[href="#collapseranczo_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="ranczo" data-dzicz-name="Ranczo" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsemost_zwodzony_driftveil_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="most_zwodzony_driftveil" data-dzicz-name="Most Zwodzony Driftveil" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsecudowny_most_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="cudowny_most" data-dzicz-name="Cudowny Most" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsestrzelisty_most_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="strzelisty_most" data-dzicz-name="Strzelisty Most" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsemost_sieci_metra_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="most_sieci_metra" data-dzicz-name="Most Sieci Metra" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsewiejski_most_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="wiejski_most" data-dzicz-name="Wiejski Most" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsejaskinia_elektrokamieni_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="jaskinia_elektrokamieni" data-dzicz-name="Jaskinia Elektrokamieni" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsereliktowy_zamek_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="reliktowy_zamek" data-dzicz-name="Reliktowy Zamek" aria-hidden="true" style=" margin-right: 7px;"></span>');
+
+                this.find('.tab-content button[href="#collapsefrancuski_labirynt_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="francuski_labirynt" data-dzicz-name="Francuski Labirynt" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapselazurowa_zatoka_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="lazurowa_zatoka" data-dzicz-name="Lazurowa Zatoka" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapsemroczna_gestwina_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="mroczna_gestwina" data-dzicz-name="Mroczna Gęstwina" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapselustrzana_grota_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="lustrzana_grota" data-dzicz-name="Lustrzana Grota" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapseoszroniona_pieczara_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="oszroniona_pieczara" data-dzicz-name="Oszroniona Pieczara" aria-hidden="true" style=" margin-right: 7px;"></span>');
+                this.find('.tab-content button[href="#collapseprzyjazne_safari_poziom"]').append('<span class="dodajDoSidebarTropicielDzicz glyphicon glyphicon-plus pull-right" data-osiagniecie-name="tropicielDzicz" data-dzicz="przyjazne_safari" data-dzicz-name="Przyjazne Safari" aria-hidden="true" style=" margin-right: 7px;"></span>');
+
             }
         })
 
