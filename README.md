@@ -27,6 +27,11 @@ Instrukcja instalacji
 Changelog
 ---------
 
+5.29 (2020-12-01)
+* Dodanie reszty tropicieli do widgetów do sidebar (dzięki @Koza679!)
+* Poprawienie zwijania/rozwijania osiągnięć na widoku Osiągnięcia
+* Dodanie możliwość wysłania prywatnej wiadomości na chat bota. Wystarczy rozpocząć wiadomość od "PW @nazwa" 
+
 5.28.2 (2020-11-24)
 * Poprawka na możliwość klikania spacji na notatniku
 
