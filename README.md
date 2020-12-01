@@ -27,6 +27,9 @@ Instrukcja instalacji
 Changelog
 ---------
 
+5.30 (2020-12-01)
+* Dodanie przypomnienia o kalendarzu swiątecznym
+
 5.29 (2020-12-01)
 * Dodanie reszty tropicieli do widgetów do sidebar (dzięki @Koza679!)
 * Poprawienie zwijania/rozwijania osiągnięć na widoku Osiągnięcia
