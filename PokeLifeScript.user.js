@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.30.1
+// @version      5.30.2
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -4058,7 +4058,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         onReloadMain(function() {
             if(this.find('.panel-heading').text().trim() === "Statystyki") {
                 if (this.find('b:contains("Kalendarz dziś otwarty")').length > 0) {
-                    if (this.find('b:contains("Kalendarz dziś otwarty")').parent().next().text() == "TAK") {
+                    if (this.find('b:contains("Kalendarz dziś otwarty")').parent().next().text() == "NIE") {
                         let html = '<div class="panel panel-primary"> <div class="panel-body"> <p class="alert alert-danger text-center text-center" style=" margin-bottom: 0; "><b>Nie zapomnij odebrać dzisiaj prezentu!</b><br><button class="btn-akcja" href="kalendarz_swiateczny.php" style="margin-top: 5px;">Przejdź do Kalendarza</button></p></div> </div>';
                         this.prepend(html);
                     }
@@ -4068,7 +4068,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
 
         if($('#glowne_okno').find('.panel-heading').text().trim() === "Statystyki") {
             if ($('#glowne_okno').find('b:contains("Kalendarz dziś otwarty")').length > 0) {
-                if ($('#glowne_okno').find('b:contains("Kalendarz dziś otwarty")').parent().next().text() == "TAK") {
+                if ($('#glowne_okno').find('b:contains("Kalendarz dziś otwarty")').parent().next().text() == "NIE") {
                     let html = '<div class="panel panel-primary"> <div class="panel-body"> <p class="alert alert-danger text-center text-center" style=" margin-bottom: 0; "><b>Nie zapomnij odebrać dzisiaj prezentu!</b><br><button class="btn-akcja" href="kalendarz_swiateczny.php" style="margin-top: 5px;">Przejdź do Kalendarza</button></p></div> </div>';
                     $('#glowne_okno').prepend(html);
                 }
