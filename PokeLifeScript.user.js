@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.30.2
+// @version      5.30.3
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -3023,14 +3023,30 @@ Przykład dla wartości 35:
         $('#shoutbox-panel-footer').after('<div style="display: none;background: none;" id="shoutbox-bot-panel-footer" class="panel-footer input-group"><textarea id="shout_bot_message" maxlength="255" style="resize: none; overflow: hidden;height: 34px" type="text" class="form-control" placeholder="Wiadomość" name="message"></textarea> <span class="input-group-btn"> <button id="shout_bot_button" class="btn btn-primary" type="button">Wyślij</button> </span> </div>');
 
         $('#shout_bot_message').on('keydown', function(e){
+            if ($(this).val().indexOf('PW @') == 0) {
+                $('#shout_bot_button').text('Wyślij prywatną');
+            } else {
+                $('#shout_bot_button').text('Wyślij');
+            }
             if(e.which == 13) {
                 e.preventDefault();
                 wyslij();
             }
         }).on('input', function(){
+            if ($(this).val().indexOf('PW @') == 0) {
+                $('#shout_bot_button').text('Wyślij prywatną');
+            } else {
+                $('#shout_bot_button').text('Wyślij');
+            }
             $(this).height(1);
             var totalHeight = $(this).prop('scrollHeight') - parseInt($(this).css('padding-top')) - parseInt($(this).css('padding-bottom'));
             $(this).height(totalHeight);
+        }).on('change', function(){
+            if ($(this).val().indexOf('PW @') == 0) {
+                $('#shout_bot_button').text('Wyślij prywatną');
+            } else {
+                $('#shout_bot_button').text('Wyślij');
+            }
         });
 
         $('.showRoomBot').click(function() {
@@ -3079,7 +3095,7 @@ Przykład dla wartości 35:
                         if (value['false_login'] == null) {
                             $("#bot_list").append('<li style="word-break: break-word;text-align: center;border-bottom: 2px dashed #aa1c00;padding-top: 3px;padding-bottom: 3px;color: #aa1c00;font-size: 18px;font-family: Arial;"><span>' + value["message"] + '</span></li>');
                         } else {
-                            $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf("PW @") >= 0 ? "background: #ffb99e9e; border-radius: 3px;" : (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "" )) + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["avatar"] != "" ? '<img src="'+value["avatar"]+'" style=" width: 15px; margin-right: 3px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
+                            $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf("PW @") == 0 ? "background: #ffb99e9e; border-radius: 3px;" : (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "" )) + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["avatar"] != "" ? '<img src="'+value["avatar"]+'" style=" width: 15px; margin-right: 3px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
                         }
                         window.localStorage.max_chat_id = value["czat_id"];
                         lastDate = new Date(value["creation_date"]);
@@ -3106,7 +3122,7 @@ Przykład dla wartości 35:
                                     if (value['false_login'] == null) {
                                         $("#bot_list").append('<li style="word-break: break-word;text-align: center;border-bottom: 2px dashed #aa1c00;padding-top: 3px;padding-bottom: 3px;color: #aa1c00;font-size: 18px;font-family: Arial;"><span>' + value["message"] + '</span></li>');
                                     } else {
-                                        $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf("PW @") >= 0 ? "background: #ffb99e9e; border-radius: 3px;" : (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "" )) + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["avatar"] != "" ? '<img src="'+value["avatar"]+'" style=" width: 15px; margin-right: 3px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
+                                        $("#bot_list").append('<li style="word-break: break-word;padding: 1px 5px 1px 5px;font-family: Georgia, \'Times New Roman\', Times, serif; font-size: 14px; ' + (value["message"].indexOf("PW @") == 0 ? "background: #ffb99e9e; border-radius: 3px;" : (value["message"].indexOf(window.localStorage.falseLogin) >= 0 ? "background: #fbf1a763; border-radius: 3px;" : "" )) + '"><span class="shout_post_date">(' + value["creation_date"].split(" ")[1] + ') </span><span class="shout_post_name2" style="cursor: pointer">'+(value["avatar"] != "" ? '<img src="'+value["avatar"]+'" style=" width: 15px; margin-right: 3px; ">': "") + value["false_login"] + '</span>: ' + value["message"] + '</li>');
                                     }
                                     window.localStorage.max_chat_id = value["czat_id"];
                                     lastDate2 = new Date(value["creation_date"]);
@@ -4166,6 +4182,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         })
 
         $(document).on("click", '.dodajDoSidebarTropicielDzicz', function (event) {
+            event.stopPropagation();
             $('.tropicielClassToDelete').remove();
             tropiciel.tropiciel_ilosc_wypraw = $(this).parent().parent().find('b').html().split('/')[0].trim();
             tropiciel.tropiciel_cel = $(this).parent().parent().find('b').html().split('/')[1] == undefined ? null : $(this).parent().parent().find('b').html().split('/')[1].trim();
