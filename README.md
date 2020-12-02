@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.30.3 (2020-12-02)
+* Przycisk do wysłania na chat bota będzie pokazywał Wyślij lub Wyslij prywatną zaleznie jaka wiadomość zostanie napisana
+* Poprawki do widoku osiągnięć 
 
 5.30 (2020-12-01)
 * Dodanie przypomnienia o kalendarzu swiątecznym
