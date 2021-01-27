@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.31 (2021-01-27)
+* Przywrócenie opcji wznawiania PA za pomocą przycisku Wypij Eventowy NE w statystykach
+
 5.30.3 (2020-12-02)
 * Przycisk do wysłania na chat bota będzie pokazywał Wyślij lub Wyslij prywatną zaleznie jaka wiadomość zostanie napisana
 * Poprawki do widoku osiągnięć 
