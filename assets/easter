@@ -1,0 +1,38 @@
+#chat_okno .panel-primary .panel-heading,
+#glowne_okno > .panel-primary > .panel-heading,
+#sidebar > .panel-primary:first-of-type > .panel-heading {
+	position: relative;
+}
+
+
+#chat_okno .panel-primary .panel-heading::before,
+#glowne_okno > .panel-primary > .panel-heading::before,
+#sidebar > .panel-primary:first-of-type > .panel-heading::before {
+	content: '';
+    display: block;
+    position: absolute;
+    top: -24px;
+    left: 160px;
+    right: 0;
+    background: url(https://raw.githubusercontent.com/krozum/pokelife/master/assets/easteregg.png);
+    background-repeat: no-repeat;
+    background-size: 67px;
+    height: 70px;
+}
+
+.progress-bar span {
+    background-size: 30px 30px;
+    background-image: linear-gradient(135deg, rgba(255, 255, 255, .15) 25%,
+                      transparent 25%,
+                      transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%,
+                      transparent 75%, transparent);
+  }
+
+.progress-stan2 .progress-bar {
+    background-color: #e9635f !important;	
+}
+
+#sidebar .btn-poziom {
+    background: #ed8e8b !important;	
+    border-color: #d46561 !important;	
+}
