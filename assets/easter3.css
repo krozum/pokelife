@@ -6,11 +6,11 @@
 
 
 #glowne_okno > .panel-primary > .panel-heading::before {
-	content: '';
+content: '';
     display: block;
     position: absolute;
     top: -24px;
-    left: 160px;
+    left: 90%;
     right: 0;
     background: url(https://raw.githubusercontent.com/krozum/pokelife/master/assets/easteregg.png);
     background-repeat: no-repeat;
