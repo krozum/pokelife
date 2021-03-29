@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.31
+// @version      5.4
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -16,7 +16,7 @@
 // @resource     color_picker_CSS  https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css
 // @resource     customCSS_global  https://raw.githubusercontent.com/krozum/pokelife/master/assets/global.css?ver=10
 // @resource     customCSS_style  https://raw.githubusercontent.com/krozum/pokelife/master/assets/style_0.css?ver=2
-// @resource     christmasCSS_style  https://raw.githubusercontent.com/krozum/pokelife/master/assets/christmas6.css?v=4
+// @resource     easter_style  https://raw.githubusercontent.com/krozum/pokelife/master/assets/easter3.css
 // ==/UserScript==
 
 
@@ -346,18 +346,18 @@ $(document).on( "click", ".pokazpoka", function(event) {
 
 function remember_back(new_buffer) {
 
-	$('#back_button').prop("disabled",false);
-	var old_buffer = $('#back_button').attr('buffer');
+    $('#back_button').prop("disabled",false);
+    var old_buffer = $('#back_button').attr('buffer');
 
-	$('#back_button').attr('prev5', $('#back_button').attr('prev4') );
-	$('#back_button').attr('prev4', $('#back_button').attr('prev3') );
-	$('#back_button').attr('prev3', $('#back_button').attr('prev2') );
-	$('#back_button').attr('prev2', $('#back_button').attr('prev1') );
-	$('#back_button').attr('prev1', $('#back_button').attr('href') );
+    $('#back_button').attr('prev5', $('#back_button').attr('prev4') );
+    $('#back_button').attr('prev4', $('#back_button').attr('prev3') );
+    $('#back_button').attr('prev3', $('#back_button').attr('prev2') );
+    $('#back_button').attr('prev2', $('#back_button').attr('prev1') );
+    $('#back_button').attr('prev1', $('#back_button').attr('href') );
 
-	$('#back_button').attr('href',old_buffer);
-	$('#back_button').attr('buffer',new_buffer);
-	var prev_buffer = '';
+    $('#back_button').attr('href',old_buffer);
+    $('#back_button').attr('buffer',new_buffer);
+    var prev_buffer = '';
 }
 
 
@@ -560,8 +560,8 @@ function initPokeLifeScript() {
         var newCSS = GM_getResourceText("customCSS_style");
         GM_addStyle(newCSS);
 
-        var christmasCSS = GM_getResourceText("christmasCSS_style");
-        GM_addStyle(christmasCSS);
+        var easterStyle = GM_getResourceText("easter_style");
+        GM_addStyle(easterStyle);
 
         if (config.skinStyle == 0) {
             $(':root').get(0).style.setProperty("--customStyle-background", config.customStyleBackground);
@@ -927,6 +927,7 @@ function initPokeLifeScript() {
 <ul class="nav nav-tabs">
 <li role="presentation" class="active"><a href="#dzien" aria-controls="dzien" role="tab" data-toggle="tab">Dzień</a></li>
 <li role="presentation"><a href="#noc" aria-controls="noc" role="tab" data-toggle="tab">Noc</a></li>
+<li role="presentation"><a href="#jajko" aria-controls="jajko" role="tab" data-toggle="tab">Jajko</a></li>
 <li role="presentation"><a href="#informacje" aria-controls="informacje" role="tab" data-toggle="tab">Informacje</a></li>
 </ul><br>
 <div class="tab-content">
@@ -1191,6 +1192,47 @@ function initPokeLifeScript() {
 </div>
 
 </div>
+<div role="tabpanel" class="tab-pane fade" id="jajko">
+
+<div class="row" style="height: 50px; margin-bottom: 15px">
+<div class="col-xs-2" style="width: 20%; height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #bfde9c;padding: 15px;border-radius: 7px;text-align: center;">I</p> </div>
+<div class="col-xs-2" style="width: 20%;">
+<div class="changePokeball" data-type="jajko" id="pokeballConfigIdJajko1">
+</div>
+</div>
+</div>
+<div class="row" style="height: 50px; margin-bottom: 15px">
+<div class="col-xs-2" style="width: 20%; height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #ffc107;padding: 15px;border-radius: 7px;text-align: center;">III</p> </div>
+<div class="col-xs-2" style="width: 20%;">
+<div class="changePokeball" data-type="jajko" id="pokeballConfigIdJajko2">
+</div>
+</div>
+</div>
+<div class="row" style="height: 50px; margin-bottom: 15px">
+<div class="col-xs-2" style="width: 20%; height: 100%; "> <p style="margin: 0;font-size: 17px;display: block;background: #da7e77;padding: 15px;border-radius: 7px;text-align: center;">V</p> </div>
+
+<div class="col-xs-2" style="width: 20%;">
+<div class="changePokeball" data-type="jajko" id="pokeballConfigIdJajko3">
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-xs-9">
+</div>
+<div class="col-xs-3" style="text-align: right">
+<button data-type="jajko" class="zapiszconfigi btn btn-success">Zapisz</button>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-1">
+</div>
+<div class="col-xs-10">
+<pre class="printConfig" data-type="noc" style="background: #eaeaea; display: none;">
+</pre>
+</div>
+</div>
+</div>
 <div role="tabpanel" class="tab-pane fade" id="informacje">
 <div class="row" style="margin-bottom: 20px;">
 <div class="col-xs-12">
@@ -1324,6 +1366,9 @@ function initPokeLifeScript() {
                         if(type == "dzien"){
                             typeC = "Dzien";
                         }
+                        if(type == "jajko"){
+                            typeC = "Jajko";
+                        }
 
                         var pokeball = config[type]["data" + id.split(typeC)[1]];
 
@@ -1379,26 +1424,33 @@ function initPokeLifeScript() {
                         if(type == "dzien"){
                             typeC = "Dzien";
                         }
-                        config[type].data11 = $('#pokeballConfigId'+typeC+'11 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data12 = $('#pokeballConfigId'+typeC+'12 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data13 = $('#pokeballConfigId'+typeC+'13 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data14 = $('#pokeballConfigId'+typeC+'14 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data21 = $('#pokeballConfigId'+typeC+'21 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data22 = $('#pokeballConfigId'+typeC+'22 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data23 = $('#pokeballConfigId'+typeC+'23 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data24 = $('#pokeballConfigId'+typeC+'24 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data31 = $('#pokeballConfigId'+typeC+'31 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data32 = $('#pokeballConfigId'+typeC+'32 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data33 = $('#pokeballConfigId'+typeC+'33 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data34 = $('#pokeballConfigId'+typeC+'34 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data41 = $('#pokeballConfigId'+typeC+'41 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data42 = $('#pokeballConfigId'+typeC+'42 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data43 = $('#pokeballConfigId'+typeC+'43 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data44 = $('#pokeballConfigId'+typeC+'44 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data51 = $('#pokeballConfigId'+typeC+'51 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data52 = $('#pokeballConfigId'+typeC+'52 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data53 = $('#pokeballConfigId'+typeC+'53 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
-                        config[type].data54 = $('#pokeballConfigId'+typeC+'54 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                        if(type == "jajko"){
+                            typeC = "Jajko";
+                            config[type].data1 = $('#pokeballConfigId'+typeC+'1 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data2 = $('#pokeballConfigId'+typeC+'2 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data3 = $('#pokeballConfigId'+typeC+'3 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                        } else {
+                            config[type].data11 = $('#pokeballConfigId'+typeC+'11 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data12 = $('#pokeballConfigId'+typeC+'12 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data13 = $('#pokeballConfigId'+typeC+'13 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data14 = $('#pokeballConfigId'+typeC+'14 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data21 = $('#pokeballConfigId'+typeC+'21 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data22 = $('#pokeballConfigId'+typeC+'22 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data23 = $('#pokeballConfigId'+typeC+'23 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data24 = $('#pokeballConfigId'+typeC+'24 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data31 = $('#pokeballConfigId'+typeC+'31 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data32 = $('#pokeballConfigId'+typeC+'32 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data33 = $('#pokeballConfigId'+typeC+'33 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data34 = $('#pokeballConfigId'+typeC+'34 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data41 = $('#pokeballConfigId'+typeC+'41 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data42 = $('#pokeballConfigId'+typeC+'42 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data43 = $('#pokeballConfigId'+typeC+'43 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data44 = $('#pokeballConfigId'+typeC+'44 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data51 = $('#pokeballConfigId'+typeC+'51 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data52 = $('#pokeballConfigId'+typeC+'52 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data53 = $('#pokeballConfigId'+typeC+'53 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                            config[type].data54 = $('#pokeballConfigId'+typeC+'54 img').attr('src').split('pokesklep/')[1].split('.')[0].trim();
+                        }
 
                         updateConfig(config, function(){ $('#settingsPokeball').remove() });
                     })
@@ -1409,6 +1461,34 @@ function initPokeLifeScript() {
 
 
         function getPokeball() {
+            if ($('#glowne_okno').find("i:contains('Jajko')").length > 0) {
+                let trudnoscType = 1;
+                if ($('#glowne_okno').find('img[src="images/event/jajko2.png"]').length > 0) {
+                    trudnoscType = 2;
+                }
+                if ($('#glowne_okno').find('img[src="images/event/jajko3.png"]').length > 0) {
+                    trudnoscType = 3;
+                }
+                var pokeball = config["jajko"]["data" + trudnoscType];
+
+                console.log('PokeLifeScript: jajko typ: ' + trudnoscType);
+                console.log(pokeball);
+
+                if(pokeball == "empty"){
+                    $('button:contains("Pomiń i szukaj dalej")').click();
+                    return "";
+                } else {
+                    if (pokeball == "greatballe") {
+                        pokeball = "greatballe";
+                    }
+                    if (pokeball == "swarmballe") {
+                        pokeball = "uzyj_swarmballe";
+                    }
+
+                    return '&zlap_jajko=' + pokeball;
+                }
+            }
+
             var miejsce = $(previousPageContent).find('button[href*="dzicz.php?miejsce="]').attr('href').split("&")[0].split('miejsce=')[1].trim();
             if(miejsce == "meteorytowa_gora" || miejsce == "park_narodowy" || miejsce == "wielkie_bagna" || miejsce == "reliktowy_zamek" || miejsce == "safari" || miejsce == "przyjazne_safari"){
                 switch(Number(config.safariMode)){
@@ -1623,7 +1703,7 @@ function initPokeLifeScript() {
 
             if (canRun) {
                 if ($('#glowne_okno .panel-heading').length > 0) {
-if ($('#glowne_okno').find(".panel-heading:contains('Zdarzenie')").length > 0) {
+                    if ($('#glowne_okno').find(".panel-heading:contains('Zdarzenie')").length > 0) {
                         if ($('#glowne_okno').find(".alert-info:contains('Kiedy tylko opuszczasz miasto, zauważasz szary dym niedaleko. ')").length > 0) {
                             var button = $('button:contains("Nie możesz tak po prostu ich zostawić, decydujesz się pomóc na tyle na ile będziesz mógł")');
                             if (button.length > 0) {
@@ -1657,9 +1737,17 @@ if ($('#glowne_okno').find(".panel-heading:contains('Zdarzenie')").length > 0) {
                         $('.dynamicsparkline').hide()
                         $("#goStopReason").html("Jesteś w dziczy weekendowej").show();
                         document.title = "Jesteś w dziczy weekendowej";
-                    } else if ($('#glowne_okno').find(".panel-heading:contains('Łapanie Jajka')").length > 0) {
-                        console.log('%cPokeLifeScript: idę do dziczy ' + AutoGoSettings.iconLocation.getSelectedValue().call() + ".", 'color: #cb404b');
-                        $('#pasek_skrotow a[href="gra/dzicz.php?poluj&miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + '"] img').trigger('click');
+                    } else if ($('#glowne_okno').find("i:contains('Jajko')").length > 0) {
+                        if (getPokeball() !== "") {
+                            var button = $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + getPokeball() + '"]');
+                            if (button.length > 0) {
+                                console.log('%cPokeLifeScript: rzucam pokeballa', 'color: #cb404b');
+                                $('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + getPokeball() + '"]').trigger('click');
+                            } else {
+                                console.log('label[href="dzicz.php?miejsce=' + AutoGoSettings.iconLocation.getSelectedValue().call() + getPokeball() + '"]');
+                                zatrzymajAutoGo("Brak odpowiedniego pokeballa", true);
+                            }
+                        }
                     } else if ($('h2:contains("Wybierz Pokemona")').length > 0 && $('.panel-body.nopadding').attr('style').indexOf("background-color: #FFBB") == -1) {
                         requestDomain("pokelife/api/update_shiny.php?pokemon_name=" + $('.panel-body.nopadding i').html().trim() + "&login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&time=" + Date.now(), null);
                         $('#refreshShinyWidget').trigger('click');
@@ -1726,7 +1814,7 @@ if ($('#glowne_okno').find(".panel-heading:contains('Zdarzenie')").length > 0) {
                     }
                 } else {
                     if($('#glowne_okno p:contains("Nie możesz podróżować po dziczy, ponieważ wszystkie twoje pokemony są ranne! Musisz je najpierw wyleczyć.")').length > 0){
-                        $('#glowne_okno button[href="dzicz.php?poluj&miejsce=laka"]').trigger('click');
+                        $('#glowne_okno button:contains("Kontynuuj")').trigger('click');
                     }
                 }
             }
@@ -2744,14 +2832,14 @@ if ($('#glowne_okno').find(".panel-heading:contains('Zdarzenie')").length > 0) {
             var DATA = this;
 
             if (url == "gra/aktywnosc.php?p=praca&przerwij") {
-                if (DATA.find("p.alert-success:contains('Otrzymujesz wynagrodzenie w wysokości')").length > 0) {
-                    var yeny = DATA.find("p.alert-success b").html().split(' ')[0].replace(/\./g, '');
+                if (DATA.find("div.alert-success:contains('Otrzymujesz wynagrodzenie w wysokości')").length > 0) {
+                    var yeny = DATA.find("div.alert-success b").html().split(' ')[0].replace(/\./g, '');
                     updateStats("zarobek_z_pracy", yeny);
                 }
             }
 
             if (url.startsWith("gra/hodowla.php?sprzedaj_wszystkie=")) {
-                if (DATA.find("p.alert-success:contains('Za oddane pokemony otrzymujesz')").length > 0) {
+                if (DATA.find("div.alert-success:contains('Za oddane pokemony otrzymujesz')").length > 0) {
                     var zarobek = DATA.find("strong").html().split("¥")[0].replace('.', '').replace('.', '').replace('.', '').trim();
                     updateStats("zarobki_z_hodowli", zarobek);
                 }
@@ -2760,13 +2848,13 @@ if ($('#glowne_okno').find(".panel-heading:contains('Zdarzenie')").length > 0) {
 
             if (DATA.find("p.alert-danger:contains('Nie możesz podróżować po dziczy, ponieważ wszystkie twoje pokemony są ranne! Musisz je najpierw wyleczyć.')").length > 0) {
                 console.log('PokeLifeScript: Nie możesz podróżować po dziczy, ponieważ wszystkie twoje pokemony są ranne! Musisz je najpierw wyleczyć.');
-            } else if (DATA.find(".panel-heading:contains('Łapanie Jajka')").length == 0 && (DATA.find('img[src="images/event/jajko1.png"]').length > 0 || DATA.find('img[src="images/event/jajko2.png"]').length > 0 || DATA.find('img[src="images/event/jajko3.png"]').length > 0)) {
+            } else if ((DATA.find('img[src="images/event/jajko1.png"]').length > 0 || DATA.find('img[src="images/event/jajko2.png"]').length > 0 || DATA.find('img[src="images/event/jajko3.png"]').length > 0)) {
                 console.log('PokeLifeScript: spotkano jajko');
                 updateEvent("Spotkano jajko", 10, dzicz);
             } else if (DATA.find("p.alert-info:contains('Niestety, tym razem nie spotkało cię nic interesującego.')").length > 0) {
                 console.log('PokeLifeScript: pusta wyprawa');
                 updateEvent("Niestety, tym razem nie spotkało cię nic interesującego", 1, dzicz);
-            } else if (DATA.find("p.alert-success:contains('pojedynek')").length > 0) {
+            } else if (DATA.find("div.alert-success:contains('pojedynek')").length > 0) {
                 console.log('PokeLifeScript: walka z trenerem');
                 updateStats("walki_z_trenerami", 1);
                 var pd = 0;
@@ -2802,21 +2890,21 @@ if ($('#glowne_okno').find(".panel-heading:contains('Zdarzenie')").length > 0) {
             } else if (DATA.find("h2:contains('Złap Pokemona')").length > 0) {
                 console.log('PokeLifeScript: pokemon pokonany');
                 updateStats("wygranych_walk_w_dziczy", 1);
-                updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0]);
-                updateStatsDoswiadczenie('{"' + DATA.find('.panel-body b b').html() + '":"' + DATA.find('p.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0] + '"}');
-                updateEvent("Wygrałeś walke z <b>" + aktualnyPokemonDzicz + "</b>. Zdobyłeś <b>" + DATA.find('p.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0] + "</b> punktów doświadczenia", 5, dzicz);
+                updateStats("zdobyte_doswiadczenie", DATA.find('div.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0]);
+                updateStatsDoswiadczenie('{"' + DATA.find('.panel-body b b').html() + '":"' + DATA.find('div.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0] + '"}');
+                updateEvent("Wygrałeś walke z <b>" + aktualnyPokemonDzicz + "</b>. Zdobyłeś <b>" + DATA.find('div.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0] + "</b> punktów doświadczenia", 5, dzicz);
             } else if (DATA.find("h2:contains('Pokemon Ucieka')").length > 0) {
                 console.log('PokeLifeScript: pokemon pokonany ale ucieka');
                 updateStats("wygranych_walk_w_dziczy", 1);
-                updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0]);
-                updateStatsDoswiadczenie('{"' + DATA.find('.panel-body b b').html() + '":"' + DATA.find('p.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0] + '"}');
-                updateEvent("Wygrałeś walke z <b>" + aktualnyPokemonDzicz + "</b>. Zdobyłeś <b>" + DATA.find('p.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0] + "</b> punktów doświadczenia", 5, dzicz);
-            } else if (DATA.find(".panel-body > p.alert-success:contains('Udało Ci się złapać')").length > 0) {
+                updateStats("zdobyte_doswiadczenie", DATA.find('div.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0]);
+                updateStatsDoswiadczenie('{"' + DATA.find('.panel-body b b').html() + '":"' + DATA.find('div.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0] + '"}');
+                updateEvent("Wygrałeś walke z <b>" + aktualnyPokemonDzicz + "</b>. Zdobyłeś <b>" + DATA.find('div.alert-success:first').html().split("Zwycięstwo! ")[1].split("</b> +")[1].split(' PD')[0] + "</b> punktów doświadczenia", 5, dzicz);
+            } else if (DATA.find(".panel-body > div.alert-success:contains('Udało Ci się złapać')").length > 0) {
                 console.log('PokeLifeScript: pokemon złapany');
                 updateEvent("Udało ci sie złapać <b>" + aktualnyPokemonDzicz + "</b>.", 7, dzicz);
                 updateStats("zlapanych_pokemonow", 1);
-                if (DATA.find('p.alert-success:nth(1):contains("nie masz już miejsca")').length > 0) {
-                    var zarobek = DATA.find('p.alert-success:nth(1):contains("nie masz już miejsca") strong').html().split(" ")[0].replace(/\./g, '');
+                if (DATA.find('div.alert-success:nth(1):contains("nie masz już miejsca")').length > 0) {
+                    var zarobek = DATA.find('div.alert-success:nth(1):contains("nie masz już miejsca") strong').html().split(" ")[0].replace(/\./g, '');
                     updateStats("zarobki_z_hodowli", zarobek);
                 }
             } else if (DATA.find(".panel-body > p.alert-danger:contains('uwolnił')").length > 0) {
@@ -2829,8 +2917,8 @@ if ($('#glowne_okno').find(".panel-heading:contains('Zdarzenie')").length > 0) {
                 updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-danger:first').html().split("</b> +")[1].split(' PD')[0]);
                 updateStatsDoswiadczenie('{"' + DATA.find('.panel-body b b').html() + '":"' + DATA.find('p.alert-danger:first').html().split("</b> +")[1].split(' PD')[0] + '"}');
                 updateEvent("Przegrana walka z <b>" + aktualnyPokemonDzicz + "</b>. Musisz uciekać. ", 6, dzicz);
-            } else if (DATA.find('p.alert-success:not(:contains("Dzięki mocy odznaki pioruna")):not(:contains("Moc odznaki odrzutowca sprawia"))').length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
-                var TEXT = 'p.alert-success:not(:contains("Dzięki mocy odznaki pioruna")):not(:contains("Moc odznaki odrzutowca sprawia"))';
+            } else if (DATA.find('div.alert-success:not(:contains("Dzięki mocy odznaki pioruna")):not(:contains("Moc odznaki odrzutowca sprawia"))').length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
+                var TEXT = 'div.alert-success:not(:contains("Dzięki mocy odznaki pioruna")):not(:contains("Moc odznaki odrzutowca sprawia"))';
                 if (DATA.find(TEXT).html().indexOf("Jagód") != -1) {
                     if (DATA.find(TEXT + ':first b').html() == "Czerwonych Jagód") {
                         updateStats("zebrane_czerwone_jagody", DATA.find(TEXT + ':first b:nth(1)').html());
@@ -2996,8 +3084,8 @@ Przykład dla wartości 35:
                         console.log(ile)
                         ile = limit - ile;
                         if (ile > 0) {
-                          affected = affected + ile;
-                          treningi.push($('.sala_atrybuty_tabelka .row:nth(1) > div:nth(3) > form').attr('action') + "&postData%5B0%5D%5Bname%5D=ilosc&postData%5B0%5D%5Bvalue%5D=" + ile);
+                            affected = affected + ile;
+                            treningi.push($('.sala_atrybuty_tabelka .row:nth(1) > div:nth(3) > form').attr('action') + "&postData%5B0%5D%5Bname%5D=ilosc&postData%5B0%5D%5Bvalue%5D=" + ile);
                         }
                         trenuj(treningi, function() { wbijajSzkoleniowca(array, limit) });
                     })
@@ -4396,6 +4484,15 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
                 config.noc.data52 = "nestballe";
                 config.noc.data53 = "nightballe";
                 config.noc.data54 = "nightballe";
+
+                updateConfig(config);
+            }
+
+            if (config.jajko == undefined) {
+                config.jajko = new Object();
+                config.jajko.data1 = "nestballe";
+                config.jajko.data2 = "greatballe";
+                config.jajko.data3 = "greatballe";
                 updateConfig(config);
             }
         } else {
@@ -4479,6 +4576,12 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
             config.noc.data52 = "nestballe";
             config.noc.data53 = "nightballe";
             config.noc.data54 = "nightballe";
+
+            config.jajko = new Object();
+            config.jajko.data1 = "nestballe";
+            config.jajko.data2 = "greatballe";
+            config.jajko.data3 = "greatballe";
+
             updateConfig(config);
         }
 
