@@ -26,6 +26,11 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.40 (2021-03-29)
+* Dodanie wyboru pokeballi dla jajek
+* Poprawki na błąd po aktualizacji gdzie nie działało AutoGo
+* Dodanie motywu wielkanocnego zamiast zimowego
+
 5.31 (2021-01-27)
 * Przywrócenie opcji wznawiania PA za pomocą przycisku Wypij Eventowy NE w statystykach
 
