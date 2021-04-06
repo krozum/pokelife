@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.40
+// @version      5.41
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -1471,9 +1471,6 @@ function initPokeLifeScript() {
                 }
                 var pokeball = config["jajko"]["data" + trudnoscType];
 
-                console.log('PokeLifeScript: jajko typ: ' + trudnoscType);
-                console.log(pokeball);
-
                 if(pokeball == "empty"){
                     $('button:contains("Pomiń i szukaj dalej")').click();
                     return "";
@@ -1905,15 +1902,15 @@ function initPokeLifeScript() {
 
         onReloadMain(function() {
             if (autoGo && !autoGoWznawianie) {
-                if (this.find(".panel-body > p.alert-danger").length > 0) {
-                    console.log(this.find('.panel-body > p.alert-danger').html());
-                    if (this.find(".panel-body > p.alert-danger:contains('Posiadasz za mało punktów akcji')").length > 0) {
+                if (this.find(".panel-body > div.alert-danger").length > 0) {
+                    console.log(this.find('.panel-body > div.alert-danger').html());
+                    if (this.find(".panel-body > div.alert-danger:contains('Posiadasz za mało punktów akcji')").length > 0) {
                         przerwijAutoGoZPowoduBrakuPA(true);
-                    } else if (this.find(".panel-body > p.alert-danger:contains('Nie masz wystarczającej ilości Punktów Akcji')").length > 0) {
+                    } else if (this.find(".panel-body > div.alert-danger:contains('Nie masz wystarczającej ilości Punktów Akcji')").length > 0) {
                         przerwijAutoGoZPowoduBrakuPA(true);
-                    } else if (this.find('.panel-body > p.alert-danger').html() == "Nie masz wystarczającej ilośći Punktów Akcji.") {
+                    } else if (this.find('.panel-body > div.alert-danger').html() == "Nie masz wystarczającej ilośći Punktów Akcji.") {
                         przerwijAutoGoZPowoduBrakuPA(true);
-                    } else if (this.find('.panel-body > p.alert-danger').html() == "Baterie w twojej latarce się wyczerpały, kup nowe.") {
+                    } else if (this.find('.panel-body > div.alert-danger').html() == "Baterie w twojej latarce się wyczerpały, kup nowe.") {
                         przerwijAutoGoZPowoduBrakuPA(false);
                         $("#goStopReason").html("Brak baterii").show();
                         document.title = "Brak baterii";
@@ -2846,12 +2843,12 @@ function initPokeLifeScript() {
             }
 
 
-            if (DATA.find("p.alert-danger:contains('Nie możesz podróżować po dziczy, ponieważ wszystkie twoje pokemony są ranne! Musisz je najpierw wyleczyć.')").length > 0) {
+            if (DATA.find("div.alert-danger:contains('Nie możesz podróżować po dziczy, ponieważ wszystkie twoje pokemony są ranne! Musisz je najpierw wyleczyć.')").length > 0) {
                 console.log('PokeLifeScript: Nie możesz podróżować po dziczy, ponieważ wszystkie twoje pokemony są ranne! Musisz je najpierw wyleczyć.');
             } else if ((DATA.find('img[src="images/event/jajko1.png"]').length > 0 || DATA.find('img[src="images/event/jajko2.png"]').length > 0 || DATA.find('img[src="images/event/jajko3.png"]').length > 0)) {
                 console.log('PokeLifeScript: spotkano jajko');
                 updateEvent("Spotkano jajko", 10, dzicz);
-            } else if (DATA.find("p.alert-info:contains('Niestety, tym razem nie spotkało cię nic interesującego.')").length > 0) {
+            } else if (DATA.find("div.alert-info:contains('Niestety, tym razem nie spotkało cię nic interesującego.')").length > 0) {
                 console.log('PokeLifeScript: pusta wyprawa');
                 updateEvent("Niestety, tym razem nie spotkało cię nic interesującego", 1, dzicz);
             } else if (DATA.find("div.alert-success:contains('pojedynek')").length > 0) {
@@ -2907,15 +2904,15 @@ function initPokeLifeScript() {
                     var zarobek = DATA.find('div.alert-success:nth(1):contains("nie masz już miejsca") strong').html().split(" ")[0].replace(/\./g, '');
                     updateStats("zarobki_z_hodowli", zarobek);
                 }
-            } else if (DATA.find(".panel-body > p.alert-danger:contains('uwolnił')").length > 0) {
+            } else if (DATA.find(".panel-body > div.alert-danger:contains('uwolnił')").length > 0) {
                 console.log('PokeLifeScript: pokemon sie uwolnił');
                 updateStats("niezlapanych_pokemonow", 1);
                 updateEvent("<b>" + aktualnyPokemonDzicz + " się uwolnił.", 8, dzicz);
-            } else if (DATA.find(".panel-body > p.alert-danger:contains('Przegrana')").length > 0) {
+            } else if (DATA.find(".panel-body > div.alert-danger:contains('Przegrana')").length > 0) {
                 console.log('PokeLifeScript: przegrana walka');
                 updateStats("przegranych_walk_w_dziczy", 1);
-                updateStats("zdobyte_doswiadczenie", DATA.find('p.alert-danger:first').html().split("</b> +")[1].split(' PD')[0]);
-                updateStatsDoswiadczenie('{"' + DATA.find('.panel-body b b').html() + '":"' + DATA.find('p.alert-danger:first').html().split("</b> +")[1].split(' PD')[0] + '"}');
+                updateStats("zdobyte_doswiadczenie", DATA.find('div.alert-danger:first').html().split("</b> +")[1].split(' PD')[0]);
+                updateStatsDoswiadczenie('{"' + DATA.find('.panel-body b b').html() + '":"' + DATA.find('div.alert-danger:first').html().split("</b> +")[1].split(' PD')[0] + '"}');
                 updateEvent("Przegrana walka z <b>" + aktualnyPokemonDzicz + "</b>. Musisz uciekać. ", 6, dzicz);
             } else if (DATA.find('div.alert-success:not(:contains("Dzięki mocy odznaki pioruna")):not(:contains("Moc odznaki odrzutowca sprawia"))').length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
                 var TEXT = 'div.alert-success:not(:contains("Dzięki mocy odznaki pioruna")):not(:contains("Moc odznaki odrzutowca sprawia"))';
@@ -2952,15 +2949,15 @@ function initPokeLifeScript() {
                     }
                     updateEvent(DATA.find(TEXT).html(), 10, dzicz);
                 }
-            } else if (DATA.find(".panel-body > p.alert-info").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
+            } else if (DATA.find(".panel-body > div.alert-info").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
                 console.log('PokeLifeScript: event w dziczy');
-                updateEvent(DATA.find('.panel-body > p.alert-info').html(), 10, dzicz);
-            } else if (DATA.find(".panel-body > p.alert-warning").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
+                updateEvent(DATA.find('.panel-body > div.alert-info').html(), 10, dzicz);
+            } else if (DATA.find(".panel-body > div.alert-warning").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
                 console.log('PokeLifeScript: event w dziczy');
-                updateEvent(DATA.find('.panel-body > p.alert-warning').html(), 10, dzicz);
-            } else if (DATA.find(".panel-body > p.alert-danger:not(:contains('Posiadasz za mało punktów akcji'))").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
+                updateEvent(DATA.find('.panel-body > div.alert-warning').html(), 10, dzicz);
+            } else if (DATA.find(".panel-body > div.alert-danger:not(:contains('Posiadasz za mało punktów akcji'))").length > 0 && DATA.find('.panel-heading').html() == 'Dzicz - wyprawa') {
                 console.log('PokeLifeScript: event w dziczy');
-                updateEvent(DATA.find('.panel-body > p.alert-danger').html(), 10, dzicz);
+                updateEvent(DATA.find('.panel-body > div.alert-danger').html(), 10, dzicz);
             }
         })
     }
