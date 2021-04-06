@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.41 (2021-04-06)
+* Poprawka na zczytywanie eventów (nie działało przez to np wznawianie PA)
+
 5.40 (2021-03-29)
 * Dodanie wyboru pokeballi dla jajek
 * Poprawki na błąd po aktualizacji gdzie nie działało AutoGo
