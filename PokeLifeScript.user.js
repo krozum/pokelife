@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.41
+// @version      5.42
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -76,7 +76,7 @@ var lastClickedDzicz = "";
 var styles = [];
 var clicksPer10SecondsArray = [0,0,0,0,0,0,0,0,0,0];
 var clicksPer10Seconds = new Object();
-var domain = "https://bra2ns.pl/"
+var domain = "https://krozum.e-kei.pl/"
 
 var borderStyle = 'border: 2px solid #000000; border-radius: 3px; box-shadow: 0px 0px 7px #000000b0;'
 
@@ -3812,12 +3812,25 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         onReloadMain(function() {
             var DATA = this;
             if (this.find('.panel-heading').html() === "Hodowla Pokemon") {
+
+               DATA.find('#btn-hodowla-zaznacz-wszystkie').parent().after('<div class="row" style="margin: 2px; margin-top: 20px"><button id="btn-hodowla-zaznacz-ponizej" class="btn btn-primary col-xs-12 col-sm-4" type="button">Zaznacz wszystkie poniżej wartości</button><input id="ponizej-value" type="number" class="form-control" style="display: inline-block; width: 33%;" value="10000"></div>');
+
                 if (DATA.find('div:contains("Wartość Pokemonów w Przechowalni")').length > 0) {
                     let yen = DATA.find('div:contains("Wartość Pokemonów w Przechowalni")').text().split('Wartość Pokemonów w Przechowalni:')[1].split(' Yen')[0];
                     DATA.find('#hodowla-glowne').prepend('<h3 style=" margin: 20px 0px 30px; ">Wartość Pokemonów w Przechowalni: ' + yen + '¥</h3>')
                 }
             }
         })
+
+        $('body').off('click', '#btn-hodowla-zaznacz-ponizej');
+        $('body').on('click', '#btn-hodowla-zaznacz-ponizej', function() {
+            $.each($('.btn-hodowla'), function (index, item) {
+                if (Number($(item).html().split('br>')[1].split(' ¥')[0]) < $('#ponizej-value').val()) {
+                    $(item).addClass('active');
+                    $(item).find('input').prop('checked', true);
+                }
+            })
+        });
     }
     initHodowlaView();
 
