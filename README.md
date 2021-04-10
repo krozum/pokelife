@@ -26,6 +26,10 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.42 (2021-04-10)
+* Zmiany związane z corocznym przeniesieniem sie na nowy hosting
+* Dodanie możliwości zaznaczania poków w hodowli poniżej podanej wartości
+
 5.41 (2021-04-06)
 * Poprawka na zczytywanie eventów (nie działało przez to np wznawianie PA)
 
