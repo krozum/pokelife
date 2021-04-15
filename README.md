@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.43 (2021-04-15)
+* Poprawka do tropiciela, powodował błąd dla niektórych uzytkowników
+
 5.42 (2021-04-10)
 * Zmiany związane z corocznym przeniesieniem sie na nowy hosting
 * Dodanie możliwości zaznaczania poków w hodowli poniżej podanej wartości
