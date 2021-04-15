@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.42
+// @version      5.43
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -4655,7 +4655,14 @@ $.getJSON(domain + "pokelife/api/get_user.php?login=" + $('#wyloguj').parent().p
                     format: "json"
                 }).done(function (data) {
                     if(data.status == 'success'){
-                        tropiciel = data.tropiciel;
+                        if (data.tropiciel != null) {
+                            tropiciel = data.tropiciel;
+                        } else {
+                            tropiciel.tropiciel_ilosc_wypraw = null;
+                            tropiciel.tropiciel_cel= null;
+                            tropiciel.dzicz= null;
+                            tropiciel.dzicz_name= null;
+                        }
                         initPokeLifeScript();
                     }
                 })
