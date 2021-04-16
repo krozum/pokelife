@@ -26,6 +26,11 @@ Instrukcja instalacji
 
 Changelog
 ---------
+
+5.44 (2021-04-16)
+* Poprawkia na błąd w podglądzie pokemonów w lidze
+* Dodanie obsługi zbierania na nowo pokemonów graczy w lidze
+
 5.43 (2021-04-15)
 * Poprawka do tropiciela, powodował błąd dla niektórych uzytkowników
 
