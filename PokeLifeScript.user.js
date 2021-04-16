@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.43
+// @version      5.44
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -340,8 +340,13 @@ $(document).on( "click", ".pokazpoka", function(event) {
     if (typeof zmienna5 !== typeof undefined && zmienna5 !== false) {
         legendy = zmienna5;
     }
+    var ranking = 0;
+    var zmienna6 = $(this).attr('data-ranking');
+    if (typeof zmienna6 !== typeof undefined && zmienna6 !== false) {
+        ranking = 1;
+    }
 
-    reloadMain("#podgladPoka_content", 'gra/pokemon_skr.php?nopanel&p='+$(this).attr('data-id-pokemona')+'&ignoruj_ukrycie='+ukrycie+'&ograniczenia_hali='+hala+'&pokemon_hala='+hala2+'&treningi_rank='+rank+'&legendarne_polowanie='+legendy);
+    reloadMain("#podgladPoka_content", 'gra/pokemon_skr.php?nopanel&p='+$(this).attr('data-id-pokemona')+'&ignoruj_ukrycie='+ukrycie+'&ograniczenia_hali='+hala+'&pokemon_hala='+hala2+'&treningi_rank='+rank+'&legendarne_polowanie='+legendy + '&ranking=' + ranking);
 });
 
 function remember_back(new_buffer) {
@@ -2521,11 +2526,11 @@ function initPokeLifeScript() {
                     id = Number(id.substring(1));
                 }
 
-                html = html + "<td data-toggle='tooltip' data-html='true' data-placement='top' title='' data-original-title='Spotkany : " + value['creation_date'] + "<br>" + wystepowanie + "<br>Cena w hodowli: " + pokemonPriceData[id] + " §' style='text-align: center;'><a target='_blank' href='https://pokelife.pl/pokedex/index.php?title=" + nazwa + "'><img src='pokemony/srednie/s" + value['pokemon_id'] + ".png' style='width: 40px; height: 40px;'></a></td>";
+                html = html + "<td data-toggle='tooltip' data-html='true' data-placement='top' title='' data-original-title='Spotkany : " + value['creation_date'] + "<br>" + wystepowanie + "<br>Cena w hodowli: " + pokemonPriceData[id] + " §' style='text-align: center;'><a target='_blank' href='https://pokelife.pl/pokedex/index.php?title=" + nazwa + "'>" + ((value['pokemon_id'] !== 412 && value['pokemon_id'] !== "412" && value['pokemon_id'] !== 413 && value['pokemon_id'] !== "413" && value['pokemon_id'] !== 421 && value['pokemon_id'] !== "421" && value['pokemon_id'] !== 422 && value['pokemon_id'] !== "422" && value['pokemon_id'] !== 423 && value['pokemon_id'] !== "423") ? "<img src='pokemony/srednie/s" + value['pokemon_id'] + ".png' style='width: 40px; height: 40px;'>" : "<img src='https://github.com/krozum/pokelife/blob/master/assets/empty.png?raw=true' style='width: 40px; height: 40px;'>") + "</a></td>";
             });
             html = html + '</tr></tbody></table></div>';
             shinyWidget = html;
-            if($('#sidebar').find(".panel-heading:contains('Ostatnio spotkane shiny')").length == 0){
+            if ($('#sidebar').find(".panel-heading:contains('Ostatnio spotkane shiny')").length == 0){
                 $('#sidebar').find(".panel-heading:contains('Drużyna')").parent().before(shinyWidget);
             }
         }
@@ -3279,23 +3284,45 @@ Przykład dla wartości 35:
     // **********************
 
     function initPokemonyLiga() {
+        let pokemons = {};
+
         onReloadMain(function() {
             var THAT = this;
-            if (this.find('.panel-heading').html() === "Liga - pojedynek") {
+            if (this.find('p:contains("Wybierz kolejność w jakiej chcesz wysłać Pokemony do walki z tym graczem. Masz na to ograniczony czas.")').length > 0) {
+                pokemons = {};
                 $.each(this.find('.pokazpoka[data-ignoruj-ukrycie="1"]'), function(index, item) {
                     var pokemon_id = $(item).data('id-pokemona');
                     var nazwa = $(item).val();
-                    var gracz_id = THAT.find('input[name="walcz"]').val();
-                    var login = THAT.find('big:nth(1)').html();
-                    var url = domain + 'pokelife/api/update_pokemon_gracza.php';
-                    $.getJSON(url, {
-                        pokemon_id: pokemon_id,
-                        gracz_id: gracz_id,
-                        login: login,
-                        nazwa: nazwa,
-                    }).done(function(data) {});
+                    var id = $(item).parent().find('img').attr('src').split('/')[2].split('.')[0].replace('s', '');
+                    pokemons[pokemon_id] = {};
+                    pokemons[pokemon_id].pokemon_id = pokemon_id;
+                    pokemons[pokemon_id].id = id;
+                    pokemons[pokemon_id].nazwa = nazwa;
+
+                    $.get('gra/pokemon_skr.php?nopanel&p=' + pokemon_id + '&ignoruj_ukrycie=1&ograniczenia_hali=0&pokemon_hala=0&treningi_rank=0&legendarne_polowanie=0&ranking=1', function(data) {
+                        pokemons[pokemon_id].pokemon_id = data.split('[ID: ')[1].split(']')[0];
+                    })
+
                 })
             }
+
+            if (this.find('div.alert-info:contains("Wyzwałeś do walki Trenera ")').length > 0) {
+                console.log(pokemons);
+                let login = this.find('div.alert-info:contains("Wyzwałeś do walki Trenera ") b').html();
+
+                for (const [key, value] of Object.entries(pokemons)) {
+                    var url = domain + 'pokelife/api/update_pokemon_gracza.php';
+                    $.getJSON(url, {
+                        pokemon_id: value.pokemon_id,
+                        id: value.id,
+                        login: login,
+                        content: value.content,
+                        nazwa: value.nazwa,
+                    }).done(function(data) {});
+                }
+            }
+
+
         })
     }
     initPokemonyLiga();
