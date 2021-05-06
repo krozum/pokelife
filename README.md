@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.45 (2021-05-06)
+* Wyłączenie tymczasowo logowania eventów i statystyk
+* Poprawka na brak dźwięku powiadomień
 
 5.44 (2021-04-16)
 * Poprawkia na błąd w podglądzie pokemonów w lidze
