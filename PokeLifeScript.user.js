@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.44
+// @version      5.45
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -137,9 +137,9 @@ function getPreviousPageContent() {
 
 
 var rnd = Math.floor(Math.random() * 10);
-var audio = new Audio('https://www.bra2ns.pl/pokelife/stats/assets/pokemon_info.mp3');
+var audio = new Audio('https://www.krozum.e-kei.pl/pokelife/stats/assets/pokemon_info.mp3');
 if(rnd == 6){
-    audio = new Audio('https://www.bra2ns.pl/pokelife/stats/assets/pokemon_lavendercity.mp3');
+    audio = new Audio('https://www.krozum.e-kei.pl/pokelife/stats/assets/pokemon_lavendercity.mp3');
 }
 function triggerSound() {
     audio.play();
@@ -159,27 +159,27 @@ function stopSound() {
 // **********************
 
 function updateEvent(text, eventTypeId, dzicz) {
-    if (dzicz != null) {
-        requestDomain("pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text=" + text + "&event_type_id=" + eventTypeId + "&dzicz=" + dzicz + "&time=" + Date.now(), function(response) {
-            console.log("%cUpdateEvent: " + eventTypeId + " => " + text, "color: orange");
-        })
-    } else {
-        requestDomain("pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text=" + text + "&event_type_id=" + eventTypeId + "&time=" + Date.now(), function(response) {
-            console.log("%cUpdateEvent: " + eventTypeId + " => " + text, "color: orange");
-        })
-    }
+    // if (dzicz != null) {
+    //     requestDomain("pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text=" + text + "&event_type_id=" + eventTypeId + "&dzicz=" + dzicz + "&time=" + Date.now(), function(response) {
+    //         console.log("%cUpdateEvent: " + eventTypeId + " => " + text, "color: orange");
+    //     })
+    // } else {
+    //     requestDomain("pokelife/api/update_event.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&text=" + text + "&event_type_id=" + eventTypeId + "&time=" + Date.now(), function(response) {
+    //         console.log("%cUpdateEvent: " + eventTypeId + " => " + text, "color: orange");
+    //     })
+    // }
 }
 
 function updateStats(name, value) {
-    requestDomain("pokelife/api/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name=" + name + "&value=" + value + "&time=" + Date.now() + "&dzicz=" + lastClickedDzicz, function(response) {
-        console.log("%cUpdateStats: " + name + " => " + value, "color: #8bc34a");
-    })
+    // requestDomain("pokelife/api/update_stats.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&stats_name=" + name + "&value=" + value + "&time=" + Date.now() + "&dzicz=" + lastClickedDzicz, function(response) {
+    //     console.log("%cUpdateStats: " + name + " => " + value, "color: #8bc34a");
+    // })
 }
 
 function updateStatsDoswiadczenie(json) {
-    requestDomain("pokelife/api/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json=" + json + "&time=" + Date.now() + "&dzicz=" + lastClickedDzicz, function(response) {
-        console.log("%cUpdateStatsDoswiadczenie: " + json, "color: #b7a5c1");
-    })
+    // requestDomain("pokelife/api/update_stats_doswiadczenie.php?login=" + $('#wyloguj').parent().parent().html().split("<div")[0].trim() + "&json=" + json + "&time=" + Date.now() + "&dzicz=" + lastClickedDzicz, function(response) {
+    //     console.log("%cUpdateStatsDoswiadczenie: " + json, "color: #b7a5c1");
+    // })
 }
 
 function addClickToMetrics(){
