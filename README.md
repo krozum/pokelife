@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.47 (2021-05-21)
+* Poprawki po update do widoków TM oraz Sali Treningowej
+
 5.46 (2021-05-08)
 * Poprawka na przywrócenie logowania eventów i statystyk, będe obserwować czy nie zacznie znowu przeciążać bazy
 
