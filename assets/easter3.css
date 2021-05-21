@@ -5,7 +5,7 @@
 }
 
 
-#glowne_okno > .panel-primary > .panel-heading::before {
+/* #glowne_okno > .panel-primary > .panel-heading::before {
 content: '';
     display: block;
     position: absolute;
@@ -16,7 +16,7 @@ content: '';
     background-repeat: no-repeat;
     background-size: 67px;
     height: 70px;
-}
+} */
 
 .progress-bar span {
     background-size: 30px 30px;
