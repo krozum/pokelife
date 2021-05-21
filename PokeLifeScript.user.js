@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.46
+// @version      5.47
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -49,6 +49,7 @@
 //     initPrzypomnienieOOpiece
 //     initOsiagnieciaView
 //     initTropicielDziczWidget
+//     initSalaTreningowaViw
 
 
 
@@ -1678,23 +1679,32 @@ function initPokeLifeScript() {
                     var healOption = 'gra/lecznica.php?wylecz_wszystkie&tylko_komunikat'
 
                     if (config.useCzerwoneJagody == "true" || config.useCzerwoneJagody == true) {
-                        healOption = 'gra/plecak.php?uzyj&rodzaj_przedmiotu=czerwone_jagody&tylko_komunikat&ulecz_wszystkie&zjedz_max'
+                        healOption = 'gra/plecak.php?uzyj&potwierdz&rodzaj_przedmiotu=czerwone_jagody&cala_druzyna'
                     }
 
                     $.get(healOption, function(data) {
 
-                        if ($(data).hasClass("alert-danger")) {
-                            console.log('Brak czerwonych jagód');
-                            config.useCzerwoneJagody = false;
-                            updateConfig(config);
-                            window.setTimeout(function() {
-                                if (autoGo) {
-                                    click(poLeczeniu)
-                                }
-                            }, clickDelay);
+                        if ($(data).find(".alert-danger").length > 0) {
+                            if ($(data).find(".alert-danger").html().indexOf("Masz za mało pieniędzy") >= 0) {
+                                console.log('Masz za mało pieniędzy');
+                                autoGo = false;
+                                $('#goAutoButton').html('AutoGO');
+                                $('.dynamicsparkline').hide()
+                                $("#goStopReason").html("Masz za mało pieniędzy").show();
+                                return;
+                            } else {
+                                console.log('Brak czerwonych jagód');
+                                config.useCzerwoneJagody = false;
+                                updateConfig(config);
+                                window.setTimeout(function() {
+                                    if (autoGo) {
+                                        click(poLeczeniu)
+                                    }
+                                }, clickDelay);
+                            }
                         };
 
-                        if ($(data).find(".alert-success").length > 0 || $(data).hasClass("alert-success")) {
+                        if ($(data).find(".alert-success").length > 0) {
 
                             console.log('PokeLifeScript: wyleczono');
 
@@ -1959,7 +1969,7 @@ function initPokeLifeScript() {
                                             if ($("a[href='gra/plecak.php']").length > 0 && autoGo) {
                                                 reloadMain("#glowne_okno", "gra/plecak.php", function() {
                                                     if ($('.thumbnail-plecak img[src="images/pokesklep/niebieskie_jagody.jpg"]').length > 0) {
-                                                        var ile = $('.thumbnail-plecak h5:contains("Niebieskie Jagody")').html().split(' x Niebieskie')[0];
+                                                        var ile = Number($('.thumbnail-plecak h5:contains("Niebieskie Jagody")').html().split(' x Niebieskie')[0]);
 
                                                         if (ile > 40) {
                                                             ile = 40;
@@ -1967,12 +1977,18 @@ function initPokeLifeScript() {
                                                         window.setTimeout(function() {
                                                             if (autoGo) {
                                                                 reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=3&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=niebieskie_jagody&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=" + ile, function() {
-                                                                    $('#goAutoButton').html('STOP');
-                                                                    console.log('Przywrócono PA');
                                                                     window.setTimeout(function() {
                                                                         if (autoGo) {
-                                                                            autoGoWznawianie = false;
-                                                                            click();
+                                                                            reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=3&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=niebieskie_jagody&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=" + ile + "&potwierdz", function() {
+                                                                                $('#goAutoButton').html('STOP');
+                                                                                console.log('Przywrócono PA');
+                                                                                window.setTimeout(function() {
+                                                                                    if (autoGo) {
+                                                                                        autoGoWznawianie = false;
+                                                                                        click();
+                                                                                    }
+                                                                                }, 1000);
+                                                                            });
                                                                         }
                                                                     }, 1000);
                                                                 });
@@ -2051,7 +2067,7 @@ function initPokeLifeScript() {
                                                             if (autoGo) {
                                                                 var maxPA = $('#sidebar .progress-bar:contains(" PA")').attr('aria-valuemax');
                                                                 var ile = Math.floor($('#sidebar .progress-bar:contains(" PA")').attr('aria-valuemax') / 100);
-                                                                var iloscNapojow = Number($('.thumbnail-plecak[data-target="#plecak-1"] h5').html().split(' x ')[0]);
+                                                                var iloscNapojow = Number($('.thumbnail-plecak[data-target="#plecak-zielony_napoj"] h5').html().split(' x ')[0]);
 
                                                                 var maxDoLimitow = ileMozna - ileJuzWypitych;
 
@@ -2064,12 +2080,18 @@ function initPokeLifeScript() {
                                                                 }
 
                                                                 reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=zielony_napoj&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=" + ile, function() {
-                                                                    $('#goAutoButton').html('STOP');
-                                                                    console.log('Przywrócono PA');
                                                                     window.setTimeout(function() {
                                                                         if (autoGo) {
-                                                                            autoGoWznawianie = false;
-                                                                            click();
+                                                                            reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=zielony_napoj&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=" + ile + "&potwierdz", function() {
+                                                                                $('#goAutoButton').html('STOP');
+                                                                                console.log('Przywrócono PA');
+                                                                                window.setTimeout(function() {
+                                                                                    if (autoGo) {
+                                                                                        autoGoWznawianie = false;
+                                                                                        click();
+                                                                                    }
+                                                                                }, 1000);
+                                                                            });
                                                                         }
                                                                     }, 1000);
                                                                 });
@@ -2113,12 +2135,18 @@ function initPokeLifeScript() {
                                                         window.setTimeout(function() {
                                                             if (autoGo) {
                                                                 reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=eventowy_napoj_energetyczny&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=1", function() {
-                                                                    $('#goAutoButton').html('STOP');
-                                                                    console.log('Przywrócono PA');
                                                                     window.setTimeout(function() {
                                                                         if (autoGo) {
-                                                                            autoGoWznawianie = false;
-                                                                            click();
+                                                                            reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=eventowy_napoj_energetyczny&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=1&potwierdz", function() {
+                                                                                $('#goAutoButton').html('STOP');
+                                                                                console.log('Przywrócono PA');
+                                                                                window.setTimeout(function() {
+                                                                                    if (autoGo) {
+                                                                                        autoGoWznawianie = false;
+                                                                                        click();
+                                                                                    }
+                                                                                }, 1000);
+                                                                            });
                                                                         }
                                                                     }, 1000);
                                                                 });
@@ -2128,12 +2156,18 @@ function initPokeLifeScript() {
                                                         window.setTimeout(function() {
                                                             if (autoGo) {
                                                                 reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=napoj_energetyczny&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=1", function() {
-                                                                    $('#goAutoButton').html('STOP');
-                                                                    console.log('Przywrócono PA');
                                                                     window.setTimeout(function() {
                                                                         if (autoGo) {
-                                                                            autoGoWznawianie = false;
-                                                                            click();
+                                                                            reloadMain("#glowne_okno", "gra/plecak.php?uzyj&p=1&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=napoj_energetyczny&postData%5B1%5D%5Bname%5D=ilosc&postData%5B1%5D%5Bvalue%5D=1&potwierdz", function() {
+                                                                                $('#goAutoButton').html('STOP');
+                                                                                console.log('Przywrócono PA');
+                                                                                window.setTimeout(function() {
+                                                                                    if (autoGo) {
+                                                                                        autoGoWznawianie = false;
+                                                                                        click();
+                                                                                    }
+                                                                                }, 1000);
+                                                                            });
                                                                         }
                                                                     }, 1000);
                                                                 });
@@ -2201,12 +2235,18 @@ function initPokeLifeScript() {
                                                     window.setTimeout(function() {
                                                         if (autoGo) {
                                                             reloadMain("#glowne_okno", "gra/plecak.php?uzyj&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=duzy_napoj_energetyczny&postData%5B1%5D%5Bname%5D=napewno&postData%5B1%5D%5Bvalue%5D=1&postData%5B2%5D%5Bname%5D=ilosc&postData%5B2%5D%5Bvalue%5D=1", function() {
-                                                                $('#goAutoButton').html('STOP');
-                                                                console.log('Przywrócono PA');
                                                                 window.setTimeout(function() {
                                                                     if (autoGo) {
-                                                                        autoGoWznawianie = false;
-                                                                        click();
+                                                                        reloadMain("#glowne_okno", "gra/plecak.php?uzyj&postData%5B0%5D%5Bname%5D=rodzaj_przedmiotu&postData%5B0%5D%5Bvalue%5D=duzy_napoj_energetyczny&postData%5B1%5D%5Bname%5D=napewno&postData%5B1%5D%5Bvalue%5D=1&postData%5B2%5D%5Bname%5D=ilosc&postData%5B2%5D%5Bvalue%5D=1&potwierdz", function() {
+                                                                            $('#goAutoButton').html('STOP');
+                                                                            console.log('Przywrócono PA');
+                                                                            window.setTimeout(function() {
+                                                                                if (autoGo) {
+                                                                                    autoGoWznawianie = false;
+                                                                                    click();
+                                                                                }
+                                                                            }, 1000);
+                                                                        });
                                                                     }
                                                                 }, 1000);
                                                             });
@@ -2485,10 +2525,13 @@ function initPokeLifeScript() {
 
     function initAutouzupelnianieFormularzy() {
 
-        $(document).on("click", "#plecak-jagody .thumbnail-plecak, .thumbnail-plecak[data-target='#plecak-11'], .thumbnail-plecak[data-target='#plecak-14'], .thumbnail-plecak[data-target='#plecak-15'], .thumbnail-plecak[data-target='#plecak-8'], .thumbnail-plecak[data-target='#plecak-7'], .thumbnail-plecak[data-target='#plecak-19'], .thumbnail-plecak[data-target='#plecak-16']", function(event) {
+        $(document).on("click", "#plecak-dla_pokemona .thumbnail-plecak, .thumbnail-plecak[data-target='#plecak-zolte_jagody']", function(event) {
             var id = $(this).data("target");
             var ilosc = $(this).find("h5").html().split(" ")[0];
-            $(id + ' input[name="ilosc"]').val(ilosc);
+            if (isNaN(Number(ilosc))) {
+                ilosc = 1;
+            }
+            $(id + ' input[name="ilosc"]').val(Number(ilosc));
         });
 
         onReloadMain(function() {
@@ -2552,6 +2595,7 @@ function initPokeLifeScript() {
             }
         }
         refreshShinyWidget();
+        $('[data-toggle="tooltip"]').tooltip();
 
         onReloadSidebar(function() {
             this.find(".panel-heading:contains('Drużyna')").parent().before(shinyWidget);
@@ -2610,17 +2654,16 @@ function initPokeLifeScript() {
 
         onReloadMain(function() {
             if (this.find('.panel-heading').html() === "Plecak") {
-                this.find('#plecak-tm > .row > div.col-xs-4').each(function(index, val) {
-                    var id = $(this).find('h3').html().split(" ")[1];
-                    $(this).find("br").remove();
+                this.find('#plecak-tm > .row > div.col-xs-12').each(function(index, val) {
+                    var id = $(this).find('div.thumbnail').html().split(" x TM ")[1].split(" -")[0];
                     if (tmData["tm"][id - 1]["category_id"] == 1) {
-                        $(this).children().css("background-color", "#f9856e");
+                        $(this).children().css("border", "2px solid #f9856e");
                     } else if (tmData["tm"][id - 1]["category_id"] == 2) {
-                        $(this).children().css("background-color", "#4d98b0");
+                        $(this).children().css("border", "2px solid #4d98b0");
                     } else if (tmData["tm"][id - 1]["category_id"] == 3) {
-                        $(this).children().css("background-color", "#bdbcbb");
+                        $(this).children().css("border", "2px solid #bdbcbb");
                     }
-                    $(this).children().prepend('<br><img src="https://pokelife.pl/images/typy/' + tmData["tm"][id - 1]["type_id"] + '.png" style="width: 40px;">');
+                    $(this).children().append('<img src="https://pokelife.pl/images/typy/' + tmData["tm"][id - 1]["type_id"] + '.png" style="max-height: 23px;max-width: 100%;display: inline;margin-left: 15px;">');
                 });
             }
         })
@@ -3067,9 +3110,17 @@ Przykład dla wartości 35:
         function trenuj(array, callback) {
             if (array.length > 0) {
                 window.setTimeout(function() {
-                    reloadMain("#glowne_okno", "gra/" + array.pop(), function() {
-                        price = Number(price) + Number($('.alert-success b:nth(1)').html().split(" ¥")[0].replace(/\./g, ''));
-                        trenuj(array, callback);
+                    let url = array.pop();
+                    let url2 = url.replace('postData%5B0%5D%5Bname%5D=', '');
+                    url2 = url2.replace('&postData%5B0%5D%5Bvalue%5D', '');
+                    url2 = url2 + "&potwierdz";
+                    reloadMain("#glowne_okno", "gra/" +url, function() {
+                        window.setTimeout(function() {
+                            reloadMain("#glowne_okno", "gra/" +url2, function() {
+                                price = Number(price) + Number($('.alert-success b:nth(1)').html().split(" ¥")[0].replace(/\./g, ''));
+                                trenuj(array, callback);
+                            })
+                        }, 1000);
                     })
                 }, 1000);
             } else {
@@ -3090,7 +3141,7 @@ Przykład dla wartości 35:
                 now++;
 
                 window.setTimeout(function() {
-                    reloadMain("#glowne_okno", "gra/sala.php?p=" + id + "&zrodlo=rezerwa", function() {
+                    reloadMain("#glowne_okno", "gra/sala.php?pokemon_id=" + id + "&zrodlo=rezerwa", function() {
                         var treningi = [];
                         var i;
                         var ile = 0;
@@ -4402,6 +4453,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         $(document).on("keyup", "#wyszukajPrzedmiot", function (event) {
             if($(this).val() == ""){
                 $('#glowne_okno .tab-pane .col-xs-4').css('display', 'block');
+                $('#glowne_okno .tab-pane .col-xs-12').css('display', 'block');
                 $('#glowne_okno #plecak-trzymane h3').css('display', 'block');
                 var tab_id = $('#glowne_okno li[role="presentation"].active a').attr('aria-controls');
                 $('#'+tab_id).parent().find("div.tab-pane[role='tabpanel']").removeClass('active').removeClass('in').addClass('fade');
@@ -4409,8 +4461,10 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
             } else {
                 $('#glowne_okno .tab-pane').removeClass('fade').addClass('in').addClass('active');
                 $('#glowne_okno .tab-pane .col-xs-4').css('display', 'none');
+                $('#glowne_okno .tab-pane .col-xs-12').css('display', 'none');
                 $('#glowne_okno #plecak-trzymane h3').css('display', 'none');
                 $('#glowne_okno .tab-pane .col-xs-4:icontains("'+$(this).val()+'")').css("display", "block");
+                $('#glowne_okno .tab-pane .col-xs-12:icontains("'+$(this).val()+'")').css("display", "block");
             }
         });
 
@@ -4419,6 +4473,7 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
             if($(this).parent().parent().parent().find('.panel-heading:contains("Plecak")').length > 0){
                 $('#wyszukajPrzedmiot').val("");
                 $('#glowne_okno .tab-pane .col-xs-4').css('display', 'block');
+                $('#glowne_okno .tab-pane .col-xs-12').css('display', 'block');
                 $('#glowne_okno #plecak-trzymane h3').css('display', 'block');
                 var tab_id = $('#glowne_okno li[role="presentation"].active a').attr('aria-controls');
                 $('#'+tab_id).parent().find("div.tab-pane[role='tabpanel']").removeClass('active').removeClass('in').addClass('fade');
@@ -4427,6 +4482,31 @@ data-zas="` + (1 * $(DATA).find('input[name="nazwa_full"][value="Białe Jagody"]
         });
     }
     initPlecakView();
+
+
+
+    // **********************
+    //
+    // initSalaTreningowaView()
+    // Funkcja modyfikująca sale treningową
+    //
+    // **********************
+    function initSalaTreningowaView() {
+        onReloadMain(function() {
+            var DATA = this;
+            if (this.find('.panel-heading').html() === "Sala Treningowa") {
+                DATA.find('.col-xs-12[style="border: 1px solid #B0B0B0;"] big').css('margin-top', '10px');
+                DATA.find('.col-xs-12[style="border: 1px solid #B0B0B0;"] big').css('display', 'inline-block');
+                DATA.find('.col-xs-12[style="border: 1px solid #B0B0B0;"]').css("margin", "20px 0");
+                DATA.find('#sala-trening > .row').css('padding', '20px 0 10px 0');
+                DATA.find('#sala-ruchy .row:nth(0) div:nth(0)').css('padding', '20px 0 10px 0');
+                DATA.find('#sala-tm .row:nth(0) div:nth(0)').css('padding', '20px 0 10px 0');
+                DATA.find('.btn-group').css('margin-bottom', '10px');
+                DATA.find('button[href^="sala.php?zrodlo=druzyna&pokemon_id"]').css('border', 'none');
+            }
+        })
+    }
+    initSalaTreningowaView();
 
 
 }
