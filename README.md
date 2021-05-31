@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.48 (2021-05-31)
+* Poprawki do niedziałających przycisków w nowej sali treningowej
+
 5.47 (2021-05-21)
 * Poprawki po update do widoków TM oraz Sali Treningowej
 
