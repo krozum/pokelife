@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.47
+// @version      5.48
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -246,7 +246,7 @@ function reloadMain(selector, url, callback, callback2) {
         if (callback2 != undefined && callback2 != null) {
             callback2.call(THAT, url);
         }
-        var html2 = THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>', "").replace("http://api.jquery.com/scripts/events.js", "https://gra.pokelife.pl/js/zegar.js").replace("$(\"#glowne_okno\").load('gra/stowarzyszenie.php?p=2&id_budynku='++'&pozycja_x='+$( \"#buduj\" ).position().left/16+'&pozycja_y='+$( \"#buduj\" ).position().top/16+'&nic');", "");
+        var html2 = THAT.html().replace('<script src="js/okno_glowne_reload.js?v=2"></script>', "").replace("http://api.jquery.com/scripts/events.js", "https://gra.pokelife.pl/js/zegar.js").replace("$(\"#glowne_okno\").load('gra/stowarzyszenie.php?p=2&id_budynku='++'&pozycja_x='+$( \"#buduj\" ).position().left/16+'&pozycja_y='+$( \"#buduj\" ).position().top/16+'&nic');", "");
         $("" + selector).html(html2);
 
         if (url.indexOf("napraw") != -1) {
@@ -280,7 +280,7 @@ function reloadMainPOST(selector, url, postData, callback, callback2) {
             if (callback2 != undefined && callback2 != null) {
                 callback2.call(THAT, url);
             }
-            $("" + selector).html(THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>', ""));
+            $("" + selector).html(THAT.html().replace('<script src="js/okno_glowne_reload.js?v=2"></script>', ""));
             $.get('inc/stan.php', function(data) {
                 $("#sidebar").html(data);
                 window.afterReloadMainFunctions.forEach(function(item) {
@@ -466,20 +466,27 @@ $(document).on("click", ".btn-edycja-nazwy-grupy", function(event) {
     $("#panel_grupa_id_" + $(this).attr('data-grupa-id')).html('<form action="druzyna.php?p=2&zmien_nazwe_grupy=' + $(this).attr('data-grupa-id') + '" method="post"><div class="input-group"><input type="text" class="form-control" name="grupa_nazwa" value="' + $(this).attr('data-obecna-nazwa') + '"><span class="input-group-btn"><input class="btn btn-primary" type="submit" value="Ok"/></span></div></form>');
 });
 
+$('.nauka-ataku').unbind("click")
+    .off("click")
+    .removeAttr("onclick");
 $(document).off("click", ".nauka-ataku");
 $(document).on("click", ".nauka-ataku", function(event) {
     event.preventDefault();
+
+    let zrodlo = $(this).data('zrodlo');
+    let ligatab = $(this).data('ligatab');
+    let nazwaAtaku = $(this).data('nazwa-ataku');
 
     $("html, body").animate({ scrollTop: 0 }, "slow");
 
     var naucz_zamiast = $("input[name=nauczZamiast-" + $(this).attr("data-pokemon-id") + "]:checked").val();
 
     if ($(this).attr("data-tm-zapomniany")) {
-        reloadMain("#glowne_okno", 'gra/sala.php?zabezpieczone_id=' + $(this).attr('zabezpieczone-id') + '&p=' + $(this).attr("data-pokemon-id") + '&tm_zapomniany=' + $(this).attr("data-tm-zapomniany") + '&naucz_zamiast=' + naucz_zamiast + '&zrodlo=' + $(this).attr('data-zrodlo'));
+        reloadMain("#glowne_okno", 'gra/sala.php?akcja=nauka_ataku&tab=3&pokemon_id=' + $(this).attr("data-pokemon-id") + '&tm_zapomniany=' + $(this).attr("data-tm-zapomniany") + '&naucz_zamiast=' + naucz_zamiast + '&zrodlo=' + zrodlo + '&liga_tab=' + ligatab);
     } else if ($(this).attr("data-tm")) {
-        reloadMain("#glowne_okno", 'gra/sala.php?zabezpieczone_id=' + $(this).attr('zabezpieczone-id') + '&p=' + $(this).attr("data-pokemon-id") + '&tm=' + $(this).attr("data-tm") + '&naucz_zamiast=' + naucz_zamiast + '&zrodlo=' + $(this).attr('data-zrodlo'));
+        reloadMain("#glowne_okno", 'gra/sala.php?akcja=nauka_ataku&tab=3&pokemon_id=' + $(this).attr("data-pokemon-id") + '&tm=' + $(this).attr("data-tm") + '&naucz_zamiast=' + naucz_zamiast + '&zrodlo=' + zrodlo + '&liga_tab=' + ligatab);
     } else {
-        reloadMain("#glowne_okno", 'gra/sala.php?zabezpieczone_id=' + $(this).attr('zabezpieczone-id') + '&p=' + $(this).attr("data-pokemon-id") + '&nauka_ataku=' + $(this).attr('data-nazwa-ataku') + '&naucz_zamiast=' + naucz_zamiast + '&zrodlo=' + $(this).attr('data-zrodlo'));
+        reloadMain("#glowne_okno", 'gra/sala.php?akcja=nauka_ataku&tab=3&pokemon_id=' + $(this).attr("data-pokemon-id") + '&nauka_ataku=' + nazwaAtaku + '&naucz_zamiast=' + naucz_zamiast + '&zrodlo=' + zrodlo + '&liga_tab=' + ligatab);
     }
 });
 
