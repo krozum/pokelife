@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.49 (2021-06-02)
+* Poprawki na niektóre double clicki
+
 5.48 (2021-05-31)
 * Poprawki do niedziałających przycisków w nowej sali treningowej
 
