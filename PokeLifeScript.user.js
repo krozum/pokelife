@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.48
+// @version      5.49
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -246,7 +246,7 @@ function reloadMain(selector, url, callback, callback2) {
         if (callback2 != undefined && callback2 != null) {
             callback2.call(THAT, url);
         }
-        var html2 = THAT.html().replace('<script src="js/okno_glowne_reload.js?v=2"></script>', "").replace("http://api.jquery.com/scripts/events.js", "https://gra.pokelife.pl/js/zegar.js").replace("$(\"#glowne_okno\").load('gra/stowarzyszenie.php?p=2&id_budynku='++'&pozycja_x='+$( \"#buduj\" ).position().left/16+'&pozycja_y='+$( \"#buduj\" ).position().top/16+'&nic');", "");
+        var html2 = THAT.html().replace('<script src="js/okno_glowne_reload.js"></script>', "").replace('<script src="js/okno_glowne_reload.js?v=2"></script>', "").replace("http://api.jquery.com/scripts/events.js", "https://gra.pokelife.pl/js/zegar.js").replace("$(\"#glowne_okno\").load('gra/stowarzyszenie.php?p=2&id_budynku='++'&pozycja_x='+$( \"#buduj\" ).position().left/16+'&pozycja_y='+$( \"#buduj\" ).position().top/16+'&nic');", "");
         $("" + selector).html(html2);
 
         if (url.indexOf("napraw") != -1) {
