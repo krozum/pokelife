@@ -26,6 +26,9 @@ Instrukcja instalacji
 
 Changelog
 ---------
+5.50 (2021-10-17)
+* Poprawki na błąd związany z nieladowaniem sie plecaka gdy ktoś posiadał nowe TM (HM)
+
 5.49 (2021-06-02)
 * Poprawki na niektóre double clicki
 
