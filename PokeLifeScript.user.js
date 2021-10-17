@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         PokeLifeScript: AntyBan Edition
-// @version      5.49
+// @version      5.50
 // @description  Dodatek do gry Pokelife
 // @match        https://gra.pokelife.pl/*
 // @downloadURL  https://github.com/krozum/pokelife/raw/master/PokeLifeScript.user.js
@@ -2663,14 +2663,16 @@ function initPokeLifeScript() {
             if (this.find('.panel-heading').html() === "Plecak") {
                 this.find('#plecak-tm > .row > div.col-xs-12').each(function(index, val) {
                     var id = $(this).find('div.thumbnail').html().split(" x TM ")[1].split(" -")[0];
-                    if (tmData["tm"][id - 1]["category_id"] == 1) {
-                        $(this).children().css("border", "2px solid #f9856e");
-                    } else if (tmData["tm"][id - 1]["category_id"] == 2) {
-                        $(this).children().css("border", "2px solid #4d98b0");
-                    } else if (tmData["tm"][id - 1]["category_id"] == 3) {
-                        $(this).children().css("border", "2px solid #bdbcbb");
+                    if (tmData["tm"][id - 1] !== undefined) {
+                        if (tmData["tm"][id - 1]["category_id"] == 1) {
+                            $(this).children().css("border", "2px solid #f9856e");
+                        } else if (tmData["tm"][id - 1]["category_id"] == 2) {
+                            $(this).children().css("border", "2px solid #4d98b0");
+                        } else if (tmData["tm"][id - 1]["category_id"] == 3) {
+                            $(this).children().css("border", "2px solid #bdbcbb");
+                        }
+                        $(this).children().append('<img src="https://pokelife.pl/images/typy/' + tmData["tm"][id - 1]["type_id"] + '.png" style="max-height: 23px;max-width: 100%;display: inline;margin-left: 15px;">');
                     }
-                    $(this).children().append('<img src="https://pokelife.pl/images/typy/' + tmData["tm"][id - 1]["type_id"] + '.png" style="max-height: 23px;max-width: 100%;display: inline;margin-left: 15px;">');
                 });
             }
         })
